@@ -1,0 +1,94 @@
+# FastYoke
+
+> Open-architecture App Platform as a Service for ISVs. Multi-tenant FSM engine, typed TypeScript SDK, zero vendor lock-in. The HTML version of this content lives at https://fastyoke.io; this index points at the markdown form of every public page for AI-agent ingestion.
+## About FastYoke
+
+- [FastYoke — The Open-Architecture aPaaS](https://fastyoke.io/index.md): Build at the speed of low-code, perform at the speed of the edge, leave whenever you want. Multi-tenant FSM platform for ISVs who refuse vendor lock-in.
+- [Pricing — FastYoke](https://fastyoke.io/pricing.md): Simple pricing that scales from a side project to a regulated fleet. Free with every Vercel Marketplace install; paid tiers on request.
+- [Privacy Notice — FastYoke](https://fastyoke.io/privacy.md): How FastYoke handles personal data submitted through public forms, account info, and product telemetry. Plain-language summary plus the data subject's rights.
+
+## Overview
+
+- [FastYoke Docs](https://fastyoke.io/docs.md): The aPaaS for logistics. Multi-tenant FSMs, schema-driven entities, extensible admin surfaces.
+
+## Accessibility
+
+- [Accessibility](https://fastyoke.io/docs/accessibility.md): WCAG 2.1 AA enforced in CI, theme contrast validated on save, focus-trap modal primitive — the architectural pieces that clear institutional procurement.
+
+## Apps
+
+- [Apps](https://fastyoke.io/docs/apps.md): Group pages under a shared slug + theme; the user-facing face of your tenant.
+- [Advanced App Builder](https://fastyoke.io/docs/apps/advanced.md): Enterprise SPA-delivery surface — artifacts, health, handoff zip, and the template / LLM-authored extension generators.
+- [CRUD Scaffold Builder](https://fastyoke.io/docs/apps/crud-scaffold.md): Deterministic template-driven CRUD generator — pick annotated entities, install a ready-to-use list/detail/new/edit extension.
+
+## Auth
+
+- [Authentication & Scopes](https://fastyoke.io/docs/auth.md): JWT shapes, platform vs tenant context, extension tokens, SSO.
+
+## CLI
+
+- [CLI](https://fastyoke.io/docs/cli.md): fy for extension authors + fastyoke-admin for operators.
+- [Command Reference](https://fastyoke.io/docs/cli/commands.md): Every subcommand for fy (extension authoring) and fastyoke-admin (operator ops).
+
+## Deprecation Policy
+
+- [Deprecation Policy](https://fastyoke.io/docs/deprecation-policy.md): What a deprecated surface means, when it goes away, and how to migrate.
+
+## Entities
+
+- [Entities](https://fastyoke.io/docs/entities.md): Schemaless JSON records that serve as FSM guard-evaluation context.
+
+## Extensions
+
+- [Extensions (Install & Manage)](https://fastyoke.io/docs/extensions.md): Upload third-party extension bundles, review scopes, activate, roll back.
+
+## Forms
+
+- [Forms](https://fastyoke.io/docs/forms.md): Build public or authenticated forms that route submissions into entities, jobs, or both.
+- [Forms Builder](https://fastyoke.io/docs/forms/builder.md): Pages, sections, field types, routing, themes, attachments.
+
+## Getting Started
+
+- [Getting Started](https://fastyoke.io/docs/getting-started.md): Sign in, provision a tenant, build your first form, wire it to an FSM.
+- [Your First Form](https://fastyoke.io/docs/getting-started/first-form.md): Build a public form, collect submissions, spawn jobs from them.
+- [Installation](https://fastyoke.io/docs/getting-started/installation.md): Sign in, confirm your tenant assignment, invite teammates.
+
+## Integrations
+
+- [Integrations](https://fastyoke.io/docs/integrations.md): Encrypted credential storage for outbound webhooks, Twilio, SendGrid, and custom REST endpoints.
+
+## Jobs
+
+- [Jobs](https://fastyoke.io/docs/jobs.md): The runtime side of workflows — live FSM instances you fire transitions against.
+
+## LCAP
+
+- [LCAP](https://fastyoke.io/docs/lcap.md): Low-Code Application Platform — annotation-driven entity rendering. One annotation row drives Forms v2, Page Designer, CRUD scaffolds, and `@fastyoke/next` SSR pages.
+- [Annotations](https://fastyoke.io/docs/lcap/annotations.md): Edit field annotations from `/admin/entities/:name`. Type picker cascades — changing field_type prunes invalid component slugs and config keys automatically.
+- [Field types](https://fastyoke.io/docs/lcap/field-types.md): The closed 9-type vocabulary every LCAP consumer resolves against. Type drives the default component; @ui/component overrides it within the type's allowed slug list.
+- [Formatting](https://fastyoke.io/docs/lcap/formatting.md): Currency, percent, date, and time formatting reference. Native Intl + a tiny dayjs-token parser. Storage stays canonical; locale + timezone applied at display only.
+- [Page Designer integration](https://fastyoke.io/docs/lcap/page-designer.md): The `entity_field` block binds a Page Designer block to one (entity, field, record) tuple and mounts `<SmartField mode="display" />`. Annotation drives display formatting — change once, every block follows.
+- [UI config reference](https://fastyoke.io/docs/lcap/ui-config.md): Every `@ui/*` key the resolver respects, organized by field_type. The annotation row's `ui_config_json` is the single source of truth.
+
+## Pages
+
+- [Pages](https://fastyoke.io/docs/pages.md): Block-based workspace pages that embed FastYoke data into your operator UI.
+
+## Recipes
+
+- [Recipes](https://fastyoke.io/docs/recipes.md): Focused walkthroughs for the common FastYoke integration patterns.
+- [CI Scripting](https://fastyoke.io/docs/recipes/ci-scripting.md): Automate tenant-scoped operations from CI using a long-lived FastYoke API token + curl.
+- [Extension Authoring](https://fastyoke.io/docs/recipes/extension-authoring.md): End-to-end — scaffold, iterate locally, publish to a tenant.
+- [CRUD UI with the SDK Hooks](https://fastyoke.io/docs/recipes/sdk-crud-ui.md): Full list + create + update + delete page for a user-defined entity kind using @fastyoke/sdk 0.2.0.
+- [Webhook Intake](https://fastyoke.io/docs/recipes/webhook-intake.md): Receive external events as FSM-backed jobs via a public form + invite token.
+
+## SDK
+
+- [SDK](https://fastyoke.io/docs/sdk.md): @fastyoke/sdk — build extensions, page designer blocks, and host integrations.
+- [SDK Quickstart](https://fastyoke.io/docs/sdk/quickstart.md): Install @fastyoke/sdk and mount your first extension.
+- [SDK Reference](https://fastyoke.io/docs/sdk/reference.md): Public exports of @fastyoke/sdk — provider, data hooks, realtime client, FsmTimeline / FsmViewer, WorkflowHistory, SmartField, and the typed resource clients.
+
+## Workflows
+
+- [Workflows](https://fastyoke.io/docs/workflows.md): Finite-state machines with sandboxed guards, declarative actions, and multi-version publishing.
+- [FSM Designer](https://fastyoke.io/docs/workflows/builder.md): Draw the graph, wire transitions, compose guards, declare actions.
