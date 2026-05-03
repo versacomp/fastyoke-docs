@@ -27,22 +27,27 @@ Extensions are React bundles the admin shell loads at runtime. The
 minimal shape is a default-exported component:
 
 ```tsx title="src/MyExtension.tsx"
-import { useCurrentUser } from '@fastyoke/sdk';
+import { useFastYoke } from '@fastyoke/sdk';
 
 export default function MyExtension() {
-  const user = useCurrentUser();
+  const { tenantId, projectId } = useFastYoke();
   return (
     <section>
-      <h2>Hello, {user.email}</h2>
-      <p>Tenant: {user.tenant_id}</p>
+      <h2>Hello from your extension</h2>
+      <p>Tenant: {tenantId}</p>
+      {projectId && <p>Project: {projectId}</p>}
     </section>
   );
 }
 ```
 
-`useCurrentUser()` reads from the `FastYokeContext` the host
+`useFastYoke()` reads from the `FastYokeContext` the host
 provides. When the extension is mounted, it's automatically wrapped
-in a provider carrying the signed-in user's context.
+in a provider carrying the active tenant/project plus typed clients
+(`schemas`, `jobs`, `entities`, `pages`, `files`, `extensions`).
+The host's signed-in identity is on the JWT those clients carry —
+read it server-side from `/api/v1/auth/me` if you need user
+fields beyond `tenantId`.
 
 ## The manifest
 
@@ -60,26 +65,29 @@ required keys:
 
 > **Scope enforcement**
 >
-> Scopes are advisory today — they're stamped into the JWT and
->   validated in a future phase. Declare them truthfully now so the
->   flip-the-switch migration is a no-op for your code.
+> Scopes are enforced at runtime. Every API call carrying an
+>   extension-scoped JWT or API token is checked against
+>   <code>required_scopes</code>; a missing scope rejects the request
+>   with HTTP 403. Declare every scope your code calls into.
 
 ## Bundling
 
 The host provides React, `react-dom`, and `@fastyoke/sdk` via an
 import map. Mark those as external when you bundle so the browser
-resolves them to the host's instances:
+resolves them to the host's instances. `fy build` and `fy dev` do
+this out of the box — pass `--entry` / `--outfile` to override
+defaults:
 
-```ts title="tsup.config.ts"
-import { defineConfig } from 'tsup';
+```bash
+# One-shot build with the right externals already configured.
+fy build
 
-export default defineConfig({
-  entry: ['src/index.tsx'],
-  format: ['esm'],
-  external: ['react', 'react-dom', 'react/jsx-runtime', '@fastyoke/sdk'],
-  dts: true,
-});
+# Watch mode against the same config, for live iteration.
+fy dev
 ```
+
+If you bundle by hand instead, the externals you must preserve are
+`react`, `react-dom`, `react/jsx-runtime`, and `@fastyoke/sdk`.
 
 ## Upload + install
 

@@ -48,3 +48,58 @@ Stored definitions are JSON. The renderer + validator share the
 same zod-backed contract on both sides of the wire. Old v1 rows are
 read-shimmed into v2 on every read, and every write emits v2, so
 you never have to migrate by hand.
+
+## Public submission API
+
+Anonymous (token-keyed) submissions go through:
+
+```
+GET  /api/v1/public/forms/:token             # fetch the form schema
+POST /api/v1/public/forms/:token/submit      # submit a payload
+```
+
+The token is what the admin shell shows you when you publish a form
+— the form's slug stays admin-side and is never exposed publicly.
+Submit body is `{ "payload_json": { /* keyed by field key */ } }`.
+
+The success response is:
+
+```json
+{
+  "submission_id": "01HXY…",
+  "form_definition_id": "01HXX…",
+  "definition_version": 7,
+  "processing_state": "received",
+  "submitted_at": "2026-05-03T18:14:22Z",
+  "pdf_download_url": "https://tenant.fly.dev/api/v1/public/attachments/…?sig=…&exp=…"
+}
+```
+
+`pdf_download_url` is a 15-minute HMAC-signed URL pointing at the
+PDF that was rendered for this submission. It's **omitted** when:
+
+- the form has no PDF template attached, or
+- the per-form `pdf_on_submit` flag is off, or
+- the render attempt failed (the submission itself still
+  succeeded — render failures don't block ingestion).
+
+A `--template nextjs` consumer app scaffolded with the
+[fy CLI](/docs/cli/commands#fy-init-name-template-kind) renders the
+download URL as a one-tap "Download your signed copy" link
+when present.
+
+## PDF templates
+
+Forms can carry a **PDF template** that gets rendered with each
+submission. Two kinds:
+
+- **AcroForm** — start from an existing fillable PDF; FastYoke
+  fills the form fields from your form payload, embeds signature
+  images as native PDF widgets, and flattens the result.
+- **Overlay** — start from any PDF; place value/signature regions
+  on the page coordinates you choose. Multi-page overlays and
+  per-submission signatures are supported.
+
+Both paths are deterministic: the same `payload_json` re-renders to
+a byte-identical PDF. Templates are configured per form in the
+admin shell's Forms Builder.

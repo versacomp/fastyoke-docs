@@ -170,15 +170,14 @@ full overview.
 
 ## What's not yet shipped
 
-- **Forms v2 internal switch** — the spec called for Forms v2's
-  existing `entity-field` block to render via ``
-  internally. Deferred — Forms v2 carries its own field-type
-  vocabulary independent of LCAP's `field_type` enum, so the
-  internal-rewire needs design work to avoid contracting two
-  separate type systems together.
 - **Cascading inspector embedded in Page Designer / Workspace**
   — currently editor-only; embedding is planned and will be
   Team-tier gated.
+
+The **Forms v2 internal SmartField switch** previously listed here
+has shipped — see the LCAP overview for the strict allow-list of
+form/annotation type pairs (`text↔string`, `textarea↔longtext`,
+etc.) that route through ``.
 
 ## Cross-references
 

@@ -28,11 +28,15 @@ cd shift-heatmap
 shift-heatmap/
 ├── manifest.json
 ├── package.json
-├── tsup.config.ts
+├── tsconfig.json
+├── README.md
 ├── src/
 │   └── index.tsx
 └── .gitignore
 ```
+
+The bundler is `fy build` / `fy dev` (esbuild under the hood) — no
+separate config file is generated.
 
 Install deps and you're ready:
 
@@ -70,15 +74,14 @@ Replace `src/index.tsx`:
 
 ```tsx
 import React from 'react';
-import { useCurrentUser, useFastYoke } from '@fastyoke/sdk';
+import { useFastYoke } from '@fastyoke/sdk';
 
 export default function ShiftHeatmap() {
-  const user = useCurrentUser();
-  const { jobs } = useFastYoke();
+  const { tenantId, jobs } = useFastYoke();
 
   const [count, setCount] = React.useState<number | null>(null);
   React.useEffect(() => {
-    void jobs.list({}).then((page) => setCount(page.items.length));
+    void jobs.list({}).then((rows) => setCount(rows.length));
   }, [jobs]);
 
   return (
@@ -87,7 +90,8 @@ export default function ShiftHeatmap() {
         <p style={{ color: '#6b7280', fontSize: '0.8rem' }}>
           Extension · acme.shift-heatmap
         </p>
-        <h1>Welcome, {user.email}</h1>
+        <h1>Shift heatmap</h1>
+        <p style={{ color: '#6b7280' }}>Tenant {tenantId}</p>
       </header>
       <p>
         Active jobs in this tenant: {count ?? <em>loading…</em>}
@@ -99,9 +103,14 @@ export default function ShiftHeatmap() {
 
 Two things are worth noting:
 
-- `useCurrentUser()` + `useFastYoke()` come from `@fastyoke/sdk`.
-  The host provides both via an import map, so your extension
-  shares state (React context, SDK client) with the shell.
+- `useFastYoke()` comes from `@fastyoke/sdk` and gives you the
+  active `tenantId`, `projectId`, and the typed clients (`jobs`,
+  `entities`, `schemas`, `pages`, `files`, `extensions`). The host
+  provides it via an import map, so your extension shares the same
+  React context and SDK clients with the shell.
+- `jobs.list()` resolves to a `JobResponse[]` array directly, not a
+  paginated `{ items }` object — read `.length` straight off the
+  result.
 - We're **not** importing from `react-dom` / mounting our own root.
   The host does that — your component is a child of
   `FastYokeProvider`.
@@ -181,7 +190,7 @@ The old version row stays in `tenant_extensions` but is flipped to
 |---|---|
 | "bundle rejected by security scan" | Inspect what the scanner flagged — usually a third-party dep with heuristic-positive code. Swap it or vendor a trimmed copy. |
 | Component renders blank | Check the browser console. Host vs extension React instance mismatch? Run the host via `preview`, not `serve`. |
-| Import map not resolving | Extensions must mark `react`, `react-dom`, and `@fastyoke/sdk` as **external** in the bundler — the scaffold's `tsup.config.ts` does this; don't remove it. |
+| Import map not resolving | Extensions must mark `react`, `react-dom`, and `@fastyoke/sdk` as **external** in the bundler — `fy build` / `fy dev` configure esbuild this way out of the box; don't bypass them by running esbuild directly without the same externals. |
 
 ## Related
 

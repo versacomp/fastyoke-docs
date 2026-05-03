@@ -41,14 +41,15 @@ declared set prominently in the upload confirmation dialog.
 Reject the upload if the scopes don't match what you expect from
 the extension's documented purpose.
 
-> **Scopes are advisory today**
+> **Scopes are enforced at runtime**
 >
-> Scope enforcement (runtime deny on a missing scope) is gated
->   behind a platform flag and will flip on in a later phase. Until
->   then, review scopes as a <em>trust signal</em>, not a security
->   boundary. The extension still runs under the signed-in user's
->   JWT — its effective permissions are a subset of the user's
->   regardless of scopes.
+> Every API call carrying an extension-scoped JWT or API token is
+>   checked against the manifest's <code>required_scopes</code> at
+>   the request boundary; a missing scope rejects the call with HTTP
+>   403. Review the scope list during install — it's both a trust
+>   signal and the active security boundary. The extension still
+>   runs under the signed-in user's JWT, so its effective permissions
+>   are a subset of the user's regardless of declared scopes.
 
 See the full [scope vocabulary](/docs/auth#scopes) in the Auth page.
 

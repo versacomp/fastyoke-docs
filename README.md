@@ -7,7 +7,7 @@ docs without rendering JavaScript.
 
 The content is automatically synced from FastYoke's private
 monorepo on every push to `main` — last updated
-2026-05-03T02:19:26.621Z.
+2026-05-03T17:41:27.615Z.
 
 ## Where to start
 

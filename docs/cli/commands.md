@@ -20,16 +20,43 @@ npm install --save-dev @fastyoke/cli
 npx fy --help
 ```
 
-### `fy init [name]`
+### `fy init [name] [--template <kind>]`
 
-Scaffold a new extension project in the current directory (or in
-`name/` if provided). Writes a `manifest.json`, `package.json`,
-`src/index.tsx`, a minimal `tsup`/esbuild config, and a `.gitignore`
-for the generated bundle.
+Scaffold a new project in the current directory (or in `name/` if
+provided). Two template variants:
 
-The scaffold imports `react` + `@fastyoke/sdk` as externals so
-they resolve through the host's import map — same rule your
-extension will follow at runtime.
+- **`--template extension`** (default) — a FastYoke admin extension.
+  Writes `manifest.json`, `package.json`, `tsconfig.json`,
+  `src/index.tsx`, `README.md`, and `.gitignore`. The scaffold
+  imports `react` + `@fastyoke/sdk` as externals so they resolve
+  through the host's import map — same rule your extension follows
+  at runtime. Build/dev/publish flow through `fy dev` / `fy build` /
+  `fy publish`.
+
+- **`--template nextjs`** — a standalone customer-facing Next.js app
+  (App Router, TypeScript, Tailwind) pre-wired against a tenant's
+  public form-submission and signed-URL PDF download endpoints.
+  Generates ~14 files including a starter `/forms/[token]` route
+  with a schema-driven renderer covering text / email / textarea /
+  checkbox / signature field types. Driven by `npm run dev` /
+  `npm run build` directly — `fy` lifecycle commands do not wrap
+  it.
+
+```bash
+# Default — extension scaffold.
+fy init my-extension
+
+# Standalone consumer app.
+fy init my-portal --template nextjs
+cd my-portal
+cp .env.local.example .env.local      # set FASTYOKE_TENANT_URL
+npm install
+npm run dev
+```
+
+The Next.js scaffold uses the **public submission token** for its
+form route (`/forms/<token>`), not the form's slug. The token is
+what `fy` shows you when you publish a form — keep it opaque.
 
 ### `fy dev`
 

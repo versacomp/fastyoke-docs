@@ -1465,11 +1465,15 @@ _Source: https://fastyoke.io/docs/cli_
 FastYoke ships two command-line surfaces — one each for the two
 distinct non-browser audiences:
 
-- **`@fastyoke/cli`** (binary name **`fy`**) — public npm package
-  for **extension authors**. Scaffolds a project from a template,
-  rebuilds the bundle in watch mode, and uploads the finished
+- **`@fastyoke/cli`** (binary name **`fy`**) — public npm package.
+  Two template variants: an **admin extension** (default) for
+  authors building inside the platform shell, and a **standalone
+  Next.js consumer app** pre-wired to a tenant's public form +
+  PDF endpoints for authors building customer-facing flows.
+  Rebuilds extension bundles in watch mode and uploads the finished
   artifact to a running tenant. Not a general-purpose API client;
-  it only does what the extension-authoring workflow needs.
+  it only does what the scaffolding + extension-authoring
+  workflows need.
 - **`fastyoke-admin`** — the operator CLI baked into the Docker
   image at `/app/fastyoke-admin`. Platform-level ops (super-admin
   lifecycle, Litestream backup hooks, tenant reassign/restore,
@@ -1491,6 +1495,7 @@ distinct non-browser audiences:
 | I want to... | Use |
 |---|---|
 | Scaffold a new extension project | `fy init` |
+| Scaffold a standalone Next.js consumer app | `fy init --template nextjs` |
 | Rebuild an extension in watch mode | `fy dev` |
 | Upload an extension bundle to a tenant | `fy publish` |
 | Create the first super-admin on deploy | `fastyoke-admin create-admin` |
@@ -1535,16 +1540,43 @@ npm install --save-dev @fastyoke/cli
 npx fy --help
 ```
 
-### `fy init [name]`
+### `fy init [name] [--template <kind>]`
 
-Scaffold a new extension project in the current directory (or in
-`name/` if provided). Writes a `manifest.json`, `package.json`,
-`src/index.tsx`, a minimal `tsup`/esbuild config, and a `.gitignore`
-for the generated bundle.
+Scaffold a new project in the current directory (or in `name/` if
+provided). Two template variants:
 
-The scaffold imports `react` + `@fastyoke/sdk` as externals so
-they resolve through the host's import map — same rule your
-extension will follow at runtime.
+- **`--template extension`** (default) — a FastYoke admin extension.
+  Writes `manifest.json`, `package.json`, `tsconfig.json`,
+  `src/index.tsx`, `README.md`, and `.gitignore`. The scaffold
+  imports `react` + `@fastyoke/sdk` as externals so they resolve
+  through the host's import map — same rule your extension follows
+  at runtime. Build/dev/publish flow through `fy dev` / `fy build` /
+  `fy publish`.
+
+- **`--template nextjs`** — a standalone customer-facing Next.js app
+  (App Router, TypeScript, Tailwind) pre-wired against a tenant's
+  public form-submission and signed-URL PDF download endpoints.
+  Generates ~14 files including a starter `/forms/[token]` route
+  with a schema-driven renderer covering text / email / textarea /
+  checkbox / signature field types. Driven by `npm run dev` /
+  `npm run build` directly — `fy` lifecycle commands do not wrap
+  it.
+
+```bash
+# Default — extension scaffold.
+fy init my-extension
+
+# Standalone consumer app.
+fy init my-portal --template nextjs
+cd my-portal
+cp .env.local.example .env.local      # set FASTYOKE_TENANT_URL
+npm install
+npm run dev
+```
+
+The Next.js scaffold uses the **public submission token** for its
+form route (`/forms/<token>`), not the form's slug. The token is
+what `fy` shows you when you publish a form — keep it opaque.
 
 ### `fy dev`
 
@@ -1900,14 +1932,15 @@ declared set prominently in the upload confirmation dialog.
 Reject the upload if the scopes don't match what you expect from
 the extension's documented purpose.
 
-> **Scopes are advisory today**
+> **Scopes are enforced at runtime**
 >
-> Scope enforcement (runtime deny on a missing scope) is gated
->   behind a platform flag and will flip on in a later phase. Until
->   then, review scopes as a <em>trust signal</em>, not a security
->   boundary. The extension still runs under the signed-in user's
->   JWT — its effective permissions are a subset of the user's
->   regardless of scopes.
+> Every API call carrying an extension-scoped JWT or API token is
+>   checked against the manifest's <code>required_scopes</code> at
+>   the request boundary; a missing scope rejects the call with HTTP
+>   403. Review the scope list during install — it's both a trust
+>   signal and the active security boundary. The extension still
+>   runs under the signed-in user's JWT, so its effective permissions
+>   are a subset of the user's regardless of declared scopes.
 
 See the full [scope vocabulary](/docs/auth#scopes) in the Auth page.
 
@@ -2039,6 +2072,61 @@ Stored definitions are JSON. The renderer + validator share the
 same zod-backed contract on both sides of the wire. Old v1 rows are
 read-shimmed into v2 on every read, and every write emits v2, so
 you never have to migrate by hand.
+
+## Public submission API
+
+Anonymous (token-keyed) submissions go through:
+
+```
+GET  /api/v1/public/forms/:token             # fetch the form schema
+POST /api/v1/public/forms/:token/submit      # submit a payload
+```
+
+The token is what the admin shell shows you when you publish a form
+— the form's slug stays admin-side and is never exposed publicly.
+Submit body is `{ "payload_json": { /* keyed by field key */ } }`.
+
+The success response is:
+
+```json
+{
+  "submission_id": "01HXY…",
+  "form_definition_id": "01HXX…",
+  "definition_version": 7,
+  "processing_state": "received",
+  "submitted_at": "2026-05-03T18:14:22Z",
+  "pdf_download_url": "https://tenant.fly.dev/api/v1/public/attachments/…?sig=…&exp=…"
+}
+```
+
+`pdf_download_url` is a 15-minute HMAC-signed URL pointing at the
+PDF that was rendered for this submission. It's **omitted** when:
+
+- the form has no PDF template attached, or
+- the per-form `pdf_on_submit` flag is off, or
+- the render attempt failed (the submission itself still
+  succeeded — render failures don't block ingestion).
+
+A `--template nextjs` consumer app scaffolded with the
+[fy CLI](/docs/cli/commands#fy-init-name-template-kind) renders the
+download URL as a one-tap "Download your signed copy" link
+when present.
+
+## PDF templates
+
+Forms can carry a **PDF template** that gets rendered with each
+submission. Two kinds:
+
+- **AcroForm** — start from an existing fillable PDF; FastYoke
+  fills the form fields from your form payload, embeds signature
+  images as native PDF widgets, and flattens the result.
+- **Overlay** — start from any PDF; place value/signature regions
+  on the page coordinates you choose. Multi-page overlays and
+  per-submission signatures are supported.
+
+Both paths are deterministic: the same `payload_json` re-renders to
+a byte-identical PDF. Templates are configured per form in the
+admin shell's Forms Builder.
 
 
 ---
@@ -3444,15 +3532,14 @@ full overview.
 
 ## What's not yet shipped
 
-- **Forms v2 internal switch** — the spec called for Forms v2's
-  existing `entity-field` block to render via ``
-  internally. Deferred — Forms v2 carries its own field-type
-  vocabulary independent of LCAP's `field_type` enum, so the
-  internal-rewire needs design work to avoid contracting two
-  separate type systems together.
 - **Cascading inspector embedded in Page Designer / Workspace**
   — currently editor-only; embedding is planned and will be
   Team-tier gated.
+
+The **Forms v2 internal SmartField switch** previously listed here
+has shipped — see the LCAP overview for the strict allow-list of
+form/annotation type pairs (`text↔string`, `textarea↔longtext`,
+etc.) that route through ``.
 
 ## Cross-references
 
@@ -4055,11 +4142,15 @@ cd shift-heatmap
 shift-heatmap/
 ├── manifest.json
 ├── package.json
-├── tsup.config.ts
+├── tsconfig.json
+├── README.md
 ├── src/
 │   └── index.tsx
 └── .gitignore
 ```
+
+The bundler is `fy build` / `fy dev` (esbuild under the hood) — no
+separate config file is generated.
 
 Install deps and you're ready:
 
@@ -4097,15 +4188,14 @@ Replace `src/index.tsx`:
 
 ```tsx
 import React from 'react';
-import { useCurrentUser, useFastYoke } from '@fastyoke/sdk';
+import { useFastYoke } from '@fastyoke/sdk';
 
 export default function ShiftHeatmap() {
-  const user = useCurrentUser();
-  const { jobs } = useFastYoke();
+  const { tenantId, jobs } = useFastYoke();
 
   const [count, setCount] = React.useState<number | null>(null);
   React.useEffect(() => {
-    void jobs.list({}).then((page) => setCount(page.items.length));
+    void jobs.list({}).then((rows) => setCount(rows.length));
   }, [jobs]);
 
   return (
@@ -4114,7 +4204,8 @@ export default function ShiftHeatmap() {
         <p style={{ color: '#6b7280', fontSize: '0.8rem' }}>
           Extension · acme.shift-heatmap
         </p>
-        <h1>Welcome, {user.email}</h1>
+        <h1>Shift heatmap</h1>
+        <p style={{ color: '#6b7280' }}>Tenant {tenantId}</p>
       </header>
       <p>
         Active jobs in this tenant: {count ?? <em>loading…</em>}
@@ -4126,9 +4217,14 @@ export default function ShiftHeatmap() {
 
 Two things are worth noting:
 
-- `useCurrentUser()` + `useFastYoke()` come from `@fastyoke/sdk`.
-  The host provides both via an import map, so your extension
-  shares state (React context, SDK client) with the shell.
+- `useFastYoke()` comes from `@fastyoke/sdk` and gives you the
+  active `tenantId`, `projectId`, and the typed clients (`jobs`,
+  `entities`, `schemas`, `pages`, `files`, `extensions`). The host
+  provides it via an import map, so your extension shares the same
+  React context and SDK clients with the shell.
+- `jobs.list()` resolves to a `JobResponse[]` array directly, not a
+  paginated `{ items }` object — read `.length` straight off the
+  result.
 - We're **not** importing from `react-dom` / mounting our own root.
   The host does that — your component is a child of
   `FastYokeProvider`.
@@ -4208,7 +4304,7 @@ The old version row stays in `tenant_extensions` but is flipped to
 |---|---|
 | "bundle rejected by security scan" | Inspect what the scanner flagged — usually a third-party dep with heuristic-positive code. Swap it or vendor a trimmed copy. |
 | Component renders blank | Check the browser console. Host vs extension React instance mismatch? Run the host via `preview`, not `serve`. |
-| Import map not resolving | Extensions must mark `react`, `react-dom`, and `@fastyoke/sdk` as **external** in the bundler — the scaffold's `tsup.config.ts` does this; don't remove it. |
+| Import map not resolving | Extensions must mark `react`, `react-dom`, and `@fastyoke/sdk` as **external** in the bundler — `fy build` / `fy dev` configure esbuild this way out of the box; don't bypass them by running esbuild directly without the same externals. |
 
 ## Related
 
@@ -4738,22 +4834,27 @@ Extensions are React bundles the admin shell loads at runtime. The
 minimal shape is a default-exported component:
 
 ```tsx title="src/MyExtension.tsx"
-import { useCurrentUser } from '@fastyoke/sdk';
+import { useFastYoke } from '@fastyoke/sdk';
 
 export default function MyExtension() {
-  const user = useCurrentUser();
+  const { tenantId, projectId } = useFastYoke();
   return (
     <section>
-      <h2>Hello, {user.email}</h2>
-      <p>Tenant: {user.tenant_id}</p>
+      <h2>Hello from your extension</h2>
+      <p>Tenant: {tenantId}</p>
+      {projectId && <p>Project: {projectId}</p>}
     </section>
   );
 }
 ```
 
-`useCurrentUser()` reads from the `FastYokeContext` the host
+`useFastYoke()` reads from the `FastYokeContext` the host
 provides. When the extension is mounted, it's automatically wrapped
-in a provider carrying the signed-in user's context.
+in a provider carrying the active tenant/project plus typed clients
+(`schemas`, `jobs`, `entities`, `pages`, `files`, `extensions`).
+The host's signed-in identity is on the JWT those clients carry —
+read it server-side from `/api/v1/auth/me` if you need user
+fields beyond `tenantId`.
 
 ## The manifest
 
@@ -4771,26 +4872,29 @@ required keys:
 
 > **Scope enforcement**
 >
-> Scopes are advisory today — they're stamped into the JWT and
->   validated in a future phase. Declare them truthfully now so the
->   flip-the-switch migration is a no-op for your code.
+> Scopes are enforced at runtime. Every API call carrying an
+>   extension-scoped JWT or API token is checked against
+>   <code>required_scopes</code>; a missing scope rejects the request
+>   with HTTP 403. Declare every scope your code calls into.
 
 ## Bundling
 
 The host provides React, `react-dom`, and `@fastyoke/sdk` via an
 import map. Mark those as external when you bundle so the browser
-resolves them to the host's instances:
+resolves them to the host's instances. `fy build` and `fy dev` do
+this out of the box — pass `--entry` / `--outfile` to override
+defaults:
 
-```ts title="tsup.config.ts"
-import { defineConfig } from 'tsup';
+```bash
+# One-shot build with the right externals already configured.
+fy build
 
-export default defineConfig({
-  entry: ['src/index.tsx'],
-  format: ['esm'],
-  external: ['react', 'react-dom', 'react/jsx-runtime', '@fastyoke/sdk'],
-  dts: true,
-});
+# Watch mode against the same config, for live iteration.
+fy dev
 ```
+
+If you bundle by hand instead, the externals you must preserve are
+`react`, `react-dom`, `react/jsx-runtime`, and `@fastyoke/sdk`.
 
 ## Upload + install
 

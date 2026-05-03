@@ -7,11 +7,15 @@
 FastYoke ships two command-line surfaces — one each for the two
 distinct non-browser audiences:
 
-- **`@fastyoke/cli`** (binary name **`fy`**) — public npm package
-  for **extension authors**. Scaffolds a project from a template,
-  rebuilds the bundle in watch mode, and uploads the finished
+- **`@fastyoke/cli`** (binary name **`fy`**) — public npm package.
+  Two template variants: an **admin extension** (default) for
+  authors building inside the platform shell, and a **standalone
+  Next.js consumer app** pre-wired to a tenant's public form +
+  PDF endpoints for authors building customer-facing flows.
+  Rebuilds extension bundles in watch mode and uploads the finished
   artifact to a running tenant. Not a general-purpose API client;
-  it only does what the extension-authoring workflow needs.
+  it only does what the scaffolding + extension-authoring
+  workflows need.
 - **`fastyoke-admin`** — the operator CLI baked into the Docker
   image at `/app/fastyoke-admin`. Platform-level ops (super-admin
   lifecycle, Litestream backup hooks, tenant reassign/restore,
@@ -33,6 +37,7 @@ distinct non-browser audiences:
 | I want to... | Use |
 |---|---|
 | Scaffold a new extension project | `fy init` |
+| Scaffold a standalone Next.js consumer app | `fy init --template nextjs` |
 | Rebuild an extension in watch mode | `fy dev` |
 | Upload an extension bundle to a tenant | `fy publish` |
 | Create the first super-admin on deploy | `fastyoke-admin create-admin` |
