@@ -43,7 +43,7 @@ distinct non-browser audiences:
 | Create the first super-admin on deploy | `fastyoke-admin create-admin` |
 | Restore a tenant's SQLite file from backup | `fastyoke-admin restore-tenant` (or `/super/tenants/:id`) |
 | Move a tenant to a different Fly machine | `fastyoke-admin reassign-tenant` (or `/super/tenants/:id`) |
-| Check cutover readiness | `fastyoke-admin phase13-status` (or `/super/maintenance`) |
+| Check cutover readiness | `fastyoke-admin mirror-cleanup-status` (or `/super/maintenance`) |
 
 ## What the CLIs **don't** do
 

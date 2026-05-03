@@ -183,23 +183,31 @@ ADMIN_EMAIL=old@example.com \
 Three-phase ops sequence. See
 [DEPLOY_CHECKLIST.md](../auth) for the full runbook.
 
+> **Renamed from `phase13-*` — old names still work**
+>
+> These two commands were previously named <code>phase13-status</code> and
+>   <code>phase13-cutover</code>. Both old names continue to work as
+>   deprecated aliases — they print a stderr warning and will be
+>   removed in the <code>3.0</code> release. Update CI / runbooks at
+>   your convenience.
+
 ```bash
 # Preflight — reports unmigrated tenant ids, exits non-zero
 # when any remain. CI-friendly.
-/app/fastyoke-admin phase13-status
+/app/fastyoke-admin mirror-cleanup-status
 
 # Destructive — drops the platform DB's tenant-scoped mirror
 # tables + VACUUMs. Refuses to run when any tenant still has
 # db_file_path IS NULL. Idempotent (DROP TABLE IF EXISTS).
-/app/fastyoke-admin phase13-cutover           # dry run — prints plan
-/app/fastyoke-admin phase13-cutover --confirm # executes
+/app/fastyoke-admin mirror-cleanup-cutover           # dry run — prints plan
+/app/fastyoke-admin mirror-cleanup-cutover --confirm # executes
 ```
 
 > **Web-UI equivalent**
 >
 > <code>/super/maintenance</code> shows the same preflight data
 >   and provides a typed-confirmation cutover button. The CLI is
->   still the only way to run <code>phase13-status</code> from
+>   still the only way to run <code>mirror-cleanup-status</code> from
 >   CI for an automated readiness gate.
 
 See [Authentication](/docs/auth) for how these tokens are validated
