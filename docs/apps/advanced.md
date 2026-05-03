@@ -1,6 +1,6 @@
 # Advanced App Builder
 
-> Enterprise SPA-delivery surface — artifacts, health, handoff zip, and the template / LLM-authored extension generators.
+> Enterprise SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
 
 # Advanced App Builder
 
@@ -20,7 +20,7 @@ doc is the admin-facing rewrite.
 | **Artifacts** | Two markdown documents — `engineering_spec_md` and `feature_phases_md` — that describe the app's SPA shape. Authored by the admin (or the AI Designer). |
 | **Nav + page health** | Every nav entry classified as `ok` / `missing_page` / `orphaned_extension`, with per-row deep links. |
 | **Handoff zip** | One-click download with both markdowns + a manifest stub + a README for an external SDK developer. |
-| **Generate extension** | Produce a working extension bundle from the artifacts — template or LLM-authored. |
+| **Generate extension** | Produce a working extension bundle — via the Studio wizard or LLM-authored. |
 
 ## Authoring artifacts with AI
 
@@ -56,28 +56,44 @@ call is metered regardless.
 
 ## Generate extension
 
-The generator turns your `engineering_spec` + `feature_phases`
-markdown into a scan-clean ES-module extension bundle the host
-knows how to load. Two synthesis modes, three delivery modes:
+The generator turns your annotated entities + chosen layout +
+brand into a scan-clean ES-module extension bundle the host
+knows how to load. Two synthesis paths:
 
-### Synth modes
+### Synth paths
 
-| Mode | Output | When to use |
+| Path | Output | When to use |
 |---|---|---|
-| **Template** | Deterministic stub — same inputs → identical bytes. Embeds the two markdowns as `<pre>` blocks and prints a disclaimer. | First pass; scaffolding; CI / automation. Runs offline, costs $0. |
-| **LLM-authored** | Claude Opus 4.7 authors a real React functional component from your artifacts. Every call is non-deterministic. | Ready to ship a working UI. ≈ $0.05 per call. |
+| **Studio wizard** | Deterministic — same picks → identical bytes. A 4-step wizard (Layout → Branding → Entities → Review) emits a themed, multi-page React/Tailwind app: per-entity list / detail / new / edit pages, plus a textual workflow viewer + advance-state buttons on detail pages of FSM-bearing entities. | The standard path. Free, no LLM, predictable. |
+| **LLM-authored** | Claude Opus 4.7 authors a bespoke React functional component from your `engineering_spec` + `feature_phases` markdown. Every call is non-deterministic. | Bespoke UI shaped by prose — when "list / detail / form" doesn't fit the requirement. ≈ $0.05 per call. |
 
-Pick the mode with the segmented control above the Download /
-Install buttons. LLM mode is disabled until an Anthropic key is
-stored — see [Setup](#setup-for-llm-mode) below.
+Pick the path with the segmented control above the action
+buttons. LLM mode is disabled until an Anthropic key is stored —
+see [Setup](#setup-for-llm-mode) below.
 
-### Delivery modes
+For the full Studio walkthrough — what each step does, how the
+preset palettes work, what the generated bundle contains — see
+the [Studio wizard](/docs/apps/studio-wizard) page.
 
-| Mode | Behavior |
-|---|---|
-| **Download** | Streams a three-file zip: `manifest.json`, `index.mjs`, `README.md`. Nothing persists server-side beyond a `delivery.last_generated_at` timestamp. |
-| **Install** | Inserts a `tenant_extensions` row with `is_active = 0`. The admin reviews + activates manually from the [Extensions page](/admin/extensions). |
-| **Preview** *(LLM only)* | Returns the authored source as JSON and opens a modal. No persistence. Used internally by the Install button in LLM mode — you don't call it directly from the UI. |
+### Studio install flow
+
+Clicking **Open Studio…** launches the wizard modal. The wizard
+collects your selections without hitting the server. Only on
+**Install** at the Review step does the client:
+
+1. `POST /api/v1/tenant/themes` to materialize the chosen palette
+   as a tenant theme (named ` theme` by default — editable
+   in the Review step).
+2. `POST .../generate-extension` with `mode: "install", synth:
+   "studio"`, the new `theme_id`, the chosen `layout`, and the
+   ticked `entity_names`.
+
+Both calls are scoped to the authenticated tenant. If theme
+creation fails, the wizard surfaces the error inline and never
+calls generate. If generate fails after theme creation, the
+wizard names the orphaned theme so you can delete it from
+[`/admin/themes`](/admin/themes) (or retry the install — same
+theme, no orphan).
 
 ### LLM install flow (preview-then-confirm)
 
@@ -96,18 +112,30 @@ attempt. If you want the same source twice, use **Download** after
 Preview-then-Confirm and re-install locally via the Extensions
 page.
 
+### Delivery modes
+
+| Mode | Behavior |
+|---|---|
+| **Open Studio…** *(Studio only)* | Opens the wizard modal. Install + Download buttons live inside the wizard's Review step. |
+| **Download** *(LLM only)* | Streams a three-file zip: `manifest.json`, `index.mjs`, `README.md`. Nothing persists server-side beyond a `delivery.last_generated_at` timestamp. |
+| **Install** *(LLM only)* | Runs the preview-then-confirm flow above. |
+| **Preview** *(LLM only)* | Returns the authored source as JSON and opens a modal. No persistence. Used internally by the Install button — you don't call it directly from the UI. |
+
 ### What you get out
 
-Regardless of mode, the manifest advertises exactly one page at
-`/ext/<id>/<app-slug>` and `required_scopes: ["data:read"]`. Both
-are **pinned** server-side — editing them requires downloading,
-editing the manifest, and re-uploading through the Extensions
-page.
+Regardless of path, the manifest advertises exactly one page at
+`/ext/<id>/<app-slug>`. **Required scopes are pinned per path**:
+Studio bundles ship `["data:read", "data:write"]` (CRUD always
+writes); LLM bundles get scopes inferred from the authored
+source (read-only by default; widened to `data:write` if the
+bundle calls `useCreateEntity`, etc. — see [Real-data
+extensions](#real-data-extensions-sdk-020) below).
 
 Installed rows are always `is_active = 0`. The admin must
-explicitly activate from `/admin/extensions`. Deliberate: LLM
-output is untrusted input and the scanner + heuristic validator
-are defenses-in-depth, not guarantees.
+explicitly activate from `/admin/extensions`. Deliberate for
+LLM output (untrusted input — the scanner + heuristic validator
+are defenses-in-depth). Same gate applies to Studio bundles
+even though they're deterministic — no exceptions.
 
 ## Setup for LLM mode
 
@@ -149,7 +177,7 @@ admin-readable in the red error banner below the buttons:
 
 | Status | Cause | Fix |
 |---|---|---|
-| `400 Bad Request` | Blank artifacts; `synth` not in `template`/`llm`; `mode` not in `download`/`install`/`preview`. | Fill in the markdown editors above. |
+| `400 Bad Request` | LLM mode: blank artifacts. Studio mode: missing `layout`, missing `theme_id`, theme not owned by tenant, or empty `entity_names`. Either mode: invalid `synth` or `mode` value. | Fill in the markdown editors (LLM); finish the wizard's required fields (Studio). |
 | `422 Unprocessable` | LLM mode: missing Anthropic key → error points at `/admin/settings/llm`. Or: validator rejected the authored bundle (forbidden token, missing import, size cap). | Add the key, or re-roll via Install (cheaper to retry than to debug). |
 | `502 Bad Gateway` | Anthropic API returned an error or timed out. | Transient — try again in a minute. Check your Anthropic account is in good standing. |
 | `500 Internal` | Our bug. | File an issue with the request timestamp + tenant id. |
@@ -166,7 +194,7 @@ model, bundle bytes, violation count, outcome) via
 Rough estimate at ship: $0.05 per LLM call, scaled by your
 organization's `wholesale_discount_multiplier`. The Install
 flow uses two calls (preview + confirm), so ≈ $0.10 per
-installed extension. Template mode is free (no upstream).
+installed extension. Studio mode is free (no upstream).
 
 Tunable — `ResourceType::LlmGenerate::base_cost` in
 `backend/src/metering.rs` is the canonical value; adjust once
@@ -174,8 +202,8 @@ you have real spend data.
 
 ## Real-data extensions (SDK 0.2.0+)
 
-Generated bundles are no longer limited to static markdown. The
-template and LLM-authored paths both have access to the full
+Generated bundles read and write live tenant data. The Studio
+wizard and the LLM-authored path both have access to the full
 [SDK hook surface](/docs/sdk/reference#react-data-hooks), so an
 extension can list entity records, render FSM workflow state,
 and mutate tenant data through the exact same backend API the
@@ -183,18 +211,23 @@ admin shell uses.
 
 ### What this means for generated bundles
 
-- **Default template** — the `index.mjs` scaffold now renders
-  live panels (active workflows, recent jobs) instead of a static
-  artifact preview. `npm run build:sdk` ships these
-  hooks in the package; the template imports them directly.
+- **Studio wizard** — list, detail, new, and edit pages compose
+  `` from each entity's annotations, so labels,
+  required flags, enum options, and field types all flow from
+  `/admin/entities/:name/annotations` automatically. FSM
+  detail pages additionally mount `` with the
+  current state badge, advance buttons (one per legal outgoing
+  transition), and the merged event-log history.
 - **LLM-authored** — the system prompt enumerates every shipped
   hook with signatures + three worked examples (paginated
   `useEntities`, `useJob` + ``, transition
   button). The model is forbidden from emitting `const SEED_*` /
   `const FAKE_*` stubs — prompt-level enforcement; slips get
   caught in human review at the Preview modal.
-- **Scope inference** — a pre-install analyzer greps the
-  generated source for hook names and widens the manifest's
+- **Scope inference** — Studio bundles always ship
+  `["data:read", "data:write"]` (CRUD always writes). LLM bundles
+  go through a pre-install analyzer that greps the generated
+  source for hook names and widens the manifest's
   `required_scopes`. A bundle that calls `useCreateEntity` lands
   with `["data:read", "data:write"]`; `useTransitionJob` adds
   `"workflow:execute"`; `useCancelJob` adds `"workflow:admin"`.

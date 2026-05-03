@@ -92,9 +92,11 @@ actions:
 
 - **Handoff zip** — download the artifacts + manifest stub for
   an SDK developer to pick up.
-- **Generate extension** — produce an extension bundle from the
-  artifacts. Two synth modes: deterministic **Template** (free)
-  and **LLM-authored** (Claude Opus 4.7, ≈ $0.05 per call).
+- **Generate extension** — produce an extension bundle. Two
+  paths: the deterministic **Studio wizard** (free, builds a
+  themed multi-page app from your annotated entities) and
+  **LLM-authored** (Claude Opus 4.7, ≈ $0.05 per call, for
+  bespoke UI shaped by prose).
 
 See the [Advanced App Builder](/docs/apps/advanced) page for the
 full surface, including LLM setup + failure modes.

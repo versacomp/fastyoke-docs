@@ -18,8 +18,8 @@
 ## Apps
 
 - [Apps](https://fastyoke.io/docs/apps.md): Group pages under a shared slug + theme; the user-facing face of your tenant.
-- [Advanced App Builder](https://fastyoke.io/docs/apps/advanced.md): Enterprise SPA-delivery surface — artifacts, health, handoff zip, and the template / LLM-authored extension generators.
-- [CRUD Scaffold Builder](https://fastyoke.io/docs/apps/crud-scaffold.md): Deterministic template-driven CRUD generator — pick annotated entities, install a ready-to-use list/detail/new/edit extension.
+- [Advanced App Builder](https://fastyoke.io/docs/apps/advanced.md): Enterprise SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
+- [Studio wizard](https://fastyoke.io/docs/apps/studio-wizard.md): Wix-style 4-step builder — pick a layout, brand it, choose entities, ship a themed multi-page extension.
 
 ## Auth
 

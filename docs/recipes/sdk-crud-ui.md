@@ -8,7 +8,7 @@ A single-page UI that lists, creates, updates, and deletes records of one entity
 
 > **Note**
 >
-> **For a fast standard-shape CRUD app, use the [CRUD Scaffold Builder](/docs/apps/crud-scaffold) instead.** Pick annotated entities in the Advanced App Builder and get a ready-to-use list + detail + new + edit extension without writing any code. Follow this recipe when you need bespoke CRUD UI or want to learn how the hooks fit together.
+> **For a fast standard-shape CRUD app, use the [Studio wizard](/docs/apps/studio-wizard) instead.** A 4-step builder (layout → branding → entities → review) ships a themed multi-page extension from your annotated entities — no code. Follow this recipe when you need bespoke CRUD UI in your own Next.js app outside the extension surface, or when you want to learn how the hooks fit together.
 
 ## What you'll build
 

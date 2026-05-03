@@ -165,8 +165,8 @@ Effects on emitted bundles:
 
 Re-emitting a bundle (admin clicks Generate again) replaces
 pre-LCAP output; existing installed bundles keep working
-unchanged. See `/docs/apps/crud-scaffold` for the full
-overview.
+unchanged. See [Studio wizard](/docs/apps/studio-wizard) for the
+full overview.
 
 ## What's not yet shipped
 
