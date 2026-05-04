@@ -161,7 +161,7 @@ _Source: https://fastyoke.io/pricing_
   </h2>
 
   <div className="mt-8 grid gap-8 text-left sm:grid-cols-2">
-    <div>
+    <div id="hobby">
       <h3 className="font-semibold text-[var(--brand-text-primary)]">
         What's included in Hobby?
       </h3>
@@ -433,6 +433,91 @@ requests, breach reports, EU/UK representative inquiries.
 [security@fastyoke.io](mailto:security@fastyoke.io) — anything
 that looks like an active vulnerability.
 
+</section>
+
+
+---
+
+# Free Online Form Builder — FastYoke Hobby Plan
+
+> Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
+
+_Source: https://fastyoke.io/free-forms_
+
+<Hero
+  eyebrow={<span style={{color: 'var(--brand-primary)'}}>HOBBY PLAN · FREE FOREVER</span>}
+  title={<>Build forms for <em>free</em>.<br/>No vendor lock-in.</>}
+  subtitle="The same form builder our enterprise customers ship to production — available free for personal projects and small businesses on the Hobby plan."
+  actions={
+    <>
+      
+        Start free — no credit card
+      
+      
+        Read the docs
+      
+    </>
+  }
+/>
+
+<section className="mx-auto max-w-3xl px-4 pb-12 text-center">
+  <p className="text-base leading-relaxed text-[var(--brand-text-secondary)]">
+    Most form builders trap your data, watermark your pages, and make you pay just to remove their logo. <strong className="text-[var(--brand-text-primary)]">FastYoke takes the opposite approach.</strong> Build unlimited forms on the Hobby plan, host them on your own domain when you upgrade, and export your data any time you want.
+  </p>
+</section>
+
+<section className="mx-auto max-w-6xl px-4 pb-4 text-center">
+  <p className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-secondary)]">
+    What you get on Hobby
+  </p>
+  <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--brand-text-primary)]">
+    Every form feature, no asterisks
+  </h2>
+</section>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+<section className="mx-auto max-w-6xl px-4 py-16 text-center">
+  <p className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-secondary)]">
+    Who it's for
+  </p>
+  <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--brand-text-primary)]">
+    Built for both sides of the desk
+  </h2>
+</section>
+
+  <FeatureCard
+    title="Personal projects"
+    description={<>Side projects, hobbyist communities, family events, club memberships. Run an annual sign-up sheet without paying a SaaS bill — the Hobby plan is <strong>free forever</strong>, no card on file, no usage cliff.</>}
+  />
+  <FeatureCard
+    title="Small businesses"
+    description={<>Intake forms, customer waivers, vendor onboarding, contact requests. Everything a $30/month form builder gives you, plus PDF generation and file scanning, plus the option to upgrade to a Pro plan when you want a custom domain or your own brand.</>}
+  />
+
+<section className="mx-auto max-w-3xl px-4 py-16">
+  <h2 className="mb-4 text-center text-2xl font-semibold tracking-tight text-[var(--brand-text-primary)]">
+    Ready when your form is.
+  </h2>
+  <p className="text-center text-base leading-relaxed text-[var(--brand-text-secondary)]">
+    Sign up in under a minute. Build your first form in five. When you outgrow the Hobby plan, the upgrade path is one click — and your forms, themes, and submissions come with you.
+  </p>
+  <div className="mt-8 flex flex-wrap justify-center gap-3">
+    
+      Start free — no credit card
+    
+    
+      Compare plans
+    
+  </div>
 </section>
 
 

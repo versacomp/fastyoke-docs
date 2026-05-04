@@ -8,7 +8,7 @@
   </h2>
 
   <div className="mt-8 grid gap-8 text-left sm:grid-cols-2">
-    <div>
+    <div id="hobby">
       <h3 className="font-semibold text-[var(--brand-text-primary)]">
         What's included in Hobby?
       </h3>

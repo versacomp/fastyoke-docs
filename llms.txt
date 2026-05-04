@@ -6,6 +6,7 @@
 - [FastYoke — The Open-Architecture aPaaS](https://fastyoke.io/index.md): Build at the speed of low-code, perform at the speed of the edge, leave whenever you want. Multi-tenant FSM platform for ISVs who refuse vendor lock-in.
 - [Pricing — FastYoke](https://fastyoke.io/pricing.md): Simple pricing that scales from a side project to a regulated fleet. Free with every Vercel Marketplace install; paid tiers on request.
 - [Privacy Notice — FastYoke](https://fastyoke.io/privacy.md): How FastYoke handles personal data submitted through public forms, account info, and product telemetry. Plain-language summary plus the data subject's rights.
+- [Free Online Form Builder — FastYoke Hobby Plan](https://fastyoke.io/free-forms.md): Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
 
 ## Overview
 
