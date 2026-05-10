@@ -26,6 +26,17 @@ Click **Add state**, give it a label. One state per FSM is marked
 Drag from one node's edge-handle to another. The transition
 side-panel opens:
 
+> **Self-loops are supported**
+>
+> Drag a transition from a node back to itself to create a
+>   **self-loop** — a transition whose <code>from</code> and
+>   <code>to</code> are the same state. The job stays put but the
+>   event still fires, the guard still evaluates, and the event log
+>   still gets a row. Useful for audit-only events ("note added"),
+>   idempotent retries while waiting on a forward guard, and counter
+>   bumps in the payload. See <a href="/docs/workflows">Workflows →
+>   Self-loops are first-class</a> for the full pattern.
+
 ### Event type
 
 Required. Snake-case identifier (e.g. `mark_processed`,
