@@ -89,6 +89,10 @@
 - [SDK Quickstart](https://fastyoke.io/docs/sdk/quickstart.md): Install @fastyoke/sdk and mount your first extension.
 - [SDK Reference](https://fastyoke.io/docs/sdk/reference.md): Public exports of @fastyoke/sdk — provider, data hooks, realtime client, FsmTimeline / FsmViewer, WorkflowHistory, SmartField, and the typed resource clients.
 
+## Security
+
+- [PII / SPI Field Encryption](https://fastyoke.io/docs/security/encryption.md): Tag entity-field annotations or form-field schemas with `is_pii` to encrypt their values at rest under a per-tenant key. Available as a $19/mo add-on at every tier.
+
 ## Workflows
 
 - [Workflows](https://fastyoke.io/docs/workflows.md): Finite-state machines with sandboxed guards, declarative actions, and multi-version publishing.
