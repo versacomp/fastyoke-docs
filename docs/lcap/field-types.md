@@ -52,21 +52,27 @@ resolver console-warns and falls back to the type's default).
 
 `richtext` / `markdown` / `code` resolve to lazy peer packages
 (`@fastyoke/lcap-richtext`, `@fastyoke/lcap-markdowneditor`,
-`@fastyoke/lcap-codeeditor`). When the peer package isn't
-installed, the resolver falls back to a plain ``
-with a one-time `console.warn`.
+`@fastyoke/lcap-codeeditor`). These three packages are not yet
+published to npm — the resolver therefore falls back to a plain
+`` with a one-time `console.warn` for every consumer
+today, and will swap to the rich UI automatically once the peer
+packages are released. See the callout below.
 
-> **Heavy-editor peer packages — installed separately**
+> **Heavy-editor peer packages — preview, not yet on npm**
 >
-> The richtext / markdown / code components ship as separate
-> npm packages so the SDK base bundle stays small. Install
-> `@fastyoke/lcap-richtext`, `@fastyoke/lcap-codeeditor`, or
-> `@fastyoke/lcap-markdowneditor` to enable the rich
-> rendering for the matching `@ui/component` slug. Without
-> the package installed, `` falls back to a
-> plain `` with a one-time console warning;
-> content shape (HTML / markdown / source) stays compatible
-> across the swap.
+> The richtext / markdown / code components are designed to
+> ship as separate npm packages so the SDK base bundle stays
+> small. **The three packages — `@fastyoke/lcap-richtext`,
+> `@fastyoke/lcap-codeeditor`, `@fastyoke/lcap-markdowneditor`
+> — are not yet published to the public npm registry.** Until
+> they land, every consumer hits the SDK's built-in fallback:
+> `` lazy-imports the package, catches the
+> 404, and renders a plain `` with a one-time
+> console warning. Content shape (HTML / markdown / source)
+> stays compatible, so a project that authors against the
+> `richtext` / `markdown` / `code` slugs today will swap
+> to the rich UI automatically once the peer packages are
+> released.
 
 ## Storage shapes
 

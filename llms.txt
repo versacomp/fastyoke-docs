@@ -22,6 +22,7 @@
 ## CLI
 
 - [CLI](https://fastyoke.io/docs/cli.md): fy for extension authors + fastyoke-admin for operators.
+- [fy-app.json Spec](https://fastyoke.io/docs/cli/app-spec.md): The versioned source-of-truth contract that fy app create and fy app add-entity read and write.
 - [Command Reference](https://fastyoke.io/docs/cli/commands.md): Every subcommand for fy (extension authoring) and fastyoke-admin (operator ops).
 
 ## Deprecation Policy

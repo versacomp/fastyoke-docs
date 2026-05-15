@@ -8,11 +8,13 @@ FastYoke ships two command-line surfaces — one each for the two
 distinct non-browser audiences:
 
 - **`@fastyoke/cli`** (binary name **`fy`**) — public npm package.
-  Two template variants: an **admin extension** (default) for
-  authors building inside the platform shell, and a **standalone
-  Next.js consumer app** pre-wired to a tenant's public form +
-  PDF endpoints for authors building customer-facing flows.
-  Rebuilds extension bundles in watch mode and uploads the finished
+  Covers three authoring workflows: a single-extension scaffold
+  (`fy init`, with **admin extension** and **standalone Next.js
+  consumer app** template variants), a full-app scaffold
+  (`fy app create` / `fy app add-entity`) that emits a typed CRUD
+  app from an entity + FSM spec, and a machine-readable discovery
+  manifest (`fy capabilities`) for LLM agents and tooling.
+  Rebuilds bundles in watch mode and uploads the finished
   artifact to a running tenant. Not a general-purpose API client;
   it only does what the scaffolding + extension-authoring
   workflows need.
@@ -38,8 +40,11 @@ distinct non-browser audiences:
 |---|---|
 | Scaffold a new extension project | `fy init` |
 | Scaffold a standalone Next.js consumer app | `fy init --template nextjs` |
+| Scaffold a full app extension from an entity + FSM spec | `fy app create` |
+| Add another entity to an existing app project | `fy app add-entity ` |
 | Rebuild an extension in watch mode | `fy dev` |
 | Upload an extension bundle to a tenant | `fy publish` |
+| Discover CLI commands + flags as JSON (for LLM agents) | `fy capabilities` |
 | Create the first super-admin on deploy | `fastyoke-admin create-admin` |
 | Restore a tenant's SQLite file from backup | `fastyoke-admin restore-tenant` (or `/super/tenants/:id`) |
 | Move a tenant to a different Fly machine | `fastyoke-admin reassign-tenant` (or `/super/tenants/:id`) |

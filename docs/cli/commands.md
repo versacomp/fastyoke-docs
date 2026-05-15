@@ -6,9 +6,16 @@
 
 ## `@fastyoke/cli` / `fy` (extension authors)
 
-The public npm package ships a single binary named **`fy`**. Four
-subcommands covering the extension-authoring loop — scaffold,
-iterate, publish.
+The public npm package ships a single binary named **`fy`**. The
+subcommands cover three workflows:
+
+- **Extension authoring** (`init` / `dev` / `build` / `publish`)
+  — scaffold a single React extension and ship it to a tenant.
+- **App scaffolding** (`app create` / `app add-entity`) — generate
+  a full app extension from an entity + FSM spec, including Zod
+  schemas, typed React-Query hooks, and CRUD pages.
+- **Discovery** (`capabilities`) — emit a JSON manifest of every
+  command, flag, and FSM constraint for AI agents and tooling.
 
 ```bash title="global"
 npm install -g @fastyoke/cli
@@ -102,11 +109,146 @@ logging.
 
 > **No generic API surface**
 >
-> <code>fy</code> only covers extension authoring. There are no
->   `fy schemas list` / `fy jobs transition` / `fy entities get`
->   commands. If you need to call the tenant API from CI, use plain{' '}
->   <code>curl</code> / <code>httpx</code> with a tenant JWT — see{' '}
->   <a href="/docs/auth">Authentication</a>.
+> <code>fy</code> only covers extension authoring and app
+>   scaffolding. There are no `fy schemas list` / `fy jobs transition`
+>   / `fy entities get` commands. If you need to call the tenant API
+>   from CI, use plain <code>curl</code> / <code>httpx</code> with a
+>   tenant JWT — see <a href="/docs/auth">Authentication</a>.
+
+### `fy app create [name]`
+
+Scaffold a full **app extension** from a single entity + FSM
+spec. Where `fy init` gives you an empty React extension shell,
+`fy app create` generates a typed, working CRUD app you can
+publish unchanged: Zod schemas, React-Query hooks, list / detail
+/ form pages, a dashboard, and the manifest wiring.
+
+Interactive by default — every prompt has a matching `--flag`
+for headless / AI-agent use. With all four spec flags supplied
+plus `--yes`, the command writes the project tree without
+prompting.
+
+```bash
+# Interactive — prompts for entity name, fields, states, transitions.
+fy app create my-orders
+
+# Headless — same spec, no prompts.
+fy app create my-orders \
+  --entity Order \
+  --fields "ref:string,amount:number" \
+  --states "pending,fulfilled,cancelled" \
+  --initial pending \
+  --transitions "pending:fulfilled:fulfill,pending:cancelled:cancel" \
+  --yes
+```
+
+| Flag | Description |
+|---|---|
+| `--entity ` | Entity name in **PascalCase** (e.g. `Order`, `Shipment`). |
+| `--fields <pairs>` | Comma-separated `name:type` pairs. Types: `string` / `number` / `boolean` / `date`. |
+| `--states <names>` | Comma-separated FSM state names. Must include `--initial`. |
+| `--initial <state>` | Initial FSM state. Required whenever `--states` is set. |
+| `--transitions <list>` | Comma-separated `from:to:event` triplets. All three parts are required. |
+| `-y, --yes` | Skip the final "Scaffold this app?" confirmation. |
+| `--json` | Emit a machine-readable summary to **stdout**; human progress text stays on **stderr**. |
+
+The generated `fy-app.json` is the source of truth — every other
+file in the tree is derived from it. See
+[the `fy-app.json` spec](/docs/cli/app-spec) for the full
+schema, the closed field-type enum, and the FSM constraints.
+
+Files written (one entity → 11 files; each extra entity adds
+5 more):
+
+```
+my-orders/
+├── fy-app.json              # source of truth — round-trippable spec
+├── manifest.json            # extension manifest for the host
+├── package.json
+├── tsconfig.json
+├── README.md
+├── AGENTS.md                # quick map of the scaffold for LLM agents
+└── src/
+    ├── index.tsx                       # default export: { pages }
+    ├── pages/Dashboard.tsx
+    ├── components/FsmStatePanel.tsx
+    ├── components/EventLog.tsx
+    └── entities/
+        ├── Order.schema.ts             # exports OrderSchema + Order type
+        └── useOrders.ts                # useOrders(), useOrder(id), useCreateOrder(), useTransitionOrder()
+    └── pages/
+        ├── OrderList.tsx
+        ├── OrderDetail.tsx
+        └── OrderForm.tsx
+```
+
+The command refuses to overwrite existing files — re-running
+inside a populated directory exits non-zero with the colliding
+paths listed.
+
+> **JSON mode for AI agents**
+>
+> Pass <code>--json</code> with <code>--yes</code> to drive the
+>   scaffold from another program. stdout is one JSON object with{' '}
+>   <code>status</code>, <code>files_written</code>, and{' '}
+>   <code>next_steps</code>; all human-readable progress is on
+>   stderr so the two streams never interleave.
+
+### `fy app add-entity `
+
+Extend an existing app project with a second (or third, etc.)
+entity. Reads the project's `fy-app.json`, validates the new
+entity against the same spec schema, then writes five new files
+for the entity and **updates** four existing ones
+(`fy-app.json`, `manifest.json`, `AGENTS.md`, `src/index.tsx`,
+`src/pages/Dashboard.tsx`).
+
+Must be run from inside a directory that already contains an
+`fy-app.json`; otherwise the command exits with a message
+pointing you at `fy app create`.
+
+```bash
+cd my-orders
+
+fy app add-entity Driver \
+  --fields "name:string,license:string" \
+  --states "available,on_route,off_duty" \
+  --initial available \
+  --transitions "available:on_route:assign,on_route:available:complete" \
+  --yes
+```
+
+Flags match `fy app create` except `--entity` (the name is a
+positional argument) and there is no `--json` — this command is
+intended for interactive iteration. Add-entity is non-destructive:
+if `src/entities/.schema.ts` already exists, the command
+refuses rather than overwriting it.
+
+### `fy capabilities`
+
+Print a JSON manifest of every `fy app` subcommand, every flag,
+and the path to `fy-feature-schema.json` (which declares the
+allowed field types, the per-app max state count, and the
+supported guard kinds). Designed for LLM agents and IDE tooling
+that want to discover what the installed CLI can do without
+parsing `--help` output.
+
+```bash
+fy capabilities | jq .
+
+# {
+#   "cli_version": "0.2.0",
+#   "commands": [
+#     { "name": "app create",     "description": "...", "flags": [...] },
+#     { "name": "app add-entity", "description": "...", "flags": [...] }
+#   ],
+#   "feature_schema_path": "./fy-feature-schema.json"
+# }
+```
+
+The same `capabilities.json` is shipped inside the npm tarball,
+so an agent can consult the schema without executing the binary
+at all.
 
 ## `fastyoke-admin` (operator)
 

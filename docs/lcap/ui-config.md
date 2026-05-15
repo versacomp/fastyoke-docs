@@ -83,9 +83,19 @@ the form schema directly.
 | `@ui/component` | Effect |
 |---|---|
 | `textarea` *(default)* | Native `<textarea>`. |
-| `richtext` | TipTap-based editor from `@fastyoke/lcap-richtext`. Stores HTML-escaped sanitized markup. |
-| `markdown` | Markdown editor from `@fastyoke/lcap-markdowneditor`. Stores raw markdown. |
-| `code` | Monaco-based editor from `@fastyoke/lcap-codeeditor`. Stores raw source. |
+| `richtext` | TipTap-based editor from `@fastyoke/lcap-richtext` *(preview — not yet on npm; falls back to `<textarea>` with a `console.warn` today)*. Stores HTML-escaped sanitized markup. |
+| `markdown` | Markdown editor from `@fastyoke/lcap-markdowneditor` *(preview — not yet on npm; falls back to `<textarea>`)*. Stores raw markdown. |
+| `code` | Monaco-based editor from `@fastyoke/lcap-codeeditor` *(preview — not yet on npm; falls back to `<textarea>`)*. Stores raw source. |
+
+> **Authoring against the preview slugs is safe**
+>
+> The `richtext` / `markdown` / `code` slugs are persisted as plain
+> strings in <code>ui_config_json["@ui/component"]</code> — the wire
+> shape (HTML / markdown / source) is identical whether the lazy
+> peer package is installed or the resolver falls back. A project
+> that picks one of these slugs today renders as a plain textarea
+> and will swap to the rich UI automatically once the peer
+> packages are published.
 
 | Key | Type | Effect |
 |---|---|---|

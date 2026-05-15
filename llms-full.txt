@@ -1026,11 +1026,13 @@ FastYoke ships two command-line surfaces — one each for the two
 distinct non-browser audiences:
 
 - **`@fastyoke/cli`** (binary name **`fy`**) — public npm package.
-  Two template variants: an **admin extension** (default) for
-  authors building inside the platform shell, and a **standalone
-  Next.js consumer app** pre-wired to a tenant's public form +
-  PDF endpoints for authors building customer-facing flows.
-  Rebuilds extension bundles in watch mode and uploads the finished
+  Covers three authoring workflows: a single-extension scaffold
+  (`fy init`, with **admin extension** and **standalone Next.js
+  consumer app** template variants), a full-app scaffold
+  (`fy app create` / `fy app add-entity`) that emits a typed CRUD
+  app from an entity + FSM spec, and a machine-readable discovery
+  manifest (`fy capabilities`) for LLM agents and tooling.
+  Rebuilds bundles in watch mode and uploads the finished
   artifact to a running tenant. Not a general-purpose API client;
   it only does what the scaffolding + extension-authoring
   workflows need.
@@ -1056,8 +1058,11 @@ distinct non-browser audiences:
 |---|---|
 | Scaffold a new extension project | `fy init` |
 | Scaffold a standalone Next.js consumer app | `fy init --template nextjs` |
+| Scaffold a full app extension from an entity + FSM spec | `fy app create` |
+| Add another entity to an existing app project | `fy app add-entity ` |
 | Rebuild an extension in watch mode | `fy dev` |
 | Upload an extension bundle to a tenant | `fy publish` |
+| Discover CLI commands + flags as JSON (for LLM agents) | `fy capabilities` |
 | Create the first super-admin on deploy | `fastyoke-admin create-admin` |
 | Restore a tenant's SQLite file from backup | `fastyoke-admin restore-tenant` (or `/super/tenants/:id`) |
 | Move a tenant to a different Fly machine | `fastyoke-admin reassign-tenant` (or `/super/tenants/:id`) |
@@ -1076,6 +1081,175 @@ curl helpers.
 
 ---
 
+# fy-app.json Spec
+
+> The versioned source-of-truth contract that fy app create and fy app add-entity read and write.
+
+_Source: https://fastyoke.io/docs/cli/app-spec_
+
+# `fy-app.json` Spec
+
+Every project scaffolded by `fy app create` carries a single
+`fy-app.json` file at its root. This file is the **source of truth**
+for the project's entities and FSM workflows — `fy app add-entity`
+reads it, validates the proposed change against the same schema,
+and writes the merged spec back. `manifest.json`, the Zod schemas,
+the React-Query hooks, and the CRUD pages are all *derived* from
+it; `fy-app.json` itself is the artifact you should hand to an
+LLM agent (or commit to git) when you want a stable, structured
+description of the app.
+
+The schema is versioned. Today the only supported version is
+`"1"`. Future incompatible shape changes will bump the version
+and ship a migration path in the CLI; old projects continue to
+build until they're explicitly migrated.
+
+## Top-level shape
+
+```json
+{
+  "fy_app_spec_version": "1",
+  "name": "my-orders",
+  "extension_id": "example.my-orders",
+  "entities": [
+    {
+      "name": "Order",
+      "fields": [
+        { "name": "ref",    "type": "string" },
+        { "name": "amount", "type": "number" }
+      ],
+      "fsm": {
+        "initial_state": "pending",
+        "states": ["pending", "fulfilled", "cancelled"],
+        "transitions": [
+          { "from": "pending", "to": "fulfilled", "event": "fulfill", "guard": null },
+          { "from": "pending", "to": "cancelled", "event": "cancel",  "guard": null }
+        ]
+      }
+    }
+  ]
+}
+```
+
+| Field | Type | Notes |
+|---|---|---|
+| `fy_app_spec_version` | literal `"1"` | Bumped on incompatible schema changes. |
+| `name` | non-empty string | Used as the npm package name in the scaffolded `package.json`. |
+| `extension_id` | non-empty string | Identifier the FastYoke host registers the extension under. `fy app create` derives this as `example.<slug>` from the project name; edit it before publishing to anything real. |
+| `entities` | array, min length 1 | One or more entities. Append-only via `fy app add-entity`. |
+
+## `entities[]`
+
+| Field | Type | Notes |
+|---|---|---|
+| `name` | string | **PascalCase** — used to generate type names, file names, and URL paths (`Order` → `OrderList.tsx`, `/orders`, `OrderSchema`). |
+| `fields` | array | May be empty. Order is preserved into the React form. |
+| `fsm` | object | Per-entity finite state machine. See below. |
+
+### `entities[].fields[]`
+
+| Field | Type | Notes |
+|---|---|---|
+| `name` | string | Used verbatim as the property name on the entity type and Zod schema. |
+| `type` | enum | One of `string`, `number`, `boolean`, `date`. The enum is closed in v1; new types require a spec-version bump. |
+
+### `entities[].fsm`
+
+| Field | Type | Notes |
+|---|---|---|
+| `initial_state` | string | Must appear in `states`. Enforced by the Zod schema. |
+| `states` | array, min length 1 | Distinct state names. The CLI imposes a soft cap of **50 states** per entity (see `fy-feature-schema.json`). |
+| `transitions` | array | May be empty. See below. |
+
+### `entities[].fsm.transitions[]`
+
+| Field | Type | Notes |
+|---|---|---|
+| `from` | string | Source state. Must appear in `states`. |
+| `to` | string | Target state. May equal `from` — **self-loops are legal** and are how you model audit-only events, idempotent retries, and payload counters. See [FSM Designer → self-loops](/docs/workflows). |
+| `event` | string | The event name that fires the transition. Required — the CLI rejects two-part `from:to` triplets. |
+| `guard` | object \| null | A JSONLogic predicate, or `null` for an unguarded transition. **JSONLogic is the only guard kind supported in v1** (see `fy-feature-schema.json`); the runtime evaluates it through the sandboxed `jsonlogic-rs` evaluator, never via raw string parsing. |
+
+> **Append-only in practice**
+>
+> <code>fy app add-entity</code> never edits an existing entity —
+>   it only appends. To change an entity's fields or FSM after
+>   scaffold, edit <code>fy-app.json</code> by hand and re-run
+>   whichever generator you need; the entity's <code>.schema.ts</code>{' '}
+>   + page files are pure functions of the spec and safe to
+>   regenerate.
+
+## Headless equivalents
+
+Every prompt in `fy app create` maps to a flag. The flags accept
+the same comma-delimited mini-DSL that the prompts use, so any
+spec describable in the interactive wizard is also expressible
+headlessly:
+
+| Spec slot | Flag | Mini-DSL |
+|---|---|---|
+| entity name | `--entity ` | PascalCase identifier |
+| `fields[]` | `--fields "<pairs>"` | `name:type,name:type` (types `string` / `number` / `boolean` / `date`) |
+| `states[]` | `--states "<names>"` | `s1,s2,s3` — the value of `--initial` is auto-added if missing |
+| `initial_state` | `--initial <state>` | single state name; required whenever `--states` is set |
+| `transitions[]` | `--transitions "<triplets>"` | `from:to:event,from:to:event` — all three parts required, `guard` is always `null` in flag-driven mode |
+
+For guards, edit `fy-app.json` after scaffolding — the wizard
+does not collect them.
+
+## Feature schema
+
+`fy-feature-schema.json` ships alongside `capabilities.json` in
+the npm tarball and declares the *constraints* that the v1 spec
+must satisfy:
+
+```json
+{
+  "spec_version": "1",
+  "field_types": ["string", "number", "boolean", "date"],
+  "fsm_constraints": {
+    "max_states": 50,
+    "self_loops": true,
+    "guard_types": ["jsonlogic"]
+  }
+}
+```
+
+An LLM agent authoring a spec can read this file to know which
+field types and guard kinds are legal **without running the CLI**.
+The path is also reported by `fy capabilities`:
+
+```bash
+fy capabilities | jq -r .feature_schema_path
+# ./fy-feature-schema.json
+```
+
+## Validation errors
+
+`fy app create` and `fy app add-entity` both validate the spec
+through the same Zod schema before writing any files. Common
+rejections:
+
+- **`initial_state must be a member of states`** — you supplied
+  `--initial review` but `--states "draft,published"` didn't
+  include it. Add the initial state to `--states` or rely on
+  the auto-add behaviour.
+- **`Invalid transition format "draft:published" — expected from:to:event (all three parts required)`** —
+  every transition triplet must have an event name.
+- **`refusing to overwrite existing file(s): …`** (`fy app create` only) — the
+  target directory already contains scaffold output. Move or
+  delete the colliding files, or pick a different `name`.
+- **`Entity '' already exists at src/entities/.schema.ts`**
+  (`fy app add-entity` only) — the entity is already in the
+  spec; pick a different name. Editing an existing entity is
+  intentionally out of scope (see callout above).
+
+See [Command Reference](/docs/cli/commands) for the full flag
+list and exit-code behaviour.
+
+
+---
+
 # Command Reference
 
 > Every subcommand for fy (extension authoring) and fastyoke-admin (operator ops).
@@ -1086,9 +1260,16 @@ _Source: https://fastyoke.io/docs/cli/commands_
 
 ## `@fastyoke/cli` / `fy` (extension authors)
 
-The public npm package ships a single binary named **`fy`**. Four
-subcommands covering the extension-authoring loop — scaffold,
-iterate, publish.
+The public npm package ships a single binary named **`fy`**. The
+subcommands cover three workflows:
+
+- **Extension authoring** (`init` / `dev` / `build` / `publish`)
+  — scaffold a single React extension and ship it to a tenant.
+- **App scaffolding** (`app create` / `app add-entity`) — generate
+  a full app extension from an entity + FSM spec, including Zod
+  schemas, typed React-Query hooks, and CRUD pages.
+- **Discovery** (`capabilities`) — emit a JSON manifest of every
+  command, flag, and FSM constraint for AI agents and tooling.
 
 ```bash title="global"
 npm install -g @fastyoke/cli
@@ -1182,11 +1363,146 @@ logging.
 
 > **No generic API surface**
 >
-> <code>fy</code> only covers extension authoring. There are no
->   `fy schemas list` / `fy jobs transition` / `fy entities get`
->   commands. If you need to call the tenant API from CI, use plain{' '}
->   <code>curl</code> / <code>httpx</code> with a tenant JWT — see{' '}
->   <a href="/docs/auth">Authentication</a>.
+> <code>fy</code> only covers extension authoring and app
+>   scaffolding. There are no `fy schemas list` / `fy jobs transition`
+>   / `fy entities get` commands. If you need to call the tenant API
+>   from CI, use plain <code>curl</code> / <code>httpx</code> with a
+>   tenant JWT — see <a href="/docs/auth">Authentication</a>.
+
+### `fy app create [name]`
+
+Scaffold a full **app extension** from a single entity + FSM
+spec. Where `fy init` gives you an empty React extension shell,
+`fy app create` generates a typed, working CRUD app you can
+publish unchanged: Zod schemas, React-Query hooks, list / detail
+/ form pages, a dashboard, and the manifest wiring.
+
+Interactive by default — every prompt has a matching `--flag`
+for headless / AI-agent use. With all four spec flags supplied
+plus `--yes`, the command writes the project tree without
+prompting.
+
+```bash
+# Interactive — prompts for entity name, fields, states, transitions.
+fy app create my-orders
+
+# Headless — same spec, no prompts.
+fy app create my-orders \
+  --entity Order \
+  --fields "ref:string,amount:number" \
+  --states "pending,fulfilled,cancelled" \
+  --initial pending \
+  --transitions "pending:fulfilled:fulfill,pending:cancelled:cancel" \
+  --yes
+```
+
+| Flag | Description |
+|---|---|
+| `--entity ` | Entity name in **PascalCase** (e.g. `Order`, `Shipment`). |
+| `--fields <pairs>` | Comma-separated `name:type` pairs. Types: `string` / `number` / `boolean` / `date`. |
+| `--states <names>` | Comma-separated FSM state names. Must include `--initial`. |
+| `--initial <state>` | Initial FSM state. Required whenever `--states` is set. |
+| `--transitions <list>` | Comma-separated `from:to:event` triplets. All three parts are required. |
+| `-y, --yes` | Skip the final "Scaffold this app?" confirmation. |
+| `--json` | Emit a machine-readable summary to **stdout**; human progress text stays on **stderr**. |
+
+The generated `fy-app.json` is the source of truth — every other
+file in the tree is derived from it. See
+[the `fy-app.json` spec](/docs/cli/app-spec) for the full
+schema, the closed field-type enum, and the FSM constraints.
+
+Files written (one entity → 11 files; each extra entity adds
+5 more):
+
+```
+my-orders/
+├── fy-app.json              # source of truth — round-trippable spec
+├── manifest.json            # extension manifest for the host
+├── package.json
+├── tsconfig.json
+├── README.md
+├── AGENTS.md                # quick map of the scaffold for LLM agents
+└── src/
+    ├── index.tsx                       # default export: { pages }
+    ├── pages/Dashboard.tsx
+    ├── components/FsmStatePanel.tsx
+    ├── components/EventLog.tsx
+    └── entities/
+        ├── Order.schema.ts             # exports OrderSchema + Order type
+        └── useOrders.ts                # useOrders(), useOrder(id), useCreateOrder(), useTransitionOrder()
+    └── pages/
+        ├── OrderList.tsx
+        ├── OrderDetail.tsx
+        └── OrderForm.tsx
+```
+
+The command refuses to overwrite existing files — re-running
+inside a populated directory exits non-zero with the colliding
+paths listed.
+
+> **JSON mode for AI agents**
+>
+> Pass <code>--json</code> with <code>--yes</code> to drive the
+>   scaffold from another program. stdout is one JSON object with{' '}
+>   <code>status</code>, <code>files_written</code>, and{' '}
+>   <code>next_steps</code>; all human-readable progress is on
+>   stderr so the two streams never interleave.
+
+### `fy app add-entity `
+
+Extend an existing app project with a second (or third, etc.)
+entity. Reads the project's `fy-app.json`, validates the new
+entity against the same spec schema, then writes five new files
+for the entity and **updates** four existing ones
+(`fy-app.json`, `manifest.json`, `AGENTS.md`, `src/index.tsx`,
+`src/pages/Dashboard.tsx`).
+
+Must be run from inside a directory that already contains an
+`fy-app.json`; otherwise the command exits with a message
+pointing you at `fy app create`.
+
+```bash
+cd my-orders
+
+fy app add-entity Driver \
+  --fields "name:string,license:string" \
+  --states "available,on_route,off_duty" \
+  --initial available \
+  --transitions "available:on_route:assign,on_route:available:complete" \
+  --yes
+```
+
+Flags match `fy app create` except `--entity` (the name is a
+positional argument) and there is no `--json` — this command is
+intended for interactive iteration. Add-entity is non-destructive:
+if `src/entities/.schema.ts` already exists, the command
+refuses rather than overwriting it.
+
+### `fy capabilities`
+
+Print a JSON manifest of every `fy app` subcommand, every flag,
+and the path to `fy-feature-schema.json` (which declares the
+allowed field types, the per-app max state count, and the
+supported guard kinds). Designed for LLM agents and IDE tooling
+that want to discover what the installed CLI can do without
+parsing `--help` output.
+
+```bash
+fy capabilities | jq .
+
+# {
+#   "cli_version": "0.2.0",
+#   "commands": [
+#     { "name": "app create",     "description": "...", "flags": [...] },
+#     { "name": "app add-entity", "description": "...", "flags": [...] }
+#   ],
+#   "feature_schema_path": "./fy-feature-schema.json"
+# }
+```
+
+The same `capabilities.json` is shipped inside the npm tarball,
+so an agent can consult the schema without executing the binary
+at all.
 
 ## `fastyoke-admin` (operator)
 
@@ -2687,21 +3003,27 @@ resolver console-warns and falls back to the type's default).
 
 `richtext` / `markdown` / `code` resolve to lazy peer packages
 (`@fastyoke/lcap-richtext`, `@fastyoke/lcap-markdowneditor`,
-`@fastyoke/lcap-codeeditor`). When the peer package isn't
-installed, the resolver falls back to a plain ``
-with a one-time `console.warn`.
+`@fastyoke/lcap-codeeditor`). These three packages are not yet
+published to npm — the resolver therefore falls back to a plain
+`` with a one-time `console.warn` for every consumer
+today, and will swap to the rich UI automatically once the peer
+packages are released. See the callout below.
 
-> **Heavy-editor peer packages — installed separately**
+> **Heavy-editor peer packages — preview, not yet on npm**
 >
-> The richtext / markdown / code components ship as separate
-> npm packages so the SDK base bundle stays small. Install
-> `@fastyoke/lcap-richtext`, `@fastyoke/lcap-codeeditor`, or
-> `@fastyoke/lcap-markdowneditor` to enable the rich
-> rendering for the matching `@ui/component` slug. Without
-> the package installed, `` falls back to a
-> plain `` with a one-time console warning;
-> content shape (HTML / markdown / source) stays compatible
-> across the swap.
+> The richtext / markdown / code components are designed to
+> ship as separate npm packages so the SDK base bundle stays
+> small. **The three packages — `@fastyoke/lcap-richtext`,
+> `@fastyoke/lcap-codeeditor`, `@fastyoke/lcap-markdowneditor`
+> — are not yet published to the public npm registry.** Until
+> they land, every consumer hits the SDK's built-in fallback:
+> `` lazy-imports the package, catches the
+> 404, and renders a plain `` with a one-time
+> console warning. Content shape (HTML / markdown / source)
+> stays compatible, so a project that authors against the
+> `richtext` / `markdown` / `code` slugs today will swap
+> to the rich UI automatically once the peer packages are
+> released.
 
 ## Storage shapes
 
@@ -3207,9 +3529,19 @@ the form schema directly.
 | `@ui/component` | Effect |
 |---|---|
 | `textarea` *(default)* | Native `<textarea>`. |
-| `richtext` | TipTap-based editor from `@fastyoke/lcap-richtext`. Stores HTML-escaped sanitized markup. |
-| `markdown` | Markdown editor from `@fastyoke/lcap-markdowneditor`. Stores raw markdown. |
-| `code` | Monaco-based editor from `@fastyoke/lcap-codeeditor`. Stores raw source. |
+| `richtext` | TipTap-based editor from `@fastyoke/lcap-richtext` *(preview — not yet on npm; falls back to `<textarea>` with a `console.warn` today)*. Stores HTML-escaped sanitized markup. |
+| `markdown` | Markdown editor from `@fastyoke/lcap-markdowneditor` *(preview — not yet on npm; falls back to `<textarea>`)*. Stores raw markdown. |
+| `code` | Monaco-based editor from `@fastyoke/lcap-codeeditor` *(preview — not yet on npm; falls back to `<textarea>`)*. Stores raw source. |
+
+> **Authoring against the preview slugs is safe**
+>
+> The `richtext` / `markdown` / `code` slugs are persisted as plain
+> strings in <code>ui_config_json["@ui/component"]</code> — the wire
+> shape (HTML / markdown / source) is identical whether the lazy
+> peer package is installed or the resolver falls back. A project
+> that picks one of these slugs today renders as a plain textarea
+> and will swap to the rich UI automatically once the peer
+> packages are published.
 
 | Key | Type | Effect |
 |---|---|---|
