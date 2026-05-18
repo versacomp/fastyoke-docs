@@ -1904,6 +1904,137 @@ flags) crosses cleanly.
 
 ---
 
+# Branding & the Powered-by badge
+
+> Where the FastYoke "Powered by" badge appears, and how Pro and above can opt out per surface.
+
+_Source: https://fastyoke.io/docs/extensions/branding_
+
+# Branding & the Powered-by badge
+
+FastYoke surfaces a small **Powered by FastYoke** attribution badge on
+public-facing pages and in generated documents. The badge is controlled
+by a single toggle — the same `show_powered_by` flag — and the visibility
+rule is the same everywhere:
+
+| Tier              | Badge behaviour                                 |
+| ----------------- | ----------------------------------------------- |
+| Hobby             | Always on. Cannot be disabled.                  |
+| Pro / Team / Enterprise / Fleet | Off by default. Admin can opt in. |
+
+---
+
+## Where the badge appears
+
+### PublicForm entry and success state
+
+The badge renders as a 12-px gray footer link at the bottom of the form
+page, both before the respondent fills in fields and after a successful
+submission. A `MarketingPlug` card (a bordered CTA promoting FastYoke's
+Hobby plan) appears alongside it on the success state; both surfaces
+respect the same flag, so opting out removes all FastYoke attribution
+from the form flow in one action.
+
+The badge links to `https://fastyoke.io/?ref=public-form`.
+
+### PublicWorkspace (`/p/:slug`)
+
+The badge appears as a footer on the public-facing workspace page.
+Visibility is driven by the same `show_powered_by` field returned by
+`GET /api/v1/public/branding`.
+
+### Embedded forms (iframe / SDK)
+
+When a form is loaded via an embed token (`?em=…`), badge visibility
+comes from the embed-config endpoint rather than the public branding
+endpoint. The server computes this from tier alone — Hobby embeds always
+show the badge; Pro and above do not, regardless of the `show_powered_by`
+opt-in toggle. There is no per-embed override.
+
+### Submission PDFs (Typst, Overlay, AcroForm)
+
+All three PDF render paths append a small footer line on the last page.
+The exact text depends on the badge state snapshotted at submit time:
+
+| State at submit | Footer text on PDF |
+| --------------- | -------------------|
+| Badge on (Hobby or opted-in Pro+) | `Submission <id> · Generated with FastYoke · fastyoke.io` |
+| Badge off (Pro+ opted out) | `Submission <id>` (audit line only, no FastYoke mention) |
+| Legacy row (created before this feature) | `Submission <id> · rendered by FastYoke` |
+
+The snapshot is taken when the submission is first persisted and stored
+in `form_submission_attachments.show_powered_by_snapshot`. Admin
+regenerate-PDF reads the snapshot, not the live tenant setting, so the
+footer is byte-stable across regenerates — a legal-fidelity guarantee.
+
+### CMS render JSON (`GET /api/v1/cms/render`)
+
+The CMS render response includes a top-level `show_powered_by: bool`
+field for Cloudflare Worker / SDK consumers to use when injecting badge
+markup into CMS-rendered pages. The value follows the same Hobby/Pro+
+rule as the other surfaces.
+
+---
+
+## Controlling the toggle
+
+### Admin UI
+
+Navigate to **Settings → Branding** (`/admin/settings/branding`) and
+scroll to the **Powered-by badge** toggle. The toggle is labelled
+**Show "Powered by FastYoke" badge**.
+
+- **Hobby tenants**: the toggle is read-only and locked to on. An
+  upgrade hint appears below it.
+- **Pro+ tenants**: the toggle is editable. Default is off (badge
+  hidden). Flip it on to display the badge on all surfaces.
+
+### API
+
+`PUT /api/v1/settings/branding` — include `show_powered_by` in the
+`config` object:
+
+```json
+{
+  "config": {
+    "show_powered_by": true
+  }
+}
+```
+
+Setting `show_powered_by: false` on a Hobby tenant returns
+**422 Unprocessable Entity** with the message:
+
+```
+Hobby tier cannot opt out of the Powered-by badge — upgrade to Pro or higher to hide it
+```
+
+Setting `show_powered_by: true` on a Hobby tenant is accepted (no-op —
+the badge is always on for Hobby regardless of the stored value).
+
+---
+
+## What is not available
+
+There is no custom-branding replacement — no option to swap the FastYoke
+badge for your own attribution mark. The badge is either shown or hidden.
+Logo, colours, and other brand tokens in Branding Settings apply to the
+admin shell only and do not replace the attribution badge on public surfaces.
+
+---
+
+## Related
+
+- [Forms tier entitlements](/docs/forms/tiers) — tier table row for
+  "Powered-by FastYoke badge".
+- [Submission PDFs](/docs/forms/submission-pdfs) — full PDF render
+  documentation including the byte-stable regenerate contract.
+- [Embedded forms](/docs/forms/embeds) — embed configuration and badge
+  behaviour in iframe contexts.
+
+
+---
+
 # Forms
 
 > Build public or authenticated forms that route submissions into entities, jobs, or both.
@@ -1916,6 +2047,15 @@ Forms are FastYoke's typed ingress layer. They collect data from
 anyone (or anyone you've authenticated), validate against a schema
 the builder owns, and feed submissions into your workflow via
 declarative actions.
+
+## What's covered
+
+- [Tier entitlements](/docs/forms/tiers) — what each tier unlocks for the Forms surface.
+- [Anti-abuse](/docs/forms/anti-abuse) — Turnstile, honeypot, daily caps, rate limit.
+- [Embed forms](/docs/forms/embed) — drop a form into any page via the SDK.
+- [HTTP ingestion API](/docs/forms/http-ingestion) — server-to-server submission.
+- [Invites (Mint)](/docs/forms/invites) — named, revocable invite links.
+- [Vanity PDF filenames](/docs/forms/pdf-vanity-filenames) — readable filenames for submission PDFs.
 
 ## Why forms are a first-class surface
 
@@ -2011,6 +2151,125 @@ submission. Two kinds:
 Both paths are deterministic: the same `payload_json` re-renders to
 a byte-identical PDF. Templates are configured per form in the
 admin shell's Forms Builder.
+
+
+---
+
+# Anti-abuse for public forms
+
+> Turnstile challenges, honeypots, daily caps, and per-IP rate limits keep public form submissions clean without a CAPTCHA wall.
+
+_Source: https://fastyoke.io/docs/forms/anti-abuse_
+
+# Anti-abuse for public forms
+
+Public forms are reachable by anyone with the invite URL. The
+platform defends them with four overlapping layers:
+
+1. **Cloudflare Turnstile** — invisible-first challenge (Hobby tier).
+2. **Honeypot field** — bots that fill every input get auto-rejected.
+3. **Daily submission cap** — per-tenant ceiling sized to your tier.
+4. **Per-IP rate limit** — token-bucket throttle on a single client.
+
+You don't configure any of this to get the defaults. The layers apply
+automatically based on your tier.
+
+## Turnstile
+
+Hobby-tier public forms render a Cloudflare Turnstile widget below
+the last visible field. The widget runs invisibly for most visitors;
+suspicious traffic gets a managed challenge.
+
+The submitted token is sent as the `cf_turnstile_response` field on
+the form payload. The server verifies the token against the Turnstile
+API before any other validation runs — a failed or missing verify
+returns `400 Bad Request` with error code `challenge_failed`.
+
+> **Pro and above**
+>
+> Pro, Team, and Enterprise forms do not require Turnstile. On those
+>   tiers the widget is not rendered and the field is not expected.
+
+## Honeypot
+
+Every public form ships with a hidden `__hp_check__` companion field
+that real users never see (it is rendered off-screen with
+`aria-hidden="true"` and `tabindex="-1"`). Submissions with any
+non-empty value for that field are rejected with `400 Bad Request` and
+error code `validation_failed`.
+
+The field name is consistent across all forms so that browser
+autofill and bot-training datasets interact with it predictably.
+
+## Timing check
+
+Each public form GET response includes a signed `__render_ts__`
+token. Submissions must echo this value back. The server rejects
+submissions where the token was issued less than 1.5 seconds ago
+(bot-speed) or more than 24 hours ago (stale page). Both cases return
+`400` with error code `validation_failed`.
+
+## Link-count filter
+
+Text, textarea, and richtext fields are scanned for URL-like
+substrings (`https://...`). Any field containing more than three URLs
+causes the submission to be rejected with `400` and error code
+`validation_failed`. This catches link-injection spam before the
+payload reaches storage.
+
+## Daily submission cap
+
+Each tenant carries a ceiling on submissions per UTC day, sized by
+tier:
+
+| Tier        | Submissions / day |
+| ----------- | ------------------ |
+| Hobby       | 100                |
+| Pro         | 1,000              |
+| Team        | Unlimited          |
+| Enterprise  | Unlimited          |
+
+Exceeding the cap returns `429 Too Many Requests` with error code
+`tier_quota_exceeded`. The cap resets at 00:00 UTC.
+
+When a tenant's count first reaches the cap in a UTC day, the platform
+sends a one-time email notification to the tenant's primary admin. The
+email fires once per cap per day — there is no repeated alerting for
+subsequent rejections within the same day.
+
+## Per-IP rate limit
+
+A token-bucket throttle limits bursts from a single client IP per
+form slug. The limits are sized by tier:
+
+| Tier        | Refill rate  | Burst allowance |
+| ----------- | ------------ | --------------- |
+| Hobby       | 10 / minute  | 3               |
+| Pro         | 60 / minute  | 10              |
+| Team        | 600 / minute | 50              |
+| Enterprise  | 600 / minute | 50              |
+
+The bucket starts full (burst allowance), then refills at the refill
+rate. Requests beyond the available tokens return `429 Too Many
+Requests` with message `rate limit exceeded`.
+
+The limit is intentionally generous at higher tiers — it exists to
+catch obvious flood patterns, not to limit legitimate kiosks behind
+NAT. If you run a kiosk on Hobby with a shared IP, upgrade to Pro or
+contact support.
+
+## What gets notified
+
+The platform sends a debounced email to the tenant admin when:
+
+- The daily submission cap is first crossed in a UTC day.
+- The daily PDF render quota is first crossed in a UTC day (if PDF
+  generation is enabled on the form).
+
+Individual per-request rejections (honeypot, Turnstile, timing,
+link-count, rate limit) are logged server-side but do not trigger
+notifications. No form-payload data is stored on a rejection — the
+body is discarded before any row is written.
 
 
 ---
@@ -2143,6 +2402,865 @@ until you re-publish.
 
 ---
 
+# Embed forms on your own site
+
+> Drop a single script tag into any page to render a FastYoke form inline, with theme overrides and origin allowlists.
+
+_Source: https://fastyoke.io/docs/forms/embed_
+
+# Embed forms on your own site
+
+The embed feature lets you render any published FastYoke form directly on a
+third-party website — your marketing site, a customer portal, or any static
+page — without an `<iframe>` tag you manage yourself. A single `<script>` tag
+loads the FastYoke embed SDK, which mounts the form in a sandboxed iframe
+inside a closed Shadow DOM.
+
+## Quickstart
+
+### 1. Create an embed in the admin shell
+
+Open the form you want to embed, then navigate to the **Embed** tab inside the
+form builder. Configure the mode and any optional settings, then click **Save
+embed**. The panel will show the snippet to paste.
+
+### 2. Paste the snippet
+
+Copy the generated snippet and paste it anywhere in your page's HTML where you
+want the form to appear (for `inline` mode, place it in the exact spot; for
+`modal`, `slide`, or `bubble` modes, placement is less critical because the
+chrome renders in a fixed overlay).
+
+```html
+<script async src="https://app.fastyoke.io/embed.js" data-embed="em_AbCd1234567890EfGhIjKl"></script>
+```
+
+The `em_` prefix followed by 22 alphanumeric characters is the opaque embed ID
+assigned when you save the embed. The snippet is shown — and copyable — from
+the **Embed** tab after saving.
+
+The script loads asynchronously and does not block page rendering.
+
+## Embed modes
+
+| Mode | Description | Tier |
+|------|-------------|------|
+| `inline` | Form renders in place, replacing the `<script>` tag's position in the DOM. | All tiers |
+| `modal` | Clicking a trigger button opens a centered modal dialog. | Pro+ |
+| `slide` | Clicking a trigger button slides a panel in from the right edge. | Pro+ |
+| `bubble` | A floating action button in the corner opens a popover form. | Pro+ |
+
+> **Hobby tier — inline only**
+>
+> Hobby accounts can publish embeds in `inline` mode. Upgrading to Pro or
+>   above unlocks `modal`, `slide`, and `bubble` modes as well as brand
+>   theming, custom success behavior, and lifecycle events.
+
+## Trigger options
+
+For `modal`, `slide`, and `bubble` modes the SDK can open the form in two ways:
+
+- **Rendered trigger** (`trigger.kind = "rendered"`) — the SDK renders its own
+  button with the label you configure.
+- **Selector trigger** (`trigger.kind = "selector"`) — you supply a CSS
+  selector; any matching element on the page (including elements added to the
+  DOM after the script loads, via `MutationObserver`) opens the form when
+  clicked. Use this to wire your own buttons or links.
+
+```html
+<!-- The SDK opens the form when any element with data-open-form="em_…" is clicked -->
+<button data-open-form="em_AbCd1234567890EfGhIjKl">Request a quote</button>
+
+<script async src="https://app.fastyoke.io/embed.js" data-embed="em_AbCd1234567890EfGhIjKl"></script>
+```
+
+The selector is configured inside the admin Embed tab, not in the HTML.
+
+## `window.FastYoke` API
+
+The script installs a `window.FastYoke` object that lets you programmatically
+control embeds from your own JavaScript:
+
+```js
+// Open or close an embed by its embed_id
+window.FastYoke.open('em_AbCd1234567890EfGhIjKl');
+window.FastYoke.close('em_AbCd1234567890EfGhIjKl');
+
+// List all embeds currently mounted on the page
+console.log(window.FastYoke.embeds);
+// → [{ embed_id: "em_…", mode: "modal", state: "closed" }]
+
+// Subscribe to lifecycle events (see Events section)
+const unsubscribe = window.FastYoke.on('fastyoke:success', (payload) => {
+  console.log('Form submitted', payload);
+});
+
+// Stop listening
+unsubscribe();
+```
+
+The `window.FastYoke` object is installed once even if multiple embed scripts
+are on the same page.
+
+## Configuring allowed origins
+
+The FastYoke form iframe validates the embedding site's origin against a
+per-tenant allowlist stored in **Settings → Embed domains**
+(`/admin/settings#allowed-embed-domains`). The list is a space-separated set
+of origins, for example:
+
+```
+https://www.example.com https://app.example.com
+```
+
+When the list is empty the server runs in wildcard mode (any origin may embed
+your forms). When it contains at least one entry, a request from an origin not
+on the list receives `403 Forbidden`.
+
+> **Configure origins before going live**
+>
+> If you save an embed but have not added your site's origin to the allowed
+>   list, every visitor to your site will see the "Form temporarily unavailable"
+>   placeholder. The Embed tab shows a warning banner with a direct link to the
+>   settings page when no domains are configured.
+
+The backend also injects a `Content-Security-Policy: frame-ancestors` header
+that tells browsers which origins may frame the form page, providing a
+defense-in-depth layer on top of the server-side origin check.
+
+## Theming
+
+> **Pro+ feature**
+>
+> Brand theming is stripped server-side for Hobby accounts. The form renders
+>   with FastYoke's default theme regardless of what was saved.
+
+The embed config carries three theme fields that map to CSS custom properties
+applied to the form's outer wrapper:
+
+| Config field | CSS variable | Default |
+|---|---|---|
+| `theme.primary_color` | `--fy-primary-color` | `#4f46e5` |
+| `theme.border_radius` | `--fy-border-radius` | `8px` |
+| `theme.font_family` | `--fy-font-family` | `inherit` |
+
+These are configured in the **Brand theme** section of the Embed tab in the
+admin shell. There is no way to override the theme from the page's HTML —
+all theme configuration is server-side and tier-masked at render time.
+
+## Lifecycle events
+
+> **Pro+ feature**
+>
+> Lifecycle events (postMessage relay) are disabled server-side for Hobby
+>   accounts. The `window.FastYoke.on()` calls below are no-ops on Hobby.
+
+When **Emit postMessage events** is enabled in the embed config, the SDK
+relays events from the form iframe to the host page as `CustomEvent`s on
+`window`. Subscribe with `window.FastYoke.on()` or directly with
+`window.addEventListener()`:
+
+| Event name | Fires when |
+|---|---|
+| `fastyoke:view` | The form is displayed / scrolled into view |
+| `fastyoke:start` | The visitor begins filling in the form |
+| `fastyoke:submit` | The visitor submits (before server confirmation) |
+| `fastyoke:success` | The server confirms a successful submission |
+| `fastyoke:error` | A submission error is returned |
+| `fastyoke:close` | The modal / slide / bubble chrome is dismissed |
+
+Every event payload includes the `embed_id` of the originating embed plus any
+additional fields from the iframe:
+
+```js
+window.addEventListener('fastyoke:success', (e) => {
+  const { embed_id, ...rest } = e.detail;
+  console.log('Submission accepted', embed_id, rest);
+});
+```
+
+`fastyoke:close` always fires when the chrome closes, even when postMessage
+events are disabled — it is a chrome event rather than an iframe-driven event.
+
+You can choose which events are forwarded from the **Events** section of the
+Embed tab. The server only relays events listed in `events_enabled`; events not
+in the list are silently dropped before reaching the host page.
+
+## Powered-by badge
+
+Hobby accounts always display a "Powered by FastYoke" badge inside the embed.
+The badge is rendered server-side (the `show_badge` field is set by the API,
+not the client), so it cannot be removed by modifying the snippet. Pro and
+above can opt out from **Branding** settings.
+
+## Summary of tier differences
+
+| Feature | Hobby | Pro+ |
+|---|---|---|
+| Inline mode | Yes | Yes |
+| Modal / slide / bubble modes | No | Yes |
+| Brand theming | No | Yes |
+| Custom success behavior | No | Yes |
+| Lifecycle events | No | Yes |
+| Powered-by badge | Always on | Optional |
+
+
+---
+
+# HTTP ingestion API
+
+> Server-to-server submission of form data via REST. Authenticate with a tenant API token, post a JSON payload, get a submission ID back.
+
+_Source: https://fastyoke.io/docs/forms/http-ingestion_
+
+# HTTP ingestion API
+
+The HTTP ingestion API lets your backend submit form data programmatically
+without a browser or form widget. One `POST` per submission — you get a
+submission ID back, and the result is indistinguishable from a user filling
+the form manually.
+
+> **Pro+ required**
+>
+> The ingestion endpoint is available on Pro, Team, Enterprise, and Fleet
+>   tiers. Hobby tenants receive a `422` with error code `tier_required`.
+>   See [Forms tier entitlements](/docs/forms/tiers) for the full matrix.
+
+---
+
+## Endpoint
+
+```
+POST /api/v1/tenant/forms/:form_id/submissions
+```
+
+`:form_id` is the UUID of the form definition. The form must be in
+`published` status; submitting to a draft or archived form returns `422
+form_not_accepting_submissions`.
+
+---
+
+## Authentication
+
+Pass a tenant API token as a Bearer token in the `Authorization` header.
+
+```http
+Authorization: Bearer fy_pat_<your-token>
+```
+
+The token must carry the `forms:ingest` scope. Tokens with `admin:*` are
+also accepted. To mint a token with the correct scope, go to **Settings →
+API tokens** in the admin portal.
+
+If the token is missing or does not have the required scope, the endpoint
+returns `401 Unauthorized` or `403 Forbidden` respectively.
+
+---
+
+## Request
+
+### Headers
+
+| Header | Required | Description |
+| --- | --- | --- |
+| `Authorization` | Yes | `Bearer fy_pat_<token>` |
+| `Content-Type` | Yes | `application/json` |
+| `Idempotency-Key` | No | Deduplication key — see [Idempotency](#idempotency) |
+| `X-Client-Now` | No | RFC 3339 timestamp from the submitting device; stored in submission metadata. Ignored if malformed. |
+
+### Body
+
+```json
+{
+  "payload": {
+    "field_key": "value"
+  }
+}
+```
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `payload` | object | Yes | Key-value map of field answers. Keys must match the field keys defined in the form schema. |
+| `client_ip` | string | No | Override the IP address recorded in submission metadata. Only honoured when the token also holds the `forms:ingest:trust_client_ip` scope (for proxied / gateway senders). Ignored otherwise. |
+
+The field values in `payload` are validated against the form's published
+schema. Required fields must be present; type constraints (text, number,
+email, etc.) are enforced. Validation failures return `422
+validation_failed` with a per-field error list.
+
+---
+
+## Response
+
+### 201 Created — new submission
+
+```json
+{
+  "submission_id": "01jx3p...",
+  "was_idempotent_replay": false
+}
+```
+
+### 200 OK — idempotent replay
+
+When an `Idempotency-Key` header was supplied and a matching prior
+submission exists, the endpoint returns `200` instead of `201` with the
+original `submission_id` and `"was_idempotent_replay": true`. No duplicate
+row is written.
+
+```json
+{
+  "submission_id": "01jx3p...",
+  "was_idempotent_replay": true
+}
+```
+
+---
+
+## Idempotency
+
+Include an `Idempotency-Key` header to make requests safe to retry.
+
+```http
+Idempotency-Key: order-12345-attempt-1
+```
+
+**Key format:** 1–128 characters, allowed characters `A-Z a-z 0-9 . _ -`.
+Any other characters return `400 bad_idempotency_key_format`.
+
+**How it works:**
+
+1. On the first request with a given key, the submission is written and
+   the key is associated with the resulting `submission_id`.
+2. Retrying with the same key **and the same payload** returns `200` with
+   the original `submission_id`. No second submission is created.
+3. Retrying with the same key but a **different payload** returns `409
+   idempotency_key_payload_mismatch`. The key cannot be reused with
+   different data.
+
+**TTL:** Idempotency records expire after 24 hours. After expiry, the same
+key may be reused and will be treated as a fresh submission.
+
+**Payload hashing:** Sameness is determined by a canonical SHA-256 hash of
+the `payload` object. Object key ordering is normalized before hashing, so
+`{"b": 2, "a": 1}` and `{"a": 1, "b": 2}` are treated as identical.
+
+**Concurrency:** If two requests arrive simultaneously with the same key,
+one wins and proceeds; the other spins briefly and then returns `200` with
+the winner's `submission_id`. If the key is still in flight after the retry
+budget is exhausted, a `422 in_flight` response is returned — wait a moment
+and retry.
+
+---
+
+## Rate limiting
+
+The endpoint is rate-limited to a burst of **60 requests** per
+`(token, form)` pair. After exhausting the burst, requests return
+`429 Too Many Requests` with a `Retry-After` header and a
+`retry_after_secs` field in the response body.
+
+```http
+HTTP/1.1 429 Too Many Requests
+Retry-After: 3
+
+{
+  "error": {
+    "code": "rate_limited",
+    "retry_after_secs": 3,
+    "message": "rate limited"
+  }
+}
+```
+
+---
+
+## Error reference
+
+All errors share the envelope shape `{ "error": { "code": "...", "message": "..." } }`.
+Some codes include additional fields noted below.
+
+| HTTP status | Error code | Description |
+| --- | --- | --- |
+| `400` | `bad_idempotency_key_format` | `Idempotency-Key` contains disallowed characters or exceeds 128 chars. |
+| `400` | `malformed_json` | Request body is not valid JSON. |
+| `401` | `unauthorized` | `Authorization` header is absent or the token is revoked. |
+| `403` | `scope_required` | Token exists but does not have `forms:ingest` scope. Response includes `"required": "forms:ingest"`. |
+| `404` | `form_not_found` | No published form with that ID belongs to your tenant. Also returned for cross-tenant ID guessing. |
+| `409` | `idempotency_key_payload_mismatch` | The idempotency key was previously used with a different payload. |
+| `422` | `tier_required` | Your tenant is on Hobby tier. Response includes `"required": "pro"` and `"current": "hobby"`. |
+| `422` | `form_not_accepting_submissions` | The form is not in `published` status. |
+| `422` | `validation_failed` | One or more fields failed schema validation. Response includes `"field_errors": [{ "field": "...", "message": "..." }]`. |
+| `422` | `in_flight` | An idempotency key is being processed by a concurrent request. Retry after a short delay. |
+| `429` | `rate_limited` | Burst quota exceeded. Respect the `Retry-After` header. Response includes `"retry_after_secs"`. |
+| `500` | `internal` | Unexpected server error. The body message is always `"internal server error"` — no internal details are leaked. |
+
+---
+
+## Example
+
+```bash
+curl -X POST https://app.fastyoke.io/api/v1/tenant/forms/FORM_ID/submissions \
+  -H "Authorization: Bearer fy_pat_YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: my-batch-job-row-42" \
+  -d '{
+    "payload": {
+      "name": "Alice",
+      "email": "alice@example.com"
+    }
+  }'
+```
+
+Successful response:
+
+```json
+{
+  "submission_id": "01jx3pabcdefghijklmn",
+  "was_idempotent_replay": false
+}
+```
+
+
+---
+
+# Form invites (Mint)
+
+> Issue named, revocable invite links to public forms. The Mint endpoint produces a URL anyone can submit; revoked invites return 410.
+
+_Source: https://fastyoke.io/docs/forms/invites_
+
+# Form invites (Mint)
+
+An invite token is a shareable URL that grants anonymous access to a single
+published form. Any holder of the URL can load and submit the form — no login
+required. You control the lifetime, an optional submission cap, and whether
+the token remains active.
+
+Tokens are managed from the **Invite links** panel inside the form builder
+(`Admin → Forms → [form] → Invite links`).
+
+---
+
+## Requirements
+
+- The form must be in **`published`** status before you can mint a token.
+  Attempting to mint against a `draft` or `archived` form returns `409` with
+  the message `cannot mint invite tokens for a form in status '<status>'`.
+- The caller must hold the `forms:admin` scope and the `forms.publish` RBAC
+  permission. Standard member tokens with `forms:read` can list tokens but
+  cannot mint or revoke.
+
+---
+
+## Endpoints
+
+### Mint a token
+
+```
+POST /api/v1/tenant/forms/definitions/:form_id/invites
+```
+
+**Request body**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `tenant_id` | string | Yes | Tenant the form belongs to. |
+| `expires_hours` | integer | No | Token lifetime in hours (minimum 1). Defaults to 720 (30 days). |
+| `max_submissions` | integer or null | No | Hard cap on submissions. `null` or omitted means unlimited. |
+
+**Success response — `201 Created`**
+
+```json
+{
+  "id": "3f2e…",
+  "tenant_id": "ten_…",
+  "form_definition_id": "fd_…",
+  "token": "a1b2c3d4-e5f6-…",
+  "expires_at": "2026-06-16T12:00:00Z",
+  "max_submissions": 100,
+  "submission_count": 0,
+  "created_at": "2026-05-16T12:00:00Z"
+}
+```
+
+The `token` field is the raw UUID that makes up the share URL:
+
+```
+https://app.fastyoke.io/f/<token>
+```
+
+The token value is stored in the database only as a SHA-256 hash. If you lose
+the URL you must mint a new token — there is no way to retrieve the plaintext
+token after the `201` response.
+
+---
+
+### List tokens for a form
+
+```
+GET /api/v1/tenant/forms/definitions/:form_id/invites?tenant_id=<tenant_id>
+```
+
+Returns all tokens for the form (active, expired, and exhausted), ordered by
+`created_at` descending. Requires the `forms:read` scope.
+
+**Success response — `200 OK`**
+
+An array of objects with the same shape as the mint response.
+`submission_count` reflects the live counter — use it to track how many
+submissions a token has received.
+
+---
+
+### Revoke a token
+
+```
+DELETE /api/v1/tenant/forms/invites/:invite_id?tenant_id=<tenant_id>
+```
+
+Deletes both the platform routing index and the tenant-side record. Any
+holder who attempts to load or submit the form via the revoked URL receives
+`410 Gone`. Existing submissions are **not** deleted — revocation prevents
+future use only.
+
+Requires the `forms:admin` scope and the `forms.delete` RBAC permission.
+
+**Success response — `200 OK`**
+
+```json
+{ "revoked": true }
+```
+
+---
+
+## Public URL behaviour
+
+When a visitor opens `https://app.fastyoke.io/f/<token>`:
+
+| Condition | HTTP status | Visitor sees |
+|-----------|-------------|--------------|
+| Token unknown | `404 Not Found` | Error page |
+| Token revoked (row deleted) | `410 Gone` | "This invite has been revoked" |
+| Token expired (`expires_at` in the past) | `410 Gone` | "This invite has expired or reached its submission limit" |
+| Submission cap reached (`submission_count >= max_submissions`) | `410 Gone` | "This invite has expired or reached its submission limit" |
+| Form unpublished after token was minted | `410 Gone` | "This form is no longer accepting submissions" |
+| Token valid | `200 OK` | Form renders |
+
+The response body also includes a `submissions_remaining` field (integer or
+`null` for unlimited) so your frontend can display a "X responses remaining"
+notice if desired.
+
+### Submission atomicity
+
+The submission counter is incremented atomically in the same `UPDATE` that
+enforces the cap. If the increment touches zero rows (cap already reached or
+token expired between the form load and the submit click), the submit returns
+`410` without writing a `form_submissions` row.
+
+---
+
+## Tier limits
+
+> **Hobby caps**
+>
+> Hobby invite tokens have a **30-day maximum lifetime** (720 hours) and a
+>   **500-submission cap per token**. Attempting to mint with `expires_hours`
+>   above 720 or `max_submissions` above 500 (or `null`) returns `402` with
+>   error code `tier_quota_exceeded`. Upgrade to Pro for 1-year tokens and
+>   unlimited submission caps.
+
+| Limit | Hobby | Pro | Team | Enterprise |
+|-------|-------|-----|------|------------|
+| Maximum token lifetime | 30 days | 1 year | 1 year | 1 year |
+| Default lifetime pre-filled in UI | 7 days | 30 days | 30 days | 30 days |
+| Maximum `max_submissions` per token | 500 | Unlimited | Unlimited | Unlimited |
+| Default `max_submissions` pre-filled in UI | 50 | Blank (unlimited) | Blank (unlimited) | Blank (unlimited) |
+
+When the request violates a tier cap the backend returns:
+
+```json
+HTTP 402 Payment Required
+{
+  "error": "tier_quota_exceeded",
+  "tier": "hobby",
+  "detail": {
+    "feature": "forms_invite_long_lived",
+    "limit_hours": 720,
+    "requested_hours": 8760
+  }
+}
+```
+
+or, for the submissions dimension:
+
+```json
+{
+  "error": "tier_quota_exceeded",
+  "tier": "hobby",
+  "detail": {
+    "feature": "forms_invite_unlimited_submissions",
+    "limit": 500,
+    "requested_max_submissions": null
+  }
+}
+```
+
+See [Forms tier entitlements](/docs/forms/tiers) for the complete matrix.
+
+---
+
+## Error reference
+
+| Status | Condition |
+|--------|-----------|
+| `400 Bad Request` | `tenant_id` is empty or missing. |
+| `404 Not Found` | Form definition not found for `(form_id, tenant_id)`. |
+| `409 Conflict` | Form is not in `published` status — see message for actual status. |
+| `402 Payment Required` | `expires_hours` or `max_submissions` exceeds the tenant's tier cap. |
+| `401 / 403` | Missing or insufficient JWT scope / RBAC permission. |
+| `410 Gone` | (Public endpoint only) Token revoked, expired, or submission cap reached; or form was unpublished. |
+
+
+---
+
+# Vanity PDF filenames
+
+> Generate human-readable filenames for submission PDFs using a pattern of slugs, submission IDs, field values, and dates.
+
+_Source: https://fastyoke.io/docs/forms/pdf-vanity-filenames_
+
+# Vanity PDF filenames
+
+By default, every submission PDF is named using the internal format
+`form-submission-<id_short>-v<version>.pdf`. Vanity filename patterns let
+you replace that with something meaningful — for example:
+`invoice-request-2026-05-15-abc12345.pdf`.
+
+Patterns are available on **Pro and above** and apply to all three PDF
+render modes (Typst, AcroForm, and Overlay). The filename is resolved
+at submit time and stored with the submission; regenerating a PDF reuses
+the original filename verbatim.
+
+## Where to configure
+
+There are two places to set a pattern:
+
+1. **Tenant default** — `Settings → Filename Defaults` sets a pattern
+   that applies to every form that has no per-form override. You can
+   also define tenant variables here (see [tenant variables](#tenant-variables)).
+
+2. **Per-form override** — open the form in the builder, scroll to
+   **PDF Designer → Filename**, and enter a pattern. A non-empty value
+   takes precedence over the tenant default.
+
+Both surfaces also accept the pattern via the REST API:
+
+- `PUT /api/v1/settings/filename-defaults` — tenant default
+- `POST /api/v1/forms` / `PATCH /api/v1/forms/:id` — `filename_pattern` field on the form definition
+
+## Token reference
+
+A pattern is a mix of literal text and `{token}` placeholders.
+
+### Built-in tokens
+
+| Token | Resolves to | Example output |
+|---|---|---|
+| `{form_name}` | Form name, slugified | `invoice-request` |
+| `{form_version}` | Integer schema version | `3` |
+| `{submission_id}` | Full UUID of the submission | `abc12345-de67-89f0-…` |
+| `{submission_id_short}` | First UUID segment (8 chars) | `abc12345` |
+| `{date}` | Submit date (UTC), `YYYY-MM-DD` | `2026-05-15` |
+| `{datetime}` | Submit timestamp (UTC), `YYYYMMdd-HHmmss` | `20260515-142307` |
+| `{counter}` | Internal row counter for this submission | `42` |
+
+### Field value tokens
+
+`{field:<key>}` inserts the submitter's value for a specific form field,
+slugified. Replace `<key>` with the field's key as defined in the form
+schema.
+
+```
+{form_name}-{field:invoice_number}-{date}
+→ invoice-request-inv-1042-2026-05-15.pdf
+```
+
+Restrictions enforced at save time:
+
+- The field key must exist in the form's current schema (`unknown_field`
+  error if not).
+- Fields marked as PII cannot be used in a filename
+  (`pii_field_blocked`). If you need an identifier that appears in
+  filenames, keep it as a non-PII reference field.
+
+If the field has no value for a particular submission (empty or null),
+the token resolves to an empty string and adjacent separators are
+collapsed automatically — no doubled dashes.
+
+### Tenant variables
+
+`{var:<key>}` inserts a static value from your tenant variable map.
+Use this for fixed labels that should appear in every filename across
+all forms — for example a region code or customer prefix — without
+coupling the value into every pattern string.
+
+Define variables at `Settings → Filename Defaults → Variables`. Up to
+**20** variables per tenant; keys must match `^[A-Za-z0-9_]+$` (max 64
+chars), values are plain strings (max 128 chars).
+
+```
+{var:region}-{form_name}-{date}
+→ us-east-invoice-request-2026-05-15.pdf
+```
+
+The variable key must exist in the tenant variable map when the pattern
+is saved (`unknown_variable` error otherwise). Adding a variable later
+does not retroactively validate saved patterns — update those patterns
+after adding the variable.
+
+## Sanitization rules
+
+Each resolved token value is slugified before insertion:
+
+1. Common Latin diacritics are ASCII-folded (`é → e`, `ü → u`, `ñ → n`, etc.).
+2. Everything is lowercased.
+3. Spaces collapse to a single `-`.
+4. Characters outside `[a-z0-9._-]` are stripped.
+5. Leading and trailing `-` / `_` are trimmed.
+6. Adjacent repeated separators (`--`, `__`) are collapsed to one.
+
+Literal text between tokens is **not** slugified. It must already
+consist of safe characters — the validator rejects any literal that
+contains characters outside `[A-Za-z0-9._-]` (`unsafe_chars` error).
+This means you cannot use `/`, spaces, or `@` in literal text; use
+hyphens as separators.
+
+The resolved filename is capped at **200 characters** before the `.pdf`
+suffix is appended. The pattern itself is limited to **256 characters**.
+
+## Fallback
+
+If the resolved filename is empty after all tokens are substituted
+(for example, every token returned an empty value), the system falls
+back to the legacy default:
+
+```
+form-submission-<submission_id_short>-v<version>.pdf
+```
+
+## Validation error codes
+
+The API returns `422` with a stable `error.code` when a pattern fails
+validation:
+
+| Code | Cause |
+|---|---|
+| `unknown_token` | `{token}` is not a recognized token name or namespace |
+| `unknown_field` | `{field:<key>}` references a field key not in the form schema |
+| `pii_field_blocked` | `{field:<key>}` references a PII-flagged field |
+| `unknown_variable` | `{var:<key>}` references a key not in the tenant variable map |
+| `unsafe_chars` | Literal text contains a character outside `[A-Za-z0-9._-]` |
+| `pattern_too_long` | Pattern exceeds 256 characters |
+
+Variable map errors (returned by `PUT /api/v1/settings/filename-defaults`):
+
+| Code | Cause |
+|---|---|
+| `too_many_variables` | More than 20 variables in the map |
+| `variable_key_too_long` | Key exceeds 64 characters or contains invalid characters |
+| `variable_value_too_long` | Value exceeds 128 characters |
+
+Attempting to configure a pattern on a Hobby-tier tenant returns `402`
+with `error.code = "tier_required"`.
+
+## Examples
+
+```
+# Minimal — just the form name and submit date
+{form_name}-{date}
+→ invoice-request-2026-05-15.pdf
+
+# Include a field value (non-PII reference number)
+{form_name}-{field:order_ref}-{date}
+→ delivery-notice-po-4021-2026-05-15.pdf
+
+# Use a tenant variable for a fixed region label
+{var:region}-{form_name}-{submission_id_short}
+→ emea-intake-form-abc12345.pdf
+
+# Full precision timestamp for audit trails
+{form_name}-{datetime}
+→ compliance-checklist-20260515-142307.pdf
+```
+
+> **Regenerated PDFs keep the original filename**
+>
+> When you regenerate a PDF from the admin panel, the regenerated copy
+>   inherits the filename that was resolved at the time of the original
+>   submission. Re-running the resolver with updated tenant variables or
+>   a new pattern does not rename existing submissions.
+
+
+---
+
+# Forms tier entitlements
+
+> What each tier unlocks for the Forms surface — active form count, daily submission ceiling, anti-abuse posture, PDF rendering, badge visibility.
+
+_Source: https://fastyoke.io/docs/forms/tiers_
+
+# Forms tier entitlements
+
+Forms ship across all tiers. The differences are in scale and
+configuration depth, not feature gates.
+
+| Capability                            | Hobby           | Pro              | Team             | Enterprise       |
+| ------------------------------------- | --------------- | ---------------- | ---------------- | ---------------- |
+| Active (published) forms              | 3               | Unlimited        | Unlimited        | Unlimited        |
+| Daily submissions (aggregate)         | 100             | 1,000            | Unlimited        | Unlimited        |
+| Turnstile challenge                   | Always-on       | Not used         | Not used         | Not used         |
+| Daily cap / form (see [anti-abuse](/docs/forms/anti-abuse)) | 100 | 1,000 | Unlimited | Unlimited |
+| Submission PDF — Typst (no template)  | ✓               | ✓                | ✓                | ✓                |
+| Submission PDF — AcroForm / Overlay   | —               | —                | ✓                | ✓                |
+| Vanity PDF filenames                  | —               | ✓                | ✓                | ✓                |
+| Powered-by FastYoke badge             | Always-on       | Opt-in           | Opt-in           | Opt-in           |
+| Embedded forms — inline mode          | ✓               | ✓                | ✓                | ✓                |
+| Embedded forms — modal / slide / bubble | —             | ✓                | ✓                | ✓                |
+| Form invites (Mint)                   | ✓ (capped)      | ✓                | ✓                | ✓                |
+| HTTP ingestion API                    | —               | ✓                | ✓                | ✓                |
+
+> **Form invite caps on Hobby**
+>
+> Hobby invite tokens have a 30-day maximum lifetime and a 500-submission
+>   cap per token. Pro and above support 1-year tokens with no submission
+>   limit.
+
+> **Crossing your daily ceiling**
+>
+> Hitting a daily submission ceiling raises a `429 Too Many Requests`
+>   with error code `tier_quota_exceeded`. The ceiling resets at 00:00 UTC.
+>   Submissions already accepted are never dropped. A one-time notification
+>   email goes to the tenant admin when the cap is first hit in a UTC day.
+
+## What an upgrade unlocks instantly
+
+Tier changes propagate within ~30 seconds. After upgrading:
+
+- New daily ceilings apply immediately.
+- The Powered-by badge becomes optional (Pro+) — toggle it off from
+  **Branding** settings.
+- Vanity PDF filenames become available — set a `filename_pattern` on
+  any form definition via the API or form settings.
+- AcroForm and Overlay PDF modes unlock at Team+ for custom-template
+  submissions.
+- Embedded modal, slide, and bubble trigger modes unlock at Pro+.
+- The HTTP ingestion API (`POST /api/v1/tenant/forms/:form_id/submissions`)
+  becomes available at Pro+.
+
+
+---
+
 # Getting Started
 
 > Sign in, provision a tenant, build your first form, wire it to an FSM.
@@ -2152,7 +3270,12 @@ _Source: https://fastyoke.io/docs/getting-started_
 # Getting Started
 
 This section takes you from an empty account to a public form whose
-submissions spawn FSM-backed jobs in your tenant. Three short pages:
+submissions spawn FSM-backed jobs in your tenant.
+
+Don't have an account yet? Start at [Sign up](/docs/getting-started/signup)
+— you're on a working Hobby tenant in under a minute.
+
+Four short pages:
 
 ## Core concepts, in one paragraph
 
@@ -2402,6 +3525,78 @@ something real against your new tenant.
 
 ---
 
+# Sign up
+
+> Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Hobby tier.
+
+_Source: https://fastyoke.io/docs/getting-started/signup_
+
+# Sign up
+
+Go to **`/signup`** on your FastYoke deployment, enter an email and
+password (8 characters minimum), pass the bot challenge, and you're
+signed in. No sales call, no invite needed.
+
+On success you land on `/admin` with a **Hobby** tenant already
+provisioned — your workspace is named after the local part of your
+email address.
+
+## Email verification
+
+Account access is immediate. A verification email goes out in the
+background. Until you click the link, an in-app banner sits at the
+top of the admin shell with a **Resend** button and a dismiss option.
+Unverified accounts are otherwise fully functional.
+
+## What Hobby includes
+
+A working tenant with every surface other tiers get — just sized for
+personal projects and small teams. Full capability matrix at
+[Forms tier entitlements](/docs/forms/tiers).
+
+Highlights:
+
+- 3 active (published) forms.
+- 100 submissions per day across all forms.
+- Cloudflare Turnstile challenge on every public form (always-on at
+  this tier).
+- The "Powered by FastYoke" badge on every public surface — Pro and
+  above can opt it out from **Branding** settings.
+- Submission PDFs via the built-in Typst renderer (no custom
+  template).
+
+## Upgrade to Pro or Team
+
+Two paths:
+
+**At signup** — append `?upgrade=pro` or `?upgrade=team` to the
+signup URL before submitting. After your account is created, the
+browser redirects straight to Stripe Checkout. A successful charge
+sets the tier; you land on `/admin` already upgraded.
+
+If Stripe is not configured on the deployment, you'll see an inline
+notice and a "Continue to dashboard" link — your account is still
+created at the Hobby tier and you can upgrade later.
+
+**After signup** — go to **Settings → Billing → Upgrade**, pick a
+plan, and complete the card checkout. Tier changes propagate within
+~30 seconds of a successful charge. No downtime — submissions in
+flight at the moment of upgrade are counted against the old tier's
+caps; every submission from the next one onward counts against the
+new tier.
+
+Downgrades follow the reverse path. Existing submissions and forms
+are preserved; new submissions count against the lower tier's caps.
+
+> **Duplicate email**
+>
+> If you already have an account, the signup form shows "An account
+>   with that email already exists." Sign in from `/login` instead, or
+>   use **Forgot password** to reset your credentials.
+
+
+---
+
 # Integrations
 
 > Encrypted credential storage for outbound webhooks, Twilio, SendGrid, and custom REST endpoints.
@@ -2543,6 +3738,247 @@ surface.
   inverse direction.
 - [Authentication](/docs/auth) — how tokens gate the CRUD calls
   against `/api/v1/tenant/connections`.
+
+
+---
+
+# Vercel
+
+> Install FastYoke from the Vercel Marketplace, or sign up directly and link an existing Vercel project. Both paths end at the same tenant.
+
+_Source: https://fastyoke.io/docs/integrations/vercel_
+
+# Vercel
+
+FastYoke supports two paths to a working tenant:
+
+- **Direct signup** — visit `/signup`, create an account, and get a
+  Hobby tenant immediately.
+- **Vercel Marketplace install** — add FastYoke from the Vercel
+  integration catalog; the install saga provisions the org, tenant,
+  and API credentials automatically, then emails you an activation
+  link.
+
+Both paths converge on the same tenant shape: a FastYoke admin
+account, a scoped `fy_pat_*` API token, and four environment
+variables written into your linked Vercel project.
+
+---
+
+## Marketplace install path
+
+### 1. OAuth consent
+
+When you install FastYoke from the Vercel integration catalog,
+Vercel redirects your browser to:
+
+```
+GET /vercel/oauth/authorize
+```
+
+This page displays a region selector (the FastYoke instance your
+data will be bound to). Submitting the form signs an OAuth state
+nonce and redirects to Vercel's approval URL.
+
+### 2. Install saga
+
+After you approve the Vercel consent screen, Vercel calls the
+registered callback:
+
+```
+GET /vercel/oauth/callback
+```
+
+The callback exchanges the authorization code for an access token,
+stores it encrypted, and starts a provisioning saga. The saga
+advances through these states in order:
+
+```
+pending
+  → org_created
+  → tenant_created
+  → db_seeded
+  → token_minted
+  → env_injected         ← env vars written to your Vercel project
+  → webhooks_registered  ← lifecycle webhooks registered
+  → complete             ← API key is live
+  → user_invited         ← activation email sent (terminal happy-path state)
+```
+
+During provisioning an interstitial page polls
+`GET /vercel/oauth/status?saga=<id>` for progress. If the saga
+stalls or errors it transitions to `failed`; the LIFO rollback
+removes every artifact created so far (token → tenant → org) and
+leaves the platform clean for a retry.
+
+### 3. Env-var injection
+
+When the saga reaches `env_injected`, four environment variables are
+written across **production, preview, and development** environments
+on your linked Vercel project:
+
+| Variable | Type | Value |
+|---|---|---|
+| `FASTYOKE_API_KEY` | encrypted | `fy_pat_*` bearer token — scoped to your tenant |
+| `FASTYOKE_TENANT_ID` | plain | Your tenant UUID |
+| `FASTYOKE_API_BASE` | plain | `https://api.fastyoke.com` |
+| `FASTYOKE_WEBHOOK_SECRET` | encrypted | Per-tenant HMAC-SHA256 signing secret for inbound webhooks |
+
+`FASTYOKE_API_KEY` and `FASTYOKE_WEBHOOK_SECRET` are stored as
+Vercel **encrypted** variables — readable by your deployments at
+runtime but not visible in the Vercel dashboard UI. The other two
+are **plain** (visible in the dashboard).
+
+Injection is idempotent: the saga lists existing env-var keys
+first and skips any that are already present, so retries and
+project-rename re-injections never create duplicates.
+
+### 4. Activation email
+
+After `complete`, the saga calls `GET https://api.vercel.com/v2/user`
+to retrieve the installing user's email, then sends a welcome email
+containing a one-time activation link:
+
+```
+https://app.fastyoke.com/vercel-claim/<token>
+```
+
+The claim token is valid for **7 days**. Clicking the link:
+
+- **New FastYoke account** — presents a password-set form. On
+  submit, your account is activated, a JWT is issued, and you land
+  at `/admin`.
+- **Existing FastYoke account** — shows a login prompt. Signing in
+  silently attaches the new Vercel tenant to your existing account;
+  no separate claim step required.
+
+> **Activation link is single-use**
+>
+> Each link can only be consumed once. If yours has expired or was
+>   already used, ask your platform operator to resend it (see the
+>   operator section below). The link cannot be regenerated from the
+>   dashboard — only via the CLI.
+
+---
+
+## Direct signup path
+
+Visit `/signup` to create a FastYoke account without going through
+the Vercel Marketplace. You receive a Hobby tenant immediately and
+can start building. To link a Vercel project later, add the four env
+vars from the table above manually using `fy_pat_*` tokens you
+generate at `/admin/settings`.
+
+---
+
+## After activation
+
+Once your account is active, the admin shell is at **`/admin`**.
+Key surfaces for Vercel-connected tenants:
+
+- `/admin/settings` — tenant settings, branding, plan tier.
+- `/admin/settings` (API Tokens tab) — manage `fy_pat_*` tokens.
+- `/admin/integrations` — outbound webhook credentials (Twilio,
+  SendGrid, generic REST).
+
+---
+
+## Lifecycle events
+
+FastYoke registers lifecycle webhooks with Vercel during the
+`webhooks_registered` saga step. The following events are handled
+automatically:
+
+| Event | Effect |
+|---|---|
+| `project.renamed` | Re-runs env injection idempotently so your renamed project still carries all four vars. |
+| `project.deleted` | Soft-deletes the installation row. The tenant and its data are preserved. |
+| `integration.uninstalled` | Soft-deletes the installation and revokes the linked `FASTYOKE_API_KEY`. The tenant, org, and all tenant data are preserved — you can reconnect by reinstalling. |
+| `project.transferred` | Refused (returns an error). Transfers are not supported. |
+
+> **Uninstall preserves your data**
+>
+> Removing FastYoke from a Vercel project does not delete your tenant
+>   database, FSM schemas, jobs, or event log. It only revokes the API
+>   token and unlinks the installation. Reinstalling provisions a
+>   fresh token and re-injects env vars into the new project.
+
+---
+
+## Token rotation
+
+Platform operators can rotate the `FASTYOKE_API_KEY` written into
+your Vercel project without downtime:
+
+```
+POST /vercel/installations/<installation_id>/rotate
+{ "reason": "<audit note>" }
+```
+
+The rotation:
+1. Mints a fresh `fy_pat_*` token.
+2. Pushes it to Vercel as the new `FASTYOKE_API_KEY` env var.
+3. Revokes the prior token.
+
+If step 2 (the Vercel push) fails, step 1 is rolled back so the old
+token stays live — your project never has a broken API key. Rotation
+is platform-admin gated; it cannot be triggered from the tenant
+dashboard.
+
+---
+
+## Operator reference
+
+### Environment variables (server-side)
+
+The Vercel integration is disabled by default. Set all three to
+enable `/vercel/*` routes:
+
+| Variable | Description |
+|---|---|
+| `VERCEL_CLIENT_ID` | OAuth2 client ID from the Vercel partner dashboard. |
+| `VERCEL_CLIENT_SECRET` | OAuth2 client secret. Also used to verify HMAC-SHA1 signatures on incoming lifecycle webhooks. |
+| `VERCEL_REDIRECT_URI` | Registered callback URL, e.g. `https://api.fastyoke.com/vercel/oauth/callback`. |
+
+All three must be set; any missing value disables every `/vercel/*`
+route (returns 503).
+
+### Saga reconciliation CLI
+
+If a saga stalls or the activation email needs to be resent, use the
+`fastyoke-admin` binary:
+
+```sh
+# Inspect a saga (read-only, safe on any id)
+fastyoke-admin vercel-saga-reconcile \
+  --id <saga-id> \
+  --action dry
+
+# Drive a db_seeded saga to token_minted
+fastyoke-admin vercel-saga-reconcile \
+  --id <saga-id> \
+  --action complete
+
+# Resend the activation email (requires --confirm matching --id)
+fastyoke-admin vercel-saga-reconcile \
+  --id <saga-id> \
+  --action user-invite \
+  --confirm <saga-id>
+
+# LIFO rollback — removes all artifacts (requires --confirm)
+fastyoke-admin vercel-saga-reconcile \
+  --id <saga-id> \
+  --action force-rollback \
+  --confirm <saga-id>
+```
+
+`dry` is the safe default and requires no `TENANT_DATA_DIR`.
+`force-rollback` requires `TENANT_DATA_DIR` to be set (same as the
+running app) so it can remove the per-tenant SQLite file.
+
+The saga sweeper worker automatically flips stale `pending` sagas to
+`failed` every 30 seconds, keeping the platform clean without manual
+intervention.
 
 
 ---
@@ -4006,6 +5442,190 @@ for the 429-specific error shape if you hit it.
 - [Authentication](/docs/auth) — full token shapes + the scope vocabulary.
 - [Webhook Intake](/docs/recipes/webhook-intake) — the inverse
   direction (external system posts in).
+
+
+---
+
+# Handle email bounces and complaints
+
+> How FastYoke processes AWS SES bounce and complaint notifications, where the suppression list lives, and how to recover a recipient.
+
+_Source: https://fastyoke.io/docs/recipes/email-bounces_
+
+# Handle email bounces and complaints
+
+FastYoke receives delivery feedback from AWS SES through an SNS HTTPS subscription
+wired to `POST /internal/ses/feedback`. The handler verifies the AWS RSA signature,
+classifies the event, appends an immutable row to `email_deliveries`, and — for hard
+bounces and complaints — also inserts an `email_suppressions` row and mirrors the
+address to the SES account-level suppression list so future sends are blocked at both
+layers.
+
+## How the feedback loop works
+
+```
+SES event (bounce / complaint / delivery)
+  → SNS topic (fastyoke-email-feedback)
+    → HTTPS POST /internal/ses/feedback
+      → signature verification
+        → dispatch_feedback()
+          ├── email_deliveries (every event, append-only)
+          └── email_suppressions (hard bounce + complaint only)
+              └── SES PutSuppressedDestination (best-effort mirror)
+```
+
+Events that trigger suppression:
+
+| SES event type | Bounce type | Suppression? | `email_deliveries.state` |
+|---|---|---|---|
+| Bounce | Permanent | Yes — `bounce_hard` | `bounced` |
+| Bounce | Transient | No | `bounced` |
+| Complaint | — | Yes — `complaint` | `complained` |
+| Delivery | — | No | `delivered` |
+| Reject | — | No | `rejected` |
+| RenderingFailure | — | No | `rendering_failed` |
+
+## Operator setup
+
+Before this handler receives real SNS traffic, complete three steps in AWS:
+
+1. **Create (or update) an SES configuration set** — name it `fastyoke-prod-feedback-eventdest`.
+   Enable the following event destinations publishing to SNS:
+   `Bounce`, `Complaint`, `Delivery`, `Reject`, `RenderingFailure`.
+2. **Create an SNS HTTPS subscription** on the `fastyoke-email-feedback` topic pointing
+   to `https://<your-host>/internal/ses/feedback`.
+3. **Watch for the SubscriptionConfirmation handshake** — FastYoke GETs the
+   `SubscribeURL` automatically when SNS POSTs a `SubscriptionConfirmation` message.
+   Look for the log line:
+
+   ```
+   INFO SES SNS SubscriptionConfirmation: GET'ing SubscribeURL (audit)
+   ```
+
+   That line appearing confirms the subscription is active and SNS will start delivering
+   events.
+
+> **Tag your messages with tenant_id**
+>
+> FastYoke resolves the tenant scope of a suppression from a `tenant_id` SES message tag.
+>   If your send path sets `{ "tenant_id": ["t-acme"] }` as a message tag, the suppression
+>   row is scoped to that tenant only. Messages sent without a `tenant_id` tag (for example,
+>   system-level mail like account alerts) result in a platform-wide suppression row
+>   (`tenant_id IS NULL`) that protects the shared SES account reputation across all tenants.
+
+## Signature verification
+
+Every SNS POST is verified before any DB write runs. The verification steps are:
+
+1. The `SigningCertURL` in the envelope is checked against an allowlist — only URLs
+   whose host matches `*.amazonaws.com` are accepted. Requests with a cert URL from any
+   other host are rejected with `403` immediately (no network request, no DB work).
+2. The cert is fetched (or served from a 24-hour in-process cache) and its
+   `notBefore`/`notAfter` validity window is checked.
+3. The RSA-PKCS1 v1.5 signature in the envelope is verified against the AWS canonical
+   string. Both SignatureVersion `1` (SHA-1) and `2` (SHA-256) are supported.
+
+Invalid signatures return `403`. The status codes SNS receives are intentional:
+
+| Status | Meaning | SNS retry? |
+|---|---|---|
+| `400` | Envelope or inner JSON parse failure | No |
+| `403` | Cert URL not allowed, or signature mismatch | No |
+| `500` | Database write failed | Yes (SNS retries) |
+| `502` | Cert fetch or SubscribeURL GET failed | Yes (SNS retries) |
+
+## Where suppression data is stored
+
+### `email_suppressions`
+
+An append-only table. Each row records one suppression event. Rows are never deleted;
+to remove a suppression, a "supersession" row is written pointing back at the original
+via `superseded_by_id`, and the active read path filters `WHERE superseded_at IS NULL`.
+
+Key columns:
+
+| Column | Type | Notes |
+|---|---|---|
+| `tenant_id` | `TEXT` (nullable FK) | `NULL` = platform-wide suppression |
+| `recipient_email` | `TEXT NOT NULL` | The address being suppressed |
+| `reason` | `TEXT NOT NULL` | One of `bounce_hard`, `bounce_soft`, `complaint`, `unsubscribe`, `manual`, `admin_block` |
+| `template_class_scope` | `TEXT` (nullable) | If set, suppression is scoped to a single email class |
+| `source_message_id` | `TEXT` (nullable) | SES message ID that triggered the suppression |
+| `created_at` | `INTEGER NOT NULL` | Unix epoch milliseconds |
+| `superseded_at` | `INTEGER` (nullable) | Set when a later record lifts the suppression |
+
+### `email_deliveries`
+
+An append-only ledger. Every feedback event (including soft bounces and deliveries)
+appends a row here regardless of whether a suppression row is also written. Multiple
+rows may exist for the same `ses_message_id` as events arrive over time; reads pick
+the latest by `last_event_at`.
+
+## SES account-level suppression mirror
+
+After writing a local `email_suppressions` row, FastYoke calls
+`PutSuppressedDestination` on the SES account-level suppression list. This is
+**best-effort**: if the AWS API call fails, a warning is logged but the local row
+stands and the handler returns `200` to SNS. The local row is the source of truth;
+the SES mirror ensures that even if the outbox worker bypasses the local check for
+any reason, SES itself will block delivery.
+
+> **SES account-level list is shared**
+>
+> `PutSuppressedDestination` operates at the AWS account level — it affects all
+>   SES sends from this account, not just FastYoke's. If you share the SES account
+>   with other senders, a hard bounce recorded by FastYoke will suppress that address
+>   account-wide. Use a dedicated SES account per environment (production, staging)
+>   to keep suppression lists isolated.
+
+## Recovering a suppressed address
+
+A suppression row can be lifted by writing a new row that sets `superseded_at` on the
+original (supersession pattern). There is no admin UI for this yet — it requires a
+direct database operation or a support workflow. To verify whether an address is
+currently suppressed, query:
+
+```sql
+SELECT id, tenant_id, reason, created_at
+FROM email_suppressions
+WHERE recipient_email = 'user@example.com'
+  AND superseded_at IS NULL;
+```
+
+An empty result means the address is not suppressed locally. You should also check the
+SES account-level suppression list in the AWS console under
+**SES → Suppression list** to confirm the mirror was removed there as well.
+
+> **Self-service suppression removal**
+>
+> An admin UI surface for listing and lifting suppressions is planned for a future
+>   release. Until then, suppression removal requires direct DB access or a platform
+>   operator action.
+
+## Verifying the integration end-to-end
+
+AWS provides mailbox simulator addresses you can use without sending to real recipients:
+
+1. **Hard bounce** — send to `bounce@simulator.amazonses.com`. Expect:
+   - An `email_suppressions` row with `reason = 'bounce_hard'`.
+   - An `email_deliveries` row with `state = 'bounced'`.
+   - A `PutSuppressedDestination` call logged on the SES account.
+2. **Complaint** — send to `complaint@simulator.amazonses.com`. Expect:
+   - An `email_suppressions` row with `reason = 'complaint'`.
+   - An `email_deliveries` row with `state = 'complained'`.
+3. **Delivery** — send to `success@simulator.amazonses.com`. Expect:
+   - An `email_deliveries` row with `state = 'delivered'`.
+   - No `email_suppressions` row.
+
+After each simulator send, query `email_deliveries` and `email_suppressions` in the
+platform database to confirm rows appear.
+
+## Related
+
+- [SMTP Integration](/docs/integrations) — configure which SMTP credentials FastYoke
+  uses to send outbound mail.
+- [Security](/docs/security) — general security model including JWT scopes and
+  tenant isolation guarantees.
 
 
 ---

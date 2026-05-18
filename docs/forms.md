@@ -9,6 +9,15 @@ anyone (or anyone you've authenticated), validate against a schema
 the builder owns, and feed submissions into your workflow via
 declarative actions.
 
+## What's covered
+
+- [Tier entitlements](/docs/forms/tiers) — what each tier unlocks for the Forms surface.
+- [Anti-abuse](/docs/forms/anti-abuse) — Turnstile, honeypot, daily caps, rate limit.
+- [Embed forms](/docs/forms/embed) — drop a form into any page via the SDK.
+- [HTTP ingestion API](/docs/forms/http-ingestion) — server-to-server submission.
+- [Invites (Mint)](/docs/forms/invites) — named, revocable invite links.
+- [Vanity PDF filenames](/docs/forms/pdf-vanity-filenames) — readable filenames for submission PDFs.
+
 ## Why forms are a first-class surface
 
 Most platforms bolt forms on top of their entity model. FastYoke

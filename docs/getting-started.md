@@ -5,7 +5,12 @@
 # Getting Started
 
 This section takes you from an empty account to a public form whose
-submissions spawn FSM-backed jobs in your tenant. Three short pages:
+submissions spawn FSM-backed jobs in your tenant.
+
+Don't have an account yet? Start at [Sign up](/docs/getting-started/signup)
+— you're on a working Hobby tenant in under a minute.
+
+Four short pages:
 
 ## Core concepts, in one paragraph
 

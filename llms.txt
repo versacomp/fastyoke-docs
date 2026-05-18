@@ -36,21 +36,30 @@
 ## Extensions
 
 - [Extensions (Install & Manage)](https://fastyoke.io/docs/extensions.md): Upload third-party extension bundles, review scopes, activate, roll back.
+- [Branding & the Powered-by badge](https://fastyoke.io/docs/extensions/branding.md): Where the FastYoke "Powered by" badge appears, and how Pro and above can opt out per surface.
 
 ## Forms
 
 - [Forms](https://fastyoke.io/docs/forms.md): Build public or authenticated forms that route submissions into entities, jobs, or both.
+- [Anti-abuse for public forms](https://fastyoke.io/docs/forms/anti-abuse.md): Turnstile challenges, honeypots, daily caps, and per-IP rate limits keep public form submissions clean without a CAPTCHA wall.
 - [Forms Builder](https://fastyoke.io/docs/forms/builder.md): Pages, sections, field types, routing, themes, attachments.
+- [Embed forms on your own site](https://fastyoke.io/docs/forms/embed.md): Drop a single script tag into any page to render a FastYoke form inline, with theme overrides and origin allowlists.
+- [HTTP ingestion API](https://fastyoke.io/docs/forms/http-ingestion.md): Server-to-server submission of form data via REST. Authenticate with a tenant API token, post a JSON payload, get a submission ID back.
+- [Form invites (Mint)](https://fastyoke.io/docs/forms/invites.md): Issue named, revocable invite links to public forms. The Mint endpoint produces a URL anyone can submit; revoked invites return 410.
+- [Vanity PDF filenames](https://fastyoke.io/docs/forms/pdf-vanity-filenames.md): Generate human-readable filenames for submission PDFs using a pattern of slugs, submission IDs, field values, and dates.
+- [Forms tier entitlements](https://fastyoke.io/docs/forms/tiers.md): What each tier unlocks for the Forms surface — active form count, daily submission ceiling, anti-abuse posture, PDF rendering, badge visibility.
 
 ## Getting Started
 
 - [Getting Started](https://fastyoke.io/docs/getting-started.md): Sign in, provision a tenant, build your first form, wire it to an FSM.
 - [Your First Form](https://fastyoke.io/docs/getting-started/first-form.md): Build a public form, collect submissions, spawn jobs from them.
 - [Installation](https://fastyoke.io/docs/getting-started/installation.md): Sign in, confirm your tenant assignment, invite teammates.
+- [Sign up](https://fastyoke.io/docs/getting-started/signup.md): Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Hobby tier.
 
 ## Integrations
 
 - [Integrations](https://fastyoke.io/docs/integrations.md): Encrypted credential storage for outbound webhooks, Twilio, SendGrid, and custom REST endpoints.
+- [Vercel](https://fastyoke.io/docs/integrations/vercel.md): Install FastYoke from the Vercel Marketplace, or sign up directly and link an existing Vercel project. Both paths end at the same tenant.
 
 ## Jobs
 
@@ -73,6 +82,7 @@
 
 - [Recipes](https://fastyoke.io/docs/recipes.md): Focused walkthroughs for the common FastYoke integration patterns.
 - [CI Scripting](https://fastyoke.io/docs/recipes/ci-scripting.md): Automate tenant-scoped operations from CI using a long-lived FastYoke API token + curl.
+- [Handle email bounces and complaints](https://fastyoke.io/docs/recipes/email-bounces.md): How FastYoke processes AWS SES bounce and complaint notifications, where the suppression list lives, and how to recover a recipient.
 - [Extension Authoring](https://fastyoke.io/docs/recipes/extension-authoring.md): End-to-end — scaffold, iterate locally, publish to a tenant.
 - [CRUD UI with the SDK Hooks](https://fastyoke.io/docs/recipes/sdk-crud-ui.md): Full list + create + update + delete page for a user-defined entity kind using @fastyoke/sdk 0.2.0.
 - [Webhook Intake](https://fastyoke.io/docs/recipes/webhook-intake.md): Receive external events as FSM-backed jobs via a public form + invite token.
