@@ -1,6 +1,8 @@
-# Accessibility
-
-> WCAG 2.1 AA enforced in CI, theme contrast validated on save, focus-trap modal primitive — the architectural pieces that clear institutional procurement.
+---
+title: Accessibility
+summary: WCAG 2.1 AA enforced in CI, theme contrast validated on save, focus-trap modal primitive — the architectural pieces that clear institutional procurement.
+order: 10
+---
 
 # Accessibility
 
@@ -12,14 +14,17 @@ the theme-save path rather than retrofitted.
 
 This section documents what's live today and what's planned.
 
+::section-cards{section="accessibility"}
+::
+
 ## What's live today
 
 | Piece | Status | Notes |
 |---|---|---|
 | Axe-core CI gate | **shipped, advisory** | `.github/workflows/a11y.yml` runs Playwright + `@axe-core/playwright` across 12 routes on every PR. Critical/serious WCAG 2.1 AA violations surface in the PR comment but don't block merge yet — the VPAT generator flips the gate when shipped. |
 | Theme contrast validation | **shipped, blocking** | Branding save returns a structured 422 when `primary_text↔primary` or `sidebar_text↔sidebar_bg` falls below 4.5:1. Auto-suggests the nearest compliant shade. Bypass writes an audit row. |
-| ARIA announcer | **shipped** | `useA11yAnnouncer` Zustand store + `` mounted at the admin shell. Two static regions (polite + assertive) with the clear→write→clear drain pattern. |
-| Modal focus-trap primitive | **shipped** | `` wraps `@radix-ui/react-dialog`. Focus trap, Escape dismissal, focus restoration, `aria-labelledby` / `aria-describedby` wiring all baked in. `` mounted as the first tabbable element of the admin shell. |
+| ARIA announcer | **shipped** | `useA11yAnnouncer` Zustand store + `<A11yLiveRegion />` mounted at the admin shell. Two static regions (polite + assertive) with the clear→write→clear drain pattern. |
+| Modal focus-trap primitive | **shipped** | `<Modal />` wraps `@radix-ui/react-dialog`. Focus trap, Escape dismissal, focus restoration, `aria-labelledby` / `aria-describedby` wiring all baked in. `<SkipToContent />` mounted as the first tabbable element of the admin shell. |
 | `aria-invalid` sweep | planned | Every controlled input binds the attribute to its current validation state. |
 | VPAT generator | planned | In-CI generator that turns the rule-coverage matrix into a committed `docs/vpat/FastYoke-VPAT-2.5.md`. |
 
@@ -85,14 +90,14 @@ The "Bypass for staging" affordance writes an append-only row to
 `0062`) so the compliance signal isn't lost when an operator
 chooses to ship a non-compliant tenant for a staging env.
 
-> **Algorithm note**
->
-> The nearest-compliant suggestion walks the **HSL lightness
->   axis** in 1% steps, with fallback to the opposite direction
->   when the primary pole is exhausted. The original spec text
->   mentioned L*a*b*; pragmatic divergence: WCAG
->   relative luminance is YCbCr-derived, not Lab — perceptual
->   accuracy isn't the goal here, threshold-met-or-not is.
+::callout{type="tip" title="Algorithm note"}
+The nearest-compliant suggestion walks the **HSL lightness
+  axis** in 1% steps, with fallback to the opposite direction
+  when the primary pole is exhausted. The original spec text
+  mentioned L*a*b*; pragmatic divergence: WCAG
+  relative luminance is YCbCr-derived, not Lab — perceptual
+  accuracy isn't the goal here, threshold-met-or-not is.
+::
 
 ## The Modal primitive
 
@@ -105,11 +110,11 @@ Every modal in the SPA mounts through
 - Focus restoration — focus returns to whatever element opened
   the dialog, captured via `useLayoutEffect` before Radix's
   focus scope takes over (Radix's built-in restoration only
-  works with ``; we ship a fully-controlled API).
+  works with `<Dialog.Trigger>`; we ship a fully-controlled API).
 - Initial focus — Radix moves focus to the first focusable
   child by default; override with `initialFocusRef`.
 - `aria-labelledby` + `aria-describedby` wiring via
-  ``.
+  `<Modal.Description>`.
 
 ```tsx
 import { Modal } from '@/components/Modal';

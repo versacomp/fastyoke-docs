@@ -1,6 +1,8 @@
-# Form invites (Mint)
-
-> Issue named, revocable invite links to public forms. The Mint endpoint produces a URL anyone can submit; revoked invites return 410.
+---
+title: Form invites (Mint)
+summary: Issue named, revocable invite links to public forms. The Mint endpoint produces a URL anyone can submit; revoked invites return 410.
+order: 35
+---
 
 # Form invites (Mint)
 
@@ -134,13 +136,13 @@ token expired between the form load and the submit click), the submit returns
 
 ## Tier limits
 
-> **Hobby caps**
->
-> Hobby invite tokens have a **30-day maximum lifetime** (720 hours) and a
->   **500-submission cap per token**. Attempting to mint with `expires_hours`
->   above 720 or `max_submissions` above 500 (or `null`) returns `402` with
->   error code `tier_quota_exceeded`. Upgrade to Pro for 1-year tokens and
->   unlimited submission caps.
+::callout{type="info" title="Hobby caps"}
+Hobby invite tokens have a **30-day maximum lifetime** (720 hours) and a
+**500-submission cap per token**. Attempting to mint with `expires_hours`
+above 720 or `max_submissions` above 500 (or `null`) returns `402` with
+error code `tier_quota_exceeded`. Upgrade to Pro for 1-year tokens and
+unlimited submission caps.
+::
 
 | Limit | Hobby | Pro | Team | Enterprise |
 |-------|-------|-----|------|------------|

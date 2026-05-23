@@ -1,6 +1,8 @@
-# Workflows
-
-> Finite-state machines with sandboxed guards, declarative actions, and multi-version publishing.
+---
+title: Workflows
+summary: Finite-state machines with sandboxed guards, declarative actions, and multi-version publishing.
+order: 3
+---
 
 # Workflows
 
@@ -8,6 +10,9 @@ A workflow is a finite-state machine. You draw it as a graph;
 FastYoke stores it as a strict JSON contract and runs it against
 **jobs** — live FSM instances bound to the schema they were spawned
 from.
+
+::section-cards{section="workflows"}
+::
 
 ## Mental model
 
@@ -62,21 +67,21 @@ happened without advancing the job:
   forward edge for the ready path, one self-loop for the not-ready
   path. The first guard that resolves true wins.
 
-> **event_log is append-only**
->
-> Every self-loop firing writes a row that you cannot prune later.
->   When you wire an automated scheduler to fire a self-loop, bound
->   it — either in the guard itself (e.g. <code>retry_count &lt; 3</code>)
->   or via your scheduler's own rate-limit logic. Unbounded loops
->   pile up audit rows fast.
+::callout{type="warning" title="event_log is append-only"}
+Every self-loop firing writes a row that you cannot prune later.
+  When you wire an automated scheduler to fire a self-loop, bound
+  it — either in the guard itself (e.g. <code>retry_count &lt; 3</code>)
+  or via your scheduler's own rate-limit logic. Unbounded loops
+  pile up audit rows fast.
+::
 
-> **The cancel override still wins**
->
-> A self-loop cannot prevent admin cancellation. The
->   <code>POST /jobs/:id/cancel</code> endpoint writes
->   <code>current_state</code> directly without consulting the FSM
->   graph, so a job spinning in a self-loop is just as cancelable as
->   any other job.
+::callout{type="info" title="The cancel override still wins"}
+A self-loop cannot prevent admin cancellation. The
+  <code>POST /jobs/:id/cancel</code> endpoint writes
+  <code>current_state</code> directly without consulting the FSM
+  graph, so a job spinning in a self-loop is just as cancelable as
+  any other job.
+::
 
 ## Cancel is an out-of-band override
 

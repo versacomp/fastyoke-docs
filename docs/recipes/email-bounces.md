@@ -1,6 +1,8 @@
-# Handle email bounces and complaints
-
-> How FastYoke processes AWS SES bounce and complaint notifications, where the suppression list lives, and how to recover a recipient.
+---
+title: Handle email bounces and complaints
+summary: How FastYoke processes AWS SES bounce and complaint notifications, where the suppression list lives, and how to recover a recipient.
+order: 20
+---
 
 # Handle email bounces and complaints
 
@@ -55,13 +57,13 @@ Before this handler receives real SNS traffic, complete three steps in AWS:
    That line appearing confirms the subscription is active and SNS will start delivering
    events.
 
-> **Tag your messages with tenant_id**
->
-> FastYoke resolves the tenant scope of a suppression from a `tenant_id` SES message tag.
->   If your send path sets `{ "tenant_id": ["t-acme"] }` as a message tag, the suppression
->   row is scoped to that tenant only. Messages sent without a `tenant_id` tag (for example,
->   system-level mail like account alerts) result in a platform-wide suppression row
->   (`tenant_id IS NULL`) that protects the shared SES account reputation across all tenants.
+::callout{type="tip" title="Tag your messages with tenant_id"}
+FastYoke resolves the tenant scope of a suppression from a `tenant_id` SES message tag.
+If your send path sets `{ "tenant_id": ["t-acme"] }` as a message tag, the suppression
+row is scoped to that tenant only. Messages sent without a `tenant_id` tag (for example,
+system-level mail like account alerts) result in a platform-wide suppression row
+(`tenant_id IS NULL`) that protects the shared SES account reputation across all tenants.
+::
 
 ## Signature verification
 
@@ -120,13 +122,13 @@ stands and the handler returns `200` to SNS. The local row is the source of trut
 the SES mirror ensures that even if the outbox worker bypasses the local check for
 any reason, SES itself will block delivery.
 
-> **SES account-level list is shared**
->
-> `PutSuppressedDestination` operates at the AWS account level — it affects all
->   SES sends from this account, not just FastYoke's. If you share the SES account
->   with other senders, a hard bounce recorded by FastYoke will suppress that address
->   account-wide. Use a dedicated SES account per environment (production, staging)
->   to keep suppression lists isolated.
+::callout{type="warn" title="SES account-level list is shared"}
+`PutSuppressedDestination` operates at the AWS account level — it affects all
+SES sends from this account, not just FastYoke's. If you share the SES account
+with other senders, a hard bounce recorded by FastYoke will suppress that address
+account-wide. Use a dedicated SES account per environment (production, staging)
+to keep suppression lists isolated.
+::
 
 ## Recovering a suppressed address
 
@@ -146,11 +148,11 @@ An empty result means the address is not suppressed locally. You should also che
 SES account-level suppression list in the AWS console under
 **SES → Suppression list** to confirm the mirror was removed there as well.
 
-> **Self-service suppression removal**
->
-> An admin UI surface for listing and lifting suppressions is planned for a future
->   release. Until then, suppression removal requires direct DB access or a platform
->   operator action.
+::callout{type="info" title="Self-service suppression removal"}
+An admin UI surface for listing and lifting suppressions is planned for a future
+release. Until then, suppression removal requires direct DB access or a platform
+operator action.
+::
 
 ## Verifying the integration end-to-end
 
@@ -174,5 +176,5 @@ platform database to confirm rows appear.
 
 - [SMTP Integration](/docs/integrations) — configure which SMTP credentials FastYoke
   uses to send outbound mail.
-- [Security](/docs/security) — general security model including JWT scopes and
-  tenant isolation guarantees.
+- [Security: encryption](/docs/security/encryption) — encryption-at-rest model
+  for sensitive payloads.

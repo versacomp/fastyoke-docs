@@ -1,6 +1,7 @@
-# Field types
-
-> The closed 9-type vocabulary every LCAP consumer resolves against. Type drives the default component; @ui/component overrides it within the type's allowed slug list.
+---
+title: Field types
+summary: The closed 9-type vocabulary every LCAP consumer resolves against. Type drives the default component; @ui/component overrides it within the type's allowed slug list.
+---
 
 # Field types
 
@@ -17,15 +18,15 @@ component author an LLM-authored extension instead.
 
 | `field_type`     | Default component         | Wire shape                         | Notes |
 |---|---|---|---|
-| `string`         | ``           | string (≤ `max_length`)            | Single-line text. |
-| `longtext`       | ``            | string (no length cap unless declared) | Multi-line. |
-| `number`         | ``         | number                             | Honors `min`/`max`/`@ui/step`. |
-| `boolean`        | ``            | boolean                            | |
-| `timestamp`      | ``          | ISO-8601 string                    | Storage stays UTC; display via `@ui/timezone`. |
-| `enum`           | ``              | string from `options_json`         | |
-| `fsm_state_ref`  | ``      | string (state name)                | Free-text input by default; `<select>` when `options_json` carries a curated list. |
+| `string`         | `<TextInput />`           | string (≤ `max_length`)            | Single-line text. |
+| `longtext`       | `<TextArea />`            | string (no length cap unless declared) | Multi-line. |
+| `number`         | `<NumberInput />`         | number                             | Honors `min`/`max`/`@ui/step`. |
+| `boolean`        | `<Checkbox />`            | boolean                            | |
+| `timestamp`      | `<DatePicker />`          | ISO-8601 string                    | Storage stays UTC; display via `@ui/timezone`. |
+| `enum`           | `<Select />`              | string from `options_json`         | |
+| `fsm_state_ref`  | `<FsmStatePicker />`      | string (state name)                | Free-text input by default; `<select>` when `options_json` carries a curated list. |
 | `file_ref`       | summary span              | `FileRef` JSON                     | Read-only summary; rich preview lives in the Card block. |
-| `relationship`   | `` | string (id) or `{ id, display_path }` | **Annotation-only in v0.** No graph fetch, no inline picker. |
+| `relationship`   | `<RelationshipDisplay />` | string (id) or `{ id, display_path }` | **Annotation-only in v0.** No graph fetch, no inline picker. |
 
 `NULL` `field_type` (pre-LCAP rows) degrades to `string` —
 existing tenants who haven't started using LCAP keep working.
@@ -52,34 +53,28 @@ resolver console-warns and falls back to the type's default).
 
 `richtext` / `markdown` / `code` resolve to lazy peer packages
 (`@fastyoke/lcap-richtext`, `@fastyoke/lcap-markdowneditor`,
-`@fastyoke/lcap-codeeditor`). These three packages are not yet
-published to npm — the resolver therefore falls back to a plain
-`` with a one-time `console.warn` for every consumer
-today, and will swap to the rich UI automatically once the peer
-packages are released. See the callout below.
+`@fastyoke/lcap-codeeditor`). When the peer package isn't
+installed, the resolver falls back to a plain `<TextArea />`
+with a one-time `console.warn`.
 
-> **Heavy-editor peer packages — preview, not yet on npm**
->
-> The richtext / markdown / code components are designed to
-> ship as separate npm packages so the SDK base bundle stays
-> small. **The three packages — `@fastyoke/lcap-richtext`,
-> `@fastyoke/lcap-codeeditor`, `@fastyoke/lcap-markdowneditor`
-> — are not yet published to the public npm registry.** Until
-> they land, every consumer hits the SDK's built-in fallback:
-> `` lazy-imports the package, catches the
-> 404, and renders a plain `` with a one-time
-> console warning. Content shape (HTML / markdown / source)
-> stays compatible, so a project that authors against the
-> `richtext` / `markdown` / `code` slugs today will swap
-> to the rich UI automatically once the peer packages are
-> released.
+::callout{type="info" title="Heavy-editor peer packages — installed separately"}
+The richtext / markdown / code components ship as separate
+npm packages so the SDK base bundle stays small. Install
+`@fastyoke/lcap-richtext`, `@fastyoke/lcap-codeeditor`, or
+`@fastyoke/lcap-markdowneditor` to enable the rich
+rendering for the matching `@ui/component` slug. Without
+the package installed, `<SmartField />` falls back to a
+plain `<TextArea />` with a one-time console warning;
+content shape (HTML / markdown / source) stays compatible
+across the swap.
+::
 
 ## Storage shapes
 
 Storage shape is the **wire format** — what lands in
 `entity_records.data_payload[field_key]`. Display formatting is
 applied by the resolver only at render time; storage stays
-canonical so an export script that bypasses ``
+canonical so an export script that bypasses `<SmartField />`
 gets sortable, parseable values.
 
 - **`string`, `longtext`** — UTF-8 string. The legacy `text`

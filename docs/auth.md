@@ -1,6 +1,8 @@
-# Authentication & Scopes
-
-> JWT shapes, platform vs tenant context, extension tokens, SSO.
+---
+title: Authentication & Scopes
+summary: JWT shapes, platform vs tenant context, extension tokens, SSO.
+order: 7
+---
 
 # Authentication
 
@@ -158,14 +160,14 @@ These are the scopes that both **extension manifests** and
 change across `KNOWN_SCOPES` in
 `backend/src/api/extensions.rs` and the mint UI.
 
-> **Enforcement is live**
->
-> Extension JWTs and API tokens both flow through
->   <code>CurrentUser::require_scope()</code>. A missing scope returns
->   403 immediately — there is no advisory mode. Human user sessions
->   (no <code>ext_id</code>, no <code>api_token_id</code>) bypass
->   scope checks; their authority is gated by
->   <code>require_admin()</code> instead.
+::callout{type="info" title="Enforcement is live"}
+Extension JWTs and API tokens both flow through
+  <code>CurrentUser::require_scope()</code>. A missing scope returns
+  403 immediately — there is no advisory mode. Human user sessions
+  (no <code>ext_id</code>, no <code>api_token_id</code>) bypass
+  scope checks; their authority is gated by
+  <code>require_admin()</code> instead.
+::
 
 ## Multi-tenancy invariant
 

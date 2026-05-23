@@ -1,6 +1,8 @@
-# Webhook Intake
-
-> Receive external events as FSM-backed jobs via a public form + invite token.
+---
+title: Webhook Intake
+summary: Receive external events as FSM-backed jobs via a public form + invite token.
+order: 1
+---
 
 # Webhook Intake
 
@@ -38,13 +40,13 @@ In the admin shell at `/admin/forms`:
    - `notes` — type `textarea`, optional, max_length 2000.
 3. **Publish** the form.
 
-> **Mirror an existing entity**
->
-> If your CRM payload should eventually become an entity record,
->   use the **From entity** tab to import the fields straight from
->   your annotated entity definition — labels, `required`, and
->   enum options carry over automatically (see
->   [Entities](/docs/entities)).
+::callout{type="tip" title="Mirror an existing entity"}
+If your CRM payload should eventually become an entity record,
+  use the **From entity** tab to import the fields straight from
+  your annotated entity definition — labels, `required`, and
+  enum options carry over automatically (see
+  [Entities](/docs/entities)).
+::
 
 ## 3. Wire SPAWN_JOB_FROM_FORM to your workflow
 
@@ -76,6 +78,7 @@ endpoint your CRM will POST to is
 
 ## 5. Have your CRM POST
 
+::code-group
 ```bash title="curl"
 curl -X POST "https://fastyoke.example/api/v1/public/forms/<token>/submit" \
   -H "content-type: application/json" \
@@ -101,6 +104,7 @@ await fetch(`${BASE}/api/v1/public/forms/${TOKEN}/submit`, {
   }),
 });
 ```
+::
 
 The response is the canonical `submission` shape — `{ id,
 submitted_at, submission_count }` — so your CRM can record the
@@ -128,12 +132,12 @@ correlation id.
   `event_log` row. You can prove what the CRM sent + when it was
   acted on.
 
-> **Don**
->
-> It's tempting to reuse a tenant admin JWT for CRM-to-FastYoke
->   calls. Don't — user JWTs are 24h-scoped and revoke on logout.
->   A form invite token is a purpose-built, revocable, per-form
->   credential. Use the right primitive.
+::callout{type="warn" title="Don't use a user JWT for this"}
+It's tempting to reuse a tenant admin JWT for CRM-to-FastYoke
+  calls. Don't — user JWTs are 24h-scoped and revoke on logout.
+  A form invite token is a purpose-built, revocable, per-form
+  credential. Use the right primitive.
+::
 
 ## Related
 

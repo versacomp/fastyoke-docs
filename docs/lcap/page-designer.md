@@ -1,6 +1,7 @@
-# Page Designer integration
-
-> The `entity_field` block binds a Page Designer block to one (entity, field, record) tuple and mounts `<SmartField mode="display" />`. Annotation drives display formatting — change once, every block follows.
+---
+title: Page Designer integration
+summary: The `entity_field` block binds a Page Designer block to one (entity, field, record) tuple and mounts `<SmartField mode="display" />`. Annotation drives display formatting — change once, every block follows.
+---
 
 # Page Designer integration
 
@@ -8,7 +9,7 @@ The Page Designer's `entity_field` block is the
 first surface where LCAP rendering meets the workspace. Drag
 the block onto the canvas, pick an entity + field + record
 binding, and the workspace renders the field via
-`` — display formatting flows
+`<SmartField mode="display" />` — display formatting flows
 straight from the annotation row.
 
 This page documents the block shape, the editor surface, and
@@ -116,7 +117,7 @@ The `entity_card` block is the "show every annotated field of
 one record" companion. Drag it onto the canvas, pick an entity
 + `record_id`, and the workspace iterates the entity's
 annotation list at render time — one
-`` per row, sorted by
+`<SmartField mode="display" />` per row, sorted by
 `display_order` (NULLs sink to the end, alphabetical by
 field_key among ties; same convention as the admin editor and
 the backend's `fetch_annotations` ORDER BY).
@@ -143,9 +144,9 @@ case shows an inline hint pointing the admin at
 
 The deterministic CRUD bundle generator
 (`/admin/apps` → Generate, mode "CRUD scaffold") now emits
-bundles that import `` for every form input and
+bundles that import `<SmartField />` for every form input and
 detail cell. Each entity's annotations get serialized inline as
-a `const _ANNOTATIONS = [...]` JS array; per-field
+a `const <PREFIX>_ANNOTATIONS = [...]` JS array; per-field
 `SmartField` calls reference the matching annotation row at
 render time.
 
@@ -157,7 +158,7 @@ Effects on emitted bundles:
   rendering automatically — no per-bundle markup.
 - **Detail cells** render with locale-aware currency / date /
   percent formatting (matrix-driven). Pre-LCAP rows still work
-  — `` falls back to a permissive string
+  — `<SmartField />` falls back to a permissive string
   rendering when `field_type` is `NULL`.
 - **List cells** stay on `FilePayloadView` for the 80px image-
   thumbnail behavior. SmartField's file-summary span doesn't
@@ -177,7 +178,7 @@ full overview.
 The **Forms v2 internal SmartField switch** previously listed here
 has shipped — see the LCAP overview for the strict allow-list of
 form/annotation type pairs (`text↔string`, `textarea↔longtext`,
-etc.) that route through ``.
+etc.) that route through `<SmartField />`.
 
 ## Cross-references
 

@@ -1,6 +1,8 @@
-# Forms
-
-> Build public or authenticated forms that route submissions into entities, jobs, or both.
+---
+title: Forms
+summary: Build public or authenticated forms that route submissions into entities, jobs, or both.
+order: 2
+---
 
 # Forms
 
@@ -17,6 +19,9 @@ declarative actions.
 - [HTTP ingestion API](/docs/forms/http-ingestion) — server-to-server submission.
 - [Invites (Mint)](/docs/forms/invites) — named, revocable invite links.
 - [Vanity PDF filenames](/docs/forms/pdf-vanity-filenames) — readable filenames for submission PDFs.
+
+::section-cards{section="forms"}
+::
 
 ## Why forms are a first-class surface
 

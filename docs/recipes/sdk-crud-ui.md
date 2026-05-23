@@ -1,14 +1,16 @@
-# CRUD UI with the SDK Hooks
-
-> Full list + create + update + delete page for a user-defined entity kind using @fastyoke/sdk 0.2.0.
+---
+title: CRUD UI with the SDK Hooks
+summary: Full list + create + update + delete page for a user-defined entity kind using @fastyoke/sdk 0.2.0.
+order: 5
+---
 
 # CRUD UI with the SDK Hooks
 
 A single-page UI that lists, creates, updates, and deletes records of one entity kind — the pattern every real-data extension eventually reaches for. Uses the data hooks shipped in `@fastyoke/sdk@0.2.0`; no host-side Zustand, no custom fetch plumbing, no manual refresh on mutation.
 
-> **Note**
->
-> **For a fast standard-shape CRUD app, use the [Studio wizard](/docs/apps/studio-wizard) instead.** A 4-step builder (layout → branding → entities → review) ships a themed multi-page extension from your annotated entities — no code. Follow this recipe when you need bespoke CRUD UI in your own Next.js app outside the extension surface, or when you want to learn how the hooks fit together.
+::callout{type="tip"}
+**For a fast standard-shape CRUD app, use the [Studio wizard](/docs/apps/studio-wizard) instead.** A 4-step builder (layout → branding → entities → review) ships a themed multi-page extension from your annotated entities — no code. Follow this recipe when you need bespoke CRUD UI in your own Next.js app outside the extension surface, or when you want to learn how the hooks fit together.
+::
 
 ## What you'll build
 

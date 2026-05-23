@@ -1,6 +1,8 @@
-# FSM Designer
-
-> Draw the graph, wire transitions, compose guards, declare actions.
+---
+title: FSM Designer
+summary: Draw the graph, wire transitions, compose guards, declare actions.
+order: 1
+---
 
 # FSM Designer
 
@@ -15,27 +17,27 @@ emits the strict `schema_json` the backend persists.
 Click **Add state**, give it a label. One state per FSM is marked
 **initial** (the drop target for a job's spawn event).
 
-> **Orphan warnings**
->
-> The save-time compiler reports any state that has no connecting
->   transitions as an orphan warning. Nothing breaks — you just see
->   a banner reminding you to either wire it up or delete it.
+::callout{type="tip" title="Orphan warnings"}
+The save-time compiler reports any state that has no connecting
+  transitions as an orphan warning. Nothing breaks — you just see
+  a banner reminding you to either wire it up or delete it.
+::
 
 ## Transitions
 
 Drag from one node's edge-handle to another. The transition
 side-panel opens:
 
-> **Self-loops are supported**
->
-> Drag a transition from a node back to itself to create a
->   **self-loop** — a transition whose <code>from</code> and
->   <code>to</code> are the same state. The job stays put but the
->   event still fires, the guard still evaluates, and the event log
->   still gets a row. Useful for audit-only events ("note added"),
->   idempotent retries while waiting on a forward guard, and counter
->   bumps in the payload. See <a href="/docs/workflows">Workflows →
->   Self-loops are first-class</a> for the full pattern.
+::callout{type="tip" title="Self-loops are supported"}
+Drag a transition from a node back to itself to create a
+  **self-loop** — a transition whose <code>from</code> and
+  <code>to</code> are the same state. The job stays put but the
+  event still fires, the guard still evaluates, and the event log
+  still gets a row. Useful for audit-only events ("note added"),
+  idempotent retries while waiting on a forward guard, and counter
+  bumps in the payload. See <a href="/docs/workflows">Workflows →
+  Self-loops are first-class</a> for the full pattern.
+::
 
 ### Event type
 
@@ -53,14 +55,14 @@ three-field form covers most cases:
   `contains` (for arrays).
 - **Value** — literal to compare against.
 
-> **Entity-bound schemas get annotations**
->
-> If the workflow has an <code>entity_name</code> binding set, the
->   Variable path input grows a <code>&lt;datalist&gt;</code> of
->   annotated field keys from the target entity. Typing a free-form
->   path still works — the picker is a suggestion, not a constraint.
->   See <a href="/docs/entities">Entities</a> for how to author
->   annotations.
+::callout{type="info" title="Entity-bound schemas get annotations"}
+If the workflow has an <code>entity_name</code> binding set, the
+  Variable path input grows a <code>&lt;datalist&gt;</code> of
+  annotated field keys from the target entity. Typing a free-form
+  path still works — the picker is a suggestion, not a constraint.
+  See <a href="/docs/entities">Entities</a> for how to author
+  annotations.
+::
 
 For guards outside the three-field form's expressivity, the
 composer accepts a raw JSONLogic object in advanced mode.

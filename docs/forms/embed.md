@@ -1,6 +1,8 @@
-# Embed forms on your own site
-
-> Drop a single script tag into any page to render a FastYoke form inline, with theme overrides and origin allowlists.
+---
+title: Embed forms on your own site
+summary: Drop a single script tag into any page to render a FastYoke form inline, with theme overrides and origin allowlists.
+order: 20
+---
 
 # Embed forms on your own site
 
@@ -44,11 +46,11 @@ The script loads asynchronously and does not block page rendering.
 | `slide` | Clicking a trigger button slides a panel in from the right edge. | Pro+ |
 | `bubble` | A floating action button in the corner opens a popover form. | Pro+ |
 
-> **Hobby tier — inline only**
->
-> Hobby accounts can publish embeds in `inline` mode. Upgrading to Pro or
->   above unlocks `modal`, `slide`, and `bubble` modes as well as brand
->   theming, custom success behavior, and lifecycle events.
+::callout{type="note" title="Hobby tier — inline only"}
+Hobby accounts can publish embeds in `inline` mode. Upgrading to Pro or
+above unlocks `modal`, `slide`, and `bubble` modes as well as brand
+theming, custom success behavior, and lifecycle events.
+::
 
 ## Trigger options
 
@@ -111,12 +113,12 @@ When the list is empty the server runs in wildcard mode (any origin may embed
 your forms). When it contains at least one entry, a request from an origin not
 on the list receives `403 Forbidden`.
 
-> **Configure origins before going live**
->
-> If you save an embed but have not added your site's origin to the allowed
->   list, every visitor to your site will see the "Form temporarily unavailable"
->   placeholder. The Embed tab shows a warning banner with a direct link to the
->   settings page when no domains are configured.
+::callout{type="warning" title="Configure origins before going live"}
+If you save an embed but have not added your site's origin to the allowed
+list, every visitor to your site will see the "Form temporarily unavailable"
+placeholder. The Embed tab shows a warning banner with a direct link to the
+settings page when no domains are configured.
+::
 
 The backend also injects a `Content-Security-Policy: frame-ancestors` header
 that tells browsers which origins may frame the form page, providing a
@@ -124,10 +126,10 @@ defense-in-depth layer on top of the server-side origin check.
 
 ## Theming
 
-> **Pro+ feature**
->
-> Brand theming is stripped server-side for Hobby accounts. The form renders
->   with FastYoke's default theme regardless of what was saved.
+::callout{type="note" title="Pro+ feature"}
+Brand theming is stripped server-side for Hobby accounts. The form renders
+with FastYoke's default theme regardless of what was saved.
+::
 
 The embed config carries three theme fields that map to CSS custom properties
 applied to the form's outer wrapper:
@@ -144,10 +146,10 @@ all theme configuration is server-side and tier-masked at render time.
 
 ## Lifecycle events
 
-> **Pro+ feature**
->
-> Lifecycle events (postMessage relay) are disabled server-side for Hobby
->   accounts. The `window.FastYoke.on()` calls below are no-ops on Hobby.
+::callout{type="note" title="Pro+ feature"}
+Lifecycle events (postMessage relay) are disabled server-side for Hobby
+accounts. The `window.FastYoke.on()` calls below are no-ops on Hobby.
+::
 
 When **Emit postMessage events** is enabled in the embed config, the SDK
 relays events from the form iframe to the host page as `CustomEvent`s on

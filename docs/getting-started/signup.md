@@ -1,6 +1,8 @@
-# Sign up
-
-> Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Hobby tier.
+---
+title: Sign up
+summary: Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Hobby tier.
+order: 5
+---
 
 # Sign up
 
@@ -59,8 +61,8 @@ new tier.
 Downgrades follow the reverse path. Existing submissions and forms
 are preserved; new submissions count against the lower tier's caps.
 
-> **Duplicate email**
->
-> If you already have an account, the signup form shows "An account
->   with that email already exists." Sign in from `/login` instead, or
->   use **Forgot password** to reset your credentials.
+::callout{type="info" title="Duplicate email"}
+If you already have an account, the signup form shows "An account
+with that email already exists." Sign in from `/login` instead, or
+use **Forgot password** to reset your credentials.
+::

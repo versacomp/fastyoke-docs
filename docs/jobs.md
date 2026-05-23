@@ -1,6 +1,8 @@
-# Jobs
-
-> The runtime side of workflows — live FSM instances you fire transitions against.
+---
+title: Jobs
+summary: The runtime side of workflows — live FSM instances you fire transitions against.
+order: 4
+---
 
 # Jobs
 
@@ -9,6 +11,9 @@ Where the Workflows section covers authoring the graph, this
 section is about what happens after you press play: spawning jobs,
 firing transitions, reading the audit trail, and overriding when
 reality diverges from the workflow model.
+
+::section-cards{section="jobs"}
+::
 
 ## Lifecycle
 

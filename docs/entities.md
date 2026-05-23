@@ -1,6 +1,8 @@
-# Entities
-
-> Schemaless JSON records that serve as FSM guard-evaluation context.
+---
+title: Entities
+summary: Schemaless JSON records that serve as FSM guard-evaluation context.
+order: 4
+---
 
 # Entities
 
@@ -8,6 +10,9 @@ Entity records are how FastYoke holds your domain data. They're
 intentionally schemaless — every record is a JSON payload stored in
 `entity_records.data_payload` as TEXT. You don't declare fields up
 front; you store whatever your workflow needs.
+
+::section-cards{section="entities"}
+::
 
 ## Why schemaless
 

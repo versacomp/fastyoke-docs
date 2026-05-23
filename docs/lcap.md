@@ -1,6 +1,8 @@
-# LCAP
-
-> Low-Code Application Platform — annotation-driven entity rendering. One annotation row drives Forms v2, Page Designer, CRUD scaffolds, and `@fastyoke/next` SSR pages.
+---
+title: LCAP
+summary: Low-Code Application Platform — annotation-driven entity rendering. One annotation row drives Forms v2, Page Designer, CRUD scaffolds, and `@fastyoke/next` SSR pages.
+order: 6
+---
 
 # LCAP — Low-Code Application Platform
 
@@ -11,7 +13,7 @@ per-field React components. It's built on three primitives:
 1. **A 9-type field vocabulary** stamped onto
    `entity_field_annotations` — the closed set every consumer
    resolves against.
-2. **``** — a single React component in
+2. **`<SmartField />`** — a single React component in
    `@fastyoke/sdk` that walks an annotation row, picks the
    right input, applies the declared formatting, runs zod
    validation, and writes back.
@@ -21,8 +23,11 @@ per-field React components. It's built on three primitives:
 
 The same annotation row drives Forms v2, the Page Designer's
 entity blocks, the CRUD scaffold's emitter, and any
-`@fastyoke/next` consumer that mounts ``. **Edit the
+`@fastyoke/next` consumer that mounts `<SmartField />`. **Edit the
 annotation in one place; every surface follows.**
+
+::section-cards{section="lcap"}
+::
 
 ## When to use LCAP
 
@@ -35,7 +40,7 @@ LCAP sits alongside two other ways to ship entity-aware UI:
 | **LLM-authored extension** | Bespoke React extension written by Claude. Anything you can describe. | Custom flows that don't fit a list/detail pattern. |
 
 LCAP and the CRUD scaffold compose: the scaffold's emitter
-imports `` for every input, so the bundle stays
+imports `<SmartField />` for every input, so the bundle stays
 in lockstep with the LCAP type matrix as new types ship.
 
 ## The annotation row
@@ -58,9 +63,9 @@ The columns are nullable. Existing tenants who never touch LCAP
 keep working — the resolver falls back to the same inferred
 behavior the pre-LCAP surfaces showed.
 
-## The resolver — ``
+## The resolver — `<SmartField />`
 
-`` is the only consumer of an annotation row. Forms
+`<SmartField />` is the only consumer of an annotation row. Forms
 v2, Page Designer entity blocks, the CRUD scaffold, Workspace —
 everything routes through it. Public API:
 
@@ -116,17 +121,17 @@ existing Team+-gated surfaces.
 - [Formatting](/docs/lcap/formatting) — currency, percent, date,
   time, locale resolution, dayjs token vocabulary.
 - [Page Designer integration](/docs/lcap/page-designer) — the
-  `entity_field` block and how it composes with ``.
+  `entity_field` block and how it composes with `<SmartField />`.
 
-> **LCAP — fully shipped (2026-04-26)**
->
-> All sub-phases are live, including the Forms v2
-> internal SmartField switch. In the admin live preview, fields
-> stamped with an `entity_field` source route through
-> `` when the form/annotation type pair is on the
-> strict allow-list — `text↔string`, `textarea↔longtext`,
-> `number↔number`, `checkbox↔boolean`, `date↔timestamp`,
-> `select↔enum`, `file↔file_ref`. Mismatches and missing
-> annotations fall back to the legacy renderer with a one-time
-> `console.warn`. The public form renderer stays on the legacy
-> path until a public-annotation read endpoint is designed.
+::callout{type="tip" title="LCAP — fully shipped (2026-04-26)"}
+All sub-phases are live, including the Forms v2
+internal SmartField switch. In the admin live preview, fields
+stamped with an `entity_field` source route through
+`<SmartField />` when the form/annotation type pair is on the
+strict allow-list — `text↔string`, `textarea↔longtext`,
+`number↔number`, `checkbox↔boolean`, `date↔timestamp`,
+`select↔enum`, `file↔file_ref`. Mismatches and missing
+annotations fall back to the legacy renderer with a one-time
+`console.warn`. The public form renderer stays on the legacy
+path until a public-annotation read endpoint is designed.
+::

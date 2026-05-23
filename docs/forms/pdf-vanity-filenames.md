@@ -1,6 +1,8 @@
-# Vanity PDF filenames
-
-> Generate human-readable filenames for submission PDFs using a pattern of slugs, submission IDs, field values, and dates.
+---
+title: Vanity PDF filenames
+summary: Generate human-readable filenames for submission PDFs using a pattern of slugs, submission IDs, field values, and dates.
+order: 40
+---
 
 # Vanity PDF filenames
 
@@ -166,9 +168,9 @@ with `error.code = "tier_required"`.
 → compliance-checklist-20260515-142307.pdf
 ```
 
-> **Regenerated PDFs keep the original filename**
->
-> When you regenerate a PDF from the admin panel, the regenerated copy
->   inherits the filename that was resolved at the time of the original
->   submission. Re-running the resolver with updated tenant variables or
->   a new pattern does not rename existing submissions.
+::callout{type="info" title="Regenerated PDFs keep the original filename"}
+When you regenerate a PDF from the admin panel, the regenerated copy
+inherits the filename that was resolved at the time of the original
+submission. Re-running the resolver with updated tenant variables or
+a new pattern does not rename existing submissions.
+::

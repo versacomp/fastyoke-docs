@@ -1,6 +1,8 @@
-# CI Scripting
-
-> Automate tenant-scoped operations from CI using a long-lived FastYoke API token + curl.
+---
+title: CI Scripting
+summary: Automate tenant-scoped operations from CI using a long-lived FastYoke API token + curl.
+order: 3
+---
 
 # CI Scripting
 
@@ -50,21 +52,21 @@ env:
   FASTYOKE_BASE: https://fastyoke.example/api/v1
 ```
 
-> **Prefer narrow scopes + short TTL**
->
-> Every scope you drop shrinks the blast radius of a leaked token.
->   A read-only deploy-gate job only needs <code>data:read</code> +
->   <code>workflow:read</code>; it should not be carrying
->   <code>admin:*</code> just because that was the default.
+::callout{type="info" title="Prefer narrow scopes + short TTL"}
+Every scope you drop shrinks the blast radius of a leaked token.
+  A read-only deploy-gate job only needs <code>data:read</code> +
+  <code>workflow:read</code>; it should not be carrying
+  <code>admin:*</code> just because that was the default.
+::
 
-> **Still need a browser-shape JWT?**
->
-> Some flows (interactive replay, local debugging) want the same
->   JWT a browser session uses. Mint one via
->   <code>POST /api/v1/auth/login</code> — see
->   [Authentication](/docs/auth#1-tenant-user-jwt). API tokens are
->   the right default for unattended pipelines; login JWTs are the
->   right default for people at keyboards.
+::callout{type="tip" title="Still need a browser-shape JWT?"}
+Some flows (interactive replay, local debugging) want the same
+  JWT a browser session uses. Mint one via
+  <code>POST /api/v1/auth/login</code> — see
+  [Authentication](/docs/auth#1-tenant-user-jwt). API tokens are
+  the right default for unattended pipelines; login JWTs are the
+  right default for people at keyboards.
+::
 
 ## Provision schemas from a JSON spec
 
@@ -126,13 +128,13 @@ jq -c '.[]' seed/vehicles.json | while read -r record; do
 done
 ```
 
-> **Annotations speed this up**
->
-> If your entity has annotations, the picker surfaces +
->   API responses already know the expected field types. Seeding
->   "wrong" types works fine (entity data is schemaless JSON) but
->   downstream Forms v2 pickers won't infer them correctly. Prefer
->   the annotated shape.
+::callout{type="tip" title="Annotations speed this up"}
+If your entity has annotations, the picker surfaces +
+  API responses already know the expected field types. Seeding
+  "wrong" types works fine (entity data is schemaless JSON) but
+  downstream Forms v2 pickers won't infer them correctly. Prefer
+  the annotated shape.
+::
 
 ## Transition jobs programmatically
 

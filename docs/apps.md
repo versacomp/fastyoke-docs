@@ -1,6 +1,8 @@
-# Apps
-
-> Group pages under a shared slug + theme; the user-facing face of your tenant.
+---
+title: Apps
+summary: Group pages under a shared slug + theme; the user-facing face of your tenant.
+order: 6
+---
 
 # Apps
 
@@ -13,6 +15,9 @@ configuration for enterprise delivery.
 Every tenant has at least one app. Most tenants have one per product
 line — `shipments`, `dispatch`, `billing` — each with its own URL
 slug and brand.
+
+::section-cards{section="apps"}
+::
 
 ## Anatomy
 
@@ -73,13 +78,13 @@ Two layers, in order:
    isn't sanitized — it's an admin-only surface, not a public
    one.
 
-> **When to fork a theme vs bump custom_css**
->
-> If the tweak would apply to more than one app, <em>fork the
->   theme</em> via <code>/admin/themes</code> — the fork becomes a
->   first-class theme you can attach to the other apps too. Only
->   reach for <code>custom_css</code> for the "last 5%" that's
->   genuinely app-specific.
+::callout{type="tip" title="When to fork a theme vs bump custom_css"}
+If the tweak would apply to more than one app, <em>fork the
+  theme</em> via <code>/admin/themes</code> — the fork becomes a
+  first-class theme you can attach to the other apps too. Only
+  reach for <code>custom_css</code> for the "last 5%" that's
+  genuinely app-specific.
+::
 
 ## Advanced App Builder (enterprise)
 

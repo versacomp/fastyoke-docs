@@ -1,6 +1,8 @@
-# Integrations
-
-> Encrypted credential storage for outbound webhooks, Twilio, SendGrid, and custom REST endpoints.
+---
+title: Integrations
+summary: Encrypted credential storage for outbound webhooks, Twilio, SendGrid, and custom REST endpoints.
+order: 9
+---
 
 # Integrations
 
@@ -9,6 +11,9 @@ outside world. Store a credential once in `/admin/integrations`, then
 fire it as a `WEBHOOK` action from any transition — the action
 engine decrypts the credential at execution time and POSTs to the
 target system.
+
+::section-cards{section="integrations"}
+::
 
 ## Supported providers
 
@@ -42,15 +47,15 @@ Credentials are encrypted at rest with **AES-256-GCM** using
   tool today — plan for that with a one-shot migration when it
   matters.
 
-> **ENCRYPTION_KEY is not optional**
->
-> Booting without <code>ENCRYPTION_KEY</code> falls back to a
->   zeroed dev key. Every deployment that carries real credentials
->   must set a real 64-char hex key via
->   <code>fly secrets set ENCRYPTION_KEY=...</code> — the
->   <code>/auth/me</code> hydrator won't warn you, but the first
->   real write will persist ciphertext that only the zero-key can
->   decrypt, stranding you on deploy rotation.
+::callout{type="warn" title="ENCRYPTION_KEY is not optional"}
+Booting without <code>ENCRYPTION_KEY</code> falls back to a
+  zeroed dev key. Every deployment that carries real credentials
+  must set a real 64-char hex key via
+  <code>fly secrets set ENCRYPTION_KEY=...</code> — the
+  <code>/auth/me</code> hydrator won't warn you, but the first
+  real write will persist ciphertext that only the zero-key can
+  decrypt, stranding you on deploy rotation.
+::
 
 ## Creating a connection
 

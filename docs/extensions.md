@@ -1,6 +1,8 @@
-# Extensions (Install & Manage)
-
-> Upload third-party extension bundles, review scopes, activate, roll back.
+---
+title: Extensions (Install & Manage)
+summary: Upload third-party extension bundles, review scopes, activate, roll back.
+order: 7
+---
 
 # Extensions (Install & Manage)
 
@@ -9,12 +11,15 @@ someone else built. For the author's side — scaffolding, iterating,
 publishing — head to the
 [Extension Authoring recipe](/docs/recipes/extension-authoring).
 
-> **Two directions, same table**
->
-> Uploaded bundles land in the per-tenant <code>tenant_extensions</code>
->   table regardless of whether they got there via <code>fy publish</code>
->   (remote CI) or the <strong>Upload</strong> button in this page
->   (admin browser). The install flow is identical from there.
+::callout{type="info" title="Two directions, same table"}
+Uploaded bundles land in the per-tenant <code>tenant_extensions</code>
+  table regardless of whether they got there via <code>fy publish</code>
+  (remote CI) or the <strong>Upload</strong> button in this page
+  (admin browser). The install flow is identical from there.
+::
+
+::section-cards{section="extensions"}
+::
 
 ## Upload flow
 
@@ -41,15 +46,15 @@ declared set prominently in the upload confirmation dialog.
 Reject the upload if the scopes don't match what you expect from
 the extension's documented purpose.
 
-> **Scopes are enforced at runtime**
->
-> Every API call carrying an extension-scoped JWT or API token is
->   checked against the manifest's <code>required_scopes</code> at
->   the request boundary; a missing scope rejects the call with HTTP
->   403. Review the scope list during install — it's both a trust
->   signal and the active security boundary. The extension still
->   runs under the signed-in user's JWT, so its effective permissions
->   are a subset of the user's regardless of declared scopes.
+::callout{type="warn" title="Scopes are enforced at runtime"}
+Every API call carrying an extension-scoped JWT or API token is
+  checked against the manifest's <code>required_scopes</code> at
+  the request boundary; a missing scope rejects the call with HTTP
+  403. Review the scope list during install — it's both a trust
+  signal and the active security boundary. The extension still
+  runs under the signed-in user's JWT, so its effective permissions
+  are a subset of the user's regardless of declared scopes.
+::
 
 See the full [scope vocabulary](/docs/auth#scopes) in the Auth page.
 

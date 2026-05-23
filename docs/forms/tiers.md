@@ -1,6 +1,8 @@
-# Forms tier entitlements
-
-> What each tier unlocks for the Forms surface — active form count, daily submission ceiling, anti-abuse posture, PDF rendering, badge visibility.
+---
+title: Forms tier entitlements
+summary: What each tier unlocks for the Forms surface — active form count, daily submission ceiling, anti-abuse posture, PDF rendering, badge visibility.
+order: 5
+---
 
 # Forms tier entitlements
 
@@ -22,18 +24,18 @@ configuration depth, not feature gates.
 | Form invites (Mint)                   | ✓ (capped)      | ✓                | ✓                | ✓                |
 | HTTP ingestion API                    | —               | ✓                | ✓                | ✓                |
 
-> **Form invite caps on Hobby**
->
-> Hobby invite tokens have a 30-day maximum lifetime and a 500-submission
->   cap per token. Pro and above support 1-year tokens with no submission
->   limit.
+::callout{type="note" title="Form invite caps on Hobby"}
+Hobby invite tokens have a 30-day maximum lifetime and a 500-submission
+cap per token. Pro and above support 1-year tokens with no submission
+limit.
+::
 
-> **Crossing your daily ceiling**
->
-> Hitting a daily submission ceiling raises a `429 Too Many Requests`
->   with error code `tier_quota_exceeded`. The ceiling resets at 00:00 UTC.
->   Submissions already accepted are never dropped. A one-time notification
->   email goes to the tenant admin when the cap is first hit in a UTC day.
+::callout{type="tip" title="Crossing your daily ceiling"}
+Hitting a daily submission ceiling raises a `429 Too Many Requests`
+with error code `tier_quota_exceeded`. The ceiling resets at 00:00 UTC.
+Submissions already accepted are never dropped. A one-time notification
+email goes to the tenant admin when the cap is first hit in a UTC day.
+::
 
 ## What an upgrade unlocks instantly
 

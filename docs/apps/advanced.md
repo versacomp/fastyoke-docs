@@ -1,6 +1,8 @@
-# Advanced App Builder
-
-> Enterprise SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
+---
+title: Advanced App Builder
+summary: Enterprise SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
+order: 2
+---
 
 # Advanced App Builder
 
@@ -82,7 +84,7 @@ collects your selections without hitting the server. Only on
 **Install** at the Review step does the client:
 
 1. `POST /api/v1/tenant/themes` to materialize the chosen palette
-   as a tenant theme (named ` theme` by default — editable
+   as a tenant theme (named `<App> theme` by default — editable
    in the Review step).
 2. `POST .../generate-extension` with `mode: "install", synth:
    "studio"`, the new `theme_id`, the chosen `layout`, and the
@@ -212,15 +214,15 @@ admin shell uses.
 ### What this means for generated bundles
 
 - **Studio wizard** — list, detail, new, and edit pages compose
-  `` from each entity's annotations, so labels,
+  `<SmartField>` from each entity's annotations, so labels,
   required flags, enum options, and field types all flow from
   `/admin/entities/:name/annotations` automatically. FSM
-  detail pages additionally mount `` with the
+  detail pages additionally mount `<WorkflowSection>` with the
   current state badge, advance buttons (one per legal outgoing
   transition), and the merged event-log history.
 - **LLM-authored** — the system prompt enumerates every shipped
   hook with signatures + three worked examples (paginated
-  `useEntities`, `useJob` + ``, transition
+  `useEntities`, `useJob` + `<WorkflowHistory>`, transition
   button). The model is forbidden from emitting `const SEED_*` /
   `const FAKE_*` stubs — prompt-level enforcement; slips get
   caught in human review at the Preview modal.
@@ -239,7 +241,7 @@ admin shell uses.
 Every read hook subscribes to the provider's shared WebSocket by
 default. `useEntities('widget')` refreshes whenever another
 session creates, updates, or deletes a widget; `useJob(id)` +
-`` redraw on every transition — no
+`<WorkflowHistory jobId={id} />` redraw on every transition — no
 polling, no backend changes on your end.
 
 Opt out per hook when a view is deliberately snapshot-style:

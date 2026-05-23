@@ -1,6 +1,8 @@
-# fy-app.json Spec
-
-> The versioned source-of-truth contract that fy app create and fy app add-entity read and write.
+---
+title: fy-app.json Spec
+summary: The versioned source-of-truth contract that fy app create and fy app add-entity read and write.
+order: 2
+---
 
 # `fy-app.json` Spec
 
@@ -85,14 +87,14 @@ build until they're explicitly migrated.
 | `event` | string | The event name that fires the transition. Required — the CLI rejects two-part `from:to` triplets. |
 | `guard` | object \| null | A JSONLogic predicate, or `null` for an unguarded transition. **JSONLogic is the only guard kind supported in v1** (see `fy-feature-schema.json`); the runtime evaluates it through the sandboxed `jsonlogic-rs` evaluator, never via raw string parsing. |
 
-> **Append-only in practice**
->
-> <code>fy app add-entity</code> never edits an existing entity —
->   it only appends. To change an entity's fields or FSM after
->   scaffold, edit <code>fy-app.json</code> by hand and re-run
->   whichever generator you need; the entity's <code>.schema.ts</code>{' '}
->   + page files are pure functions of the spec and safe to
->   regenerate.
+::callout{type="info" title="Append-only in practice"}
+`fy app add-entity` never edits an existing entity —
+it only appends. To change an entity's fields or FSM after
+scaffold, edit `fy-app.json` by hand and re-run
+whichever generator you need; the entity's `.schema.ts`
++ page files are pure functions of the spec and safe to
+regenerate.
+::
 
 ## Headless equivalents
 
@@ -103,7 +105,7 @@ headlessly:
 
 | Spec slot | Flag | Mini-DSL |
 |---|---|---|
-| entity name | `--entity ` | PascalCase identifier |
+| entity name | `--entity <Name>` | PascalCase identifier |
 | `fields[]` | `--fields "<pairs>"` | `name:type,name:type` (types `string` / `number` / `boolean` / `date`) |
 | `states[]` | `--states "<names>"` | `s1,s2,s3` — the value of `--initial` is auto-added if missing |
 | `initial_state` | `--initial <state>` | single state name; required whenever `--states` is set |
@@ -154,7 +156,7 @@ rejections:
 - **`refusing to overwrite existing file(s): …`** (`fy app create` only) — the
   target directory already contains scaffold output. Move or
   delete the colliding files, or pick a different `name`.
-- **`Entity '' already exists at src/entities/.schema.ts`**
+- **`Entity '<Name>' already exists at src/entities/<Name>.schema.ts`**
   (`fy app add-entity` only) — the entity is already in the
   spec; pick a different name. Editing an existing entity is
   intentionally out of scope (see callout above).

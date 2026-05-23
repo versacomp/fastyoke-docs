@@ -1,19 +1,24 @@
-# Anti-abuse for public forms
-
-> Turnstile challenges, honeypots, daily caps, and per-IP rate limits keep public form submissions clean without a CAPTCHA wall.
+---
+title: Anti-abuse for public forms
+summary: Turnstile challenges, honeypots, daily caps, and per-IP rate limits keep public form submissions clean without a CAPTCHA wall.
+order: 30
+---
 
 # Anti-abuse for public forms
 
 Public forms are reachable by anyone with the invite URL. The
-platform defends them with four overlapping layers:
+platform defends them with several overlapping layers:
 
 1. **Cloudflare Turnstile** — invisible-first challenge (Hobby tier).
-2. **Honeypot field** — bots that fill every input get auto-rejected.
+2. **Bot heuristics** — hidden-field traps, render-time signing, and
+   payload-content filters reject obvious automation server-side.
 3. **Daily submission cap** — per-tenant ceiling sized to your tier.
 4. **Per-IP rate limit** — token-bucket throttle on a single client.
 
 You don't configure any of this to get the defaults. The layers apply
-automatically based on your tier.
+automatically based on your tier. Specific thresholds and field
+names are intentionally undocumented — publishing them would let a
+targeted bot bypass each check by name.
 
 ## Turnstile
 
@@ -22,41 +27,31 @@ the last visible field. The widget runs invisibly for most visitors;
 suspicious traffic gets a managed challenge.
 
 The submitted token is sent as the `cf_turnstile_response` field on
-the form payload. The server verifies the token against the Turnstile
-API before any other validation runs — a failed or missing verify
-returns `400 Bad Request` with error code `challenge_failed`.
+the form payload (a Cloudflare-defined name, required for HTTP
+ingestion integrations). The server verifies the token against the
+Turnstile API before any other validation runs — a failed or missing
+verify returns `400 Bad Request` with error code `challenge_failed`.
 
-> **Pro and above**
->
-> Pro, Team, and Enterprise forms do not require Turnstile. On those
->   tiers the widget is not rendered and the field is not expected.
+::callout{type="tip" title="Pro and above"}
+Pro, Team, and Enterprise forms do not require Turnstile. On those
+tiers the widget is not rendered and the field is not expected.
+::
 
-## Honeypot
+## Bot heuristics
 
-Every public form ships with a hidden `__hp_check__` companion field
-that real users never see (it is rendered off-screen with
-`aria-hidden="true"` and `tabindex="-1"`). Submissions with any
-non-empty value for that field are rejected with `400 Bad Request` and
-error code `validation_failed`.
+Beyond Turnstile, every public form runs a layered set of server-side
+heuristics: a hidden-field trap that real browsers ignore, a signed
+render-time token that detects pre-canned payloads and stale pages,
+and a content filter that catches link-injection spam in text
+fields. Submissions that fail any heuristic are rejected with
+`400 Bad Request` and error code `validation_failed`. No payload data
+is stored on a rejection.
 
-The field name is consistent across all forms so that browser
-autofill and bot-training datasets interact with it predictably.
-
-## Timing check
-
-Each public form GET response includes a signed `__render_ts__`
-token. Submissions must echo this value back. The server rejects
-submissions where the token was issued less than 1.5 seconds ago
-(bot-speed) or more than 24 hours ago (stale page). Both cases return
-`400` with error code `validation_failed`.
-
-## Link-count filter
-
-Text, textarea, and richtext fields are scanned for URL-like
-substrings (`https://...`). Any field containing more than three URLs
-causes the submission to be rejected with `400` and error code
-`validation_failed`. This catches link-injection spam before the
-payload reaches storage.
+The exact field names, signing windows, and content thresholds are
+not published. Integrators submitting through the HTTP ingestion API
+do not need them — submissions originating from a real browser
+session on the rendered form page carry the required fields
+automatically.
 
 ## Daily submission cap
 

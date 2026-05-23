@@ -1,6 +1,8 @@
-# Studio wizard
-
-> Wix-style 4-step builder — pick a layout, brand it, choose entities, ship a themed multi-page extension.
+---
+title: Studio wizard
+summary: Wix-style 4-step builder — pick a layout, brand it, choose entities, ship a themed multi-page extension.
+order: 3
+---
 
 # Studio wizard
 
@@ -87,7 +89,7 @@ name so you can spot under-annotated entities at a glance.
 ### Step 4 — Review
 
 A summary of your picks, plus a **Theme name** field that defaults
-to ` theme` (editable). Click **Install** to ship it.
+to `<App> theme` (editable). Click **Install** to ship it.
 
 ## What Install does
 
@@ -117,14 +119,14 @@ Per ticked entity, four components:
 | Page | Hook it uses | What it renders |
 |---|---|---|
 | `{Entity}ListPage` | `useEntities(kind)` | Table with columns from annotations + per-row **View** button + **New** button. |
-| `{Entity}DetailPage` | `useEntity(kind, id)` | `<dl>` of `` per annotated field; if the entity has an FSM schema, additionally mounts `` for live state + advance + history. |
-| `{Entity}NewPage` | `useCreateEntity(kind)` | Form with one `` per writable annotation, client-side required + max_length enforcement. |
+| `{Entity}DetailPage` | `useEntity(kind, id)` | `<dl>` of `<SmartField mode="display">` per annotated field; if the entity has an FSM schema, additionally mounts `<WorkflowSection>` for live state + advance + history. |
+| `{Entity}NewPage` | `useCreateEntity(kind)` | Form with one `<SmartField mode="edit">` per writable annotation, client-side required + max_length enforcement. |
 | `{Entity}EditPage` | `useEntity` + `useUpdateEntity` | Same form, pre-filled from the existing record. |
 
 Plus a top-level `Page` export that wraps a `useState`-driven
 router inside the chosen shell component (`LeftNavShell`,
 `TopNavShell`, or `TopBarSideRailShell`), each importing its
-theme tokens via `` scoped to `[data-theme={themeId}]`.
+theme tokens via `<ThemeStyle>` scoped to `[data-theme={themeId}]`.
 
 The manifest declares a single page at `/<slug>` because internal
 navigation happens inside the bundle — the extension platform
@@ -133,7 +135,7 @@ doesn't need to know about sub-routes.
 ## The workflow viewer
 
 Detail pages of FSM-bearing entities mount the SDK's
-`` below the field grid. It renders:
+`<WorkflowSection>` below the field grid. It renders:
 
 - **Current state badge** — pill showing the active job's state.
 - **Breadcrumb of states** — textual flow `Draft → [Submitted] →
@@ -186,7 +188,7 @@ varies).
 |---|---|
 | Themed multi-page CRUD app, predictable output | **Studio wizard** |
 | Bespoke admin dashboard from prose | [**LLM-authored**](/docs/apps/advanced#synth-paths) |
-| Just embed an FSM viewer in your own Next.js app | [`@fastyoke/sdk` ``](/docs/sdk/reference) |
+| Just embed an FSM viewer in your own Next.js app | [`@fastyoke/sdk` `<WorkflowSection>`](/docs/sdk/reference) |
 
 ## Editing the generated bundle
 
@@ -194,7 +196,7 @@ Studio's output is your starting point, not your ceiling. Download
 the bundle zip from the Extensions page and edit `index.mjs` to:
 
 - Add custom columns or row actions to a list page.
-- Swap a default `` for a richer component.
+- Swap a default `<SmartField>` for a richer component.
 - Introduce a dashboard alongside the per-entity pages.
 - Link related entities together.
 

@@ -1,6 +1,7 @@
-# FastYoke Docs
-
-> The aPaaS for logistics. Multi-tenant FSMs, schema-driven entities, extensible admin surfaces.
+---
+title: FastYoke Docs
+summary: The aPaaS for logistics. Multi-tenant FSMs, schema-driven entities, extensible admin surfaces.
+---
 
 # FastYoke Documentation
 
@@ -18,17 +19,20 @@ around four ideas:
 - **Extensions** let you ship your own React UI bundled against the
   platform SDK and mounted inside the admin shell.
 
+::section-cards
+::
+
 ## Where to start
 
-> **Tenant admin?**
->
-> Start with [Getting Started](/docs/getting-started) — it walks you
->   from sign-in to a live public form in under ten minutes.
+::callout{type="tip" title="Tenant admin?"}
+Start with [Getting Started](/docs/getting-started) — it walks you
+  from sign-in to a live public form in under ten minutes.
+::
 
-> **Integrator?**
->
-> Head to the [SDK quickstart](/docs/sdk/quickstart) or the
->   [CLI reference](/docs/cli) to wire FastYoke into your own tooling.
+::callout{type="tip" title="Integrator?"}
+Head to the [SDK quickstart](/docs/sdk/quickstart) or the
+  [CLI reference](/docs/cli) to wire FastYoke into your own tooling.
+::
 
 ## Versioning
 

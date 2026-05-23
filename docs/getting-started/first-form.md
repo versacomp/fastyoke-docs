@@ -1,6 +1,8 @@
-# Your First Form
-
-> Build a public form, collect submissions, spawn jobs from them.
+---
+title: Your First Form
+summary: Build a public form, collect submissions, spawn jobs from them.
+order: 2
+---
 
 # Your First Form
 
@@ -8,13 +10,13 @@ By the end of this page you'll have a public URL that anyone can
 submit, and every submission will create a job in your FSM and end
 up as a first-class entity record. Six steps.
 
-> **What you**
->
-> A tiny <code>intake</code> form with two fields (name + notes), a
->   two-state FSM (<code>received → processed</code>), an invite link
->   that spawns a job in <code>received</code> on every submit, and a
->   transition action that promotes the submission to an
->   <code>intake</code> entity record when an operator fires it.
+::callout{type="info" title="What you'll build"}
+A tiny `intake` form with two fields (name + notes), a
+two-state FSM (`received → processed`), an invite link
+that spawns a job in `received` on every submit, and a
+transition action that promotes the submission to an
+`intake` entity record when an operator fires it.
+::
 
 ## 1. Create the entity kind
 
@@ -45,16 +47,14 @@ React Flow canvas.
    `{ "entity_name": "intake" }` — when the operator fires this
    transition, the submission attached to the job will be copied
    into an `intake` entity record.
-   
-> **Where does submission_id come from?**
->
-> You don't have to supply one. The action resolves the
->      submission automatically from the job it's running on, as
->      long as the form bound its Submit actions in step 4 below.
->      Pass an explicit <code>submission_id</code> only if you need
->      to promote a different submission than the one linked to the
->      current job.
-
+   ::callout{type="tip" title="Where does submission_id come from?"}
+   You don't have to supply one. The action resolves the
+   submission automatically from the job it's running on, as
+   long as the form bound its Submit actions in step 4 below.
+   Pass an explicit `submission_id` only if you need to
+   promote a different submission than the one linked to the
+   current job.
+   ::
 4. Name the workflow `Intake Flow` and bind it to the `intake`
    entity (sidebar "Entity name" field) so
    [entity annotations](/docs/entities) can light up the guard
@@ -73,18 +73,18 @@ Open **Forms** → **New form**:
    required.
 3. Save. Click **Publish** once you're happy.
 
-> **Mirror your entity schema**
->
-> The "From entity" palette tab auto-samples 50 records of the
->   selected kind and offers to import each field with its derived
->   type. If you've annotated the entity (see the
->   <a href="/docs/entities">Entities</a> section), labels, options,
->   and required flags come along for the ride.
+::callout{type="tip" title="Mirror your entity schema"}
+The "From entity" palette tab auto-samples 50 records of the
+selected kind and offers to import each field with its derived
+type. If you've annotated the entity (see the
+[Entities](/docs/entities) section), labels, options,
+and required flags come along for the ride.
+::
 
 ## 4. Wire the form to the FSM
 
 Open the form's detail view, find the **Submit actions** panel, and
-pick your `Intake Flow` schema from the <em>Spawn job in schema</em>
+pick your `Intake Flow` schema from the *Spawn job in schema*
 dropdown. Save.
 
 Every accepted submission will now spawn a fresh `Intake Flow` job
@@ -112,7 +112,7 @@ Three things happen in one atomic step:
 1. The job advances from `received` to `processed`.
 2. The `PROMOTE_FORM_TO_ENTITY` action copies the submission's
    payload into a new `intake` record on
-   <code>entity_records</code>.
+   `entity_records`.
 3. The submission's `processing_state` flips from `attached` to
    `promoted` and its `entity_record_id` points at the new record.
 
@@ -120,7 +120,7 @@ Open **Entities**, type `intake`, and click **Load** — the
 submitter's values (`name`, `notes`) show up as a fresh row.
 Discarded submissions don't land here; every entity record you see
 came from a transition an operator explicitly fired, and the
-append-only <code>event_log</code> carries the full audit trail.
+append-only `event_log` carries the full audit trail.
 
 ## What's next
 

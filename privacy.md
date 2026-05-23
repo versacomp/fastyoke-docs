@@ -1,8 +1,13 @@
-# Privacy Notice — FastYoke
+---
+title: Privacy Notice — FastYoke
+summary: How FastYoke handles personal data submitted through public forms, account info, and product telemetry. Plain-language summary plus the data subject's rights.
+order: 3
+---
 
-> How FastYoke handles personal data submitted through public forms, account info, and product telemetry. Plain-language summary plus the data subject's rights.
+::hero{eyebrow="Privacy" title="Privacy notice" tagline="A plain-language summary of what FastYoke collects, why, and the rights you have over that data."}
+::
 
-<section className="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
+<section class="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
 
 **Last updated:** 2026-04-26.
 

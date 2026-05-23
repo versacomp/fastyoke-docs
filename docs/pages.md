@@ -1,6 +1,8 @@
-# Pages
-
-> Block-based workspace pages that embed FastYoke data into your operator UI.
+---
+title: Pages
+summary: Block-based workspace pages that embed FastYoke data into your operator UI.
+order: 5
+---
 
 # Pages
 
@@ -11,6 +13,9 @@ then rendered at a tenant URL. When a page is marked public, the
 same render is available at `/p/:slug` — useful for driver-facing
 dashboards, customer portals, or anything you'd otherwise need to
 author a full extension for.
+
+::section-cards{section="pages"}
+::
 
 ## Page vs extension
 
@@ -74,13 +79,13 @@ customer portal without relaxing the CSP globally. See
 frontend contract (`GET /api/v1/public/embed-config?slug=...`
 returns the resolved CSP for use in the embedding shell).
 
-> **Tenant-aware embeds**
->
-> Tenants with a `custom_domain` set can serve public pages on
->   their own domain. The platform-admin shell's tenant detail page
->   is where you assign it. Once set, `/p/:slug` on the custom
->   domain resolves to the same page as `/p/:slug` on the platform
->   domain — same row, different host.
+::callout{type="tip" title="Tenant-aware embeds"}
+Tenants with a `custom_domain` set can serve public pages on
+  their own domain. The platform-admin shell's tenant detail page
+  is where you assign it. Once set, `/p/:slug` on the custom
+  domain resolves to the same page as `/p/:slug` on the platform
+  domain — same row, different host.
+::
 
 ## Inheritance (enterprise)
 

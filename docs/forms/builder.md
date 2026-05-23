@@ -1,6 +1,8 @@
-# Forms Builder
-
-> Pages, sections, field types, routing, themes, attachments.
+---
+title: Forms Builder
+summary: Pages, sections, field types, routing, themes, attachments.
+order: 1
+---
 
 # Forms Builder
 
@@ -22,32 +24,31 @@ hope" step. Here's the feature surface.
 | `file` | Up to 20 MiB, scanned server-side (see below) |
 | `heading`, `section`, `static` | Layout only — not validated |
 
-> **Annotation-driven prefill**
->
-> When a form field was imported from an entity via the "From entity"
->   palette, the builder stamps <code>source.*</code> provenance. If
->   the entity has annotations, the importer pre-fills
->   label, required, max_length, min, max, and synthesizes a{' '}
->   <code>select</code> type from enum options.
+::callout{type="info" title="Annotation-driven prefill"}
+When a form field was imported from an entity via the "From entity"
+  palette, the builder stamps <code>source.*</code> provenance. If
+  the entity has annotations, the importer pre-fills
+  label, required, max_length, min, max, and synthesizes a{' '}
+  <code>select</code> type from enum options.
+::
 
-> **Note**
->
-> ">
->   As of 2026-04-26, source-stamped fields in the admin live preview
->   render through the LCAP <code>&lt;SmartField /&gt;</code> resolver
->   when the form/annotation type pair is on a strict allow-list
->   (<code>text↔string</code>, <code>textarea↔longtext</code>,{' '}
->   <code>number↔number</code>, <code>checkbox↔boolean</code>,{' '}
->   <code>date↔timestamp</code>, <code>select↔enum</code>,{' '}
->   <code>file↔file_ref</code>). Live edits to the entity's annotation
->   (label, formatting, ui_config) flow through to the preview
->   without rebuilding the form. Mismatches and missing annotations
->   fall back to the legacy renderer with a one-time{' '}
->   <code>console.warn</code>. Layout fields (<code>heading</code>,{' '}
->   <code>section</code>, <code>static</code>), <code>email</code>,{' '}
->   <code>radio</code>, and <code>multi_select</code> always stay
->   legacy. The public renderer at the public form URL also stays
->   legacy until a public-annotation read endpoint ships.
+::callout{type="tip" title="Admin preview routes through SmartField"}
+  As of 2026-04-26, source-stamped fields in the admin live preview
+  render through the LCAP <code>&lt;SmartField /&gt;</code> resolver
+  when the form/annotation type pair is on a strict allow-list
+  (<code>text↔string</code>, <code>textarea↔longtext</code>,{' '}
+  <code>number↔number</code>, <code>checkbox↔boolean</code>,{' '}
+  <code>date↔timestamp</code>, <code>select↔enum</code>,{' '}
+  <code>file↔file_ref</code>). Live edits to the entity's annotation
+  (label, formatting, ui_config) flow through to the preview
+  without rebuilding the form. Mismatches and missing annotations
+  fall back to the legacy renderer with a one-time{' '}
+  <code>console.warn</code>. Layout fields (<code>heading</code>,{' '}
+  <code>section</code>, <code>static</code>), <code>email</code>,{' '}
+  <code>radio</code>, and <code>multi_select</code> always stay
+  legacy. The public renderer at the public form URL also stays
+  legacy until a public-annotation read endpoint ships.
+::
 
 ## Pages + sections
 
@@ -86,12 +87,12 @@ hash → LLM content) runs asynchronously; the renderer polls until
 submit handler then claims all referenced attachments atomically
 in one transaction with the submission INSERT.
 
-> **Pending uploads block submit**
->
-> The frontend refuses to POST the submission while any attachment
->   is still scanning. The backend's claim predicate (<code>
->   scan_status='clean' AND submission_id IS NULL</code>) would 422
->   it anyway — failing client-side gives users a clearer error.
+::callout{type="warn" title="Pending uploads block submit"}
+The frontend refuses to POST the submission while any attachment
+  is still scanning. The backend's claim predicate (<code>
+  scan_status='clean' AND submission_id IS NULL</code>) would 422
+  it anyway — failing client-side gives users a clearer error.
+::
 
 ## Themes + branding
 
@@ -104,14 +105,14 @@ The **Theme** panel controls form-level appearance:
   with 1h cache.
 - Title / subtitle overrides render in the form header.
 
-> **Custom CSS (enterprise)**
->
-> Tenants with the <code>forms_custom_css</code> feature flag on
->   get a textarea to author per-form CSS. The server runs a
->   hand-rolled sanitizer on save (strips at-rules, banned
->   properties, and dangerous URL schemes) and scopes every rule to{' '}
->   <code>.form-public-shell[data-form-id="..."]</code> so one
->   form's CSS can never leak into another.
+::callout{type="tip" title="Custom CSS (enterprise)"}
+Tenants with the <code>forms_custom_css</code> feature flag on
+  get a textarea to author per-form CSS. The server runs a
+  hand-rolled sanitizer on save (strips at-rules, banned
+  properties, and dangerous URL schemes) and scopes every rule to{' '}
+  <code>.form-public-shell[data-form-id="..."]</code> so one
+  form's CSS can never leak into another.
+::
 
 ## Publishing
 

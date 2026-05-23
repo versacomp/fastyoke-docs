@@ -1,6 +1,8 @@
-# HTTP ingestion API
-
-> Server-to-server submission of form data via REST. Authenticate with a tenant API token, post a JSON payload, get a submission ID back.
+---
+title: HTTP ingestion API
+summary: Server-to-server submission of form data via REST. Authenticate with a tenant API token, post a JSON payload, get a submission ID back.
+order: 25
+---
 
 # HTTP ingestion API
 
@@ -9,11 +11,11 @@ without a browser or form widget. One `POST` per submission — you get a
 submission ID back, and the result is indistinguishable from a user filling
 the form manually.
 
-> **Pro+ required**
->
-> The ingestion endpoint is available on Pro, Team, Enterprise, and Fleet
->   tiers. Hobby tenants receive a `422` with error code `tier_required`.
->   See [Forms tier entitlements](/docs/forms/tiers) for the full matrix.
+::callout{type="info" title="Pro+ required"}
+The ingestion endpoint is available on Pro, Team, Enterprise, and Fleet
+tiers. Hobby tenants receive a `422` with error code `tier_required`.
+See [Forms tier entitlements](/docs/forms/tiers) for the full matrix.
+::
 
 ---
 

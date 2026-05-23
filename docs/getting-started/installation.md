@@ -1,6 +1,8 @@
-# Installation
-
-> Sign in, confirm your tenant assignment, invite teammates.
+---
+title: Installation
+summary: Sign in, confirm your tenant assignment, invite teammates.
+order: 1
+---
 
 # Installation
 
@@ -23,13 +25,12 @@ there happens inside the admin shell at **`/admin`**.
    after the initial set.
 3. You're signed in and redirected to `/admin`.
 
-> **Roles at a glance**
->
-> Every tenant user has a role: <code>admin</code> or{' '}
->   <code>operator</code>. Admins configure schemas, forms, and
->   extensions; operators run jobs against them. A handful of surfaces
->   (FSM edits, form publishing, extension install) are admin-only and
->   will return <code>403</code> for operators.
+::callout{type="info" title="Roles at a glance"}
+Every tenant user has a role: `admin` or `operator`. Admins configure schemas, forms, and
+extensions; operators run jobs against them. A handful of surfaces
+(FSM edits, form publishing, extension install) are admin-only and
+will return `403` for operators.
+::
 
 ## Confirming your tenant assignment
 
@@ -61,16 +62,16 @@ they sign in via SSO and get JIT-provisioned on first callback.
 
 ## Troubleshooting
 
-> **401 on every API call**
->
-> Your browser is holding a stale token. Click the avatar → Log out,
->   then sign back in. The `/auth/me` endpoint re-hydrates the session
->   on every mount, so you never need to hard-refresh.
+::callout{type="warn" title="401 on every API call"}
+Your browser is holding a stale token. Click the avatar → Log out,
+then sign back in. The `/auth/me` endpoint re-hydrates the session
+on every mount, so you never need to hard-refresh.
+::
 
-> **Invite link says **
->
-> Invite tokens are one-shot. Ask your platform admin for a fresh
->   link — the old token isn't reusable even if you never opened it.
+::callout{type="warn" title="Invite link says 'expired or already accepted'"}
+Invite tokens are one-shot. Ask your platform admin for a fresh
+link — the old token isn't reusable even if you never opened it.
+::
 
 ## Next steps
 

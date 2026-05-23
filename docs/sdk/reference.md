@@ -1,6 +1,8 @@
-# SDK Reference
-
-> Public exports of @fastyoke/sdk — provider, data hooks, realtime client, FsmTimeline / FsmViewer, WorkflowHistory, SmartField, and the typed resource clients.
+---
+title: SDK Reference
+summary: Public exports of @fastyoke/sdk — provider, data hooks, realtime client, FsmTimeline / FsmViewer, WorkflowHistory, SmartField, and the typed resource clients.
+order: 2
+---
 
 # SDK Reference
 
@@ -8,7 +10,7 @@ The `@fastyoke/sdk` package is the public surface every host, extension, and ext
 
 Current version: **0.2.0**. See the [CHANGELOG](https://github.com/versacomp/fastyoke-sdk/blob/main/CHANGELOG.md) for the 0.1.x → 0.2.0 delta.
 
-## ``
+## `<FastYokeProvider>`
 
 Mounts the SDK context. The host app mounts one at the root with its auth-aware fetcher and the current tenant; extensions see the same context when loaded into the host, so extension code never mounts its own provider.
 
@@ -28,7 +30,7 @@ import { FastYokeProvider } from '@fastyoke/sdk';
 | Prop | Type | Required | Description |
 |---|---|---|---|
 | `tenantId` | `string` | yes | Current tenant UUID. Every request the SDK issues is scoped by this — see the [Multi-tenancy mandate](/docs/getting-started). |
-| `fetcher` | `(input, init?) => Promise` | yes | Credential-aware fetch. The host wires its `apiFetch` (auto-attaches the JWT, handles 401 redirects); tests inject a mock. |
+| `fetcher` | `(input, init?) => Promise<Response>` | yes | Credential-aware fetch. The host wires its `apiFetch` (auto-attaches the JWT, handles 401 redirects); tests inject a mock. |
 | `projectId` | `string \| null` | no | When set, narrows list queries and project-scoped mutations. |
 | `baseUrl` | `string` | no | Absolute API origin. Defaults to the current origin — extensions loaded into the admin shell never set this. |
 | `realtime` | `boolean` | no | Default `true`. When `false`, no WebSocket is opened and every realtime-aware hook behaves as if `{ realtime: false }` were passed individually. Useful for SSR and tests. |
@@ -53,7 +55,7 @@ const {
 } = useFastYoke();
 ```
 
-Throws if called outside a ``. Client instances are stable across renders unless `tenantId` / `projectId` / `fetcher` / `baseUrl` change.
+Throws if called outside a `<FastYokeProvider>`. Client instances are stable across renders unless `tenantId` / `projectId` / `fetcher` / `baseUrl` change.
 
 ## Resource clients
 
@@ -167,7 +169,7 @@ function WidgetsPanel() {
 }
 ```
 
-**Live workflow timeline via `useJob` + ``:**
+**Live workflow timeline via `useJob` + `<WorkflowHistory>`:**
 
 ```tsx
 import { useJob, WorkflowHistory } from '@fastyoke/sdk';
@@ -208,7 +210,7 @@ function ApproveButton({ jobId }: { jobId: string }) {
 }
 ```
 
-## ``
+## `<WorkflowHistory>`
 
 Drop-in table over `useJobHistory`. Humanizes `__created__` / `__admin_cancel__` sentinels, em-dashes missing actor/reason, and ships with inline styling so iframe-isolated extensions render without the host stylesheet.
 
@@ -225,11 +227,11 @@ Drop-in table over `useJobHistory`. Humanizes `__created__` / `__admin_cancel__`
 | `className` | `string` | Applied to the outer `<table>`. |
 | `style` | `React.CSSProperties` | Merged with the inline defaults. |
 
-## `` + ``
+## `<FsmTimeline>` + `<FsmViewer>`
 
 Drop-in workflow visualizers for ISVs embedding FastYoke flows. Two physically-separate exports so tree-shaking is deterministic — `FsmTimeline` ships with **zero** reactflow / elkjs imports.
 
-### `` — standalone
+### `<FsmTimeline>` — standalone
 
 Pure HTML / Tailwind utility classes. Mobile-friendly; right-sized for L1 support and field-tech surfaces.
 
@@ -250,7 +252,7 @@ const { data: schema } = useSchema(job?.schema_id);
 />
 ```
 
-### `` — composed shell
+### `<FsmViewer>` — composed shell
 
 Renders the timeline plus a `React.lazy`-imported reactflow canvas. Smart-default mode: `entity` supplied → operator (timeline only); `entity` omitted → engineer (canvas only). Pass `mode='dual'` for both surfaces side-by-side, or `mode='operator' | 'engineer'` to lock the surface and hide the built-in mode switcher.
 
@@ -272,7 +274,7 @@ The viewer is **transition-agnostic**: the host composes `EntityState = { curren
 
 ### Audit-diff disclosures
 
-`FsmTimeline` accepts a `renderHistoryDetail(entry, index) => ReactNode | null` render-prop that renders an inline `<details>` disclosure under each history row. Pair with `` and the `matchAuditEntry()` helper to surface payload before/after diffs straight from the audit ledger:
+`FsmTimeline` accepts a `renderHistoryDetail(entry, index) => ReactNode | null` render-prop that renders an inline `<details>` disclosure under each history row. Pair with `<FsmAuditDiff />` and the `matchAuditEntry()` helper to surface payload before/after diffs straight from the audit ledger:
 
 ```tsx
 import {
@@ -384,7 +386,7 @@ Exponential backoff (1s → 2s → 4s …, capped at 30s). The delay resets on a
 
 Host-side helpers for loading, activating, and rendering tenant-uploaded extension bundles. Extension authors don't typically touch these.
 
-### ``
+### `<ExtensionProvider>`
 
 ```tsx
 import { ExtensionProvider, ExtensionErrorBoundary } from '@fastyoke/sdk';
@@ -464,7 +466,7 @@ if (isFileRef(val)) {
 }
 ```
 
-## `` (LCAP)
+## `<SmartField />` (LCAP)
 
 Single React component that renders one annotated entity field
 — picks the input from the closed 9-type vocabulary, applies
@@ -521,7 +523,7 @@ import {
 ```
 
 See the [LCAP section](/docs/lcap) for the full annotation
-model + matrix. `` is framework-agnostic React-DOM;
+model + matrix. `<SmartField />` is framework-agnostic React-DOM;
 the `@fastyoke/next` SDK adds an SSR wrapper for App-Router
 consumers.
 

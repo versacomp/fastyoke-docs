@@ -1,6 +1,8 @@
-# Extension Authoring
-
-> End-to-end — scaffold, iterate locally, publish to a tenant.
+---
+title: Extension Authoring
+summary: End-to-end — scaffold, iterate locally, publish to a tenant.
+order: 2
+---
 
 # Extension Authoring
 
@@ -10,6 +12,7 @@ a full walkthrough from empty directory to installed extension.
 
 ## 1. Scaffold
 
+::code-group
 ```bash title="npm"
 npm install -g @fastyoke/cli
 fy init shift-heatmap
@@ -21,6 +24,7 @@ pnpm add -g @fastyoke/cli
 fy init shift-heatmap
 cd shift-heatmap
 ```
+::
 
 `fy init` drops you a minimal TypeScript project:
 
@@ -61,12 +65,12 @@ install. Minimum required keys:
 }
 ```
 
-> **Manifest id conventions**
->
-> Reverse-DNS-ish. First segment is your tenant / org; second is
->   the extension slug. The backend validator rejects slashes +
->   whitespace but doesn't enforce the dot — convention, not a
->   constraint.
+::callout{type="info" title="Manifest id conventions"}
+Reverse-DNS-ish. First segment is your tenant / org; second is
+  the extension slug. The backend validator rejects slashes +
+  whitespace but doesn't enforce the dot — convention, not a
+  constraint.
+::
 
 ## 3. Write a minimal component
 
@@ -128,13 +132,13 @@ terminal, keep the admin shell running (`npm run build && npm run
 preview` from the main repo) — every `fy dev` rebuild reloads
 seamlessly once the extension is uploaded.
 
-> **Dev-mode caveat**
->
-> <code>vite serve</code> routes the host's React through its dep
->   optimizer while extensions load via the import map — that's two
->   React instances, which breaks hooks. Always iterate against{' '}
->   <code>npm run build && npm run preview</code> on the host, or
->   against a deployed tenant.
+::callout{type="warn" title="Dev-mode caveat"}
+<code>vite serve</code> routes the host's React through its dep
+  optimizer while extensions load via the import map — that's two
+  React instances, which breaks hooks. Always iterate against{' '}
+  <code>npm run build && npm run preview</code> on the host, or
+  against a deployed tenant.
+::
 
 ## 5. Mint a tenant admin JWT
 

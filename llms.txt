@@ -1,103 +1,106 @@
 # FastYoke
 
-> Open-architecture App Platform as a Service for ISVs. Multi-tenant FSM engine, typed TypeScript SDK, zero vendor lock-in. The HTML version of this content lives at https://fastyoke.io; this index points at the markdown form of every public page for AI-agent ingestion.
-## Overview
+## About FastYoke
 
-- [FastYoke Docs](https://fastyoke.io/docs.md): The aPaaS for logistics. Multi-tenant FSMs, schema-driven entities, extensible admin surfaces.
+- [FastYoke — The Open-Architecture aPaaS](https://www.fastyoke.io/): Build at the speed of low-code, perform at the speed of the edge, leave whenever you want. Multi-tenant FSM platform for ISVs who refuse vendor lock-in.
+- [Pricing — FastYoke](https://www.fastyoke.io/pricing): Simple pricing that scales from a side project to a regulated fleet. Free with every Vercel Marketplace install; paid tiers on request.
+- [Privacy Notice — FastYoke](https://www.fastyoke.io/privacy): How FastYoke handles personal data submitted through public forms, account info, and product telemetry. Plain-language summary plus the data subject's rights.
+- [Free Online Form Builder — FastYoke Hobby Plan](https://www.fastyoke.io/free-forms): Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
+
+## Documentation
+
+- [Deprecation Policy](https://www.fastyoke.io/docs/deprecation-policy): What a deprecated surface means, when it goes away, and how to migrate.
+- [FastYoke Docs](https://www.fastyoke.io/docs): The aPaaS for logistics. Multi-tenant FSMs, schema-driven entities, extensible admin surfaces.
 
 ## Accessibility
 
-- [Accessibility](https://fastyoke.io/docs/accessibility.md): WCAG 2.1 AA enforced in CI, theme contrast validated on save, focus-trap modal primitive — the architectural pieces that clear institutional procurement.
+- [Accessibility](https://www.fastyoke.io/docs/accessibility): WCAG 2.1 AA enforced in CI, theme contrast validated on save, focus-trap modal primitive — the architectural pieces that clear institutional procurement.
 
 ## Apps
 
-- [Apps](https://fastyoke.io/docs/apps.md): Group pages under a shared slug + theme; the user-facing face of your tenant.
-- [Advanced App Builder](https://fastyoke.io/docs/apps/advanced.md): Enterprise SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
-- [Studio wizard](https://fastyoke.io/docs/apps/studio-wizard.md): Wix-style 4-step builder — pick a layout, brand it, choose entities, ship a themed multi-page extension.
+- [Advanced App Builder](https://www.fastyoke.io/docs/apps/advanced): Enterprise SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
+- [Studio wizard](https://www.fastyoke.io/docs/apps/studio-wizard): Wix-style 4-step builder — pick a layout, brand it, choose entities, ship a themed multi-page extension.
+- [Apps](https://www.fastyoke.io/docs/apps): Group pages under a shared slug + theme; the user-facing face of your tenant.
 
-## Auth
+## Authentication
 
-- [Authentication & Scopes](https://fastyoke.io/docs/auth.md): JWT shapes, platform vs tenant context, extension tokens, SSO.
+- [Authentication & Scopes](https://www.fastyoke.io/docs/auth): JWT shapes, platform vs tenant context, extension tokens, SSO.
 
 ## CLI
 
-- [CLI](https://fastyoke.io/docs/cli.md): fy for extension authors + fastyoke-admin for operators.
-- [fy-app.json Spec](https://fastyoke.io/docs/cli/app-spec.md): The versioned source-of-truth contract that fy app create and fy app add-entity read and write.
-- [Command Reference](https://fastyoke.io/docs/cli/commands.md): Every subcommand for fy (extension authoring) and fastyoke-admin (operator ops).
-
-## Deprecation Policy
-
-- [Deprecation Policy](https://fastyoke.io/docs/deprecation-policy.md): What a deprecated surface means, when it goes away, and how to migrate.
+- [Command Reference](https://www.fastyoke.io/docs/cli/commands): Every subcommand for fy (extension authoring).
+- [fy-app.json Spec](https://www.fastyoke.io/docs/cli/app-spec): The versioned source-of-truth contract that fy app create and fy app add-entity read and write.
+- [CLI](https://www.fastyoke.io/docs/cli): fy — the extension-authoring CLI.
 
 ## Entities
 
-- [Entities](https://fastyoke.io/docs/entities.md): Schemaless JSON records that serve as FSM guard-evaluation context.
+- [Entities](https://www.fastyoke.io/docs/entities): Schemaless JSON records that serve as FSM guard-evaluation context.
 
 ## Extensions
 
-- [Extensions (Install & Manage)](https://fastyoke.io/docs/extensions.md): Upload third-party extension bundles, review scopes, activate, roll back.
-- [Branding & the Powered-by badge](https://fastyoke.io/docs/extensions/branding.md): Where the FastYoke "Powered by" badge appears, and how Pro and above can opt out per surface.
+- [Extensions (Install & Manage)](https://www.fastyoke.io/docs/extensions): Upload third-party extension bundles, review scopes, activate, roll back.
+- [Branding & the Powered-by badge](https://www.fastyoke.io/docs/extensions/branding): Where the FastYoke "Powered by" badge appears, and how Pro and above can opt out per surface.
 
 ## Forms
 
-- [Forms](https://fastyoke.io/docs/forms.md): Build public or authenticated forms that route submissions into entities, jobs, or both.
-- [Anti-abuse for public forms](https://fastyoke.io/docs/forms/anti-abuse.md): Turnstile challenges, honeypots, daily caps, and per-IP rate limits keep public form submissions clean without a CAPTCHA wall.
-- [Forms Builder](https://fastyoke.io/docs/forms/builder.md): Pages, sections, field types, routing, themes, attachments.
-- [Embed forms on your own site](https://fastyoke.io/docs/forms/embed.md): Drop a single script tag into any page to render a FastYoke form inline, with theme overrides and origin allowlists.
-- [HTTP ingestion API](https://fastyoke.io/docs/forms/http-ingestion.md): Server-to-server submission of form data via REST. Authenticate with a tenant API token, post a JSON payload, get a submission ID back.
-- [Form invites (Mint)](https://fastyoke.io/docs/forms/invites.md): Issue named, revocable invite links to public forms. The Mint endpoint produces a URL anyone can submit; revoked invites return 410.
-- [Vanity PDF filenames](https://fastyoke.io/docs/forms/pdf-vanity-filenames.md): Generate human-readable filenames for submission PDFs using a pattern of slugs, submission IDs, field values, and dates.
-- [Forms tier entitlements](https://fastyoke.io/docs/forms/tiers.md): What each tier unlocks for the Forms surface — active form count, daily submission ceiling, anti-abuse posture, PDF rendering, badge visibility.
+- [Forms Builder](https://www.fastyoke.io/docs/forms/builder): Pages, sections, field types, routing, themes, attachments.
+- [Forms](https://www.fastyoke.io/docs/forms): Build public or authenticated forms that route submissions into entities, jobs, or both.
+- [Forms tier entitlements](https://www.fastyoke.io/docs/forms/tiers): What each tier unlocks for the Forms surface — active form count, daily submission ceiling, anti-abuse posture, PDF rendering, badge visibility.
+- [Embed forms on your own site](https://www.fastyoke.io/docs/forms/embed): Drop a single script tag into any page to render a FastYoke form inline, with theme overrides and origin allowlists.
+- [HTTP ingestion API](https://www.fastyoke.io/docs/forms/http-ingestion): Server-to-server submission of form data via REST. Authenticate with a tenant API token, post a JSON payload, get a submission ID back.
+- [Anti-abuse for public forms](https://www.fastyoke.io/docs/forms/anti-abuse): Turnstile challenges, honeypots, daily caps, and per-IP rate limits keep public form submissions clean without a CAPTCHA wall.
+- [Form invites (Mint)](https://www.fastyoke.io/docs/forms/invites): Issue named, revocable invite links to public forms. The Mint endpoint produces a URL anyone can submit; revoked invites return 410.
+- [Vanity PDF filenames](https://www.fastyoke.io/docs/forms/pdf-vanity-filenames): Generate human-readable filenames for submission PDFs using a pattern of slugs, submission IDs, field values, and dates.
 
 ## Getting Started
 
-- [Getting Started](https://fastyoke.io/docs/getting-started.md): Sign in, provision a tenant, build your first form, wire it to an FSM.
-- [Your First Form](https://fastyoke.io/docs/getting-started/first-form.md): Build a public form, collect submissions, spawn jobs from them.
-- [Installation](https://fastyoke.io/docs/getting-started/installation.md): Sign in, confirm your tenant assignment, invite teammates.
-- [Sign up](https://fastyoke.io/docs/getting-started/signup.md): Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Hobby tier.
+- [Getting Started](https://www.fastyoke.io/docs/getting-started): Sign in, provision a tenant, build your first form, wire it to an FSM.
+- [Installation](https://www.fastyoke.io/docs/getting-started/installation): Sign in, confirm your tenant assignment, invite teammates.
+- [Your First Form](https://www.fastyoke.io/docs/getting-started/first-form): Build a public form, collect submissions, spawn jobs from them.
+- [Sign up](https://www.fastyoke.io/docs/getting-started/signup): Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Hobby tier.
 
 ## Integrations
 
-- [Integrations](https://fastyoke.io/docs/integrations.md): Encrypted credential storage for outbound webhooks, Twilio, SendGrid, and custom REST endpoints.
-- [Vercel](https://fastyoke.io/docs/integrations/vercel.md): Install FastYoke from the Vercel Marketplace, or sign up directly and link an existing Vercel project. Both paths end at the same tenant.
+- [Integrations](https://www.fastyoke.io/docs/integrations): Encrypted credential storage for outbound webhooks, Twilio, SendGrid, and custom REST endpoints.
+- [Vercel](https://www.fastyoke.io/docs/integrations/vercel): Install FastYoke from the Vercel Marketplace, or sign up directly and link an existing Vercel project. Both paths end at the same tenant.
 
 ## Jobs
 
-- [Jobs](https://fastyoke.io/docs/jobs.md): The runtime side of workflows — live FSM instances you fire transitions against.
+- [Jobs](https://www.fastyoke.io/docs/jobs): The runtime side of workflows — live FSM instances you fire transitions against.
 
 ## LCAP
 
-- [LCAP](https://fastyoke.io/docs/lcap.md): Low-Code Application Platform — annotation-driven entity rendering. One annotation row drives Forms v2, Page Designer, CRUD scaffolds, and `@fastyoke/next` SSR pages.
-- [Annotations](https://fastyoke.io/docs/lcap/annotations.md): Edit field annotations from `/admin/entities/:name`. Type picker cascades — changing field_type prunes invalid component slugs and config keys automatically.
-- [Field types](https://fastyoke.io/docs/lcap/field-types.md): The closed 9-type vocabulary every LCAP consumer resolves against. Type drives the default component; @ui/component overrides it within the type's allowed slug list.
-- [Formatting](https://fastyoke.io/docs/lcap/formatting.md): Currency, percent, date, and time formatting reference. Native Intl + a tiny dayjs-token parser. Storage stays canonical; locale + timezone applied at display only.
-- [Page Designer integration](https://fastyoke.io/docs/lcap/page-designer.md): The `entity_field` block binds a Page Designer block to one (entity, field, record) tuple and mounts `<SmartField mode="display" />`. Annotation drives display formatting — change once, every block follows.
-- [UI config reference](https://fastyoke.io/docs/lcap/ui-config.md): Every `@ui/*` key the resolver respects, organized by field_type. The annotation row's `ui_config_json` is the single source of truth.
+- [LCAP](https://www.fastyoke.io/docs/lcap): Low-Code Application Platform — annotation-driven entity rendering. One annotation row drives Forms v2, Page Designer, CRUD scaffolds, and `@fastyoke/next` SSR pages.
+- [Annotations](https://www.fastyoke.io/docs/lcap/annotations): Edit field annotations from `/admin/entities/:name`. Type picker cascades — changing field_type prunes invalid component slugs and config keys automatically.
+- [Field types](https://www.fastyoke.io/docs/lcap/field-types): The closed 9-type vocabulary every LCAP consumer resolves against. Type drives the default component; @ui/component overrides it within the type's allowed slug list.
+- [Formatting](https://www.fastyoke.io/docs/lcap/formatting): Currency, percent, date, and time formatting reference. Native Intl + a tiny dayjs-token parser. Storage stays canonical; locale + timezone applied at display only.
+- [Page Designer integration](https://www.fastyoke.io/docs/lcap/page-designer): The `entity_field` block binds a Page Designer block to one (entity, field, record) tuple and mounts `<SmartField mode="display" />`. Annotation drives display formatting — change once, every block follows.
+- [UI config reference](https://www.fastyoke.io/docs/lcap/ui-config): Every `@ui/*` key the resolver respects, organized by field_type. The annotation row's `ui_config_json` is the single source of truth.
 
 ## Pages
 
-- [Pages](https://fastyoke.io/docs/pages.md): Block-based workspace pages that embed FastYoke data into your operator UI.
+- [Pages](https://www.fastyoke.io/docs/pages): Block-based workspace pages that embed FastYoke data into your operator UI.
 
 ## Recipes
 
-- [Recipes](https://fastyoke.io/docs/recipes.md): Focused walkthroughs for the common FastYoke integration patterns.
-- [CI Scripting](https://fastyoke.io/docs/recipes/ci-scripting.md): Automate tenant-scoped operations from CI using a long-lived FastYoke API token + curl.
-- [Handle email bounces and complaints](https://fastyoke.io/docs/recipes/email-bounces.md): How FastYoke processes AWS SES bounce and complaint notifications, where the suppression list lives, and how to recover a recipient.
-- [Extension Authoring](https://fastyoke.io/docs/recipes/extension-authoring.md): End-to-end — scaffold, iterate locally, publish to a tenant.
-- [CRUD UI with the SDK Hooks](https://fastyoke.io/docs/recipes/sdk-crud-ui.md): Full list + create + update + delete page for a user-defined entity kind using @fastyoke/sdk 0.2.0.
-- [Webhook Intake](https://fastyoke.io/docs/recipes/webhook-intake.md): Receive external events as FSM-backed jobs via a public form + invite token.
+- [Webhook Intake](https://www.fastyoke.io/docs/recipes/webhook-intake): Receive external events as FSM-backed jobs via a public form + invite token.
+- [Extension Authoring](https://www.fastyoke.io/docs/recipes/extension-authoring): End-to-end — scaffold, iterate locally, publish to a tenant.
+- [CI Scripting](https://www.fastyoke.io/docs/recipes/ci-scripting): Automate tenant-scoped operations from CI using a long-lived FastYoke API token + curl.
+- [CRUD UI with the SDK Hooks](https://www.fastyoke.io/docs/recipes/sdk-crud-ui): Full list + create + update + delete page for a user-defined entity kind using @fastyoke/sdk 0.2.0.
+- [Recipes](https://www.fastyoke.io/docs/recipes): Focused walkthroughs for the common FastYoke integration patterns.
+- [Handle email bounces and complaints](https://www.fastyoke.io/docs/recipes/email-bounces): How FastYoke processes AWS SES bounce and complaint notifications, where the suppression list lives, and how to recover a recipient.
 
 ## SDK
 
-- [SDK](https://fastyoke.io/docs/sdk.md): @fastyoke/sdk — build extensions, page designer blocks, and host integrations.
-- [SDK Quickstart](https://fastyoke.io/docs/sdk/quickstart.md): Install @fastyoke/sdk and mount your first extension.
-- [SDK Reference](https://fastyoke.io/docs/sdk/reference.md): Public exports of @fastyoke/sdk — provider, data hooks, realtime client, FsmTimeline / FsmViewer, WorkflowHistory, SmartField, and the typed resource clients.
+- [SDK Quickstart](https://www.fastyoke.io/docs/sdk/quickstart): Install @fastyoke/sdk and mount your first extension.
+- [SDK Reference](https://www.fastyoke.io/docs/sdk/reference): Public exports of @fastyoke/sdk — provider, data hooks, realtime client, FsmTimeline / FsmViewer, WorkflowHistory, SmartField, and the typed resource clients.
+- [SDK](https://www.fastyoke.io/docs/sdk): @fastyoke/sdk — build extensions, page designer blocks, and host integrations.
 
 ## Security
 
-- [PII / SPI Field Encryption](https://fastyoke.io/docs/security/encryption.md): Tag entity-field annotations or form-field schemas with `is_pii` to encrypt their values at rest under a per-tenant key. Available as a $19/mo add-on at every tier.
+- [PII / SPI Field Encryption](https://www.fastyoke.io/docs/security/encryption): Tag entity-field annotations or form-field schemas with `is_pii` to encrypt their values at rest under a per-tenant key. Available as a $19/mo add-on at every tier.
 
 ## Workflows
 
-- [Workflows](https://fastyoke.io/docs/workflows.md): Finite-state machines with sandboxed guards, declarative actions, and multi-version publishing.
-- [FSM Designer](https://fastyoke.io/docs/workflows/builder.md): Draw the graph, wire transitions, compose guards, declare actions.
+- [FSM Designer](https://www.fastyoke.io/docs/workflows/builder): Draw the graph, wire transitions, compose guards, declare actions.
+- [Workflows](https://www.fastyoke.io/docs/workflows): Finite-state machines with sandboxed guards, declarative actions, and multi-version publishing.

@@ -1,6 +1,7 @@
-# Vercel
-
-> Install FastYoke from the Vercel Marketplace, or sign up directly and link an existing Vercel project. Both paths end at the same tenant.
+---
+title: Vercel
+summary: Install FastYoke from the Vercel Marketplace, or sign up directly and link an existing Vercel project. Both paths end at the same tenant.
+---
 
 # Vercel
 
@@ -106,12 +107,12 @@ The claim token is valid for **7 days**. Clicking the link:
   silently attaches the new Vercel tenant to your existing account;
   no separate claim step required.
 
-> **Activation link is single-use**
->
-> Each link can only be consumed once. If yours has expired or was
->   already used, ask your platform operator to resend it (see the
->   operator section below). The link cannot be regenerated from the
->   dashboard — only via the CLI.
+::callout{type="warn" title="Activation link is single-use"}
+Each link can only be consumed once. If yours has expired or was
+already used, ask your platform operator to resend it (see the
+operator section below). The link cannot be regenerated from the
+dashboard — only via the CLI.
+::
 
 ---
 
@@ -150,12 +151,12 @@ automatically:
 | `integration.uninstalled` | Soft-deletes the installation and revokes the linked `FASTYOKE_API_KEY`. The tenant, org, and all tenant data are preserved — you can reconnect by reinstalling. |
 | `project.transferred` | Refused (returns an error). Transfers are not supported. |
 
-> **Uninstall preserves your data**
->
-> Removing FastYoke from a Vercel project does not delete your tenant
->   database, FSM schemas, jobs, or event log. It only revokes the API
->   token and unlinks the installation. Reinstalling provisions a
->   fresh token and re-injects env vars into the new project.
+::callout{type="info" title="Uninstall preserves your data"}
+Removing FastYoke from a Vercel project does not delete your tenant
+database, FSM schemas, jobs, or event log. It only revokes the API
+token and unlinks the installation. Reinstalling provisions a
+fresh token and re-injects env vars into the new project.
+::
 
 ---
 

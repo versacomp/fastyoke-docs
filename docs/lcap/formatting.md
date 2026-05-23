@@ -1,6 +1,7 @@
-# Formatting
-
-> Currency, percent, date, and time formatting reference. Native Intl + a tiny dayjs-token parser. Storage stays canonical; locale + timezone applied at display only.
+---
+title: Formatting
+summary: Currency, percent, date, and time formatting reference. Native Intl + a tiny dayjs-token parser. Storage stays canonical; locale + timezone applied at display only.
+---
 
 # Formatting
 
@@ -140,8 +141,8 @@ materializes.
 
 `mode="display"` for `field_type = "file_ref"` renders
 `filename (size)` with rounded-KB. The Page Designer Card
-block (rolling out) wraps `` with
-the existing `` so image previews + download
+block (rolling out) wraps `<SmartField />` with
+the existing `<FilePayloadView />` so image previews + download
 links work inline.
 
 ## Cross-references
@@ -150,5 +151,5 @@ links work inline.
   `@ui/*` key catalog.
 - [Field types](/docs/lcap/field-types) — type → default
   component mapping.
-- [SDK reference](/docs/sdk/reference) — ``
+- [SDK reference](/docs/sdk/reference) — `<SmartField />`
   props and the `entityAnnotationToZod` helper.

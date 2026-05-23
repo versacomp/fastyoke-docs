@@ -1,11 +1,14 @@
-# SDK Quickstart
-
-> Install @fastyoke/sdk and mount your first extension.
+---
+title: SDK Quickstart
+summary: Install @fastyoke/sdk and mount your first extension.
+order: 1
+---
 
 # SDK Quickstart
 
 ## Install
 
+::code-group
 ```bash title="npm"
 npm install @fastyoke/sdk
 ```
@@ -17,6 +20,7 @@ pnpm add @fastyoke/sdk
 ```bash title="yarn"
 yarn add @fastyoke/sdk
 ```
+::
 
 React is a peer dep — if your project doesn't already have React 18,
 install it too.
@@ -63,12 +67,12 @@ required keys:
 }
 ```
 
-> **Scope enforcement**
->
-> Scopes are enforced at runtime. Every API call carrying an
->   extension-scoped JWT or API token is checked against
->   <code>required_scopes</code>; a missing scope rejects the request
->   with HTTP 403. Declare every scope your code calls into.
+::callout{type="info" title="Scope enforcement"}
+Scopes are enforced at runtime. Every API call carrying an
+  extension-scoped JWT or API token is checked against
+  <code>required_scopes</code>; a missing scope rejects the request
+  with HTTP 403. Declare every scope your code calls into.
+::
 
 ## Bundling
 

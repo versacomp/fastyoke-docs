@@ -1,6 +1,8 @@
-# Deprecation Policy
-
-> What a deprecated surface means, when it goes away, and how to migrate.
+---
+title: Deprecation Policy
+summary: What a deprecated surface means, when it goes away, and how to migrate.
+order: 90
+---
 
 # Deprecation Policy
 
@@ -18,18 +20,16 @@ Three signals:
   frontmatter renders with a "(deprecated)" suffix in the nav.
 - **Top-of-page banner.** Pages whose entire subject is being
   replaced render a full-width red banner at the top, with a link
-  to the replacement. Powered by the `` MDX component.
+  to the replacement. Powered by the `<Deprecated>` MDX component.
 - **In-prose highlight.** When only one construct on an otherwise
   current page is deprecated, you'll see a red-bordered
-  `
-> **Note**
->
-> ` block next to it.
->
-> 
->   See the <a href="/docs/forms/builder">Forms Builder</a> page for
->   an in-prose deprecated callout on the Forms v1 schema. It's been
->   read-shimmed rather than migrated — but authors target v2.
+  `<Callout type="deprecated">` block next to it.
+
+::callout{type="info" title="Example"}
+See the <a href="/docs/forms/builder">Forms Builder</a> page for
+  an in-prose deprecated callout on the Forms v1 schema. It's been
+  read-shimmed rather than migrated — but authors target v2.
+::
 
 ## What the marker promises
 
@@ -40,7 +40,7 @@ When you see a deprecation marker, what you're reading:
 - Will keep working through at least one subsequent platform
   release. We don't pull a deprecated surface in the same deploy
   that ships the replacement.
-- Has a named replacement. The ``
+- Has a named replacement. The `<Deprecated replaceWith="...">`
   banner always links to the page you should migrate to. If the
   link is missing, the deprecation is scoped to information loss
   (e.g. a field being removed) — the surrounding surface stays.

@@ -1,6 +1,8 @@
-# Branding & the Powered-by badge
-
-> Where the FastYoke "Powered by" badge appears, and how Pro and above can opt out per surface.
+---
+title: Branding & the Powered-by badge
+summary: Where the FastYoke "Powered by" badge appears, and how Pro and above can opt out per surface.
+order: 60
+---
 
 # Branding & the Powered-by badge
 
@@ -119,7 +121,7 @@ admin shell only and do not replace the attribution badge on public surfaces.
 
 - [Forms tier entitlements](/docs/forms/tiers) — tier table row for
   "Powered-by FastYoke badge".
-- [Submission PDFs](/docs/forms/submission-pdfs) — full PDF render
-  documentation including the byte-stable regenerate contract.
-- [Embedded forms](/docs/forms/embeds) — embed configuration and badge
+- [Vanity PDF filenames](/docs/forms/pdf-vanity-filenames) — PDF render
+  documentation including filename pattern tokens and tier gating.
+- [Embed forms](/docs/forms/embed) — embed configuration and badge
   behaviour in iframe contexts.

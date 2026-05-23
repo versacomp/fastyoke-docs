@@ -1,6 +1,7 @@
-# UI config reference
-
-> Every `@ui/*` key the resolver respects, organized by field_type. The annotation row's `ui_config_json` is the single source of truth.
+---
+title: UI config reference
+summary: Every `@ui/*` key the resolver respects, organized by field_type. The annotation row's `ui_config_json` is the single source of truth.
+---
 
 # UI config reference
 
@@ -83,19 +84,9 @@ the form schema directly.
 | `@ui/component` | Effect |
 |---|---|
 | `textarea` *(default)* | Native `<textarea>`. |
-| `richtext` | TipTap-based editor from `@fastyoke/lcap-richtext` *(preview — not yet on npm; falls back to `<textarea>` with a `console.warn` today)*. Stores HTML-escaped sanitized markup. |
-| `markdown` | Markdown editor from `@fastyoke/lcap-markdowneditor` *(preview — not yet on npm; falls back to `<textarea>`)*. Stores raw markdown. |
-| `code` | Monaco-based editor from `@fastyoke/lcap-codeeditor` *(preview — not yet on npm; falls back to `<textarea>`)*. Stores raw source. |
-
-> **Authoring against the preview slugs is safe**
->
-> The `richtext` / `markdown` / `code` slugs are persisted as plain
-> strings in <code>ui_config_json["@ui/component"]</code> — the wire
-> shape (HTML / markdown / source) is identical whether the lazy
-> peer package is installed or the resolver falls back. A project
-> that picks one of these slugs today renders as a plain textarea
-> and will swap to the rich UI automatically once the peer
-> packages are published.
+| `richtext` | TipTap-based editor from `@fastyoke/lcap-richtext`. Stores HTML-escaped sanitized markup. |
+| `markdown` | Markdown editor from `@fastyoke/lcap-markdowneditor`. Stores raw markdown. |
+| `code` | Monaco-based editor from `@fastyoke/lcap-codeeditor`. Stores raw source. |
 
 | Key | Type | Effect |
 |---|---|---|
@@ -140,7 +131,7 @@ the form schema directly.
 
 | Key | Type | Effect |
 |---|---|---|
-| `@ui/include_time` | boolean | Switches the input from `` to `` (equivalent to picking `datetime` as the component slug). |
+| `@ui/include_time` | boolean | Switches the input from `<DatePicker />` to `<DateTimePicker />` (equivalent to picking `datetime` as the component slug). |
 | `@ui/date_format` | string | dayjs-style display format (`"MMM dd, yyyy"`, `"yyyy-MM-dd"`, etc). Display-only; storage stays ISO-8601 UTC. See [formatting](/docs/lcap/formatting) for the full token vocabulary. |
 | `@ui/time_format` | string | dayjs-style time-portion format. |
 | `@ui/timezone` | string | IANA tz (`"America/Los_Angeles"`). Applied at display only. |
@@ -154,7 +145,7 @@ the form schema directly.
 | `tags` | Reserved for a multi-select chip surface. |
 
 The `options_json` column on the annotation row carries
-`[{ value, label }, …]`. `` reads it directly.
+`[{ value, label }, …]`. `<SmartField />` reads it directly.
 
 ## `field_type = "fsm_state_ref"`
 
@@ -165,8 +156,8 @@ otherwise a free-text input.
 ## `field_type = "file_ref"`
 
 Single-component; v0 renders a read-only summary
-(`filename (size)`). The Page Designer Card block (rolling out) wraps `` with the existing
-`` for full image / download rendering.
+(`filename (size)`). The Page Designer Card block (rolling out) wraps `<SmartField />` with the existing
+`<FilePayloadView />` for full image / download rendering.
 
 ## `field_type = "relationship"`
 
@@ -179,12 +170,12 @@ Single-component; v0 renders a read-only summary
 |---|---|---|
 | `@ui/display_path` | string | When set, the resolver runs a single `useEntity(target_entity, target_id)` fetch and shows the named field instead of the raw id. v0 doesn't traverse multi-level paths. |
 
-> **Relationship is annotation-only in v0**
->
-> `relationship` ships without inline editing, graph fetches, or
-> multi-level traversal. Admins who need a relationship picker use
-> LLM-authored extensions. A follow-on release may revisit once
-> the v0 surface proves out.
+::callout{type="info" title="Relationship is annotation-only in v0"}
+`relationship` ships without inline editing, graph fetches, or
+multi-level traversal. Admins who need a relationship picker use
+LLM-authored extensions. A follow-on release may revisit once
+the v0 surface proves out.
+::
 
 ## Cross-references
 

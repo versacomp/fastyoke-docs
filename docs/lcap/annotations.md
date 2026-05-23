@@ -1,6 +1,7 @@
-# Annotations
-
-> Edit field annotations from `/admin/entities/:name`. Type picker cascades — changing field_type prunes invalid component slugs and config keys automatically.
+---
+title: Annotations
+summary: Edit field annotations from `/admin/entities/:name`. Type picker cascades — changing field_type prunes invalid component slugs and config keys automatically.
+---
 
 # Annotations
 
@@ -63,11 +64,11 @@ or revert restores the pristine snapshot from the last
 successful load. No partial-write state survives a network
 failure.
 
-> **Revert is non-destructive**
->
-> The Revert button restores the row state from the last
-> successful load or save — no API call, no flicker. Use it
-> freely while exploring different type / component combos.
+::callout{type="tip" title="Revert is non-destructive"}
+The Revert button restores the row state from the last
+successful load or save — no API call, no flicker. Use it
+freely while exploring different type / component combos.
+::
 
 ## Save semantics
 

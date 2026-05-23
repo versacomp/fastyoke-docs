@@ -1,6 +1,7 @@
-# PII / SPI Field Encryption
-
-> Tag entity-field annotations or form-field schemas with `is_pii` to encrypt their values at rest under a per-tenant key. Available as a $19/mo add-on at every tier.
+---
+title: PII / SPI Field Encryption
+summary: Tag entity-field annotations or form-field schemas with `is_pii` to encrypt their values at rest under a per-tenant key. Available as a $19/mo add-on at every tier.
+---
 
 # PII / SPI Field Encryption
 

@@ -1,6 +1,8 @@
-# Command Reference
-
-> Every subcommand for fy (extension authoring) and fastyoke-admin (operator ops).
+---
+title: Command Reference
+summary: Every subcommand for fy (extension authoring).
+order: 1
+---
 
 # Command Reference
 
@@ -17,6 +19,7 @@ subcommands cover three workflows:
 - **Discovery** (`capabilities`) — emit a JSON manifest of every
   command, flag, and FSM constraint for AI agents and tooling.
 
+::code-group
 ```bash title="global"
 npm install -g @fastyoke/cli
 fy --help
@@ -26,6 +29,7 @@ fy --help
 npm install --save-dev @fastyoke/cli
 npx fy --help
 ```
+::
 
 ### `fy init [name] [--template <kind>]`
 
@@ -107,13 +111,12 @@ Goes through the same three-layer scanner (MIME magic → VT hash
 verdict is a hard reject; `Suspicious` / `Skipped` pass with
 logging.
 
-> **No generic API surface**
->
-> <code>fy</code> only covers extension authoring and app
->   scaffolding. There are no `fy schemas list` / `fy jobs transition`
->   / `fy entities get` commands. If you need to call the tenant API
->   from CI, use plain <code>curl</code> / <code>httpx</code> with a
->   tenant JWT — see <a href="/docs/auth">Authentication</a>.
+::callout{type="warn" title="No generic API surface"}
+`fy` only covers extension authoring and app scaffolding. There are no
+`fy schemas list` / `fy jobs transition` / `fy entities get`
+commands. If you need to call the tenant API from CI, use plain
+`curl` / `httpx` with a tenant JWT — see [Authentication](/docs/auth).
+::
 
 ### `fy app create [name]`
 
@@ -144,7 +147,7 @@ fy app create my-orders \
 
 | Flag | Description |
 |---|---|
-| `--entity ` | Entity name in **PascalCase** (e.g. `Order`, `Shipment`). |
+| `--entity <Name>` | Entity name in **PascalCase** (e.g. `Order`, `Shipment`). |
 | `--fields <pairs>` | Comma-separated `name:type` pairs. Types: `string` / `number` / `boolean` / `date`. |
 | `--states <names>` | Comma-separated FSM state names. Must include `--initial`. |
 | `--initial <state>` | Initial FSM state. Required whenever `--states` is set. |
@@ -186,15 +189,11 @@ The command refuses to overwrite existing files — re-running
 inside a populated directory exits non-zero with the colliding
 paths listed.
 
-> **JSON mode for AI agents**
->
-> Pass <code>--json</code> with <code>--yes</code> to drive the
->   scaffold from another program. stdout is one JSON object with{' '}
->   <code>status</code>, <code>files_written</code>, and{' '}
->   <code>next_steps</code>; all human-readable progress is on
->   stderr so the two streams never interleave.
+::callout{type="info" title="JSON mode for AI agents"}
+Pass `--json` with `--yes` to drive the scaffold from another program. stdout is one JSON object with `status`, `files_written`, and `next_steps`; all human-readable progress is on stderr so the two streams never interleave.
+::
 
-### `fy app add-entity `
+### `fy app add-entity <Name>`
 
 Extend an existing app project with a second (or third, etc.)
 entity. Reads the project's `fy-app.json`, validates the new
@@ -221,7 +220,7 @@ fy app add-entity Driver \
 Flags match `fy app create` except `--entity` (the name is a
 positional argument) and there is no `--json` — this command is
 intended for interactive iteration. Add-entity is non-destructive:
-if `src/entities/.schema.ts` already exists, the command
+if `src/entities/<Name>.schema.ts` already exists, the command
 refuses rather than overwriting it.
 
 ### `fy capabilities`
@@ -250,108 +249,3 @@ The same `capabilities.json` is shipped inside the npm tarball,
 so an agent can consult the schema without executing the binary
 at all.
 
-## `fastyoke-admin` (operator)
-
-Baked into the Docker image at `/app/fastyoke-admin`. Run via
-`fly ssh console`. Credentials flow through environment variables
-rather than argv where possible — `/proc/<pid>/cmdline` leaks on
-Linux.
-
-### Super-admin lifecycle
-
-```bash
-# Create the first super-admin on a fresh deploy. Idempotent
-# bootstrap: running with an existing email updates the password.
-ADMIN_EMAIL=you@example.com ADMIN_PASSWORD=<strong> \
-  /app/fastyoke-admin create-admin
-
-/app/fastyoke-admin list-admins
-
-ADMIN_EMAIL=you@example.com ADMIN_PASSWORD=<new> \
-  /app/fastyoke-admin reset-password
-
-ADMIN_EMAIL=old@example.com \
-  /app/fastyoke-admin delete-admin --yes       # --yes skips prompt
-```
-
-> **Web-UI equivalents**
->
-> The platform-admin shell at <code>/super/admins</code> mirrors
->   every one of these — list / create / reset password / delete —
->   with the same last-admin and self-delete guards. The CLI remains
->   the right path for automation and for the initial bootstrap
->   (when no admin exists to log in).
-
-### Backup / restore
-
-```bash
-# Rewrite /etc/litestream.yml from the current tenant list.
-# Invoked by startup.sh before `litestream replicate` launches.
-/app/fastyoke-admin regen-litestream-config --out /etc/litestream.yml
-
-# Pull one tenant's SQLite back from Tigris into its on-disk path.
-# For cold-restore recovery after volume loss — the app doesn't
-# need to be running.
-/app/fastyoke-admin restore-tenant --tenant <tenant_id>
-
-# Move a live tenant to a different machine. Three-step
-# orchestration: restore on target → update platform assignment
-# → best-effort evict on source. Mints its own platform JWT from
-# JWT_SECRET.
-/app/fastyoke-admin reassign-tenant \
-    --tenant <tenant_id> \
-    --to-machine <machine_id> \
-    --app-url http://localhost:8080
-```
-
-> **JWT_SECRET required for reassign**
->
-> <code>reassign-tenant</code> mints a short-lived platform JWT to
->   authenticate its own HTTP calls to the app's ops endpoints.
->   Export <code>JWT_SECRET</code> in the shell you're running from
->   — already set inside the container.
-
-> **Web-UI equivalents**
->
-> <code>/super/tenants/:id</code> has a Danger Zone with{' '}
->   <strong>Restore from Tigris</strong> (pinned to the current owner)
->   and <strong>Reassign to machine</strong> (pinned to the target).
->   The CLI's <code>restore-tenant</code> is the right path for
->   post-volume-loss recovery when the app can't run; otherwise
->   the shell is the more convenient surface.
-
-### Final cutover
-
-Three-phase ops sequence. See
-[DEPLOY_CHECKLIST.md](../auth) for the full runbook.
-
-> **Renamed from `phase13-*` — old names still work**
->
-> These two commands were previously named <code>phase13-status</code> and
->   <code>phase13-cutover</code>. Both old names continue to work as
->   deprecated aliases — they print a stderr warning and will be
->   removed in the <code>3.0</code> release. Update CI / runbooks at
->   your convenience.
-
-```bash
-# Preflight — reports unmigrated tenant ids, exits non-zero
-# when any remain. CI-friendly.
-/app/fastyoke-admin mirror-cleanup-status
-
-# Destructive — drops the platform DB's tenant-scoped mirror
-# tables + VACUUMs. Refuses to run when any tenant still has
-# db_file_path IS NULL. Idempotent (DROP TABLE IF EXISTS).
-/app/fastyoke-admin mirror-cleanup-cutover           # dry run — prints plan
-/app/fastyoke-admin mirror-cleanup-cutover --confirm # executes
-```
-
-> **Web-UI equivalent**
->
-> <code>/super/maintenance</code> shows the same preflight data
->   and provides a typed-confirmation cutover button. The CLI is
->   still the only way to run <code>mirror-cleanup-status</code> from
->   CI for an automated readiness gate.
-
-See [Authentication](/docs/auth) for how these tokens are validated
-and the operator runbook in `DEPLOY_CHECKLIST.md` for the full
-cutover + failover scenarios.
