@@ -34,7 +34,7 @@ npx fy --help
 ### `fy init [name] [--template <kind>]`
 
 Scaffold a new project in the current directory (or in `name/` if
-provided). Two template variants:
+provided). Three template variants:
 
 - **`--template extension`** (default) — a FastYoke admin extension.
   Writes `manifest.json`, `package.json`, `tsconfig.json`,
@@ -53,6 +53,16 @@ provided). Two template variants:
   `npm run build` directly — `fy` lifecycle commands do not wrap
   it.
 
+- **`--template vite-spa`** — a standalone tenant-operator portal as a
+  pure SPA. Vite + React + TypeScript + Tailwind + the FastYoke React
+  SDK, pre-wired with a login screen, JWT-aware Fetcher,
+  `<FastYokeProvider>`, an entity CRUD page on the `contact` kind, a
+  file upload + download panel, and a realtime jobs list. Ships a
+  Cloudflare-Pages-ready `public/_headers` file with a starter CSP
+  that blocks third-party scripts by default. Driven by
+  `npm run dev` / `npm run build` directly — `fy` lifecycle commands
+  do not wrap it.
+
 ```bash
 # Default — extension scaffold.
 fy init my-extension
@@ -63,11 +73,25 @@ cd my-portal
 cp .env.local.example .env.local      # set FASTYOKE_TENANT_URL
 npm install
 npm run dev
+
+# Standalone tenant-operator SPA for Cloudflare Pages.
+fy init my-portal --template vite-spa
+cd my-portal
+cp .env.local.example .env.local      # set VITE_FASTYOKE_API_URL
+npm install
+npm run dev
 ```
 
 The Next.js scaffold uses the **public submission token** for its
 form route (`/forms/<token>`), not the form's slug. The token is
 what `fy` shows you when you publish a form — keep it opaque.
+
+The Vite SPA scaffold uses the **operator JWT** (obtained at runtime
+by the user signing in at `/auth/login`) and stores it in
+`localStorage`. See the
+[SPA on Cloudflare Pages recipe](/docs/recipes/spa-on-cloudflare-pages)
+for the full walk-through including the CORS allowlist edit and the
+Cloudflare Pages dashboard steps.
 
 ### `fy dev`
 

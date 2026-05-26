@@ -87,6 +87,7 @@
 - [Extension Authoring](https://www.fastyoke.io/docs/recipes/extension-authoring): End-to-end — scaffold, iterate locally, publish to a tenant.
 - [CI Scripting](https://www.fastyoke.io/docs/recipes/ci-scripting): Automate tenant-scoped operations from CI using a long-lived FastYoke API token + curl.
 - [CRUD UI with the SDK Hooks](https://www.fastyoke.io/docs/recipes/sdk-crud-ui): Full list + create + update + delete page for a user-defined entity kind using @fastyoke/sdk 0.2.0.
+- [SPA on Cloudflare Pages with the React SDK](https://www.fastyoke.io/docs/recipes/spa-on-cloudflare-pages): Build a standalone Vite + React SPA that signs in to FastYoke, CRUDs entities with realtime, uploads files, and deploys to Cloudflare Pages.
 - [Recipes](https://www.fastyoke.io/docs/recipes): Focused walkthroughs for the common FastYoke integration patterns.
 - [Handle email bounces and complaints](https://www.fastyoke.io/docs/recipes/email-bounces): How FastYoke processes AWS SES bounce and complaint notifications, where the suppression list lives, and how to recover a recipient.
 

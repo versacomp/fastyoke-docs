@@ -6,6 +6,14 @@ order: 1
 
 # SDK Quickstart
 
+::callout{type="tip" title="Building a standalone app instead?"}
+This page covers SDK use inside admin-shell extensions. If you want a
+standalone Vite + React SPA signed in with operator credentials and
+deployed to Cloudflare Pages, follow
+[SPA on Cloudflare Pages with the React SDK](/docs/recipes/spa-on-cloudflare-pages)
+instead.
+::
+
 ## Install
 
 ::code-group

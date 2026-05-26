@@ -268,5 +268,6 @@ The [scope inference pass](/docs/apps/advanced#real-data-extensions-sdk-020) rea
 
 - [SDK reference — data hooks](/docs/sdk/reference#react-data-hooks)
 - [SDK reference — realtime](/docs/sdk/reference#realtime)
+- [SPA on Cloudflare Pages with the React SDK](/docs/recipes/spa-on-cloudflare-pages) — the standalone-app deploy posture this recipe carves out.
 - [Advanced App Builder — real-data extensions](/docs/apps/advanced#real-data-extensions-sdk-020)
 - [Extension authoring](/docs/recipes/extension-authoring) — scaffold → build → install a bundle that includes this page.
