@@ -1970,6 +1970,7 @@ FastYoke ships a single public command-line surface:
 |---|---|
 | Scaffold a new extension project | `fy init` |
 | Scaffold a standalone Next.js consumer app | `fy init --template nextjs` |
+| Scaffold a standalone Vite SPA (operator portal, CF Pages) | `fy init --template vite-spa` |
 | Scaffold a full app extension from an entity + FSM spec | `fy app create` |
 | Add another entity to an existing app project | `fy app add-entity <Name>` |
 | Rebuild an extension in watch mode | `fy dev` |
