@@ -9,7 +9,7 @@ order: 3
 
 <section class="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
 
-**Last updated:** 2026-04-26.
+**Last updated:** 2026-05-26.
 
 This page is the **scaffold** version of the FastYoke privacy
 notice. It covers the platform's defaults; the operator that
@@ -63,6 +63,8 @@ If you sign in as a tenant administrator or operator:
   console (workflow edits, job transitions, theme changes).
   These are append-only and survive account deletion as a
   compliance trail.
+- (Optional) A verified phone number, if you opt in to SMS
+  two-factor authentication. See **SMS messages** below.
 
 ### From product telemetry
 
@@ -96,6 +98,8 @@ analytics that fingerprint visitors across sites.
 | Tenant account info | While the account is active. After deletion, audit-log rows that reference the account stay in the immutable ledger; the account row itself is hard-deleted within 30 days. |
 | Access logs | 30 days. |
 | Product telemetry | Aggregate counters retained indefinitely; no submitter-level data. |
+| Enrolled phone number (SMS 2FA) | While SMS two-factor is enabled on your account. Hard-deleted within 30 days of removal or account deletion. |
+| Verification codes (OTP) | 10 minutes from send. Stored only as a salted, peppered SHA-256 hash; never in plaintext. |
 
 ## Who can see it
 
@@ -139,6 +143,75 @@ set no cookies at all.
 
 We use no third-party tracking scripts, no advertising
 pixels, and no cross-site session reconciliation.
+
+## SMS messages
+
+FastYoke sends SMS text messages only when a tenant
+administrator or operator opts in to two-factor authentication
+(2FA) on their FastYoke account and enrolls a phone number
+through an in-app verification flow.
+
+### What you'll receive
+
+- A 6-digit one-time verification code when you sign in.
+- A 6-digit one-time verification code when you first enroll or
+  change your phone number.
+
+That is the only category of SMS we send. We do not send
+marketing, promotional, recurring, or account-status SMS.
+Standard message and data rates may apply from your carrier.
+
+### Frequency
+
+Messages are sent only in response to a sign-in or enrollment
+attempt you initiate — typically zero to a few per week per
+user. A per-user rate limit caps sends at 4 in any 15-minute
+window.
+
+### How to opt in
+
+Open your FastYoke account settings, enable two-factor
+authentication, enter your phone number in international format
+(E.164, e.g. `+14155551234`), and respond to the verification
+code we send. Your number is stored only after you confirm
+ownership this way.
+
+### How to opt out
+
+- Reply **STOP**, **UNSUBSCRIBE**, or **CANCEL** to any
+  FastYoke verification SMS. Your carrier will block further
+  FastYoke SMS to that number; no further action needed on
+  your part.
+- Or, in your account settings, switch the second factor to
+  email (we send the same one-time code to your verified
+  account email instead).
+- Or, remove your phone number entirely. Two-factor will fall
+  back to email.
+
+To re-enable SMS after opting out, re-enroll your phone in
+account settings.
+
+### Who sees the phone number and the message
+
+- **FastYoke** stores your phone number in our platform
+  database, scoped to your tenant. We use it only to deliver
+  verification codes.
+- **AWS** is our SMS delivery provider (Amazon SNS). They
+  receive the destination phone number and the message body
+  at send time, subject to their privacy terms. They do not
+  use the content for any other purpose.
+- **Your mobile carrier** delivers the message to your
+  handset, as with any SMS.
+- **No third-party advertising or analytics provider** ever
+  receives your phone number or message content.
+
+### How long it's kept
+
+Your enrolled phone number is kept while two-factor SMS is
+enabled on your account. Remove it from account settings or
+delete your account and it is hard-deleted within 30 days.
+Verification codes themselves are short-lived (10-minute
+expiry) and are never logged in plaintext.
 
 ## Children
 
