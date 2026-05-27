@@ -4,15 +4,39 @@ summary: Build at the speed of low-code, perform at the speed of the edge, leave
 order: 1
 ---
 
-::hero{eyebrow="FASTYOKE" tagline="The open-architecture App Platform as a Service designed for zero vendor lock-in." graphic="story"}
-#title
+::hero-carousel
+#story-a-eyebrow
+FASTYOKE
+
+#story-a-title
 Build at the speed of <em>Low-Code</em>.<br/>Perform at the speed of the <em>Edge</em>.<br/>Total architectural <em>freedom</em>.
 
-#default
-::signup-cta{size="lg" variant="primary" location="hero-home"}
+#story-a-tagline
+The open-architecture App Platform as a Service designed for zero vendor lock-in.
+
+#story-a-cta
+::signup-cta{size="lg" variant="primary" location="hero-home-platform"}
 ::
 
-::marketplace-cta{size="lg" variant="secondary" location="hero-home"}
+::marketplace-cta{size="lg" variant="secondary" location="hero-home-platform"}
+::
+
+#story-b-eyebrow
+HOBBY · FREE FOREVER
+
+#story-b-title
+Build forms <em>for free</em>. No vendor lock-in.
+
+#story-b-tagline
+The same form builder our enterprise customers ship to production — free for personal projects and small businesses.
+
+#story-b-cta
+::signup-cta{size="lg" variant="primary" location="hero-home-forms"}
+Build a form free
+::
+
+::cta-button{to="/free-forms" variant="secondary" size="lg"}
+See the features
 ::
 ::
 

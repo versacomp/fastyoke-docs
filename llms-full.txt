@@ -2,11 +2,31 @@
 
 > Build at the speed of low-code, perform at the speed of the edge, leave whenever you want. Multi-tenant FSM platform for ISVs who refuse vendor lock-in.
 
-#title
+#story-a-eyebrow
+FASTYOKE
+
+#story-a-title
 Build at the speed of <em>Low-Code</em>.<br/>Perform at the speed of the <em>Edge</em>.<br/>Total architectural <em>freedom</em>.
 
-#default
+#story-a-tagline
+The open-architecture App Platform as a Service designed for zero vendor lock-in.
 
+#story-a-cta
+
+
+#story-b-eyebrow
+HOBBY · FREE FOREVER
+
+#story-b-title
+Build forms <em>for free</em>. No vendor lock-in.
+
+#story-b-tagline
+The same form builder our enterprise customers ship to production — free for personal projects and small businesses.
+
+#story-b-cta
+Build a form free
+
+See the features
 ::
 
 

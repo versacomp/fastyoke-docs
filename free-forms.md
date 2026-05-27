@@ -5,7 +5,7 @@ order: 4
 ---
 
 ::hero{eyebrow="HOBBY PLAN · FREE FOREVER" title="Build forms for free. No vendor lock-in." tagline="The same form builder our enterprise customers ship to production — available free for personal projects and small businesses on the Hobby plan."}
-::cta-button{to="/pricing#hobby" variant="primary" size="lg"}
+::signup-cta{size="lg" variant="primary" location="freeforms-hero"}
 Start free — no credit card
 ::
 ::cta-button{to="/docs/forms" variant="secondary" size="lg"}
@@ -71,7 +71,7 @@ Sign up in under a minute. Build your first form in five. When you outgrow the H
 
 <div class="mt-8 flex flex-wrap justify-center gap-3">
 
-::cta-button{to="/pricing#hobby" variant="primary" size="lg"}
+::signup-cta{size="lg" variant="primary" location="freeforms-bottom"}
 Start free — no credit card
 ::
 
