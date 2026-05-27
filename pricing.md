@@ -10,6 +10,9 @@ order: 2
 ::pricing-table
 ::
 
+::pricing-forms-matrix
+::
+
 ::prose-container{max-width="3xl" padding="lg"}
 
 <h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">Frequently asked</h2>
