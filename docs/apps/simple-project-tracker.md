@@ -18,9 +18,9 @@ The app provides three core entities and everything you need to run them:
 
 All task state is managed through a **Kanban board** with five lanes: *Backlog*, *To Do*, *In Progress*, *Blocked*, and *Done*. Drag tasks between lanes to advance work. Unblock a task manually, reopen completed work if needed, or use the admin override to force a state change with a reason.
 
-## Installing from the Marketplace
+## Installing from Logic Cores
 
-1. Go to the Marketplace (sidebar → **Marketplace**).
+1. Go to Logic Cores (sidebar → **Logic Cores**).
 2. Find **Simple Project Tracker** in the free apps section.
 3. Click **Install**.
 4. Choose whether to load demo data (3 sample projects, 14 tasks, 6 comments). Demo mode helps you see the board in action; you can delete it anytime.
