@@ -46,8 +46,8 @@ The script loads asynchronously and does not block page rendering.
 | `slide` | Clicking a trigger button slides a panel in from the right edge. | Pro+ |
 | `bubble` | A floating action button in the corner opens a popover form. | Pro+ |
 
-::callout{type="note" title="Hobby tier — inline only"}
-Hobby accounts can publish embeds in `inline` mode. Upgrading to Pro or
+::callout{type="note" title="Solo tier — inline only"}
+Solo accounts can publish embeds in `inline` mode. Upgrading to Pro or
 above unlocks `modal`, `slide`, and `bubble` modes as well as brand
 theming, custom success behavior, and lifecycle events.
 ::
@@ -127,7 +127,7 @@ defense-in-depth layer on top of the server-side origin check.
 ## Theming
 
 ::callout{type="note" title="Pro+ feature"}
-Brand theming is stripped server-side for Hobby accounts. The form renders
+Brand theming is stripped server-side for Solo accounts. The form renders
 with FastYoke's default theme regardless of what was saved.
 ::
 
@@ -147,8 +147,8 @@ all theme configuration is server-side and tier-masked at render time.
 ## Lifecycle events
 
 ::callout{type="note" title="Pro+ feature"}
-Lifecycle events (postMessage relay) are disabled server-side for Hobby
-accounts. The `window.FastYoke.on()` calls below are no-ops on Hobby.
+Lifecycle events (postMessage relay) are disabled server-side for Solo
+accounts. The `window.FastYoke.on()` calls below are no-ops on Solo.
 ::
 
 When **Emit postMessage events** is enabled in the embed config, the SDK
@@ -184,14 +184,14 @@ in the list are silently dropped before reaching the host page.
 
 ## Powered-by badge
 
-Hobby accounts always display a "Powered by FastYoke" badge inside the embed.
+Solo accounts always display a "Powered by FastYoke" badge inside the embed.
 The badge is rendered server-side (the `show_badge` field is set by the API,
 not the client), so it cannot be removed by modifying the snippet. Pro and
 above can opt out from **Branding** settings.
 
 ## Summary of tier differences
 
-| Feature | Hobby | Pro+ |
+| Feature | Solo | Pro+ |
 |---|---|---|
 | Inline mode | Yes | Yes |
 | Modal / slide / bubble modes | No | Yes |

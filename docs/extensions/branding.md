@@ -13,7 +13,7 @@ rule is the same everywhere:
 
 | Tier              | Badge behaviour                                 |
 | ----------------- | ----------------------------------------------- |
-| Hobby             | Always on. Cannot be disabled.                  |
+| Solo             | Always on. Cannot be disabled.                  |
 | Pro / Team / Enterprise / Fleet | Off by default. Admin can opt in. |
 
 ---
@@ -25,7 +25,7 @@ rule is the same everywhere:
 The badge renders as a 12-px gray footer link at the bottom of the form
 page, both before the respondent fills in fields and after a successful
 submission. A `MarketingPlug` card (a bordered CTA promoting FastYoke's
-Hobby plan) appears alongside it on the success state; both surfaces
+Solo plan) appears alongside it on the success state; both surfaces
 respect the same flag, so opting out removes all FastYoke attribution
 from the form flow in one action.
 
@@ -41,7 +41,7 @@ Visibility is driven by the same `show_powered_by` field returned by
 
 When a form is loaded via an embed token (`?em=…`), badge visibility
 comes from the embed-config endpoint rather than the public branding
-endpoint. The server computes this from tier alone — Hobby embeds always
+endpoint. The server computes this from tier alone — Solo embeds always
 show the badge; Pro and above do not, regardless of the `show_powered_by`
 opt-in toggle. There is no per-embed override.
 
@@ -52,7 +52,7 @@ The exact text depends on the badge state snapshotted at submit time:
 
 | State at submit | Footer text on PDF |
 | --------------- | -------------------|
-| Badge on (Hobby or opted-in Pro+) | `Submission <id> · Generated with FastYoke · fastyoke.io` |
+| Badge on (Solo or opted-in Pro+) | `Submission <id> · Generated with FastYoke · fastyoke.io` |
 | Badge off (Pro+ opted out) | `Submission <id>` (audit line only, no FastYoke mention) |
 | Legacy row (created before this feature) | `Submission <id> · rendered by FastYoke` |
 
@@ -65,7 +65,7 @@ footer is byte-stable across regenerates — a legal-fidelity guarantee.
 
 The CMS render response includes a top-level `show_powered_by: bool`
 field for Cloudflare Worker / SDK consumers to use when injecting badge
-markup into CMS-rendered pages. The value follows the same Hobby/Pro+
+markup into CMS-rendered pages. The value follows the same Solo/Pro+
 rule as the other surfaces.
 
 ---
@@ -78,7 +78,7 @@ Navigate to **Settings → Branding** (`/admin/settings/branding`) and
 scroll to the **Powered-by badge** toggle. The toggle is labelled
 **Show "Powered by FastYoke" badge**.
 
-- **Hobby tenants**: the toggle is read-only and locked to on. An
+- **Solo tenants**: the toggle is read-only and locked to on. An
   upgrade hint appears below it.
 - **Pro+ tenants**: the toggle is editable. Default is off (badge
   hidden). Flip it on to display the badge on all surfaces.
@@ -96,15 +96,15 @@ scroll to the **Powered-by badge** toggle. The toggle is labelled
 }
 ```
 
-Setting `show_powered_by: false` on a Hobby tenant returns
+Setting `show_powered_by: false` on a Solo tenant returns
 **422 Unprocessable Entity** with the message:
 
 ```
-Hobby tier cannot opt out of the Powered-by badge — upgrade to Pro or higher to hide it
+Solo tier cannot opt out of the Powered-by badge — upgrade to Pro or higher to hide it
 ```
 
-Setting `show_powered_by: true` on a Hobby tenant is accepted (no-op —
-the badge is always on for Hobby regardless of the stored value).
+Setting `show_powered_by: true` on a Solo tenant is accepted (no-op —
+the badge is always on for Solo regardless of the stored value).
 
 ---
 

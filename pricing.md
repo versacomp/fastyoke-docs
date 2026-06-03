@@ -19,11 +19,11 @@ order: 2
 
 <div class="mt-8 grid gap-8 text-left sm:grid-cols-2">
   <div id="hobby">
-    <h3 class="font-semibold text-[var(--brand-text-primary)]">What's included in Hobby?</h3>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">What's included in Solo?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-secondary)]">
       Every runtime primitive that matters — the FSM engine, tenant
       isolation, the full SDK, extensions, realtime. You can ship a
-      real product on Hobby and upgrade only when you hit a
+      real product on Solo and upgrade only when you hit a
       platform-scale feature gate.
     </p>
   </div>
@@ -32,7 +32,7 @@ order: 2
     <p class="mt-2 text-sm text-[var(--brand-text-secondary)]">
       Vercel handles the install; FastYoke handles the upgrade.
       Pro, Team, and Enterprise route through our billing
-      surface — Hobby and Pro are hard-capped on transition
+      surface — Solo and Pro are hard-capped on transition
       volume, Team can opt in to metered overages, Enterprise
       bills overages by default. Reach out to <a href="mailto:sales@fastyoke.io">sales@fastyoke.io</a> to provision.
     </p>
@@ -76,9 +76,9 @@ order: 2
   <div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">Is there a trial on paid tiers?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-secondary)]">
-      Every install starts on Hobby for free. Paid-tier features
+      Every install starts on Solo for free. Paid-tier features
       require an active subscription — there is no separate trial,
-      since Hobby itself is the evaluation path.
+      since Solo itself is the evaluation path.
     </p>
   </div>
   <div>
@@ -98,7 +98,7 @@ order: 2
 
 <section class="bg-[var(--brand-bg-surface-raised)] py-16">
 <div class="mx-auto max-w-3xl px-4 text-center">
-<h2 class="text-2xl font-semibold tracking-tight text-[var(--brand-text-primary)]">Start on Hobby. Upgrade when you need it.</h2>
+<h2 class="text-2xl font-semibold tracking-tight text-[var(--brand-text-primary)]">Start on Solo. Upgrade when you need it.</h2>
 <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
 
 ::signup-cta{size="lg" variant="primary" location="pricing-bottom"}

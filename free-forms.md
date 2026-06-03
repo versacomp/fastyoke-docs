@@ -1,10 +1,10 @@
 ---
-title: Free Online Form Builder — FastYoke Hobby Plan
+title: Free Online Form Builder — FastYoke Solo Plan
 summary: Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
 order: 4
 ---
 
-::hero{eyebrow="HOBBY PLAN · FREE FOREVER" title="Build forms for free. No vendor lock-in." tagline="The same form builder our enterprise customers ship to production — available free for personal projects and small businesses on the Hobby plan."}
+::hero{eyebrow="SOLO PLAN · FREE FOREVER" title="Build forms for free. No vendor lock-in." tagline="The same form builder our enterprise customers ship to production — available free for personal projects and small businesses on the Solo plan."}
 ::signup-cta{size="lg" variant="primary" location="freeforms-hero"}
 Start free — no credit card
 ::
@@ -15,13 +15,13 @@ Read the docs
 
 ::prose-container{max-width="3xl" padding="md"}
 
-Most form builders trap your data, watermark your pages, and make you pay just to remove their logo. **FastYoke takes the opposite approach.** Build unlimited forms on the Hobby plan, host them on your own domain when you upgrade, and export your data any time you want.
+Most form builders trap your data, watermark your pages, and make you pay just to remove their logo. **FastYoke takes the opposite approach.** Build unlimited forms on the Solo plan, host them on your own domain when you upgrade, and export your data any time you want.
 
 ::
 
 ::prose-container{max-width="6xl" padding="lg"}
 
-What you get on Hobby
+What you get on Solo
 
 ## Every form feature, no asterisks
 
@@ -57,7 +57,7 @@ Who it's for
 ::
 
 ::feature-grid{columns="2"}
-  ::feature-card{title="Personal projects" summary="Side projects, hobbyist communities, family events, club memberships. Run an annual sign-up sheet without paying a SaaS bill — the Hobby plan is free forever, no card on file, no usage cliff."}
+  ::feature-card{title="Personal projects" summary="Side projects, hobbyist communities, family events, club memberships. Run an annual sign-up sheet without paying a SaaS bill — the Solo plan is free forever, no card on file, no usage cliff."}
   ::
   ::feature-card{title="Small businesses" summary="Intake forms, customer waivers, vendor onboarding, contact requests. Everything a $30/month form builder gives you, plus PDF generation and file scanning, plus the option to upgrade to a Pro plan when you want a custom domain or your own brand."}
   ::
@@ -67,7 +67,7 @@ Who it's for
 
 ## Ready when your form is.
 
-Sign up in under a minute. Build your first form in five. When you outgrow the Hobby plan, the upgrade path is one click — and your forms, themes, and submissions come with you.
+Sign up in under a minute. Build your first form in five. When you outgrow the Solo plan, the upgrade path is one click — and your forms, themes, and submissions come with you.
 
 <div class="mt-8 flex flex-wrap justify-center gap-3">
 

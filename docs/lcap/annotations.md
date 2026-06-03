@@ -103,7 +103,7 @@ annotations deliberately.
 The editor itself is **free for all tenants** at
 `/admin/entities/:entityName/annotations`. The same component
 embedded in the Page Designer right-rail inspector + Workspace
-inspector requires **Team tier or higher**; Hobby and Pro
+inspector requires **Team tier or higher**; Solo and Pro
 admins continue to use the standalone admin editor.
 
 ## Cross-references

@@ -13,7 +13,7 @@ the form manually.
 
 ::callout{type="info" title="Pro+ required"}
 The ingestion endpoint is available on Pro, Team, Enterprise, and Fleet
-tiers. Hobby tenants receive a `422` with error code `tier_required`.
+tiers. Solo tenants receive a `422` with error code `tier_required`.
 See [Forms tier entitlements](/docs/forms/tiers) for the full matrix.
 ::
 
@@ -179,7 +179,7 @@ Some codes include additional fields noted below.
 | `403` | `scope_required` | Token exists but does not have `forms:ingest` scope. Response includes `"required": "forms:ingest"`. |
 | `404` | `form_not_found` | No published form with that ID belongs to your tenant. Also returned for cross-tenant ID guessing. |
 | `409` | `idempotency_key_payload_mismatch` | The idempotency key was previously used with a different payload. |
-| `422` | `tier_required` | Your tenant is on Hobby tier. Response includes `"required": "pro"` and `"current": "hobby"`. |
+| `422` | `tier_required` | Your tenant is on Solo tier. Response includes `"required": "pro"` and `"current": "hobby"`. |
 | `422` | `form_not_accepting_submissions` | The form is not in `published` status. |
 | `422` | `validation_failed` | One or more fields failed schema validation. Response includes `"field_errors": [{ "field": "...", "message": "..." }]`. |
 | `422` | `in_flight` | An idempotency key is being processed by a concurrent request. Retry after a short delay. |

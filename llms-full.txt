@@ -15,7 +15,7 @@ The open-architecture App Platform as a Service designed for zero vendor lock-in
 
 
 #story-b-eyebrow
-HOBBY · FREE FOREVER
+SOLO · FREE FOREVER
 
 #story-b-title
 Build forms <em>for free</em>. No vendor lock-in.
@@ -145,11 +145,11 @@ Sign up direct and you get an isolated FastYoke tenant — dedicated database, s
 
 <div class="mt-8 grid gap-8 text-left sm:grid-cols-2">
   <div id="hobby">
-    <h3 class="font-semibold text-[var(--brand-text-primary)]">What's included in Hobby?</h3>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">What's included in Solo?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-secondary)]">
       Every runtime primitive that matters — the FSM engine, tenant
       isolation, the full SDK, extensions, realtime. You can ship a
-      real product on Hobby and upgrade only when you hit a
+      real product on Solo and upgrade only when you hit a
       platform-scale feature gate.
     </p>
   </div>
@@ -158,7 +158,7 @@ Sign up direct and you get an isolated FastYoke tenant — dedicated database, s
     <p class="mt-2 text-sm text-[var(--brand-text-secondary)]">
       Vercel handles the install; FastYoke handles the upgrade.
       Pro, Team, and Enterprise route through our billing
-      surface — Hobby and Pro are hard-capped on transition
+      surface — Solo and Pro are hard-capped on transition
       volume, Team can opt in to metered overages, Enterprise
       bills overages by default. Reach out to <a href="mailto:sales@fastyoke.io">sales@fastyoke.io</a> to provision.
     </p>
@@ -202,9 +202,9 @@ Sign up direct and you get an isolated FastYoke tenant — dedicated database, s
   <div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">Is there a trial on paid tiers?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-secondary)]">
-      Every install starts on Hobby for free. Paid-tier features
+      Every install starts on Solo for free. Paid-tier features
       require an active subscription — there is no separate trial,
-      since Hobby itself is the evaluation path.
+      since Solo itself is the evaluation path.
     </p>
   </div>
   <div>
@@ -223,7 +223,7 @@ Sign up direct and you get an isolated FastYoke tenant — dedicated database, s
 
 <section class="bg-[var(--brand-bg-surface-raised)] py-16">
 <div class="mx-auto max-w-3xl px-4 text-center">
-<h2 class="text-2xl font-semibold tracking-tight text-[var(--brand-text-primary)]">Start on Hobby. Upgrade when you need it.</h2>
+<h2 class="text-2xl font-semibold tracking-tight text-[var(--brand-text-primary)]">Start on Solo. Upgrade when you need it.</h2>
 <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
 
 
@@ -471,7 +471,7 @@ that looks like an active vulnerability.
 
 ---
 
-# Free Online Form Builder — FastYoke Hobby Plan
+# Free Online Form Builder — FastYoke Solo Plan
 
 > Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
 
@@ -480,11 +480,11 @@ Read the docs
 ::
 
 
-Most form builders trap your data, watermark your pages, and make you pay just to remove their logo. **FastYoke takes the opposite approach.** Build unlimited forms on the Hobby plan, host them on your own domain when you upgrade, and export your data any time you want.
+Most form builders trap your data, watermark your pages, and make you pay just to remove their logo. **FastYoke takes the opposite approach.** Build unlimited forms on the Solo plan, host them on your own domain when you upgrade, and export your data any time you want.
 
 
 
-What you get on Hobby
+What you get on Solo
 
 ## Every form feature, no asterisks
 
@@ -514,7 +514,7 @@ Who it's for
 ## Built for both sides of the desk
 
 
-  ::feature-card{title="Personal projects" summary="Side projects, hobbyist communities, family events, club memberships. Run an annual sign-up sheet without paying a SaaS bill — the Hobby plan is free forever, no card on file, no usage cliff."}
+  ::feature-card{title="Personal projects" summary="Side projects, hobbyist communities, family events, club memberships. Run an annual sign-up sheet without paying a SaaS bill — the Solo plan is free forever, no card on file, no usage cliff."}
   ::
   ::feature-card{title="Small businesses" summary="Intake forms, customer waivers, vendor onboarding, contact requests. Everything a $30/month form builder gives you, plus PDF generation and file scanning, plus the option to upgrade to a Pro plan when you want a custom domain or your own brand."}
   ::
@@ -522,7 +522,7 @@ Who it's for
 
 ## Ready when your form is.
 
-Sign up in under a minute. Build your first form in five. When you outgrow the Hobby plan, the upgrade path is one click — and your forms, themes, and submissions come with you.
+Sign up in under a minute. Build your first form in five. When you outgrow the Solo plan, the upgrade path is one click — and your forms, themes, and submissions come with you.
 
 <div class="mt-8 flex flex-wrap justify-center gap-3">
 
@@ -2943,7 +2943,7 @@ rule is the same everywhere:
 
 | Tier              | Badge behaviour                                 |
 | ----------------- | ----------------------------------------------- |
-| Hobby             | Always on. Cannot be disabled.                  |
+| Solo             | Always on. Cannot be disabled.                  |
 | Pro / Team / Enterprise / Fleet | Off by default. Admin can opt in. |
 
 ---
@@ -2955,7 +2955,7 @@ rule is the same everywhere:
 The badge renders as a 12-px gray footer link at the bottom of the form
 page, both before the respondent fills in fields and after a successful
 submission. A `MarketingPlug` card (a bordered CTA promoting FastYoke's
-Hobby plan) appears alongside it on the success state; both surfaces
+Solo plan) appears alongside it on the success state; both surfaces
 respect the same flag, so opting out removes all FastYoke attribution
 from the form flow in one action.
 
@@ -2971,7 +2971,7 @@ Visibility is driven by the same `show_powered_by` field returned by
 
 When a form is loaded via an embed token (`?em=…`), badge visibility
 comes from the embed-config endpoint rather than the public branding
-endpoint. The server computes this from tier alone — Hobby embeds always
+endpoint. The server computes this from tier alone — Solo embeds always
 show the badge; Pro and above do not, regardless of the `show_powered_by`
 opt-in toggle. There is no per-embed override.
 
@@ -2982,7 +2982,7 @@ The exact text depends on the badge state snapshotted at submit time:
 
 | State at submit | Footer text on PDF |
 | --------------- | -------------------|
-| Badge on (Hobby or opted-in Pro+) | `Submission <id> · Generated with FastYoke · fastyoke.io` |
+| Badge on (Solo or opted-in Pro+) | `Submission <id> · Generated with FastYoke · fastyoke.io` |
 | Badge off (Pro+ opted out) | `Submission <id>` (audit line only, no FastYoke mention) |
 | Legacy row (created before this feature) | `Submission <id> · rendered by FastYoke` |
 
@@ -2995,7 +2995,7 @@ footer is byte-stable across regenerates — a legal-fidelity guarantee.
 
 The CMS render response includes a top-level `show_powered_by: bool`
 field for Cloudflare Worker / SDK consumers to use when injecting badge
-markup into CMS-rendered pages. The value follows the same Hobby/Pro+
+markup into CMS-rendered pages. The value follows the same Solo/Pro+
 rule as the other surfaces.
 
 ---
@@ -3008,7 +3008,7 @@ Navigate to **Settings → Branding** (`/admin/settings/branding`) and
 scroll to the **Powered-by badge** toggle. The toggle is labelled
 **Show "Powered by FastYoke" badge**.
 
-- **Hobby tenants**: the toggle is read-only and locked to on. An
+- **Solo tenants**: the toggle is read-only and locked to on. An
   upgrade hint appears below it.
 - **Pro+ tenants**: the toggle is editable. Default is off (badge
   hidden). Flip it on to display the badge on all surfaces.
@@ -3026,15 +3026,15 @@ scroll to the **Powered-by badge** toggle. The toggle is labelled
 }
 ```
 
-Setting `show_powered_by: false` on a Hobby tenant returns
+Setting `show_powered_by: false` on a Solo tenant returns
 **422 Unprocessable Entity** with the message:
 
 ```
-Hobby tier cannot opt out of the Powered-by badge — upgrade to Pro or higher to hide it
+Solo tier cannot opt out of the Powered-by badge — upgrade to Pro or higher to hide it
 ```
 
-Setting `show_powered_by: true` on a Hobby tenant is accepted (no-op —
-the badge is always on for Hobby regardless of the stored value).
+Setting `show_powered_by: true` on a Solo tenant is accepted (no-op —
+the badge is always on for Solo regardless of the stored value).
 
 ---
 
@@ -3301,7 +3301,7 @@ admin shell's Forms Builder.
 Forms ship across all tiers. The differences are in scale and
 configuration depth, not feature gates.
 
-| Capability                            | Hobby           | Pro              | Team             | Enterprise       |
+| Capability                            | Solo           | Pro              | Team             | Enterprise       |
 | ------------------------------------- | --------------- | ---------------- | ---------------- | ---------------- |
 | Active (published) forms              | 3               | Unlimited        | Unlimited        | Unlimited        |
 | Daily submissions (aggregate)         | 100             | 1,000            | Unlimited        | Unlimited        |
@@ -3316,7 +3316,7 @@ configuration depth, not feature gates.
 | Form invites (Mint)                   | ✓ (capped)      | ✓                | ✓                | ✓                |
 | HTTP ingestion API                    | —               | ✓                | ✓                | ✓                |
 
-Hobby invite tokens have a 30-day maximum lifetime and a 500-submission
+Solo invite tokens have a 30-day maximum lifetime and a 500-submission
 cap per token. Pro and above support 1-year tokens with no submission
 limit.
 
@@ -3388,7 +3388,7 @@ The script loads asynchronously and does not block page rendering.
 | `slide` | Clicking a trigger button slides a panel in from the right edge. | Pro+ |
 | `bubble` | A floating action button in the corner opens a popover form. | Pro+ |
 
-Hobby accounts can publish embeds in `inline` mode. Upgrading to Pro or
+Solo accounts can publish embeds in `inline` mode. Upgrading to Pro or
 above unlocks `modal`, `slide`, and `bubble` modes as well as brand
 theming, custom success behavior, and lifecycle events.
 
@@ -3464,7 +3464,7 @@ defense-in-depth layer on top of the server-side origin check.
 
 ## Theming
 
-Brand theming is stripped server-side for Hobby accounts. The form renders
+Brand theming is stripped server-side for Solo accounts. The form renders
 with FastYoke's default theme regardless of what was saved.
 
 The embed config carries three theme fields that map to CSS custom properties
@@ -3482,8 +3482,8 @@ all theme configuration is server-side and tier-masked at render time.
 
 ## Lifecycle events
 
-Lifecycle events (postMessage relay) are disabled server-side for Hobby
-accounts. The `window.FastYoke.on()` calls below are no-ops on Hobby.
+Lifecycle events (postMessage relay) are disabled server-side for Solo
+accounts. The `window.FastYoke.on()` calls below are no-ops on Solo.
 
 When **Emit postMessage events** is enabled in the embed config, the SDK
 relays events from the form iframe to the host page as `CustomEvent`s on
@@ -3518,14 +3518,14 @@ in the list are silently dropped before reaching the host page.
 
 ## Powered-by badge
 
-Hobby accounts always display a "Powered by FastYoke" badge inside the embed.
+Solo accounts always display a "Powered by FastYoke" badge inside the embed.
 The badge is rendered server-side (the `show_badge` field is set by the API,
 not the client), so it cannot be removed by modifying the snippet. Pro and
 above can opt out from **Branding** settings.
 
 ## Summary of tier differences
 
-| Feature | Hobby | Pro+ |
+| Feature | Solo | Pro+ |
 |---|---|---|
 | Inline mode | Yes | Yes |
 | Modal / slide / bubble modes | No | Yes |
@@ -3548,7 +3548,7 @@ submission ID back, and the result is indistinguishable from a user filling
 the form manually.
 
 The ingestion endpoint is available on Pro, Team, Enterprise, and Fleet
-tiers. Hobby tenants receive a `422` with error code `tier_required`.
+tiers. Solo tenants receive a `422` with error code `tier_required`.
 See [Forms tier entitlements](/docs/forms/tiers) for the full matrix.
 
 ---
@@ -3713,7 +3713,7 @@ Some codes include additional fields noted below.
 | `403` | `scope_required` | Token exists but does not have `forms:ingest` scope. Response includes `"required": "forms:ingest"`. |
 | `404` | `form_not_found` | No published form with that ID belongs to your tenant. Also returned for cross-tenant ID guessing. |
 | `409` | `idempotency_key_payload_mismatch` | The idempotency key was previously used with a different payload. |
-| `422` | `tier_required` | Your tenant is on Hobby tier. Response includes `"required": "pro"` and `"current": "hobby"`. |
+| `422` | `tier_required` | Your tenant is on Solo tier. Response includes `"required": "pro"` and `"current": "hobby"`. |
 | `422` | `form_not_accepting_submissions` | The form is not in `published` status. |
 | `422` | `validation_failed` | One or more fields failed schema validation. Response includes `"field_errors": [{ "field": "...", "message": "..." }]`. |
 | `422` | `in_flight` | An idempotency key is being processed by a concurrent request. Retry after a short delay. |
@@ -3757,7 +3757,7 @@ Successful response:
 Public forms are reachable by anyone with the invite URL. The
 platform defends them with several overlapping layers:
 
-1. **Cloudflare Turnstile** — invisible-first challenge (Hobby tier).
+1. **Cloudflare Turnstile** — invisible-first challenge (Solo tier).
 2. **Bot heuristics** — hidden-field traps, render-time signing, and
    payload-content filters reject obvious automation server-side.
 3. **Daily submission cap** — per-tenant ceiling sized to your tier.
@@ -3770,7 +3770,7 @@ targeted bot bypass each check by name.
 
 ## Turnstile
 
-Hobby-tier public forms render a Cloudflare Turnstile widget below
+Solo-tier public forms render a Cloudflare Turnstile widget below
 the last visible field. The widget runs invisibly for most visitors;
 suspicious traffic gets a managed challenge.
 
@@ -3806,7 +3806,7 @@ tier:
 
 | Tier        | Submissions / day |
 | ----------- | ------------------ |
-| Hobby       | 100                |
+| Solo       | 100                |
 | Pro         | 1,000              |
 | Team        | Unlimited          |
 | Enterprise  | Unlimited          |
@@ -3826,7 +3826,7 @@ form slug. The limits are sized by tier:
 
 | Tier        | Refill rate  | Burst allowance |
 | ----------- | ------------ | --------------- |
-| Hobby       | 10 / minute  | 3               |
+| Solo       | 10 / minute  | 3               |
 | Pro         | 60 / minute  | 10              |
 | Team        | 600 / minute | 50              |
 | Enterprise  | 600 / minute | 50              |
@@ -3837,7 +3837,7 @@ Requests` with message `rate limit exceeded`.
 
 The limit is intentionally generous at higher tiers — it exists to
 catch obvious flood patterns, not to limit legitimate kiosks behind
-NAT. If you run a kiosk on Hobby with a shared IP, upgrade to Pro or
+NAT. If you run a kiosk on Solo with a shared IP, upgrade to Pro or
 contact support.
 
 ## What gets notified
@@ -3991,13 +3991,13 @@ token expired between the form load and the submit click), the submit returns
 
 ## Tier limits
 
-Hobby invite tokens have a **30-day maximum lifetime** (720 hours) and a
+Solo invite tokens have a **30-day maximum lifetime** (720 hours) and a
 **500-submission cap per token**. Attempting to mint with `expires_hours`
 above 720 or `max_submissions` above 500 (or `null`) returns `402` with
 error code `tier_quota_exceeded`. Upgrade to Pro for 1-year tokens and
 unlimited submission caps.
 
-| Limit | Hobby | Pro | Team | Enterprise |
+| Limit | Solo | Pro | Team | Enterprise |
 |-------|-------|-----|------|------------|
 | Maximum token lifetime | 30 days | 1 year | 1 year | 1 year |
 | Default lifetime pre-filled in UI | 7 days | 30 days | 30 days | 30 days |
@@ -4195,7 +4195,7 @@ Variable map errors (returned by `PUT /api/v1/settings/filename-defaults`):
 | `variable_key_too_long` | Key exceeds 64 characters or contains invalid characters |
 | `variable_value_too_long` | Value exceeds 128 characters |
 
-Attempting to configure a pattern on a Hobby-tier tenant returns `402`
+Attempting to configure a pattern on a Solo-tier tenant returns `402`
 with `error.code = "tier_required"`.
 
 ## Examples
@@ -4463,7 +4463,7 @@ append-only `event_log` carries the full audit trail.
 
 # Sign up
 
-> Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Hobby tier.
+> Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Solo tier.
 
 # Sign up
 
@@ -4471,7 +4471,7 @@ Go to **`/signup`** on your FastYoke deployment, enter an email and
 password (8 characters minimum), pass the bot challenge, and you're
 signed in. No sales call, no invite needed.
 
-On success you land on `/admin` with a **Hobby** tenant already
+On success you land on `/admin` with a **Solo** tenant already
 provisioned — your workspace is named after the local part of your
 email address.
 
@@ -4482,7 +4482,7 @@ background. Until you click the link, an in-app banner sits at the
 top of the admin shell with a **Resend** button and a dismiss option.
 Unverified accounts are otherwise fully functional.
 
-## What Hobby includes
+## What Solo includes
 
 A working tenant with every surface other tiers get — just sized for
 personal projects and small teams. Full capability matrix at
@@ -4510,7 +4510,7 @@ sets the tier; you land on `/admin` already upgraded.
 
 If Stripe is not configured on the deployment, you'll see an inline
 notice and a "Continue to dashboard" link — your account is still
-created at the Hobby tier and you can upgrade later.
+created at the Solo tier and you can upgrade later.
 
 **After signup** — go to **Settings → Billing → Upgrade**, pick a
 plan, and complete the card checkout. Tier changes propagate within
@@ -4726,7 +4726,7 @@ synced and stored independently under your account.
 FastYoke supports two paths to a working tenant:
 
 - **Direct signup** — visit `/signup`, create an account, and get a
-  Hobby tenant immediately.
+  Solo tenant immediately.
 - **Vercel Marketplace install** — add FastYoke from the Vercel
   integration catalog; the install saga provisions the org, tenant,
   and API credentials automatically, then emails you an activation
@@ -4835,7 +4835,7 @@ dashboard — only via the CLI.
 ## Direct signup path
 
 Visit `/signup` to create a FastYoke account without going through
-the Vercel Marketplace. You receive a Hobby tenant immediately and
+the Vercel Marketplace. You receive a Solo tenant immediately and
 can start building. To link a Vercel project later, add the four env
 vars from the table above manually using `fy_pat_*` tokens you
 generate at `/admin/settings`.
@@ -5185,7 +5185,7 @@ row.
 ## Tier gates
 
 The resolver is **free for all tenants** — annotated fields
-render correctly on Hobby and Pro. Three Page-Designer surfaces
+render correctly on Solo and Pro. Three Page-Designer surfaces
 require **Team tier** or higher:
 
 - The cascading inspector inside Page Designer / Workspace
@@ -5326,7 +5326,7 @@ annotations deliberately.
 The editor itself is **free for all tenants** at
 `/admin/entities/:entityName/annotations`. The same component
 embedded in the Page Designer right-rail inspector + Workspace
-inspector requires **Team tier or higher**; Hobby and Pro
+inspector requires **Team tier or higher**; Solo and Pro
 admins continue to use the standalone admin editor.
 
 ## Cross-references
@@ -5840,7 +5840,7 @@ These keys apply to every `field_type`.
 | Key | Type | Effect |
 |---|---|---|
 | `@ui/component` | string | Override the default component for the type. Validated against the type's allow-list. |
-| `@ui/visible_when` | string | Expression: when false, hide the field. **Team-tier gated.** Hobby/Pro tenants see the field rendered as if always-true. |
+| `@ui/visible_when` | string | Expression: when false, hide the field. **Team-tier gated.** Solo/Pro tenants see the field rendered as if always-true. |
 | `@ui/compute` | string | Expression: when set, the field is read-only and displays the computed value. **Team-tier gated.** |
 | `@ui/validate_when` | string | Expression: when false, surface a zod-style validation error. **Team-tier gated.** |
 

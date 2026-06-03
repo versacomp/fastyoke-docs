@@ -8,7 +8,7 @@ summary: Install FastYoke from the Vercel Marketplace, or sign up directly and l
 FastYoke supports two paths to a working tenant:
 
 - **Direct signup** — visit `/signup`, create an account, and get a
-  Hobby tenant immediately.
+  Solo tenant immediately.
 - **Vercel Marketplace install** — add FastYoke from the Vercel
   integration catalog; the install saga provisions the org, tenant,
   and API credentials automatically, then emails you an activation
@@ -119,7 +119,7 @@ dashboard — only via the CLI.
 ## Direct signup path
 
 Visit `/signup` to create a FastYoke account without going through
-the Vercel Marketplace. You receive a Hobby tenant immediately and
+the Vercel Marketplace. You receive a Solo tenant immediately and
 can start building. To link a Vercel project later, add the four env
 vars from the table above manually using `fy_pat_*` tokens you
 generate at `/admin/settings`.

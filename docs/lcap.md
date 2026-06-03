@@ -97,7 +97,7 @@ row.
 ## Tier gates
 
 The resolver is **free for all tenants** — annotated fields
-render correctly on Hobby and Pro. Three Page-Designer surfaces
+render correctly on Solo and Pro. Three Page-Designer surfaces
 require **Team tier** or higher:
 
 - The cascading inspector inside Page Designer / Workspace

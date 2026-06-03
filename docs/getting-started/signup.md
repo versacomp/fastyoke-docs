@@ -1,6 +1,6 @@
 ---
 title: Sign up
-summary: Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Hobby tier.
+summary: Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Solo tier.
 order: 5
 ---
 
@@ -10,7 +10,7 @@ Go to **`/signup`** on your FastYoke deployment, enter an email and
 password (8 characters minimum), pass the bot challenge, and you're
 signed in. No sales call, no invite needed.
 
-On success you land on `/admin` with a **Hobby** tenant already
+On success you land on `/admin` with a **Solo** tenant already
 provisioned — your workspace is named after the local part of your
 email address.
 
@@ -21,7 +21,7 @@ background. Until you click the link, an in-app banner sits at the
 top of the admin shell with a **Resend** button and a dismiss option.
 Unverified accounts are otherwise fully functional.
 
-## What Hobby includes
+## What Solo includes
 
 A working tenant with every surface other tiers get — just sized for
 personal projects and small teams. Full capability matrix at
@@ -49,7 +49,7 @@ sets the tier; you land on `/admin` already upgraded.
 
 If Stripe is not configured on the deployment, you'll see an inline
 notice and a "Continue to dashboard" link — your account is still
-created at the Hobby tier and you can upgrade later.
+created at the Solo tier and you can upgrade later.
 
 **After signup** — go to **Settings → Billing → Upgrade**, pick a
 plan, and complete the card checkout. Tier changes propagate within

@@ -145,7 +145,7 @@ Variable map errors (returned by `PUT /api/v1/settings/filename-defaults`):
 | `variable_key_too_long` | Key exceeds 64 characters or contains invalid characters |
 | `variable_value_too_long` | Value exceeds 128 characters |
 
-Attempting to configure a pattern on a Hobby-tier tenant returns `402`
+Attempting to configure a pattern on a Solo-tier tenant returns `402`
 with `error.code = "tier_required"`.
 
 ## Examples

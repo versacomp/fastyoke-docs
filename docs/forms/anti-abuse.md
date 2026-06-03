@@ -9,7 +9,7 @@ order: 30
 Public forms are reachable by anyone with the invite URL. The
 platform defends them with several overlapping layers:
 
-1. **Cloudflare Turnstile** — invisible-first challenge (Hobby tier).
+1. **Cloudflare Turnstile** — invisible-first challenge (Solo tier).
 2. **Bot heuristics** — hidden-field traps, render-time signing, and
    payload-content filters reject obvious automation server-side.
 3. **Daily submission cap** — per-tenant ceiling sized to your tier.
@@ -22,7 +22,7 @@ targeted bot bypass each check by name.
 
 ## Turnstile
 
-Hobby-tier public forms render a Cloudflare Turnstile widget below
+Solo-tier public forms render a Cloudflare Turnstile widget below
 the last visible field. The widget runs invisibly for most visitors;
 suspicious traffic gets a managed challenge.
 
@@ -60,7 +60,7 @@ tier:
 
 | Tier        | Submissions / day |
 | ----------- | ------------------ |
-| Hobby       | 100                |
+| Solo       | 100                |
 | Pro         | 1,000              |
 | Team        | Unlimited          |
 | Enterprise  | Unlimited          |
@@ -80,7 +80,7 @@ form slug. The limits are sized by tier:
 
 | Tier        | Refill rate  | Burst allowance |
 | ----------- | ------------ | --------------- |
-| Hobby       | 10 / minute  | 3               |
+| Solo       | 10 / minute  | 3               |
 | Pro         | 60 / minute  | 10              |
 | Team        | 600 / minute | 50              |
 | Enterprise  | 600 / minute | 50              |
@@ -91,7 +91,7 @@ Requests` with message `rate limit exceeded`.
 
 The limit is intentionally generous at higher tiers — it exists to
 catch obvious flood patterns, not to limit legitimate kiosks behind
-NAT. If you run a kiosk on Hobby with a shared IP, upgrade to Pro or
+NAT. If you run a kiosk on Solo with a shared IP, upgrade to Pro or
 contact support.
 
 ## What gets notified

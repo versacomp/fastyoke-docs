@@ -5,7 +5,7 @@
 - [FastYoke — The Open-Architecture aPaaS](https://www.fastyoke.io/): Build at the speed of low-code, perform at the speed of the edge, leave whenever you want. Multi-tenant FSM platform for ISVs who refuse vendor lock-in.
 - [Pricing — FastYoke](https://www.fastyoke.io/pricing): Simple pricing that scales from a side project to a regulated fleet. Free with every Vercel Marketplace install; paid tiers on request.
 - [Privacy Notice — FastYoke](https://www.fastyoke.io/privacy): How FastYoke handles personal data submitted through public forms, account info, and product telemetry. Plain-language summary plus the data subject's rights.
-- [Free Online Form Builder — FastYoke Hobby Plan](https://www.fastyoke.io/free-forms): Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
+- [Free Online Form Builder — FastYoke Solo Plan](https://www.fastyoke.io/free-forms): Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
 - [Terms of Service — FastYoke](https://www.fastyoke.io/terms): The terms governing your use of FastYoke — eligibility, accounts, acceptable use, SMS messaging consent, billing, and the standard disclaimers and liability limits.
 - [SMS Opt-In — FastYoke](https://www.fastyoke.io/sms-opt-in): How FastYoke users opt in to receive transactional SMS messages, with screenshots of the in-product consent screen and the seven required disclosures.
 - [security-fixes](https://www.fastyoke.io/security-fixes)
@@ -62,7 +62,7 @@
 - [Getting Started](https://www.fastyoke.io/docs/getting-started): Sign in, provision a tenant, build your first form, wire it to an FSM.
 - [Installation](https://www.fastyoke.io/docs/getting-started/installation): Sign in, confirm your tenant assignment, invite teammates.
 - [Your First Form](https://www.fastyoke.io/docs/getting-started/first-form): Build a public form, collect submissions, spawn jobs from them.
-- [Sign up](https://www.fastyoke.io/docs/getting-started/signup): Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Hobby tier.
+- [Sign up](https://www.fastyoke.io/docs/getting-started/signup): Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Solo tier.
 
 ## Integrations
 

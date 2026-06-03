@@ -21,7 +21,7 @@ These keys apply to every `field_type`.
 | Key | Type | Effect |
 |---|---|---|
 | `@ui/component` | string | Override the default component for the type. Validated against the type's allow-list. |
-| `@ui/visible_when` | string | Expression: when false, hide the field. **Team-tier gated.** Hobby/Pro tenants see the field rendered as if always-true. |
+| `@ui/visible_when` | string | Expression: when false, hide the field. **Team-tier gated.** Solo/Pro tenants see the field rendered as if always-true. |
 | `@ui/compute` | string | Expression: when set, the field is read-only and displays the computed value. **Team-tier gated.** |
 | `@ui/validate_when` | string | Expression: when false, surface a zod-style validation error. **Team-tier gated.** |
 

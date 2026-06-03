@@ -136,15 +136,15 @@ token expired between the form load and the submit click), the submit returns
 
 ## Tier limits
 
-::callout{type="info" title="Hobby caps"}
-Hobby invite tokens have a **30-day maximum lifetime** (720 hours) and a
+::callout{type="info" title="Solo caps"}
+Solo invite tokens have a **30-day maximum lifetime** (720 hours) and a
 **500-submission cap per token**. Attempting to mint with `expires_hours`
 above 720 or `max_submissions` above 500 (or `null`) returns `402` with
 error code `tier_quota_exceeded`. Upgrade to Pro for 1-year tokens and
 unlimited submission caps.
 ::
 
-| Limit | Hobby | Pro | Team | Enterprise |
+| Limit | Solo | Pro | Team | Enterprise |
 |-------|-------|-----|------|------------|
 | Maximum token lifetime | 30 days | 1 year | 1 year | 1 year |
 | Default lifetime pre-filled in UI | 7 days | 30 days | 30 days | 30 days |

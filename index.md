@@ -22,7 +22,7 @@ The open-architecture App Platform as a Service designed for zero vendor lock-in
 ::
 
 #story-b-eyebrow
-HOBBY · FREE FOREVER
+SOLO · FREE FOREVER
 
 #story-b-title
 Build forms <em>for free</em>. No vendor lock-in.

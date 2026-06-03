@@ -9,7 +9,7 @@ order: 5
 Forms ship across all tiers. The differences are in scale and
 configuration depth, not feature gates.
 
-| Capability                            | Hobby           | Pro              | Team             | Enterprise       |
+| Capability                            | Solo           | Pro              | Team             | Enterprise       |
 | ------------------------------------- | --------------- | ---------------- | ---------------- | ---------------- |
 | Active (published) forms              | 3               | Unlimited        | Unlimited        | Unlimited        |
 | Daily submissions (aggregate)         | 100             | 1,000            | Unlimited        | Unlimited        |
@@ -24,8 +24,8 @@ configuration depth, not feature gates.
 | Form invites (Mint)                   | ✓ (capped)      | ✓                | ✓                | ✓                |
 | HTTP ingestion API                    | —               | ✓                | ✓                | ✓                |
 
-::callout{type="note" title="Form invite caps on Hobby"}
-Hobby invite tokens have a 30-day maximum lifetime and a 500-submission
+::callout{type="note" title="Form invite caps on Solo"}
+Solo invite tokens have a 30-day maximum lifetime and a 500-submission
 cap per token. Pro and above support 1-year tokens with no submission
 limit.
 ::
