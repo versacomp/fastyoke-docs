@@ -68,7 +68,7 @@
 ## Integrations
 
 - [Integrations](https://www.fastyoke.io/docs/integrations): Encrypted credential storage for outbound webhooks, Twilio, SendGrid, and custom REST endpoints.
-- [Gmail Connector](https://www.fastyoke.io/docs/integrations/gmail-connector): Sync customer emails into your CRM, automatically.
+- [Email Connector (Gmail & Outlook)](https://www.fastyoke.io/docs/integrations/mail-connector): Sync customer emails into your CRM, automatically — connect Gmail or Outlook/M365.
 - [Vercel](https://www.fastyoke.io/docs/integrations/vercel): Install FastYoke from the Vercel Marketplace, or sign up directly and link an existing Vercel project. Both paths end at the same tenant.
 
 ## Jobs
