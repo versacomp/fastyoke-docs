@@ -49,7 +49,7 @@ WebSocket also authenticates from that cookie instead of a token placed in the
 URL. This is defense-in-depth — we have no report of an exploit — that limits
 the reach of any future cross-site-scripting flaw to a single browser tab
 rather than a portable, stealable token. The platform-admin and
-organization-admin consoles are tracked for the same change.
+organization-admin consoles received the same treatment.
 ::
 
 ::security-fix
