@@ -34,6 +34,66 @@ and under triage.
 
 ::security-fix
 ---
+title: Admin session tokens moved out of browser storage (XSS hardening)
+status: fixed
+fixedIn: "3.16.0"
+fixedAt: "2026-06-04"
+---
+
+The admin application previously kept its session token (a JWT) in the
+browser's `localStorage`. A script injected through a cross-site-scripting
+flaw could read it from storage and reuse it elsewhere. The token is now
+carried in an `HttpOnly`, `Secure`, `SameSite=Strict` cookie that page scripts
+cannot read, and it is no longer written to `localStorage`; the live-updates
+WebSocket also authenticates from that cookie instead of a token placed in the
+URL. This is defense-in-depth — we have no report of an exploit — that limits
+the reach of any future cross-site-scripting flaw to a single browser tab
+rather than a portable, stealable token. The platform-admin and
+organization-admin consoles are tracked for the same change.
+::
+
+::security-fix
+---
+title: Stricter origin matching for embedded-form framing
+status: fixed
+fixedIn: "3.16.0"
+fixedAt: "2026-06-04"
+---
+
+Tenants choose which sites may embed their hosted forms in an iframe, and
+FastYoke enforces that allow-list with a Content-Security-Policy
+`frame-ancestors` directive. Origin comparison is now scheme-exact: a bare
+host on the allow-list matches only its `https://` origin, and an entry that
+already includes a scheme matches that scheme exactly. Previously the scheme
+was disregarded when comparing, so an insecure (`http://`) variant of an
+allowed host could satisfy the check. No abuse was observed; this tightens the
+embedding boundary against a downgraded-origin framing attempt.
+::
+
+::security-fix
+---
+title: Uninitialized memory disclosure in the ws library (build-time dependency)
+status: fixed
+fixedIn: "3.16.0"
+fixedAt: "2026-06-04"
+advisory:
+  label: GHSA-58qx-3vcg-4xpx
+  url: https://github.com/advisories/GHSA-58qx-3vcg-4xpx
+---
+
+A moderate advisory (CVE-2026-45736) in the `ws` Node WebSocket library
+reported that `websocket.close()` could disclose uninitialized memory when
+given a typed-array reason argument. In FastYoke `ws` appears only as a
+build-, development-, and test-time transitive dependency (Nuxt tooling and
+the test DOM environment); the shipped product uses the browser's native
+WebSocket on the client and a Rust WebSocket server on the backend — neither
+is the `ws` library — so no shipped release was exposed to the vulnerable
+path. We updated to `ws` ≥ 8.20.1 to clear the advisory and keep the
+dependency tree clean.
+::
+
+::security-fix
+---
 title: TLS hostname-verification regression in lettre's boring-tls backend
 status: fixed
 fixedIn: "3.1.2"
@@ -113,6 +173,6 @@ abuse from one IP is caught while a single user submitting to multiple forms
 is not penalised.
 ::
 
-<p class="mt-12 text-xs" style="color: var(--brand-text-secondary)">Last updated: 2026-05-29</p>
+<p class="mt-12 text-xs" style="color: var(--brand-text-secondary)">Last updated: 2026-06-04</p>
 
 </section>
