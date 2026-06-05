@@ -27,6 +27,7 @@
 - [Inventory Yoke](https://www.fastyoke.io/docs/apps/inventory-yoke)
 - [Vendara Payments](https://www.fastyoke.io/docs/apps/vendara-payments): Connect your Vendara account to invoice customers from your CRM orders and quotes.
 - [Apps](https://www.fastyoke.io/docs/apps): Group pages under a shared slug + theme; the user-facing face of your tenant.
+- [EHR / ADT Connector](https://www.fastyoke.io/docs/apps/ehr-connector)
 - [Patient Flow Yoke](https://www.fastyoke.io/docs/apps/patient-flow)
 
 ## Authentication
