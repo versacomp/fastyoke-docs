@@ -26,6 +26,7 @@
 - [Studio wizard](https://www.fastyoke.io/docs/apps/studio-wizard): Wix-style 4-step builder — pick a layout, brand it, choose entities, ship a themed multi-page extension.
 - [Inventory Yoke](https://www.fastyoke.io/docs/apps/inventory-yoke)
 - [Apps](https://www.fastyoke.io/docs/apps): Group pages under a shared slug + theme; the user-facing face of your tenant.
+- [Patient Flow Yoke](https://www.fastyoke.io/docs/apps/patient-flow)
 
 ## Authentication
 
