@@ -2158,6 +2158,99 @@ mirrors; the builder locks every surface on inherited rows.
 
 ---
 
+# Dejavoo SPIn Payments
+
+> Take card-present payments on your Dejavoo terminals from the parts counter and service cashier.
+
+# Dejavoo SPIn Payments
+
+Dejavoo SPIn Payments connects your own Dejavoo merchant account and card
+terminals to FastYoke, so your counter and cashier can take a chip or
+contactless card right at the terminal — the card never passes through FastYoke.
+
+## What you'll need
+
+- A **Dejavoo merchant account**.
+- One or more **SPIn-enabled Dejavoo terminals**. Each terminal has a **TPN**
+  (Terminal Profile Number) — find it on the device under the red **Settings**
+  icon. A green arrow on the terminal means it is registered and online.
+- Your SPIn **server URL** and **API key** (request these from Dejavoo).
+
+## Connecting your account
+
+1. Install **Dejavoo SPIn Payments** from the Marketplace.
+2. Open **Connectors** under the Yoke section.
+3. Enter your SPIn **server URL** and **API key** (and your integrator id, if you
+   have one), then click **Connect Dejavoo**. We validate the credentials
+   before saving them, and we store them encrypted.
+
+## Registering a terminal
+
+Add each terminal by its **TPN** and give it a label (for example, "Parts
+counter" or "Service cashier"). You can register as many terminals as you run.
+Removing a terminal stops it being offered when taking a payment.
+
+## Taking payments
+
+Taking a payment from a repair order or parts counter ticket arrives with the
+**Auto Dealer Yoke**. There, your cashier picks a terminal, confirms the amount,
+and the customer taps or inserts their card on the terminal; the approval (or
+decline) returns to the screen with the masked card and authorization code.
+
+## What's stored where
+
+Your card processing happens on the Dejavoo terminal and your merchant account.
+FastYoke stores only the **masked** result of each transaction — the last four
+digits, card type, authorization code, and reference — never a full card number.
+
+---
+
+# Auto Dealer Yoke
+
+> Run your service drive and parts counter with integrated card-present payments.
+
+# Auto Dealer Yoke
+
+The Auto Dealer Yoke runs the fixed-ops side of a dealership — the **service
+drive** and the **parts counter** — with payments built in. It installs ready to
+use, with demo data across every board so you can see the flow immediately.
+
+## What you get
+
+- **Service Drive** — a board of repair orders moving from estimate through
+  approval, work, quality check, and pickup.
+- **Appointments** — schedule and check in service visits.
+- **Parts Counter** — ring up counter tickets and manage special orders.
+- **Customers, Vehicles, Parts, Technicians** — the records behind it all, with
+  a repair-order detail view showing labor and part lines.
+
+## Taking payments
+
+Install a payment connector and you can take money without leaving a repair
+order or counter ticket:
+
+- **Dejavoo SPIn** — card-present payments on your Dejavoo terminals at the
+  counter and cashier. Connect it under **Connectors**, register your terminals,
+  and charge, void, or refund right from the ticket. The card stays on the
+  terminal — only the masked result (last four, card type, authorization code)
+  is recorded.
+- **Vendara** — card-not-present pay-links by email (arriving in a later update).
+
+A repair order or ticket shows what's been paid as a running total over its
+payment history.
+
+## Billing
+
+The Auto Dealer Yoke is a paid monthly subscription. The Dejavoo and Vendara
+connectors are free — you bring your own merchant account.
+
+## Coming next
+
+**Lot Sales** — vehicle inventory and deals — is a planned expansion of the
+Auto Dealer family.
+
+---
+
 # EHR / ADT Connector
 
 # EHR / ADT Connector

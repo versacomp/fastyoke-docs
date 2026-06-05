@@ -27,6 +27,8 @@
 - [Inventory Yoke](https://www.fastyoke.io/docs/apps/inventory-yoke)
 - [Vendara Payments](https://www.fastyoke.io/docs/apps/vendara-payments): Connect your Vendara account to invoice customers from your CRM orders and quotes.
 - [Apps](https://www.fastyoke.io/docs/apps): Group pages under a shared slug + theme; the user-facing face of your tenant.
+- [Dejavoo SPIn Payments](https://www.fastyoke.io/docs/apps/dejavoo-spin): Take card-present payments on your Dejavoo terminals from the parts counter and service cashier.
+- [Auto Dealer Yoke](https://www.fastyoke.io/docs/apps/auto-dealer-yoke): Run your service drive and parts counter with integrated card-present payments.
 - [EHR / ADT Connector](https://www.fastyoke.io/docs/apps/ehr-connector)
 - [Patient Flow Yoke](https://www.fastyoke.io/docs/apps/patient-flow)
 
