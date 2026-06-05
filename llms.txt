@@ -31,6 +31,7 @@
 - [Auto Dealer Yoke](https://www.fastyoke.io/docs/apps/auto-dealer-yoke): Run your service drive and parts counter with integrated card-present payments.
 - [EHR / ADT Connector](https://www.fastyoke.io/docs/apps/ehr-connector)
 - [Patient Flow Yoke](https://www.fastyoke.io/docs/apps/patient-flow)
+- [Urgent Care Triage](https://www.fastyoke.io/docs/apps/urgent-care)
 
 ## Authentication
 
