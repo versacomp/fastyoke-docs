@@ -112,6 +112,7 @@
 
 ## Security
 
+- [Trust Center](https://www.fastyoke.io/docs/security/trust-center): How FastYoke protects your data — isolation, encryption, access control, auditability, availability, and our path to SOC 2.
 - [PII / SPI Field Encryption](https://www.fastyoke.io/docs/security/encryption): Tag entity-field annotations or form-field schemas with `is_pii` to encrypt their values at rest under a per-tenant key. Available as a $19/mo add-on at every tier.
 
 ## Workflows
