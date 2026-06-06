@@ -3497,6 +3497,66 @@ until you re-publish.
 
 ---
 
+# Recipes
+
+> Short, isolated single-task pages for experienced builders.
+
+# Forms recipes
+
+Quick, isolated. No running scenario. If you want a guided arc, use the [Tutorials](/docs/forms/tutorials) instead.
+
+- [Add a required email field with confirmation copy](/docs/forms/recipes/required-email-with-confirmation)
+- [Skip a page when a checkbox is unchecked](/docs/forms/recipes/skip-page-on-checkbox)
+- [Make one field required only on page 3](/docs/forms/recipes/conditional-required-by-page)
+- [Rename the downloaded PDF per submission](/docs/forms/recipes/rename-pdf-per-submission)
+- [Embed a form on a Next.js page](/docs/forms/recipes/embed-on-nextjs)
+- [Mint a one-shot invite link](/docs/forms/recipes/mint-one-shot-invite)
+- [Switch a form's theme without rebuilding](/docs/forms/recipes/switch-theme-without-rebuild)
+- [Add a signature line to an AcroForm template](/docs/forms/recipes/add-signature-to-acroform)
+- [Test a form locally with the HTTP ingestion API](/docs/forms/recipes/local-test-via-http-ingestion)
+- [Reset Turnstile when you're locked out in dev](/docs/forms/recipes/reset-turnstile-in-dev)
+
+---
+
+# Tutorials
+
+> Guided 101 → 201 → 301 path that builds one clinic Patient Intake form across every Forms Builder feature.
+
+# Forms tutorials
+
+A guided path. Every tutorial picks up where the last left off. By the end, you'll have a published Patient Intake form that renders signed PDF consents, promotes submissions into Patient records, routes minors around the insurance page, and accepts server-to-server submissions from an upstream scheduler.
+
+If you want to skip around, use the [Recipes](/docs/forms/recipes) instead.
+
+## The scenario
+
+You're building intake for a small clinic. One form (`patient-intake`), one entity (`patient`), one FSM (`Patient Intake Flow`). Each tutorial adds one capability.
+
+## 101 — Build and publish
+
+1. [Build your first form](/docs/forms/tutorials/101-build-first-form) — fields, pages, sections, publish.
+2. [Style and brand it](/docs/forms/tutorials/101-style-and-brand) — theme, logo, hero, copy.
+3. [Share it](/docs/forms/tutorials/101-share-invite-and-embed) — Mint invite + SDK embed.
+
+## 201 — PDFs, signatures, entity flow
+
+4. [Attach an AcroForm template](/docs/forms/tutorials/201-acroform-template)
+5. [Place an Overlay template](/docs/forms/tutorials/201-overlay-template)
+6. [Collect signatures](/docs/forms/tutorials/201-signatures)
+7. [Promote submissions to entity records](/docs/forms/tutorials/201-promote-to-entity)
+8. [Prefill from your entity schema](/docs/forms/tutorials/201-entity-prefill)
+
+## 301 — Power features
+
+9. [Conditional routing](/docs/forms/tutorials/301-conditional-routing)
+10. [File uploads and scanning](/docs/forms/tutorials/301-file-uploads-and-scanning)
+11. [Anti-abuse tuning](/docs/forms/tutorials/301-anti-abuse)
+12. [Custom CSS](/docs/forms/tutorials/301-custom-css)
+13. [Server-to-server submission](/docs/forms/tutorials/301-http-ingestion)
+14. [Vanity PDF filenames](/docs/forms/tutorials/301-vanity-filenames)
+
+---
+
 # Forms
 
 > Build public or authenticated forms that route submissions into entities, jobs, or both.
@@ -3510,6 +3570,8 @@ declarative actions.
 
 ## What's covered
 
+- [Tutorials](/docs/forms/tutorials) — guided 101 → 201 → 301 path that builds one Patient Intake form across every feature.
+- [Recipes](/docs/forms/recipes) — quick, isolated single-task pages.
 - [Tier entitlements](/docs/forms/tiers) — what each tier unlocks for the Forms surface.
 - [Anti-abuse](/docs/forms/anti-abuse) — Turnstile, honeypot, daily caps, rate limit.
 - [Embed forms](/docs/forms/embed) — drop a form into any page via the SDK.
@@ -3615,6 +3677,550 @@ admin shell's Forms Builder.
 
 ---
 
+# Required email with confirmation copy
+
+> Force an email field, surface a clear "we'll email you" line so the submitter knows what's coming.
+
+# Required email with confirmation copy
+
+**When you'd use this** — any form where the submitter expects a copy of
+their answers (or a follow-up) by email, and the success screen should
+say so plainly.
+
+## 1. Add a required email field
+
+In the builder, drag an **email** field onto the page where you collect
+contact info — or onto page one for a single-page form. Set:
+
+- `key` — `email`
+- Label — `Email address`
+- Required — on
+- Helper text — `We'll email you a copy of your answers.`
+
+The `email` field type runs RFC 5322 light validation client-side and
+again on the server, so a malformed address never makes it into the
+submission row. The helper text renders directly under the input on the
+public form, which is the first place the submitter actually looks for
+reassurance.
+
+## 2. Match the post-submit screen to the promise
+
+After the submitter clicks **Submit**, the public renderer shows a
+thank-you screen. Edit the form's **Title** and **Subtitle** on the
+**Theme** panel so the post-submit copy lines up with the helper text —
+e.g. title `Thanks!`, subtitle `A copy of your answers is on its way to
+your inbox.` Subtitle text renders inside the form header on both the
+form and the confirmation state, so the reassurance survives the submit
+hand-off without needing any new template syntax.
+
+If you also want the operator to receive a copy, configure that
+downstream in the form's notification routing — the public renderer's
+success screen only governs what the submitter sees.
+
+## See also
+
+- [Build your first form](/docs/forms/tutorials/101-build-first-form)
+- [Forms Builder reference](/docs/forms/builder)
+
+---
+
+# Build your first form
+
+> Create the Patient Intake form — two pages, six fields, publish.
+
+# Build your first form
+
+A published `Patient Intake` form with a demographics page and a
+contact page, ready to share. Submissions will land in the admin
+queue.
+
+You should already have a tenant up and running. If you don't,
+finish [installation](/docs/getting-started/installation) and
+[signup](/docs/getting-started/signup) first, then come back.
+
+This is the first stop on the 101 → 201 → 301 path. Each step takes
+about a minute. Use the names exactly as written — later tutorials
+build on this form by slug and field key, so renaming things now
+will trip you up later.
+
+## 1. Create the form
+
+From the admin shell, open **Forms** and click **New form**.
+
+1. Set the name to `Patient Intake`.
+2. Set the slug to `patient-intake`. The slug is the public URL
+   fragment, so keep it lowercase and hyphenated.
+3. Click **Create**. The builder opens with one empty page.
+
+## 2. Add the demographics page
+
+Rename the first page to `demographics` in the left rail. Drag the
+following fields into the page in this order, marking the required
+ones:
+
+- `first_name` (text, required)
+- `last_name` (text, required)
+- `dob` (date, required)
+- `preferred_language` (select, optional)
+
+The field key is what the submission payload uses — the label on
+screen can be whatever reads cleanly, but the key stays
+machine-friendly.
+
+## 3. Configure the language select
+
+Click `preferred_language` to open its side panel and add four
+options. The saved field looks like this:
+
+```json
+{
+  "type": "select",
+  "key": "preferred_language",
+  "options": ["English", "Spanish", "Mandarin", "Other"]
+}
+```
+
+You can edit the JSON directly in the **Advanced** tab if you'd
+rather skip the form — both views write the same field row.
+
+## 4. Add the contact page
+
+Add a second page from the left rail and name it `contact`. Drag in
+these six fields:
+
+- `email` (email, required)
+- `phone` (text)
+- `street` (text)
+- `city` (text)
+- `state` (text)
+- `postal_code` (text)
+
+Only `email` is required on this page. Leave the others optional —
+not every submitter will have a full mailing address, and the form
+should still accept what they can give you.
+
+## 5. Save and publish
+
+Click **Save** to persist the draft, then **Publish** to mint the
+public version. A `draft` form is visible only in the admin; once
+published, the slug `patient-intake` resolves to a public URL the
+admin shell shows in the form's detail header.
+
+```text
+┌──────────────┐    ┌─────────┐    ┌────────┐
+│ demographics │ -> │ contact │ -> │ submit │
+└──────────────┘    └─────────┘    └────────┘
+```
+
+The renderer walks the pages in order. Each page validates its own
+fields before the **Next** button advances. The final page swaps
+**Next** for **Submit**.
+
+## Verify it worked
+
+Copy the public URL from the form's detail header in the admin
+shell and open it in an incognito window. Fill in plausible values
+on both pages — anything that satisfies the required fields will
+do — and click **Submit**.
+
+Back in the admin shell, open **Forms** → **Submissions** and pick
+`Patient Intake` from the form filter. Your test row should be at
+the top of the list, with the demographics and contact values you
+typed visible in the row detail.
+
+If the submission isn't there, check that you clicked **Publish**
+and not just **Save** — a draft form has no public endpoint and
+the URL will 404.
+
+## Next
+
+Continue with [Style and brand your form](/docs/forms/tutorials/101-style-and-brand).
+
+---
+
+# Skip a page when a checkbox is unchecked
+
+> Use a routing rule to bypass a page based on a boolean.
+
+# Skip a page when a checkbox is unchecked
+
+**When you'd use this** — opt-in subsections like "Do you want to add a
+passenger?" or "Need insurance details?" — pages that are only relevant
+when the submitter ticks a box on an earlier page.
+
+## 1. Add the gating checkbox
+
+On the page that comes *before* the optional one, drag in a **checkbox**
+field:
+
+- `key` — `add_passenger`
+- Label — `Add a second passenger`
+
+Leave it unrequired. A `checkbox` field is a boolean — `true` when
+ticked, `false` (or absent) when not.
+
+## 2. Add a routing rule on the page you want to skip
+
+Open the optional page (say, `passenger`) and click **Routing** → **Add
+rule**. In Simple mode, fill the row:
+
+- Field — `add_passenger`
+- Op — `==`
+- Value — `false`
+- Goto page — the page that should follow when the box is unchecked
+  (e.g. `review`), or the reserved id `__end__` to short-circuit
+  straight to submit.
+
+The renderer evaluates the rule when the submitter would otherwise land
+on the `passenger` page. If `add_passenger` is `false`, the rule fires
+and the page is skipped; if `true`, the rule misses and the page renders
+normally. Save the page — the validator rejects dangling `goto_page_id`
+or unknown field refs at save time, so a typo never reaches the public
+URL.
+
+If you'd rather author the rule by hand, flip the panel to **Advanced**
+mode and write `{ "==": [ { "var": "add_passenger" }, false ] }` — same
+shape, same evaluator.
+
+## See also
+
+- [Conditional routing](/docs/forms/tutorials/301-conditional-routing)
+- [Forms Builder reference](/docs/forms/builder)
+
+---
+
+# Style and brand your form
+
+> Apply a theme, upload a logo and hero, customize the header and submit-button copy.
+
+# Style and brand your form
+
+A branded public `Patient Intake` form with your clinic logo, a hero
+banner across the top, a custom header title, and submit-button copy
+that reads like the rest of your intake flow.
+
+Finish [Build your first form](/docs/forms/tutorials/101-build-first-form)
+before starting this tutorial. You need the `patient-intake` form
+already saved and published.
+
+The builder ships with neutral defaults so a brand-new form is
+usable on day one. Once you have submissions flowing, swap in your
+own theme and assets so the public URL looks like part of your
+clinic — not part of FastYoke.
+
+## 1. Open the Theme panel
+
+From the admin shell, open **Forms** and click into `Patient Intake`.
+In the form's right rail, open the **Theme** panel. This is where
+every appearance setting on the form lives — theme picker, asset
+uploads, and the header/button copy overrides.
+
+The panel writes to the form record on save. Nothing here changes
+the schema or the field keys, so styling edits are safe to make
+against a published form without re-publishing.
+
+## 2. Pick the Clinic Cool theme
+
+In the theme picker, choose `Clinic Cool` from the dropdown.
+
+Themes are tenant-scoped and live under **Settings → Themes**. If
+you don't see `Clinic Cool` in the list, an admin needs to create
+it there first — give the theme that exact name and save it, then
+come back to the form and re-open the picker.
+
+Leaving the theme picker blank is also valid. A blank picker tells
+the renderer to fall back to the tenant's active brand, which is
+the brand configured under **Settings → Branding**. Pick a theme
+explicitly when you want this form to look different from the rest
+of the tenant's surfaces.
+
+## 3. Upload the logo and hero
+
+Below the theme picker, the panel has two upload slots: **Logo**
+and **Hero image**.
+
+1. Drop `logo.png` into the logo slot. Aim for a transparent PNG
+   sized around 240×80 — the renderer scales it down to fit the
+   header.
+2. Drop `hero.jpg` into the hero slot. The hero is rendered full-
+   width above the form title, so a wide landscape crop reads best.
+
+Both uploads run through the entity-file scanner before they're
+accepted. That's the same pipeline file fields use — MIME magic
+check, size limit, and an antivirus pass. A rejected file shows
+its rejection reason inline next to the slot; fix the file and
+re-drop it.
+
+Accepted assets are stored on the form record and served from
+`/api/v1/public/form-assets/:id` with a one-hour cache, so updates
+take effect for new visitors within the hour.
+
+## 4. Customize the header and button copy
+
+Two text inputs live below the asset slots:
+
+- **Title override.** Set this to:
+  `Welcome to Bayview Clinic — please complete your intake.`
+- **Submit-button copy.** Set this to: `Finish intake.`
+
+The title override replaces the default form name in the public
+header. The submit-button copy replaces the renderer's default
+**Submit** label on the last page only — the **Next** buttons on
+earlier pages are unaffected.
+
+Both fields accept plain text. Punctuation, em-dashes, and trailing
+periods all render verbatim, so write the copy exactly the way you
+want it to read.
+
+## 5. Save
+
+Click **Save** at the top of the builder. The theme, the two
+assets, and the two copy overrides all persist in the same write.
+You don't need to re-publish — appearance edits flow to the
+published version on save.
+
+## Verify it worked
+
+Copy the public URL from the form's detail header and open it in
+an incognito window. You should see:
+
+- The `Clinic Cool` theme applied to the page background, form
+  card, and button colors.
+- `logo.png` in the header, scaled to fit.
+- `hero.jpg` rendered full-width above the title.
+- The title reading `Welcome to Bayview Clinic — please complete
+  your intake.`
+- The button on the final page reading `Finish intake.` instead of
+  the default **Submit**.
+
+If any of the assets are missing, re-open the **Theme** panel and
+check whether the scanner rejected the upload — a rejected file
+leaves the slot empty but keeps the rejection reason visible.
+
+## Next
+
+Continue with [Share with an invite or embed](/docs/forms/tutorials/101-share-invite-and-embed).
+
+---
+
+# Make a field effectively required only on a later page
+
+> Keep a field optional early, then use a routing rule to block navigation past a later page until it's filled.
+
+# Make a field effectively required only on a later page
+
+**When you'd use this** — a field that's offered as optional during
+intake but has to be present by the time the submitter reaches a later
+gate (e.g. `delivery_notes` optional on `cart`, mandatory by
+`checkout`).
+
+## 1. Leave the field unrequired on the early page
+
+On the intake page, drag the field in as usual but leave **Required**
+off. Submitters can advance without filling it, which is the whole point
+— most won't, and you don't want to make them.
+
+## 2. Block navigation past the gate page with a routing rule
+
+The builder's per-field `required` flag is a single boolean — it doesn't
+vary by page. To get per-page behavior, lean on routing instead. Open
+the page that should *enforce* the value (say, `checkout`), click
+**Routing** → **Add rule**, and in Simple mode fill the row:
+
+- Field — `delivery_notes`
+- Op — `==`
+- Value — `""` (empty string)
+- Goto page — the same gate page (e.g. `checkout`)
+
+The rule fires when the field is still empty at the moment the renderer
+would advance off `checkout`, sending the submitter right back to it.
+Pair the rule with a `static` text block on the page that explains *why*
+they're stuck — otherwise the loop reads as a bug. Once the field has a
+value, the rule misses and the form advances normally.
+
+If you'd rather use Advanced mode, the same predicate is
+`{ "==": [ { "var": "delivery_notes" }, "" ] }`. The save-time
+validator rejects rules that would make any page unreachable, so a
+typo'd field key surfaces immediately.
+
+## See also
+
+- [Conditional routing](/docs/forms/tutorials/301-conditional-routing)
+- [Forms Builder reference](/docs/forms/builder)
+
+---
+
+# Share with an invite or embed
+
+> Mint a kiosk invite link and embed the form on your marketing site.
+
+# Share with an invite or embed
+
+Two ways to send visitors at the same `Patient Intake` form: a Mint
+invite link for the front-desk kiosk, and an inline embed dropped
+into the clinic's marketing site at `/intake`.
+
+Finish [Style and brand your form](/docs/forms/tutorials/101-style-and-brand)
+before starting this tutorial. You need the branded `patient-intake`
+form already published, with assets and copy overrides saved.
+
+A published form already has a public URL. This tutorial is about
+the two share paths that sit on top of that URL: a tracked, revocable
+invite token for the kiosk, and an SDK-loaded inline embed for your
+own pages. Both render the same form; they differ in how the visit
+is attributed and how you turn the link off later.
+
+## 1. Mint the front-desk-kiosk invite
+
+From the admin shell, open **Forms** and click into `Patient Intake`.
+In the form's right rail, open the **Invites** panel and click **New
+invite**.
+
+Fill in the panel:
+
+- **Label.** `front-desk-kiosk`. The label is for your own records —
+  it shows up in the list of active tokens so you can tell the kiosk
+  link apart from any other invites you mint later.
+- **Expiry.** `30 days`. That maps to the panel's default 720-hour
+  lifetime. The token stops working at midnight UTC on the 30th day;
+  re-mint to extend.
+- **Uses.** Leave the submission cap blank for unlimited. The kiosk
+  takes one walk-in after another, and a per-token cap would lock
+  the iPad out mid-shift.
+
+Click **Mint**. The panel returns a URL of the form
+`https://app.fastyoke.io/f/<token>`. Copy it — the raw token is
+hashed server-side and there's no way to retrieve it after this
+screen closes. Paste the URL into the kiosk browser as a bookmark
+or pinned tab.
+
+If you ever need to disable the kiosk link — staff turnover, lost
+iPad, anything — open the **Invites** panel, find the
+`front-desk-kiosk` row, and click **Revoke**. Visitors who try the
+URL after revocation get a `410 Gone` page; submissions already on
+file stay intact.
+
+## 2. Embed on the marketing site
+
+Open `Patient Intake` again and switch to the **Embed** panel. Pick
+`inline` mode, save the embed, and copy the snippet the panel shows.
+It looks like this:
+
+```html
+<script async src="https://app.fastyoke.io/embed.js" data-embed="em_AbCd1234567890EfGhIjKl"></script>
+```
+
+The `em_` prefix plus 22 alphanumeric characters is the opaque embed
+ID assigned when you saved. The snippet loads the FastYoke embed
+SDK asynchronously and mounts the form inline at the script tag's
+position in the DOM.
+
+Paste the snippet into your clinic's marketing-site `/intake`
+Next.js page. JSX accepts the raw `<script>` tag — drop it inline
+inside the page component where you want the form to render, and
+Next.js renders it through to the client HTML untouched.
+
+Before you ship the page, add the marketing site's origin to
+**Settings → Embed domains** in the admin shell. With the allowlist
+empty the SDK accepts any origin; once you add an entry, requests
+from origins not on the list get `403 Forbidden` and visitors see
+the "Form temporarily unavailable" placeholder.
+
+## 3. Pick the path that fits
+
+Invites and embeds both render the same `Patient Intake` form, but
+they answer different questions. An invite is a tracked, named
+issuance: each submission carries the token, the **Invites** panel
+shows a live count, and revocation kills future use with a single
+click. Use it for kiosks, one-off campaigns, anything where you
+want to attribute or turn off the link later. An embed reaches the
+form through the form's public token directly: it lives on a page
+you control and is governed by the embed-domain allowlist rather
+than a per-issuance record. Use it for stable surfaces — your
+marketing site, a customer portal — where the page itself is the
+attribution.
+
+## Verify it worked
+
+Open the front-desk-kiosk URL in one incognito window and the
+marketing site's `/intake` page in another. Submit a test entry in
+each.
+
+In the admin shell, open `Patient Intake` and switch to
+**Submissions**:
+
+- The submission from the kiosk URL shows `front-desk-kiosk` in
+  the invite-source column.
+- The submission from the marketing-site `/intake` page shows no
+  invite source — it's unattributed, which is the correct shape
+  for the embed path.
+
+If the embed submission is missing entirely, re-check the
+embed-domain allowlist. The most common failure is a freshly-saved
+embed against an empty or mis-typed allowlist; the **Embed** panel
+shows a warning banner with a direct link to the settings page
+when no domains are configured.
+
+## Next
+
+Continue with [Map a form to an AcroForm template](/docs/forms/tutorials/201-acroform-template).
+
+---
+
+# Rename the downloaded PDF per submission
+
+> Set a vanity filename pattern once; every submission's download link uses it.
+
+# Rename the downloaded PDF per submission
+
+**When you'd use this** — operators don't want to triage 200
+`form-submission-abc12345-v3.pdf` files a day. A vanity pattern stamps
+each PDF with a human-readable name at submit time, and regenerated
+copies inherit the original.
+
+## 1. Open the form's filename field
+
+In the builder, open the form, scroll to **PDF Designer → Filename**,
+and put the pattern there. A non-empty value at this surface overrides
+whatever's set as the tenant default.
+
+If you want every form in the tenant to use the same shape, set it once
+at **Settings → Filename Defaults** instead — per-form patterns then
+override on a form-by-form basis.
+
+## 2. Enter a pattern
+
+Patterns mix literal text with `{token}` placeholders. A reasonable
+default for an order workflow:
+
+```
+{form_name}-{date}-{submission_id_short}
+→ order-intake-2026-05-15-abc12345.pdf
+```
+
+Common tokens you'll reach for:
+
+- `{form_name}` — the form's name, slugified.
+- `{date}` — submit date in `YYYY-MM-DD`.
+- `{submission_id_short}` — first 8 chars of the submission UUID, for
+  uniqueness.
+- `{field:<key>}` — a submitter-supplied value. The field must exist in
+  the schema and must not be flagged PII, or the save call returns 422.
+
+The resolver runs at submit time and stores the result with the
+submission, so the download link uses the vanity name immediately. The
+pattern is capped at 256 characters and the resolved filename at 200.
+
+Vanity patterns require Pro or higher. Solo-tier tenants get a 402
+  with `error.code = "tier_required"` when they try to save one.
+
+## See also
+
+- [Vanity PDF filenames tutorial](/docs/forms/tutorials/301-vanity-filenames)
+- [PDF vanity filenames reference](/docs/forms/pdf-vanity-filenames)
+
+---
+
 # Forms tier entitlements
 
 > What each tier unlocks for the Forms surface — active form count, daily submission ceiling, anti-abuse posture, PDF rendering, badge visibility.
@@ -3662,6 +4268,1833 @@ Tier changes propagate within ~30 seconds. After upgrading:
 - Embedded modal, slide, and bubble trigger modes unlock at Pro+.
 - The HTTP ingestion API (`POST /api/v1/tenant/forms/:form_id/submissions`)
   becomes available at Pro+.
+
+---
+
+# Attach an AcroForm template
+
+> Upload a fillable PDF, map form fields to AcroForm fields, render on submit.
+
+# Attach an AcroForm template
+
+The `Patient Intake` form now generates a filled `consent.pdf` on
+every submission. The submit response carries a `pdf_download_url`
+the visitor can tap to grab their signed copy.
+
+Finish [Share with an invite or embed](/docs/forms/tutorials/101-share-invite-and-embed)
+first. You need the published `Patient Intake` form and a public
+URL you can submit against.
+
+The share tutorials get visitors *to* the form. This one decides
+what they take away when they're done. AcroForm is the path to use
+when you already have a fillable PDF — a consent waiver from your
+compliance team, an insurance form from a carrier, anything with
+named fields already drawn on the page. FastYoke reads the
+widgets out of the PDF, you map each one to a form field, and the
+renderer fills the values and flattens the result on submit.
+
+## 1. Add an AcroForm template to the form
+
+From the admin shell, open **Forms** and click into `Patient
+Intake`. In the right rail open the **PDF templates** panel and
+click **Add AcroForm**.
+
+The panel switches into upload mode and asks for the source PDF.
+
+## 2. Upload the fillable PDF
+
+Drop `consent.pdf` onto the upload zone. The builder parses the
+file server-side and lists every AcroForm widget it found:
+
+- `Patient Name` — text widget
+- `Date of Birth` — text widget
+- `Email` — text widget
+- `Today` — text widget
+
+If the inventory comes back empty or names look garbled, the source
+file probably isn't a true AcroForm — it's a scanned image or a
+flattened PDF. Re-export it from the original tool with form fields
+enabled and try again.
+
+## 3. Map AcroForm fields to form values
+
+Each widget in the inventory needs a binding. The builder shows a
+two-column editor: the AcroForm field name on the left, the source
+on the right. There are three source kinds:
+
+- **Form field** — bind to a payload key from the `Patient Intake`
+  form. The most common choice.
+- **System token** — bind to one of `__submitted_at`,
+  `__submitter_signature`, `__submitter_ip`, `__form_version`.
+- **Literal** — a fixed string up to 200 characters.
+
+Pick **Form field** for `Patient Name`, `Date of Birth`, and
+`Email`, and choose the matching payload key from each dropdown.
+Pick **System token** → `__submitted_at` for `Today`.
+
+The stored mapping looks like this on the wire:
+
+```json
+{
+  "entries": {
+    "Patient Name": { "type": "form_field", "key": "full_name", "input_type": "text", "format_as_string": false },
+    "Date of Birth": { "type": "form_field", "key": "dob", "input_type": "date", "format_as_string": false },
+    "Email": { "type": "form_field", "key": "email", "input_type": "email", "format_as_string": false },
+    "Today": { "type": "system_token", "token": "__submitted_at" }
+  }
+}
+```
+
+The validator runs on save and rejects any binding whose input
+type isn't compatible with the widget's type — a `checkbox` widget
+won't accept a `text` field, for example. The editor surfaces those
+errors inline against the offending row, so you fix and re-save
+without losing the rest of the mapping.
+
+The same `payload_json` always produces a byte-identical PDF. The
+renderer is contract-tested to enforce this.
+
+If the visitor needs to combine two fields into one widget — first
+name plus last name into `Patient Name`, say — add a single
+`full_name` field to the form itself and bind that. AcroForm
+bindings are one widget to one source by design; the form schema
+is where you compose.
+
+## 4. Turn on render-on-submit
+
+Below the mapping editor is the **Render on submit** toggle. Off
+by default — the template uploads and validates, but no rendering
+happens until you opt in. Flip it on.
+
+With the toggle on, every submission triggers a render attempt
+right after the row is written. The submit response gains a
+`pdf_download_url` field, an HMAC-signed URL valid for 15 minutes.
+Render failures don't block ingestion — the submission still
+succeeds, the field is just omitted from the response.
+
+## 5. Save and re-publish
+
+Click **Save** at the top of the form. Then **Publish** to cut a
+new definition version.
+
+The re-publish step is the one detail to get right. Existing
+invite tokens and the embed snippet keep pointing at the form's
+public token across versions, but the template binding rides on
+the published definition. Without a republish your kiosk URL still
+loads the form, accepts the submission, and just doesn't render
+the PDF — because the visitor's session is pinned to the previous
+version. Republish, and the next visitor hits the version with the
+template attached.
+
+## Verify it worked
+
+Open the public URL of `Patient Intake` in an incognito window —
+the same one you used at the end of the share tutorial. Fill in
+the form and submit.
+
+In the browser devtools open the network tab and find the
+`POST /api/v1/public/forms/<token>/submit` request. The response
+JSON includes:
+
+```json
+{
+  "submission_id": "01HXY…",
+  "processing_state": "received",
+  "submitted_at": "2026-06-06T14:22:11Z",
+  "pdf_download_url": "https://tenant.fly.dev/api/v1/public/attachments/…?sig=…&exp=…"
+}
+```
+
+Open `pdf_download_url` in a new tab. The browser loads
+`consent.pdf` with the four widgets filled: the patient's name in
+`Patient Name`, the date in `Date of Birth`, the email in `Email`,
+and the submission timestamp in `Today`. If a `--template nextjs`
+consumer app is wrapping the form, the URL renders as a
+"Download your signed copy" link on the success screen
+automatically.
+
+If `pdf_download_url` is missing from the response, the most
+likely cause is that the visitor's session was loaded against the
+pre-publish definition. Close the tab, re-open the public URL,
+and submit again — the new session picks up the version with the
+template attached.
+
+If the field is present but the URL 404s after the click, the
+render failed silently. Open the `Patient Intake` form in the
+admin shell, switch to **Submissions**, and click the offending
+row. The PDF tab shows the renderer's failure class —
+`mapping_invalid`, `widget_missing`, `pdf_corrupt`, and so on —
+along with the audit row written at attempt time.
+
+## Next
+
+Continue with [Attach an Overlay template](/docs/forms/tutorials/201-overlay-template).
+
+---
+
+# Embed a form on a Next.js page
+
+> Drop the embed snippet onto any page; works in App Router and Pages Router.
+
+# Embed a form on a Next.js page
+
+**When you'd use this — your marketing site is Next.js and you want the form to render directly on `/contact` (or any other page) without managing an iframe yourself.**
+
+The FastYoke embed is a single `<script>` tag. It is not a React component, so there's no npm package to install and no SSR/CSR boundary to think about. The same snippet works in App Router (`app/contact/page.tsx`) and Pages Router (`pages/contact.tsx`).
+
+## 1. Copy the snippet from the Embed panel
+
+Open the form in the admin shell, switch to the **Embed** tab, pick a mode (start with `inline`), and click **Save embed**. The panel shows a copyable snippet of the form:
+
+```html
+<script async src="https://app.fastyoke.io/embed.js" data-embed="em_AbCd1234567890EfGhIjKl"></script>
+```
+
+The `em_…` value is the embed ID assigned when you saved.
+
+## 2. Paste it into your Next.js page
+
+JSX accepts a raw `<script>` tag inline — you do not need `next/script` for this, and you do not need to escape anything. This is the most common stumbling block: people reach for `next/script` and end up debugging hydration mismatches that don't exist.
+
+```tsx
+export default function ContactPage() {
+  return (
+    <main>
+      <h1>Contact us</h1>
+      <script
+        async
+        src="https://app.fastyoke.io/embed.js"
+        data-embed="em_AbCd1234567890EfGhIjKl"
+      />
+    </main>
+  );
+}
+```
+
+For `inline` mode the form renders where the tag sits. For `modal`, `slide`, or `bubble` modes the placement of the tag doesn't matter — the chrome is a fixed overlay. Make sure your production domain is on the **Settings → Embed domains** allowlist before launch, otherwise visitors see the unavailable placeholder.
+
+## See also
+
+- [Share with an invite or embed](/docs/forms/tutorials/101-share-invite-and-embed)
+- [Embed reference](/docs/forms/embed)
+
+---
+
+# Place an Overlay template
+
+> Drop value regions onto any PDF — works on scans, no AcroForm needed.
+
+# Place an Overlay template
+
+The `Patient Intake` form now produces two PDFs on every
+submission: the AcroForm `consent.pdf` from the previous tutorial
+*and* an overlay-filled `hipaa-acknowledgment.pdf`. The second
+file is a flat scan of a paper acknowledgment — no AcroForm
+widgets to bind to, just ink — and the overlay renderer paints
+the patient's name and the submission date on top of it.
+
+Finish [Attach an AcroForm template](/docs/forms/tutorials/201-acroform-template)
+first. This tutorial assumes the `Patient Intake` form already
+has a published definition with the `full_name` field on it.
+
+The AcroForm path only works when the source PDF carries named
+form widgets. A lot of real-world paperwork doesn't —
+compliance hands you a scanned acknowledgment, the carrier sends
+a flattened export, the front office prints and re-scans the
+template every year. Overlay templates handle exactly that case.
+You upload the flat PDF, mark rectangles on the page where the
+values should go, and the renderer composites the typeset
+values on top at submit time. The original page bytes are
+untouched.
+
+## 1. Add an Overlay template to the form
+
+Open **Forms**, click into `Patient Intake`, and in the right
+rail open the **PDF templates** panel. Below the AcroForm row
+you added in the last tutorial, click **Add Overlay**.
+
+The panel switches into upload mode.
+
+## 2. Upload the source PDF
+
+Drop `hipaa-acknowledgment.pdf` onto the upload zone. The file
+is a 1-page US-Letter scan (612 × 792 pt) with no form widgets.
+
+The builder runs an intake pass on the upload, records the page
+geometry, and opens the page preview. If the intake fails —
+encrypted PDF, corrupted xref, page count over the per-template
+cap — the panel surfaces the failure class inline and refuses
+the upload. Re-export from the source tool and try again.
+
+## 3. Place the regions
+
+The preview shows page 1 of the acknowledgment. Click-and-drag
+on the page to draw a rectangle, then pick the region's **kind**
+and **binding** in the inspector that pops out on the right.
+Three region kinds matter for this template:
+
+- A **text** region for the patient name, near the top-left.
+- A **text** region for the submission date, near the top-right.
+- A **text** region acting as a signature placeholder, near the
+  bottom-left. We leave this one bound to a literal empty string
+  for now — the next tutorial swaps it for a real signature
+  region wired to a `signature` field.
+
+Draw all three. Approximate placements (PDF points, bottom-left
+origin):
+
+- Patient name — page 1, x=72, y=620, w=300, h=18 — bound to
+  the `full_name` form field.
+- Date — page 1, x=420, y=620, w=120, h=18 — bound to the
+  `__submitted_at` system token.
+- Signature placeholder — page 1, x=72, y=120, w=200, h=60 —
+  bound to a literal empty string.
+
+The mapping you just authored serializes like this:
+
+```json
+{
+  "regions": [
+    {
+      "id": "r_patient_name",
+      "page": 1,
+      "x": 72.0,
+      "y": 620.0,
+      "w": 300.0,
+      "h": 18.0,
+      "kind": "text",
+      "binding": { "type": "form_input", "key": "full_name" },
+      "font_size_pt": null
+    },
+    {
+      "id": "r_submitted_at",
+      "page": 1,
+      "x": 420.0,
+      "y": 620.0,
+      "w": 120.0,
+      "h": 18.0,
+      "kind": "text",
+      "binding": { "type": "token", "token": "__submitted_at" },
+      "font_size_pt": null
+    },
+    {
+      "id": "r_signature_placeholder",
+      "page": 1,
+      "x": 72.0,
+      "y": 120.0,
+      "w": 200.0,
+      "h": 60.0,
+      "kind": "text",
+      "binding": { "type": "literal", "value": "" },
+      "font_size_pt": null
+    }
+  ]
+}
+```
+
+The wire shape is the same as what the validator checks on save:
+each region carries a stable `id`, a page number, four geometry
+floats in PDF points, a `kind`, and a tagged `binding`. The
+binding tag is one of `form_input`, `token`, `literal`,
+`signature_field`, or `form_input_image`; the matrix that pairs
+kinds with bindings is enforced server-side. A `checkbox` region
+must bind to a `form_input`, a `signature` region must bind to a
+`signature_field`, an `image` region must bind to a
+`form_input_image`, and a `text` region accepts anything.
+
+Here's what the placements look like against the page:
+
+```text
++---------------------------------------------+
+|                                             |
+|  Patient: [____________]   Date: [______]   |   <- y≈620
+|                                             |
+|                                             |
+|     ( body copy of the acknowledgment )     |
+|                                             |
+|                                             |
+|                                             |
+|                                             |
+|  Sign: [____________________]               |   <- y≈120
+|                                             |
++---------------------------------------------+
+  ^                                           ^
+  x=0                                       x=612
+  (origin bottom-left, 1-page US-Letter)
+```
+
+Overlay coordinates use the PDF / PostScript convention: the
+origin is the **bottom-left** corner of the page, `y` grows
+upward, and the unit is one PDF point (1/72 inch). The page
+preview reflects this — drag a region near the top of the
+page and the inspector's `y` value reads ~620 on a US-Letter
+sheet, not ~170. Live values update as you drag, so coarse
+placement by eye and then nudge to the value you want.
+
+## 4. Save
+
+Click **Save**. The validator runs the closed kind/binding
+matrix, checks every region sits inside its page's geometry,
+and checks each `form_input` key exists on the published form
+definition. Errors come back inline against the offending
+region — the rest of the mapping stays in the editor while you
+fix.
+
+Then **Publish** to cut a new form definition version, the
+same way you did for the AcroForm template. Existing public
+links keep working; the next visitor session loads the version
+with both PDF templates attached.
+
+## Verify it worked
+
+Open the public URL of `Patient Intake` in an incognito window,
+fill the form out, and submit.
+
+The submit response now carries two download URLs — one per
+attached template. Open the `hipaa-acknowledgment.pdf` URL.
+The patient's name appears at top-left where you drew the
+first region, the submission timestamp appears at top-right,
+and the signature placeholder region is blank — the literal
+empty string renders as nothing, which is what we want until
+the next tutorial wires a real signature in. The original
+scan underneath is unchanged; only the three rectangles you
+authored are overpainted.
+
+If a value lands a few points off where you wanted it, open
+the form, nudge the region's `y` (or `x`) in the inspector,
+save, and re-submit. The renderer is deterministic — the same
+`payload_json` plus the same mapping always produces a
+byte-identical PDF — so once you've got the placement right
+it stays right.
+
+## Next
+
+Continue with [Wire up the signature region](/docs/forms/tutorials/201-signatures).
+
+---
+
+# Mint a one-shot invite link
+
+> Single-use, expires when consumed — perfect for a personal email.
+
+# Mint a one-shot invite link
+
+**When you'd use this — you're sending the form to one named person over email, and you want the link to die the moment they submit so it can't be forwarded or replayed.**
+
+A one-shot invite is just a regular invite token with `max_submissions` set to `1`. After the first successful submission the public URL flips to `410 Gone` automatically — no manual revoke needed.
+
+## 1. Open Invites and create a new one
+
+In the admin shell, open the form, switch to the **Invites** tab, and click **New invite**. Fill in:
+
+- **Label** — the recipient, e.g. `jane@example.com`. This is the only place you'll see who the link was minted for, so keep it specific.
+- **Uses** — `1`.
+- **Expiry** — `7 days` is a sane default for a personal email; raise or lower to taste. Solo accounts cap at 30 days.
+
+Click **Mint**. The dialog reveals the share URL of the form `https://app.fastyoke.io/f/<token>`. Copy it now — the token is hashed in the database and cannot be retrieved later.
+
+## 2. Send it from your normal email tool
+
+Paste the URL into whatever you'd normally use — Gmail, your CRM, a Loom follow-up. Nothing on the recipient's side knows or cares it came from FastYoke.
+
+## 3. After submission the link returns 410 Gone
+
+The submission counter is incremented atomically with the cap check. The first submit succeeds and writes a `form_submissions` row; any subsequent load or submit at that URL returns `410 Gone` with the message "This invite has expired or reached its submission limit." If you need to give the same person a second try, mint a fresh invite — there is no way to reset the counter on an exhausted token.
+
+## See also
+
+- [Share with an invite or embed](/docs/forms/tutorials/101-share-invite-and-embed)
+- [Invites reference](/docs/forms/invites)
+
+---
+
+# Collect signatures
+
+> Add a signature field and wire it into both your AcroForm and your Overlay template.
+
+# Collect signatures
+
+The `Patient Intake` form now captures a drawn signature from the
+visitor and pipes the same image into both PDFs you've already
+wired up: the AcroForm `consent.pdf` from tutorial 5 and the
+Overlay `hipaa-acknowledgment.pdf` from tutorial 6. One capture,
+two outputs, byte-deterministic on both sides.
+
+Finish [Place an Overlay template](/docs/forms/tutorials/201-overlay-template)
+first. You need the `Patient Intake` form with both PDF templates
+attached and the empty signature placeholder still sitting at the
+bottom-left of the Overlay page.
+
+A signature is the one field where the form schema and the PDF
+templates have to agree end-to-end. The visitor draws once; the
+captured image flows through the submit pipeline as an attachment,
+and each template type consumes it differently — the AcroForm
+renderer drops it into a real PDF signature widget, the Overlay
+renderer composites it as an inline image inside the rectangle
+you marked. Neither path re-prompts the visitor and neither path
+reads a separate copy.
+
+## 1. Add the signature field to the form
+
+Open `Patient Intake` in the admin shell. The form already has
+the `demographics` and `contact` pages from the earlier
+tutorials. Add a third page named `consent` after them.
+
+Drag a **signature** field onto the new page. Set the key to
+`signature` and mark it **required**. Save the draft — the
+field appears in the published schema as
+`{ "key": "signature", "type": "signature", "required": true }`.
+
+That's the entire form-side change. Both PDF templates now have
+a signature payload key they can bind against.
+
+## 2. Map the AcroForm signature widget
+
+Open the **PDF templates** panel and click into the `consent.pdf`
+row. The widget inventory from tutorial 5 lists `Patient Name`,
+`Date of Birth`, `Email`, and `Today`. The PDF also carries one
+more widget that you skipped earlier because there was nothing
+to bind it to — a signature widget named `Signature`. It's a
+real AcroForm signature field, not a text widget, so the
+validator only accepts a signature-shaped binding.
+
+The shape the renderer wants for a `Signature` widget is the
+`__submitter_signature` system token. Pick **System token** in
+the dropdown for the `Signature` row, then choose
+`__submitter_signature`.
+
+The full mapping now reads:
+
+```json
+{
+  "entries": {
+    "Patient Name": { "type": "form_field", "key": "full_name", "input_type": "text", "format_as_string": false },
+    "Date of Birth": { "type": "form_field", "key": "dob", "input_type": "date", "format_as_string": false },
+    "Email": { "type": "form_field", "key": "email", "input_type": "email", "format_as_string": false },
+    "Today": { "type": "system_token", "token": "__submitted_at" },
+    "Signature": { "type": "system_token", "token": "__submitter_signature" }
+  }
+}
+```
+
+The validator pairs `__submitter_signature` with the widget's
+declared type on save — if the widget weren't a signature
+widget the binding would come back with a `type_mismatch`
+error against that row. The renderer reads the captured image
+from the submission's attachment store and writes it into the
+widget as a native PDF signature field, so a downstream
+verifier sees a real signature, not a flattened bitmap.
+
+## 3. Swap the Overlay placeholder for a signature region
+
+Back in the **PDF templates** panel, open the
+`hipaa-acknowledgment.pdf` row. In tutorial 6 you authored a
+text region with id `r_signature_placeholder` bound to a
+literal empty string — a deliberate stand-in. Edit that region
+now: switch its **kind** from `text` to `signature`, and
+switch its **binding** from the literal to
+**Signature field** → `signature`.
+
+The geometry stays exactly as you placed it. The region
+serializes like this:
+
+```json
+{
+  "id": "r_signature_placeholder",
+  "page": 1,
+  "x": 72.0,
+  "y": 120.0,
+  "w": 200.0,
+  "h": 60.0,
+  "kind": "signature",
+  "binding": { "type": "signature_field", "key": "signature" },
+  "font_size_pt": null
+}
+```
+
+The save-time validator enforces the closed kind-to-binding
+matrix: a `signature` region must bind to a `signature_field`,
+and the `key` must point at a field whose form-schema type is
+`signature`. Mismatches surface as `signature_field_required`,
+`unknown_signature_field`, or `signature_field_wrong_type`
+inline against the region. The other two regions you authored
+in tutorial 6 — the patient-name text and the date text —
+stay as they were.
+
+The same captured signature image flows to both renderers from
+a single visitor capture. AcroForm consumes it through the
+`__submitter_signature` system token and writes it as a native
+PDF signature field on `consent.pdf`. Overlay consumes it
+through the `signature_field` binding and composites it as an
+inline image inside the rectangle on `hipaa-acknowledgment.pdf`.
+The submit pipeline reads the attachment once and hands the
+same bytes to both renderers.
+
+## 4. Save and re-publish
+
+Save both template panels. Then click **Publish** on the form
+to cut a new definition version. As with the previous
+tutorials, public links keep working across the republish —
+the next visitor session loads the version that has the
+signature field plus both updated mappings.
+
+## Verify it worked
+
+Open the public URL of `Patient Intake` in an incognito
+window. Fill in the demographics and contact pages, then on
+the new `consent` page draw a signature in the signature pad
+and submit.
+
+The submit response still carries the two `pdf_download_url`s
+from before. Open the `consent.pdf` URL: the same four fields
+fill as in tutorial 5, and the `Signature` widget now shows
+your drawn signature inside its rectangle. Open the
+`hipaa-acknowledgment.pdf` URL: the patient name and date
+render where they did before, and the bottom-left rectangle
+that previously rendered as blank now shows the same drawn
+signature, composited as an inline image on top of the
+original scan.
+
+If either PDF comes back without the signature, the most
+likely cause is the same one as the earlier tutorials — the
+visitor's session was pinned to the pre-publish definition.
+Close the tab, reopen the public URL, and submit again.
+
+## Next
+
+Continue with [Promote a submission to an entity](/docs/forms/tutorials/201-promote-to-entity).
+
+---
+
+# Switch a form's theme without rebuilding
+
+> Theme change is a single save — no need to re-author the form.
+
+# Switch a form's theme without rebuilding
+
+**When you'd use this — you're rebranding mid-quarter and need every live form to follow, or you want to A/B-test two themes on the same form without forking it.**
+
+A form's theme is a pointer, not a copy. The fields, validation, and submission wiring all live on the form definition; the theme lives on a separate row that the public renderer joins in at request time. Swapping themes is a single save and never touches the form's structure.
+
+## 1. Pick a theme from the Theme panel
+
+Open the form in the admin shell and switch to the **Theme** panel. The dropdown lists every theme your tenant has authored (plus the FastYoke defaults). Pick one and click **Save**. The save is atomic — there is no intermediate "draft" state and no need to republish the form.
+
+If you're A/B-testing, duplicate the form first, point the duplicate at the alternate theme, and split traffic at the invite/embed layer. The form definition stays identical between the two; only the theme pointer differs.
+
+## 2. The public URL picks up the new theme on next page load
+
+Form pages are not edge-cached by visitor — the theme join happens on every request — so a visitor who refreshes immediately after the save will see the new look. Embedded forms (the `<script>`-tag SDK) pick up the change on the next iframe mount, which in practice means the next page load on the host site.
+
+The submitted payloads, validation rules, and downstream FSM jobs are unaffected by a theme swap. A submission collected under the old theme and one collected under the new theme are indistinguishable on the server; only the rendered chrome changes.
+
+## See also
+
+- [Style and brand your form](/docs/forms/tutorials/101-style-and-brand)
+
+---
+
+# Promote submissions into entity records
+
+> Spawn a job per submission, then fire a transition that copies the submission into a Patient record.
+
+# Promote submissions into entity records
+
+Every accepted `Patient Intake` submission now spawns a job in
+the `Patient Intake Flow` workflow in state `received`. When
+an operator fires the `mark_triaged` transition, the job
+advances to `triaged` and a `patient` entity record is created
+from the submission's payload — one atomic step, fully audited
+in `event_log`.
+
+Finish [Collect signatures](/docs/forms/tutorials/201-signatures)
+first. You need the `Patient Intake` form published, with both
+PDF templates wired up. This tutorial leaves the form itself
+alone — you'll add an entity, an FSM, and a Submit-actions
+binding around it.
+
+Submissions land in a quarantine zone by design: the
+form-scoped tables have no FK path into `entity_records`, so a
+malformed or hostile payload can't corrupt your operational
+data. Promotion to an entity is an explicit FSM action —
+`PROMOTE_FORM_TO_ENTITY` — that an operator fires by name. The
+audit trail stays clean because every entity write has a
+named transition behind it.
+
+## 1. Create the `patient` entity kind
+
+From the admin shell, open **Entities**:
+
+1. Type `patient` in the "Entity kind" box.
+2. Click **Load**. The records list is empty — that's exactly
+   what you want. The kind is now registered; the FSM action
+   you'll author below will populate it.
+
+Leave the page. You don't need to seed a record by hand.
+
+## 2. Design the `Patient Intake Flow` workflow
+
+Open **Workflows** → **New workflow**. The FSM Designer opens
+as a React Flow canvas.
+
+1. Add two states: `received` and `triaged`. Click **Set
+   initial** on the `received` node.
+2. Drag a transition from `received` to `triaged`. In the side
+   panel, set `event_type = mark_triaged`. No guard needed for
+   the first run.
+3. Name the workflow `Patient Intake Flow`.
+
+Don't save yet — the action wiring comes next.
+
+## 3. Attach the `PROMOTE_FORM_TO_ENTITY` action
+
+Still on the `mark_triaged` transition's side panel, click
+**Add action** and pick `PROMOTE_FORM_TO_ENTITY` from the
+catalog. Fill the payload template with:
+
+```json
+{ "entity_name": "patient" }
+```
+
+That's the entire payload. When the operator fires
+`mark_triaged`, the action will copy the submission attached
+to the job into a fresh `patient` entity record.
+
+You don't have to supply one. The action resolves the
+submission automatically from the job it's running on,
+because the form's Submit actions (step 6) link the
+submission to the job at spawn time. Pass an explicit
+`submission_id` only if you need to promote a different
+submission than the one linked to the current job.
+
+## 4. Bind the workflow to the `patient` entity
+
+In the workflow sidebar, find the **Entity name** field and
+type `patient`. This binding is what lets entity annotations
+light up the guard composer later, and it's what tells the
+FSM Designer which kind to validate the promote action
+against. With the binding in place the action's
+`entity_name` payload is checked at save time, not at fire
+time — a typo here surfaces immediately, not on the next
+operator click.
+
+## 5. Save the workflow
+
+Click **Save**. The schema is written with `is_active = true`
+and `Patient Intake Flow` shows up in the workflows list. The
+`mark_triaged` transition now carries the
+`PROMOTE_FORM_TO_ENTITY` action; the dry-run panel will let
+you preview the entity write against any existing submission
+before you fire it for real.
+
+## 6. Wire `Patient Intake` to spawn jobs
+
+Open `Patient Intake` in the Forms list, then open its detail
+view. Find the **Submit actions** panel:
+
+1. In the *Spawn job in schema* dropdown, pick
+   `Patient Intake Flow`.
+2. Confirm the *Initial state* shows `received` (it should be
+   the default — that's the state you marked initial above).
+3. Leave the *Link submission to job* toggle on. This is the
+   bit that makes the `submission_id`-less promote action
+   work; the spawn writes the submission's id onto the new
+   job so the action can resolve it back at fire time.
+4. Save.
+
+Every accepted submission from this point forward spawns a
+fresh `Patient Intake Flow` job in `received`, with the
+submission's `processing_state` set to `attached`.
+Submissions accepted before this binding existed stay
+`pending` and never auto-spawn — they're available for
+manual triage from the submissions list.
+
+```text
+┌──────────┐  mark_triaged   ┌──────────┐
+│ received │ ──────────────▶ │ triaged  │
+└──────────┘   action:       └──────────┘
+               PROMOTE_FORM_TO_ENTITY
+```
+
+## Verify it worked
+
+Open the public URL of `Patient Intake` in an incognito
+window. Fill the demographics, contact, and consent pages
+from the earlier tutorials and submit.
+
+Head to `/admin/jobs`. A new `Patient Intake Flow` job
+appears in `received` within a second of the submit
+returning. Click into it — the side panel shows the linked
+submission id and the payload you just entered.
+
+Click **Mark triaged**. Three things happen in one atomic
+step:
+
+1. The job advances from `received` to `triaged`.
+2. The `PROMOTE_FORM_TO_ENTITY` action copies the
+   submission's payload into a new record on
+   `entity_records` with kind `patient`.
+3. The submission's `processing_state` flips from
+   `attached` to `promoted` and its `entity_record_id`
+   points at the new record.
+
+Open **Entities**, type `patient`, and click **Load**. The
+submitter's values show up as a fresh row. Discarded
+submissions don't land here; every `patient` record you see
+came from a `mark_triaged` an operator explicitly fired,
+and the append-only `event_log` carries the full audit
+trail of who fired which transition against which job.
+
+## Next
+
+Continue with [Prefill a form from an entity record](/docs/forms/tutorials/201-entity-prefill).
+
+---
+
+# Add a signature line to an AcroForm template
+
+> Bind a signature field to a PDF widget — same captured image flows in.
+
+# Add a signature line to an AcroForm template
+
+When you'd use this — your AcroForm PDF has a `Signature` widget you've
+never wired up. The visitor sees no signature pad on the form yet, and
+the rendered PDF comes back with an empty signature box. One form-side
+field plus one mapping entry connects them.
+
+## 1. Add the signature field
+
+Open the form in the admin shell and drag a **signature** field onto
+the page where the consent lives. Set the **key** to `signature` and
+mark it **required**. The published schema now carries
+`{ "key": "signature", "type": "signature", "required": true }`, which
+is the payload key the AcroForm renderer will reach for at render
+time.
+
+## 2. Bind the widget in the field mapper
+
+Open the form's **PDF templates** panel and click into the AcroForm
+template row. The widget inventory lists the `Signature` widget — a
+real PDF signature field, not a text widget, so the mapper's validator
+only accepts a signature-shaped binding.
+
+Pick **System token** in the dropdown for the `Signature` row and
+choose `__submitter_signature`. The saved entry looks like this:
+
+```json
+{ "Signature": { "type": "system_token", "token": "__submitter_signature" } }
+```
+
+The validator pairs the token with the widget's declared type on save
+— if the widget weren't a signature widget the row would come back
+with a `type_mismatch` error.
+
+## 3. Save and re-publish
+
+Save the template and click **Publish** on the form. The next
+submission's `pdf_download_url` returns a `consent.pdf` with the
+visitor's drawn signature composited into the widget as a native PDF
+signature field, not a flattened bitmap.
+
+## See also
+
+- [Collect signatures tutorial](/docs/forms/tutorials/201-signatures)
+
+---
+
+# Prefill fields from your entity schema
+
+> Annotate the patient entity once; the form's labels, requireds, and select options come along automatically.
+
+# Prefill fields from your entity schema
+
+The `patient` entity gets a small set of annotations — labels,
+a date format, an enum list. You re-author `Patient Intake`
+using the **From entity** palette so each field carries the
+entity's metadata. Edit a label on the entity later and the
+admin preview picks it up without rebuilding the form.
+
+Finish [Promote submissions into entity records](/docs/forms/tutorials/201-promote-to-entity)
+first. You need a `patient` entity kind registered and the
+`Patient Intake` form published.
+
+Annotations live on the entity, not the form. That means one
+edit to the entity propagates to every form (and every other
+LCAP surface) that consumes it. The Forms builder reads those
+annotations at import time, and the admin preview reads them
+again at render time — so the loop is short.
+
+## 1. Annotate the `patient` entity
+
+Open **Entities**, type `patient`, click **Load**, then open
+the **Annotations** tab. Add three annotations:
+
+- `first_name` → label `First name`.
+- `dob` → label `Date of birth`, `formatting: "MM/DD/YYYY"`.
+- `preferred_language` → label `Preferred language`, with
+  enum options `English`, `Spanish`, `Mandarin`, `Other`.
+
+If you'd rather author by hand, the panel accepts JSON:
+
+```json
+{
+  "first_name":         { "label": "First name" },
+  "dob":                { "label": "Date of birth", "formatting": "MM/DD/YYYY" },
+  "preferred_language": {
+    "label": "Preferred language",
+    "enum":  ["English", "Spanish", "Mandarin", "Other"]
+  }
+}
+```
+
+Save. The annotations are now read by both the builder's
+**From entity** importer and the admin preview's renderer.
+
+## 2. Re-author the form from the entity
+
+Open `Patient Intake` in the Forms list. In the builder's
+field palette, switch to the **From entity** tab and pick
+`patient`. The importer lists every field on the entity and
+offers to drop them onto the current page. Accept all.
+
+Existing fields with matching keys are replaced — the
+importer is destructive on key collisions by design, so the
+imported metadata wins. Every imported field gets a
+`source.entity = "patient"` provenance stamp; the builder
+uses that stamp later to decide which renderer to use.
+
+The importer reads each annotation and pre-fills the
+field's <code>label</code>, <code>required</code>,{' '}
+<code>max_length</code>, <code>min</code>, and{' '}
+<code>max</code>. Enum lists are synthesized into a{' '}
+<code>select</code> field with the enum values as options —
+which is how `preferred_language` lands as a four-option
+select without you typing the options into the form.
+
+## 3. Watch SmartField pick up live edits
+
+Open the admin preview. Source-stamped fields now render
+through the LCAP `<SmartField />` resolver — the label on
+`first_name` reads from the entity's annotation, not from a
+copy frozen into the form.
+
+Prove it: leave the preview open in one tab, open the
+`patient` annotations in another, and rename `first_name`'s
+label from `First name` to `Legal first name`. Save. Reload
+the preview tab — the label updates. No form re-publish, no
+build step.
+
+The SmartField path only fires in the admin preview. The
+public form URL keeps the legacy renderer until a
+public-annotation read endpoint ships, so a label change
+on the entity won't reach public submitters until you
+re-publish the form (which freezes the current annotation
+text into the version row).
+
+The resolver only takes over when the form/annotation type
+pair is on a strict allow-list (<code>text↔string</code>,{' '}
+<code>textarea↔longtext</code>, <code>number↔number</code>,{' '}
+<code>checkbox↔boolean</code>, <code>date↔timestamp</code>,{' '}
+<code>select↔enum</code>, <code>file↔file_ref</code>).
+Mismatches and missing annotations fall back to the legacy
+renderer with a one-time <code>console.warn</code>. Layout
+fields (<code>heading</code>, <code>section</code>,{' '}
+<code>static</code>), <code>email</code>,{' '}
+<code>radio</code>, and <code>multi_select</code> always
+stay legacy.
+
+## 4. Save and re-publish
+
+Once the page reads the way you want it to, click **Save**,
+then **Publish**. The published version row freezes the
+current label and enum text into the public renderer, so
+submitters see the same options as your operators do —
+until your next annotation change and re-publish.
+
+## Verify it worked
+
+Open the admin preview for `Patient Intake`. Confirm:
+
+- `first_name` shows as `First name`.
+- `dob` shows as `Date of birth` with an `MM/DD/YYYY`
+  placeholder.
+- `preferred_language` shows as a select with `English`,
+  `Spanish`, `Mandarin`, `Other`.
+
+Now open the `patient` annotations and rename
+`preferred_language` to `Language preference`. Save, reload
+the preview. The select's label updates — the options stay
+put. That's the loop: edit once on the entity, the admin
+preview tracks it.
+
+## Next
+
+Continue with [Conditional routing](/docs/forms/tutorials/301-conditional-routing).
+
+---
+
+# Test a form locally with the HTTP ingestion API
+
+> Skip the UI — POST a payload directly to verify your wiring.
+
+# Test a form locally with the HTTP ingestion API
+
+When you'd use this — you're debugging a Submit action or a downstream
+promotion and you don't want to drive the browser every iteration. One
+curl exercises the same validation, idempotency, and submission write
+path the public widget uses.
+
+## 1. Mint a PAT
+
+In the admin shell, open **Settings → API tokens** and click **New**.
+Give it the `forms:ingest` scope, copy the `fy_pat_…` value
+immediately (it's only shown once), and stash it in a shell variable
+or your secrets manager. See the
+[API tokens reference](/docs/auth) for scope details.
+
+## 2. POST a submission
+
+Substitute the published form's UUID for `FORM_ID`:
+
+```bash
+curl -X POST http://localhost:8080/api/v1/tenant/forms/FORM_ID/submissions \
+  -H "Authorization: Bearer fy_pat_…" \
+  -H "Content-Type: application/json" \
+  -d '{"payload": {"first_name": "Test"}}'
+```
+
+Field keys inside `payload` must match the published schema. Required
+fields not in the body come back as `422 validation_failed` with a
+per-field error list — handy for catching a typo in a field key
+without round-tripping through the UI.
+
+## 3. Inspect the response
+
+A fresh submission returns `201 Created`:
+
+```json
+{ "submission_id": "01jx3p…", "was_idempotent_replay": false }
+```
+
+Open the admin **Submissions** list and the row appears with the same
+`submission_id`. If you're testing a promote-on-submit hookup, the
+paired entity should already exist by the time the row renders. Any
+downstream Action runs identically to a browser submission.
+
+## See also
+
+- [Server-to-server submission tutorial](/docs/forms/tutorials/301-http-ingestion)
+- [HTTP ingestion reference](/docs/forms/http-ingestion)
+
+---
+
+# Conditional routing
+
+> Skip the insurance page for minors — simple mode first, then the same rule in JSONLogic.
+
+# Conditional routing
+
+`Patient Intake` learns to branch. Adults walk through every
+page; minors skip the `insurance` page and land on `consent`.
+You'll wire the rule in the builder's **Simple mode** first,
+then read the generated JSONLogic in **Advanced mode** so the
+two views click into place.
+
+Finish [Prefill fields from your entity schema](/docs/forms/tutorials/201-entity-prefill).
+You need the annotated `patient` entity and a published
+`Patient Intake` form with `demographics` and `contact` pages.
+
+Routing rules live on a page. When the public renderer finishes
+a page, it walks that page's rules top-to-bottom; the first
+match wins, and the renderer jumps to the rule's
+`goto_page_id` instead of the next page in document order. No
+match falls through to the next page. The submit state has a
+reserved id of `__end__` — a rule pointing there short-circuits
+the rest of the form.
+
+## 1. Add the `insurance` page
+
+Earlier tutorials didn't need an `insurance` page; we'll add
+one now so there's something for minors to skip.
+
+In the Forms builder, open `Patient Intake`. In the **Pages**
+rail, click **Add page** and drop it between `contact` and
+`consent`. Name it `insurance`. Add two text fields:
+
+- `insurance_provider` — label `Insurance provider`.
+- `insurance_member_id` — label `Member ID`.
+
+This page only applies to adults. Minors will skip it via the
+rule you wire in step 3.
+
+## 2. Add an `age` field to `demographics`
+
+Open the `demographics` page and add one more field:
+
+- `age` — type `number`, label `Age`, required, min `0`,
+  max `120`.
+
+We use a plain numeric `age` field rather than computing it
+from `dob` because the JSONLogic evaluator that runs the
+routing rules ships with the standard op set — no custom
+`age_from_dob` op exists. Keeping the routing predicate on a
+raw number makes both the simple-mode UI and the advanced-mode
+JSON honest about what's being compared.
+
+## 3. Wire the rule in Simple mode
+
+Open the `contact` page and click **Routing**. Click **Add
+rule** and fill the simple-mode row:
+
+- Field: `age`
+- Op: `<`
+- Value: `18`
+- Goto page: `consent`
+
+Save the page. The branch now reads:
+
+```text
+                         (age >= 18)
+┌──────────────┐    ┌─────────┐ ──────▶ ┌───────────┐    ┌─────────┐
+│ demographics │ -> │ contact │         │ insurance │ -> │ consent │
+└──────────────┘    └─────────┘ ──────▶ └───────────┘    └─────────┘
+                         (age <  18)        ────────────▶
+```
+
+Open the admin preview. Enter `15` for `age` and fill the
+contact page — clicking **Next** jumps you to `consent`,
+skipping `insurance`. Reload the preview, enter `40`, and the
+form steps through `insurance` as before.
+
+The builder rejects rules with a dangling `goto_page_id`, an
+unknown field reference, a cycle in the page graph, or any
+page made unreachable by the new rule. Fix the rule in place
+— the save endpoint returns `422` with the offending rule's
+index and reason, and the panel highlights it inline.
+
+## 4. Read the same rule in Advanced mode
+
+Flip the **Routing** panel from **Simple** to **Advanced**.
+The simple row compiles to a JSONLogic predicate the
+evaluator can run:
+
+```json
+{ "<": [ { "var": "age" }, 18 ] }
+```
+
+The `goto_page_id` (`consent`) stays on the rule's wrapper
+record; only the predicate moves into the JSON. The same
+shape is what you'd hand-author for conditions Simple mode
+can't express — `and` / `or` trees, `in` over an enum,
+`!!` to check a checkbox is set. Anything the
+`jsonlogic-rs` evaluator accepts is fair game, because the
+public renderer hands the page's collected values straight
+to it.
+
+If you want minors to skip straight past `consent` too,
+swap `consent` for `__end__` in the `goto_page_id` field —
+the renderer short-circuits to the submit state.
+
+## 5. Save and re-publish
+
+Click **Save**, then **Publish**. The published version row
+freezes the routing graph the same way it freezes fields, so
+public submitters get the branch you just tested. Edits to
+the rule after this point need another **Publish** to reach
+the public URL.
+
+## Verify it worked
+
+Open the admin preview for `Patient Intake`:
+
+- Enter `age = 15`. Walk forward from `contact`. The
+  `insurance` page is skipped; you land on `consent`.
+- Reload, enter `age = 40`. The form steps through
+  `insurance` before `consent`, exactly as document order
+  suggests.
+
+If both runs match, the rule is live.
+
+## Next
+
+Continue with [File uploads and scanning](/docs/forms/tutorials/301-file-uploads-and-scanning).
+
+---
+
+# Reset Turnstile when you're locked out in dev
+
+> One admin action clears the per-tenant counters.
+
+# Reset Turnstile when you're locked out in dev
+
+When you'd use this — you've been hammering a public form in dev,
+anti-abuse flagged your IP, and Turnstile is now serving a managed
+challenge or the per-IP token bucket is empty. You want a clean slate
+without waiting for the refill window or 00:00 UTC.
+
+## 1. Clear the counters
+
+In the admin shell, open **Settings → Anti-abuse** and click **Reset
+counters**. Confirm in the modal. The action clears the per-tenant
+daily submission count, the per-IP token-bucket state for every form
+slug, and the short-lived Turnstile challenge history. It does not
+touch submission rows or any audit ledger — only the counters that
+gate future requests.
+
+## 2. Submit again
+
+The next submission from the same browser passes. Turnstile re-runs
+its invisible-first check from a clean slate, and the per-IP throttle
+starts the bucket full again at the burst allowance for your tier.
+
+Counters are tenant-scoped, so this only affects your own tenant —
+other tenants on the same instance are untouched. Use this freely in
+dev; in production it's still safe (the only state you're discarding
+is rate-limit accounting), but you'll want to know why you were
+throttled before clearing.
+
+## See also
+
+- [Anti-abuse tuning tutorial](/docs/forms/tutorials/301-anti-abuse)
+- [Anti-abuse reference](/docs/forms/anti-abuse)
+
+---
+
+# File uploads and scanning
+
+> Collect insurance card images; watch them flow through the three-layer scanner.
+
+# File uploads and scanning
+
+`Patient Intake` learns to collect insurance card images. You'll
+add `insurance_card_front` and `insurance_card_back` file fields
+to the `insurance` page, submit a happy-path image, then submit
+a deliberately bad file so you can watch the three-layer scanner
+transition each upload from `pending` to `clean` — or `rejected`.
+
+Finish [Conditional routing](/docs/forms/tutorials/301-conditional-routing).
+You need an `insurance` page and a published `Patient Intake`
+form with the age-based branch wired up.
+
+The public renderer doesn't bundle file bytes into the submit
+POST. Each file uploads on its own request the moment a user
+picks it, lands in `form_submission_attachments` with
+`scan_status='pending'`, and only gets claimed by the
+submission INSERT once the three-layer scanner clears it. That
+split is why the upload widget has a state to display in the
+first place — by the time the renderer is ready to POST, the
+attachment row already exists and is moving through scanner
+states server-side.
+
+## 1. Add the file fields
+
+In the Forms builder, open `Patient Intake` and switch to the
+`insurance` page. From the field palette, drag in a **File
+upload** field for `insurance_card_front`. Configure it:
+
+- `accepted_mime`: `image/jpeg, image/png`
+- `max_size`: `5` (MiB)
+- `multiple`: `false`
+
+Drag in a second file field for `insurance_card_back` with the
+same three settings. We keep `multiple` off because each card
+has exactly one front and one back — two single-file fields
+read more cleanly than one multi-file field, and they let the
+renderer label the slots in the UI without extra prose.
+
+The `accepted_mime` list is enforced two ways: the renderer's
+`<input accept>` filters the OS file picker, and the MIME-magic
+scanner re-checks the bytes after upload. The browser-side
+filter is convenience; the magic check is the gate.
+
+## 2. Save and re-publish
+
+Click **Save**, then **Publish**. The published version row
+freezes the file-field config the same way it froze the routing
+graph in the previous tutorial. The public renderer at the
+invite URL picks up the new fields on the next request.
+
+```text
+┌─────────┐      ┌──────────┐      ┌───────┐
+│ pending │ ───▶ │ scanning │ ───▶ │ clean │
+└─────────┘      └────┬─────┘      └───┬───┘
+                     │                │
+                     ▼                ▼
+               ┌──────────┐    submit handler claims
+               │ rejected │    attachments atomically
+               └──────────┘    with submission INSERT
+```
+
+Every uploaded attachment walks this graph. `pending` is the
+row's birth state — the bytes have landed on disk but no
+scanner has touched them yet. `scanning` covers the three
+layers in sequence: MIME magic on the leading bytes,
+VirusTotal hash lookup, and an LLM content classifier for
+image and document payloads. `clean` is the only terminal
+state the renderer will POST against; `rejected` carries a
+human-readable `scan_reason` the widget surfaces in place of
+the green check.
+
+## 3. Submit a happy-path image
+
+Open the public invite URL. Walk through `demographics` and
+`contact` with an adult age (so routing keeps you on the
+`insurance` page). Pick a normal JPEG for
+`insurance_card_front` — a phone photo of any rectangular
+card works.
+
+Watch the widget. The label transitions through `pending` →
+`scanning` → `clean`, usually within a second or two for a
+small image. Repeat for `insurance_card_back`. Once both
+slots are green, the **Submit** button enables and the
+submission POSTs.
+
+The renderer refuses to POST the submission while any
+attachment is still `scanning`. The backend's claim predicate
+(<code>scan_status='clean' AND submission_id IS NULL</code>)
+would 422 it anyway — failing client-side gives the user a
+clearer error and avoids a wasted round-trip.
+
+## 4. Submit a deliberately bad file
+
+Reload the public form and reach the `insurance` page again.
+This time, take any tiny `.exe` (Windows binaries, even
+trivial ones, work — what matters is the leading bytes are not
+a JPEG or PNG header) and rename it to `card.png` so the
+browser MIME filter lets it through the file picker.
+
+Upload it as `insurance_card_front`. The widget shows
+`pending`, flips to `scanning`, then lands on `rejected`. The
+rejection reason renders inline — something like *"MIME magic
+mismatch: declared image/png, detected application/x-dosexec."*
+The slot stays red and the **Submit** button stays disabled
+until you replace the file with a clean image.
+
+The other two scanner layers behave the same way from the
+renderer's perspective: a VirusTotal hash hit produces a
+*"known malicious file"* reason; an LLM content rejection
+produces a category-specific reason ("explicit content
+detected", etc.). Same `rejected` state, different
+`scan_reason`.
+
+## Verify it worked
+
+Submit the form once with two clean card images.
+
+- The bad-upload attempt was rejected with a human-readable
+  reason in the widget; nothing reached the database beyond
+  the original `form_submission_attachments` row marked
+  `rejected`.
+- The clean upload reached `clean`, the submission POSTed,
+  and both attachment rows were claimed atomically with the
+  submission INSERT.
+- After promoting the submission to a `patient` entity, the
+  two attachments appear in `entity_files` tied to the
+  promoted record — the promotion path re-parents the
+  attachments by id, no re-upload required.
+
+If all three line up, the file-upload pipeline is live.
+
+## Next
+
+Continue with [Anti-abuse](/docs/forms/tutorials/301-anti-abuse).
+
+---
+
+# Anti-abuse tuning
+
+> Turnstile, honeypot, daily cap — what each catches and how to reset when you're locked out in dev.
+
+# Anti-abuse tuning
+
+`Patient Intake` gets the full three-layer abuse shield turned on:
+Cloudflare Turnstile in front, a honeypot field behind it, and a
+hard ceiling of `200` submissions per UTC day. You'll publish, then
+prove each layer by tripping it on purpose.
+
+Finish [File uploads and scanning](/docs/forms/tutorials/301-file-uploads-and-scanning).
+You need a published `Patient Intake` form with the insurance-page
+file fields wired up.
+
+The three layers stack: Turnstile rejects automation before the
+request body is even parsed, the honeypot catches dumb form-fillers
+that breeze past Turnstile by filling every visible input, and the
+daily cap puts a ceiling on whatever still gets through. None of the
+three replaces the others — they catch different shapes of abuse.
+
+## 1. Open the Anti-abuse panel
+
+In the Forms builder, open `Patient Intake` and switch to the
+**Anti-abuse** panel in the form settings drawer. The panel holds
+three toggles and one numeric input — Turnstile, honeypot, and the
+daily cap. The defaults are conservative; this tutorial walks the
+dial up on all three.
+
+## 2. Enable Turnstile
+
+Flip the **Turnstile** toggle on. The widget renders below the last
+visible field on the public form and runs invisibly for most
+visitors; suspicious traffic gets a managed challenge. The submitted
+token rides on the submit POST and the server verifies it against
+Cloudflare's API before any other validation runs.
+
+Turnstile needs a tenant-level Cloudflare site key configured under
+**Settings → Integrations**. Without it the toggle saves but the
+widget can't render, and submissions return `400 Bad Request` with
+error code `challenge_failed` because the token is missing. Configure
+the key once per tenant, not per form.
+
+## 3. Enable the honeypot
+
+Flip the **Honeypot** toggle on. The renderer injects an extra
+field — wire name `forms_turnstile`, despite the misleading name —
+that is hidden from real users via CSS but present in the DOM. Most
+naive bots scrape the DOM and fill every input they find; a
+submission with `forms_turnstile` non-empty is rejected with
+`400 Bad Request` and error code `validation_failed`. No payload data
+is stored on a rejection.
+
+The honeypot catches a different population from Turnstile —
+specifically, automation that solves or bypasses the Cloudflare
+challenge but doesn't bother rendering the page. The two layers are
+cheap and overlap on purpose.
+
+## 4. Set the daily cap
+
+In the **Daily submission cap** input, type `200`. The cap is a
+per-tenant ceiling that resets at 00:00 UTC. Submissions beyond it
+return `429` with error code `tier_quota_exceeded` until the next
+day rolls over. Pick a number above your real expected volume but
+low enough that a runaway script gets stopped before it fills the
+attachments disk.
+
+## 5. Save and re-publish
+
+Click **Save**, then **Publish**. The published version row freezes
+the anti-abuse config the same way it froze field config and the
+routing graph in earlier tutorials. The public renderer at the
+invite URL picks up the new shields on the next request.
+
+The cap counters are per-tenant, not per-form, so a stress test
+against one form burns through the day's budget for all of them. In
+the admin Forms list, open the form's overflow menu and click
+**Anti-abuse → Reset counters**. That clears the per-tenant rate
+and daily-cap counters immediately. The same reset is documented
+under [Reset Turnstile in dev](/docs/forms/recipes/reset-turnstile-in-dev).
+
+```text
+POST submit
+   │
+   ▼
+┌──────────┐ fail  ┌────────────────────┐
+│ Turnstile│ ────▶ │ 400 / challenge_fail
+└────┬─────┘       └────────────────────┘
+     │ pass
+     ▼
+┌──────────┐ filled ┌────────────────────┐
+│ Honeypot │ ─────▶ │ 400 / validation_fail
+└────┬─────┘        └────────────────────┘
+     │ empty
+     ▼
+┌──────────┐ over   ┌──────────────────┐
+│ Day cap  │ ─────▶ │ 429 / tier_quota
+└────┬─────┘        └──────────────────┘
+     │ under
+     ▼
+submission INSERT
+```
+
+Read the diagram top to bottom: each layer either short-circuits the
+request with a specific outcome or hands off to the next. Nothing
+writes a row until all three pass. That ordering matters for the
+verification steps below — tripping the honeypot still consumes
+Turnstile's verify call but does not touch the cap.
+
+## Verify it worked
+
+Run the three tests in order. Reset counters between them if you
+exhaust the cap.
+
+- **Turnstile missing.** Open the public invite URL in a browser
+  with JavaScript disabled (or use curl with no `cf-turnstile-response`
+  field) and POST a submission. The response is `400 Bad Request` with
+  error code `challenge_failed`. No row lands in `form_submissions`.
+- **Honeypot filled.** Open the invite URL with JS on, then use
+  devtools to find the hidden `forms_turnstile` input and type
+  anything into it before submitting. The response is `400 Bad Request`
+  with error code `validation_failed`. No row lands in `form_submissions`
+  and no attachments are claimed.
+- **Cap exceeded.** In the **Anti-abuse** panel temporarily lower
+  the daily cap from `200` to `1`, save, and re-publish. Submit
+  once — it succeeds. Submit a second time — the response is `429`
+  with error code `tier_quota_exceeded`. Click **Reset counters**
+  to clear the lockout, then restore the cap to `200` and
+  re-publish.
+
+If all three tripwires fire as described, the shield is live.
+
+## Next
+
+Continue with [Custom CSS for branded forms](/docs/forms/tutorials/301-custom-css).
+
+---
+
+# Custom CSS
+
+> Wire your brand's exact hex tokens with per-form CSS — Enterprise only.
+
+# Custom CSS
+
+`Patient Intake` picks up the clinic's exact brand palette —
+`#0F5C7A` as the primary action color and `#E0F2F8` as the page
+surface — without forking the public renderer or touching tenant-wide
+theme tokens. The styling is per-form and ships with the published
+version.
+
+Finish [Anti-abuse tuning](/docs/forms/tutorials/301-anti-abuse).
+You need a published `Patient Intake` form with shields on.
+
+Custom CSS is gated by the `forms_custom_css` feature flag on the
+tenant. Lower tiers see the theme tokens panel but not the **Custom
+CSS** textarea. If the textarea is missing on an Enterprise tenant,
+confirm the flag is set under **Settings → Feature flags**.
+
+Tenant-wide theme tokens cover most branding needs in one shot, but
+clinics, law firms, and agencies routinely have a specific
+intake-form palette that differs from the rest of their tenant
+shell. Per-form CSS is the escape hatch — narrow, sanitized, and
+scoped so one form's rules can never bleed into another.
+
+## 1. Open the Custom CSS textarea
+
+Open `Patient Intake` in the Forms builder and switch to the
+**Theme** panel in the settings drawer. The panel shows the usual
+color, font, and spacing tokens at the top and a **Custom CSS**
+textarea below them. The textarea is empty by default.
+
+## 2. Paste the clinic palette
+
+Paste the following block into the textarea. It declares two CSS
+custom properties at `:root`, then wires them onto the submit button
+and the page surface.
+
+```css
+:root {
+  --form-primary: #0F5C7A;
+  --form-surface: #E0F2F8;
+}
+button[type="submit"] { background: var(--form-primary); color: white; }
+.form-page { background: var(--form-surface); }
+```
+
+Two custom properties keep the hex codes in one place — change them
+once and every selector that reads `var(--form-primary)` updates. If
+you have more buttons or accent surfaces to brand, extend the same
+pattern rather than sprinkling hex codes through individual rules.
+
+## 3. Save
+
+Click **Save**. The server-side sanitizer runs synchronously on save
+and either accepts the block whole or rejects it with `422` and the
+offending rule echoed back in the response body. Fix the rule the
+sanitizer named and save again. Sanitization is a save-time gate,
+not a render-time one — once a block is saved it has already passed.
+
+## 4. Confirm on the public form
+
+Open the public invite URL for `Patient Intake` in a fresh browser
+tab. The page background should render `#E0F2F8` and the
+**Submit** button should render `#0F5C7A`. If the colors don't
+land, check the **Theme** panel's tenant-wide tokens — a tenant
+token with higher specificity can override a per-form rule, and the
+fix is usually to bump the per-form selector's specificity rather
+than to weaken the tenant token.
+
+The sanitizer enforces four invariants. At-rules like `@import` and
+`@font-face` are stripped, so you cannot pull in remote stylesheets
+or remote fonts. Banned properties — `position: fixed` is the
+canonical example — are dropped from the declaration block they
+appear in. URL schemes other than `https:` and `data:image/*` are
+blocked, which kills `javascript:` and `http:` background images.
+Every rule is auto-scoped to
+`.form-public-shell[data-form-id="<id>"]` at save time, so one
+form's CSS can never leak into another form, the admin shell, or
+the tenant chrome. The scoping is transparent — you write
+`button[type="submit"] { ... }` and the saved rule reads
+`.form-public-shell[data-form-id="<id>"] button[type="submit"] { ... }`.
+
+## Verify it worked
+
+Run two checks in order.
+
+- **Good CSS lands.** Open the public invite URL. Use devtools to
+  confirm the **Submit** button computed `background-color` reads
+  `rgb(15, 92, 122)` — that's `#0F5C7A` — and the page surface
+  reads `rgb(224, 242, 248)` — that's `#E0F2F8`. Inspect any rule
+  in the Styles pane and confirm the selector is prefixed with
+  `.form-public-shell[data-form-id="<id>"]`.
+- **Bad CSS is rejected.** Back in the **Theme** panel, paste
+  `@import url(evil.css);` at the top of the textarea and click
+  **Save**. The save fails with `422` and the response body names
+  the offending rule. Remove the line and save again — the form
+  returns to a saving-clean state.
+
+If both checks pass, the per-form palette is live and the sanitizer
+is doing its job.
+
+## Next
+
+Continue with [HTTP ingestion](/docs/forms/tutorials/301-http-ingestion).
+
+---
+
+# Server-to-server submission
+
+> Pipe an upstream scheduler's POSTs into the form via the HTTP ingestion API.
+
+# Server-to-server submission
+
+An upstream scheduling system posts JSON straight at `Patient Intake`
+and the row lands in the submissions queue without anyone touching
+the public renderer. The result is indistinguishable from a walk-in
+patient filling the form on a kiosk.
+
+Finish [Custom CSS](/docs/forms/tutorials/301-custom-css). You need a
+published `Patient Intake` form and its form ID — copy it from the
+URL of the builder or from the form's row in **Forms → All forms**.
+
+The HTTP ingestion API is one `POST` per submission. The form's
+published schema is the contract: required fields must be present,
+typed fields are validated, and the response hands you a
+`submission_id` you can store upstream.
+
+## 1. Mint a PAT
+
+Open the admin portal and go to **Settings → API tokens → New**. Give
+the token a name a human will recognize three months from now
+(`scheduler-prod-ingest` beats `token-1`), then pick the scope
+`forms:ingest`. The portal shows the raw `fy_pat_…` value exactly
+once — copy it into your scheduler's secret store before you close
+the dialog. There is no recovery flow; a lost token is revoked and
+reminted.
+
+PAT semantics, scopes, and revocation are covered in
+[Authentication & Scopes](/docs/auth). The short version: PATs are
+SHA-256 hashed at rest, scoped explicitly, and never expire until
+you revoke them.
+
+## 2. POST the submission
+
+The endpoint is:
+
+```
+POST /api/v1/tenant/forms/:form_id/submissions
+```
+
+`:form_id` is the UUID of the published `Patient Intake` form.
+Submit with the PAT as a Bearer token and a JSON body whose
+`payload` object maps onto the form's field keys.
+
+```bash
+curl -X POST https://app.fastyoke.io/api/v1/tenant/forms/FORM_ID/submissions \
+  -H "Authorization: Bearer fy_pat_YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "payload": {
+      "first_name": "Alice",
+      "last_name": "Nguyen",
+      "dob": "1986-03-14",
+      "email": "alice.nguyen@example.com",
+      "phone": "+1-555-0142"
+    }
+  }'
+```
+
+The keys inside `payload` must match the field keys you set when you
+built `Patient Intake` — not the labels. If the scheduler emits
+slightly different names (`patient_first_name`, `birthdate`), remap
+them upstream rather than renaming fields in the form; the field
+keys are part of the schema and changing them invalidates earlier
+submissions in queries.
+
+If you plan to retry on network errors, add an `Idempotency-Key`
+header keyed off the upstream record (`scheduler-row-91824`). A
+retry with the same key and the same body returns `200` with the
+original `submission_id` instead of writing a duplicate row.
+
+## 3. Read the response
+
+On success the endpoint returns `201 Created`:
+
+```json
+{
+  "submission_id": "01jx3pabcdefghijklmn",
+  "was_idempotent_replay": false
+}
+```
+
+Store the `submission_id` against the upstream record so the
+scheduler can prove the handoff happened. If you sent an
+`Idempotency-Key` and this is a replay, the status is `200 OK` and
+`was_idempotent_replay` is `true` — the original `submission_id` is
+returned and no new row is written.
+
+The error envelope is `{ "error": { "code": "...", "message": "..." } }`.
+A `422 validation_failed` includes a `field_errors` array naming the
+field key and the reason — that's where you'll catch missing
+required fields or a malformed `dob`. See
+[HTTP ingestion API](/docs/forms/http-ingestion) for the full code
+table.
+
+## 4. Confirm in the admin
+
+Open **Forms → Patient Intake → Submissions**. The row appears at
+the top of the list with the same timestamp the server stamped, the
+field values you posted, and the source labelled as an ingest. The
+submission is a first-class row: it shows up in exports, in CSV
+downloads, and in any downstream FSM job the form fires.
+
+The ingest endpoint requires a `fy_pat_` token with the
+`forms:ingest` scope — it is admin-authenticated, not anonymous. The
+public-submit flow at `POST /forms/:slug/submit` is the inverse: no
+auth, but Turnstile / honeypot / daily cap shields apply. The
+ingest path skips Turnstile because the token is the proof of
+identity; rate limiting still applies (a burst of 60 requests per
+`(token, form)` pair, then `429` with `Retry-After`). Don't reach
+for ingest to bypass abuse controls — reach for it when the caller
+is a trusted backend.
+
+## Verify it worked
+
+- **Row landed.** Open **Patient Intake → Submissions** and confirm
+  the new row's field values match the JSON you posted. Click into
+  the row and confirm `first_name`, `last_name`, `dob`, `email`, and
+  `phone` are all populated.
+- **Source is ingest.** In the submission detail panel, the source /
+  origin metadata identifies the row as an API ingest rather than a
+  public-renderer submit. If your tenant surfaces a metadata badge,
+  it reads "ingest"; if it surfaces the raw user-agent, you'll see
+  your scheduler's HTTP client string instead of a browser UA.
+- **Idempotency holds.** Re-run the same `curl` with the same
+  `Idempotency-Key` and confirm the response status flips to `200`
+  with `"was_idempotent_replay": true` and the same `submission_id`.
+  The submissions list does not grow a second row.
+
+If all three checks pass, the upstream scheduler can hand off to
+`Patient Intake` without any human touching the form.
+
+## Next
+
+Continue with [Vanity filenames](/docs/forms/tutorials/301-vanity-filenames).
+
+---
+
+# Vanity PDF filenames
+
+> Replace the default `submission-<id>.pdf` with a readable per-submission filename.
+
+# Vanity PDF filenames
+
+Every `Patient Intake` submission's `pdf_download_url` ends in a
+readable, scenario-specific filename like
+`patient-intake-nguyen-2026-05-15.pdf` instead of the opaque default
+`form-submission-<id>-v1.pdf`. The pattern resolves at submit time
+and sticks with the submission forever — regenerating the PDF reuses
+the same filename.
+
+Finish [Server-to-server submission](/docs/forms/tutorials/301-http-ingestion).
+You need a published `Patient Intake` form with PDF rendering already
+turned on, and at least one submission so you can compare the
+`pdf_download_url` before and after.
+
+The pattern is a small template string of literal text and `{token}`
+placeholders. The resolver substitutes each token, slugifies the
+result, caps it at 200 characters, and appends `.pdf`. Patterns are
+available on Pro and above.
+
+## 1. Open the per-form override
+
+Open `Patient Intake` in the builder and scroll to **PDF Designer →
+Filename**. This is the per-form override — a non-empty value here
+takes precedence over the tenant-wide default at **Settings →
+Filename Defaults**. Leave the tenant default alone for this tutorial
+so you can see the override take effect on just this form.
+
+## 2. Set the pattern
+
+Enter:
+
+```
+{form_name}-{field:last_name}-{date}
+```
+
+Three tokens, two literal hyphens. At submit time:
+
+- `{form_name}` resolves to the form's slugified name —
+  `patient-intake`.
+- `{field:last_name}` resolves to the submitter's `last_name`
+  field value, slugified. The field key must exist in the
+  published schema; if you marked `last_name` as PII, the
+  validator rejects the pattern with `pii_field_blocked` —
+  swap to a non-PII reference field (an MRN, a visit number)
+  or unflag `last_name` if it's safe to expose in filenames.
+- `{date}` resolves to the submit date in UTC as
+  `YYYY-MM-DD`.
+
+Diacritics fold to ASCII, spaces collapse to `-`, and adjacent
+separators de-dup automatically. If a token resolves to an empty
+string (an optional field left blank) the adjacent hyphen is
+collapsed rather than left dangling.
+
+## 3. Save and re-publish
+
+Save the form. The pattern is validated synchronously — an unknown
+token name returns `unknown_token`, an unknown field key returns
+`unknown_field`, and literal text outside `[A-Za-z0-9._-]` returns
+`unsafe_chars`. Fix any errors inline, then re-publish so new
+submissions pick up the override. Older submissions keep whatever
+filename they resolved to at the time — the resolver never renames.
+
+The built-in tokens are `{form_name}`, `{form_version}`,
+`{submission_id}`, `{submission_id_short}`, `{date}`,
+`{datetime}`, and `{counter}`. Field-value tokens use
+`{field:<key>}` where `<key>` is a non-PII field key in the
+current schema. Tenant variables use `{var:<key>}` where
+`<key>` is defined at **Settings → Filename Defaults →
+Variables**. Full reference: [Vanity PDF filenames](/docs/forms/pdf-vanity-filenames).
+
+## Verify it worked
+
+Submit `Patient Intake` twice — once with `last_name = Nguyen`,
+once with `last_name = O'Brien` — using the ingest curl from the
+previous tutorial or the public renderer. Then:
+
+- Open each submission's detail panel and copy the
+  `pdf_download_url`. The first URL should end in
+  `patient-intake-nguyen-<today>.pdf`; the second in
+  `patient-intake-obrien-<today>.pdf` (the apostrophe is
+  stripped by the slugifier).
+- Download both PDFs and confirm the filename the browser saves
+  matches the URL suffix — the server sets `Content-Disposition`
+  from the same resolved name.
+- Regenerate one of the PDFs from the admin panel. The
+  regenerated copy keeps the original filename; the resolver
+  does not re-run with the current pattern.
+
+If both URLs carry the templated filename and the regenerated PDF
+matches the original, the override is wired correctly.
+
+## Next
+
+This is the last tutorial in the guided arc. From here:
+
+- [Recipes index](/docs/forms/recipes) — short, copy-pasteable
+  patterns for specific problems (conditional routing, file
+  uploads, webhook fan-out).
+- [Forms reference](/docs/forms/builder) — the full builder
+  reference: every field type, every validator, every PDF
+  renderer mode, and the public-submit and ingest API
+  contracts in detail.
 
 ---
 
@@ -4781,6 +7214,10 @@ append-only `event_log` carries the full audit trail.
   payload templates.
 - [Entities](/docs/entities) — annotations, the Page Designer, and
   entity-scoped pages.
+
+## Next
+
+For the full guided arc — multi-page forms, PDF templates, signatures, branching, custom CSS — see the [Forms tutorials](/docs/forms/tutorials).
 
 ---
 

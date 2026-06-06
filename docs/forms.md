@@ -13,6 +13,8 @@ declarative actions.
 
 ## What's covered
 
+- [Tutorials](/docs/forms/tutorials) — guided 101 → 201 → 301 path that builds one Patient Intake form across every feature.
+- [Recipes](/docs/forms/recipes) — quick, isolated single-task pages.
 - [Tier entitlements](/docs/forms/tiers) — what each tier unlocks for the Forms surface.
 - [Anti-abuse](/docs/forms/anti-abuse) — Turnstile, honeypot, daily caps, rate limit.
 - [Embed forms](/docs/forms/embed) — drop a form into any page via the SDK.

@@ -56,8 +56,34 @@
 ## Forms
 
 - [Forms Builder](https://www.fastyoke.io/docs/forms/builder): Pages, sections, field types, routing, themes, attachments.
+- [Recipes](https://www.fastyoke.io/docs/forms/recipes): Short, isolated single-task pages for experienced builders.
+- [Tutorials](https://www.fastyoke.io/docs/forms/tutorials): Guided 101 → 201 → 301 path that builds one clinic Patient Intake form across every Forms Builder feature.
 - [Forms](https://www.fastyoke.io/docs/forms): Build public or authenticated forms that route submissions into entities, jobs, or both.
+- [Required email with confirmation copy](https://www.fastyoke.io/docs/forms/recipes/required-email-with-confirmation): Force an email field, surface a clear "we'll email you" line so the submitter knows what's coming.
+- [Build your first form](https://www.fastyoke.io/docs/forms/tutorials/101-build-first-form): Create the Patient Intake form — two pages, six fields, publish.
+- [Skip a page when a checkbox is unchecked](https://www.fastyoke.io/docs/forms/recipes/skip-page-on-checkbox): Use a routing rule to bypass a page based on a boolean.
+- [Style and brand your form](https://www.fastyoke.io/docs/forms/tutorials/101-style-and-brand): Apply a theme, upload a logo and hero, customize the header and submit-button copy.
+- [Make a field effectively required only on a later page](https://www.fastyoke.io/docs/forms/recipes/conditional-required-by-page): Keep a field optional early, then use a routing rule to block navigation past a later page until it's filled.
+- [Share with an invite or embed](https://www.fastyoke.io/docs/forms/tutorials/101-share-invite-and-embed): Mint a kiosk invite link and embed the form on your marketing site.
+- [Rename the downloaded PDF per submission](https://www.fastyoke.io/docs/forms/recipes/rename-pdf-per-submission): Set a vanity filename pattern once; every submission's download link uses it.
 - [Forms tier entitlements](https://www.fastyoke.io/docs/forms/tiers): What each tier unlocks for the Forms surface — active form count, daily submission ceiling, anti-abuse posture, PDF rendering, badge visibility.
+- [Attach an AcroForm template](https://www.fastyoke.io/docs/forms/tutorials/201-acroform-template): Upload a fillable PDF, map form fields to AcroForm fields, render on submit.
+- [Embed a form on a Next.js page](https://www.fastyoke.io/docs/forms/recipes/embed-on-nextjs): Drop the embed snippet onto any page; works in App Router and Pages Router.
+- [Place an Overlay template](https://www.fastyoke.io/docs/forms/tutorials/201-overlay-template): Drop value regions onto any PDF — works on scans, no AcroForm needed.
+- [Mint a one-shot invite link](https://www.fastyoke.io/docs/forms/recipes/mint-one-shot-invite): Single-use, expires when consumed — perfect for a personal email.
+- [Collect signatures](https://www.fastyoke.io/docs/forms/tutorials/201-signatures): Add a signature field and wire it into both your AcroForm and your Overlay template.
+- [Switch a form's theme without rebuilding](https://www.fastyoke.io/docs/forms/recipes/switch-theme-without-rebuild): Theme change is a single save — no need to re-author the form.
+- [Promote submissions into entity records](https://www.fastyoke.io/docs/forms/tutorials/201-promote-to-entity): Spawn a job per submission, then fire a transition that copies the submission into a Patient record.
+- [Add a signature line to an AcroForm template](https://www.fastyoke.io/docs/forms/recipes/add-signature-to-acroform): Bind a signature field to a PDF widget — same captured image flows in.
+- [Prefill fields from your entity schema](https://www.fastyoke.io/docs/forms/tutorials/201-entity-prefill): Annotate the patient entity once; the form's labels, requireds, and select options come along automatically.
+- [Test a form locally with the HTTP ingestion API](https://www.fastyoke.io/docs/forms/recipes/local-test-via-http-ingestion): Skip the UI — POST a payload directly to verify your wiring.
+- [Conditional routing](https://www.fastyoke.io/docs/forms/tutorials/301-conditional-routing): Skip the insurance page for minors — simple mode first, then the same rule in JSONLogic.
+- [Reset Turnstile when you're locked out in dev](https://www.fastyoke.io/docs/forms/recipes/reset-turnstile-in-dev): One admin action clears the per-tenant counters.
+- [File uploads and scanning](https://www.fastyoke.io/docs/forms/tutorials/301-file-uploads-and-scanning): Collect insurance card images; watch them flow through the three-layer scanner.
+- [Anti-abuse tuning](https://www.fastyoke.io/docs/forms/tutorials/301-anti-abuse): Turnstile, honeypot, daily cap — what each catches and how to reset when you're locked out in dev.
+- [Custom CSS](https://www.fastyoke.io/docs/forms/tutorials/301-custom-css): Wire your brand's exact hex tokens with per-form CSS — Enterprise only.
+- [Server-to-server submission](https://www.fastyoke.io/docs/forms/tutorials/301-http-ingestion): Pipe an upstream scheduler's POSTs into the form via the HTTP ingestion API.
+- [Vanity PDF filenames](https://www.fastyoke.io/docs/forms/tutorials/301-vanity-filenames): Replace the default `submission-<id>.pdf` with a readable per-submission filename.
 - [Embed forms on your own site](https://www.fastyoke.io/docs/forms/embed): Drop a single script tag into any page to render a FastYoke form inline, with theme overrides and origin allowlists.
 - [HTTP ingestion API](https://www.fastyoke.io/docs/forms/http-ingestion): Server-to-server submission of form data via REST. Authenticate with a tenant API token, post a JSON payload, get a submission ID back.
 - [Anti-abuse for public forms](https://www.fastyoke.io/docs/forms/anti-abuse): Turnstile challenges, honeypots, daily caps, and per-IP rate limits keep public form submissions clean without a CAPTCHA wall.
