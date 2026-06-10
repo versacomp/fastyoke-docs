@@ -9,6 +9,7 @@
 - [Terms of Service — FastYoke](https://www.fastyoke.io/terms): The terms governing your use of FastYoke — eligibility, accounts, acceptable use, SMS messaging consent, billing, and the standard disclaimers and liability limits.
 - [SMS Opt-In — FastYoke](https://www.fastyoke.io/sms-opt-in): How FastYoke users opt in to receive transactional SMS messages, with screenshots of the in-product consent screen and the seven required disclosures.
 - [security-fixes](https://www.fastyoke.io/security-fixes)
+- [Yoke Architect — A Thesis](https://www.fastyoke.io/yoke-architect)
 
 ## Documentation
 
