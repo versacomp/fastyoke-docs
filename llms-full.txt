@@ -1677,8 +1677,9 @@ list + create + update + delete page using these hooks.
 The app provides three core entities and everything you need to run them:
 
 - **Projects** — top-level containers for related work. Each has a name, optional description, owner, and color for visual organization.
-- **Tasks** — work items that live in projects (or stand alone as inbox-style items). Track title, description, assignee, priority, due date, and custom labels.
+- **Tasks** — work items that live in projects (or stand alone as inbox-style items). Track title, description, assignee, priority, due date, and custom labels. A task can also be broken into **sub-tasks** — child tasks shown right on the parent's detail page with their current status and an "X of Y done" summary.
 - **Comments** — threaded notes on tasks. Each comment carries author, body, and timestamps for team discussion.
+- **Time entries** — log minutes against any task. Each task's detail page shows its entries with a running total, and a workspace-wide **Time Log** page lists them all.
 
 All task state is managed through a **Kanban board** with five lanes: *Backlog*, *To Do*, *In Progress*, *Blocked*, and *Done*. Drag tasks between lanes to advance work. Unblock a task manually, reopen completed work if needed, or use the admin override to force a state change with a reason.
 
@@ -1687,24 +1688,28 @@ All task state is managed through a **Kanban board** with five lanes: *Backlog*,
 1. Go to Logic Cores (sidebar → **Logic Cores**).
 2. Find **Simple Project Tracker** in the free apps section.
 3. Click **Install**.
-4. Choose whether to load demo data (3 sample projects, 14 tasks, 6 comments). Demo mode helps you see the board in action; you can delete it anytime.
+4. Choose whether to load demo data (3 sample projects, 14 tasks including a few sub-tasks, 6 comments, and a handful of time entries). Demo mode helps you see the board in action; you can delete it anytime.
 5. Done. The app appears in your workspace sidebar as **Projects**.
 
 ## In the app
 
-Once installed, you'll see five main pages:
+Once installed, you'll see these main pages:
 
 | Page | What it does |
 |---|---|
 | **Dashboard** | Quick overview — your active tasks and a list of all projects. |
 | **Board** | Kanban view grouped by task state. Drag to transition; click a task to open its detail page. |
+| **My Tasks** | Just the tasks assigned to you, across every project — filtered automatically by your account's email. |
 | **Projects** | Full list of projects. Click to open, or edit inline. |
 | **Tasks** | Full list of tasks across all projects (and orphaned inbox items). Sort and filter by project, assignee, or priority. |
 | **Comments** | Activity stream of all comments on all tasks. |
+| **Time Log** | Every time entry logged across all tasks. |
 
 Click any task to open its **detail page**, where you can:
 
 - Edit task fields (title, description, assignee, priority, due date, labels).
+- See and advance its **sub-tasks**, with an "X of Y done" roll-up of their status.
+- Log **time** against the task and see the running total.
 - See the full comment thread.
 - Advance the task through its lifecycle using the state buttons.
 
@@ -1720,13 +1725,12 @@ The Kanban board and task lifecycle are powered by FastYoke's FSM Designer. You 
 
 Every tenant's projects, tasks, and comments are isolated. Uninstalling the app cleanly removes all seeded demo data while preserving the FSM schema (in case you create tasks later and want the same workflow).
 
-## What's not included (v1)
+## What's not included
 
 - Attachments on tasks or comments.
 - Due-date notifications or reminders.
-- Time tracking or estimation.
-- Sub-tasks.
-- Real assignee management (currently free-text; integration with team members is a future enhancement).
+- Start/stop timers (time is logged as manual minute entries).
+- Real assignee management — assignee is free-text today. The **My Tasks** page matches your account's email against the assignee field, so set assignees to teammates' emails to make it work for everyone.
 
 These are deliberately simple starting points so you can focus on core workflow. If you need any of these, add them via the Annotation editor and the detail-page renderer will pick them up automatically.
 
