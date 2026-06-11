@@ -51,6 +51,7 @@ The Sovereignty Triad
 #title
 Three guarantees you won't get from a typical LCAP
 
+#default
 ::feature-grid{columns="3"}
   ::feature-card{title="01. UI/UX Sovereignty (Next.js & Astro)" summary="Stop compromising your user experience with generic, drag-and-drop dashboards. FastYoke's Advanced App Builder generates standard Next.js and Astro applications. Deploy on [Vercel via our marketplace](/pricing#hosting), or any host you already use — you own the frontend repository."}
   ::
@@ -74,6 +75,7 @@ How it works
 #title
 The primitives behind the sovereignty
 
+#default
 ::two-col-row
 #title
 Sandboxed guards
@@ -107,6 +109,7 @@ WCAG 2.1 AA enforced in CI. VPAT-ready.
 #lede
 Every PR runs Playwright + axe-core across every route in the admin SPA. Brand color saves are mathematically validated against WCAG 1.4.3 contrast thresholds — the platform offers a one-click compliant shade or refuses the save. ARIA live regions and a focus-trap modal primitive ship at the layout root. The procurement document writes itself.
 
+#default
 ::feature-grid{columns="3"}
   ::feature-card{title="Axe-core CI gate" summary="WCAG 2.1 AA structural checks fail the build on critical or serious violations. Allowlist entries auto-expire after 90 days — there's no mute-and-forget path."}
   ::
@@ -124,6 +127,7 @@ TypeScript
 #caption
 Live workflow state in a dozen lines
 
+#default
 ```tsx title="JobPage.tsx"
 import { useJob, WorkflowHistory, useTransitionJob } from '@fastyoke/sdk';
 

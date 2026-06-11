@@ -1,15 +1,21 @@
+---
+title: Security Fixes — FastYoke
+summary: Known security findings and their fix status across FastYoke releases.
+order: 6
+---
+
 <!--
   Curation note: add a new ::security-fix block here in the same
   CHANGELOG-curation session where you bless the corresponding
   ### Security bullet. Keep prose plain-English. NEVER link to
   the private fastyoke2 GitHub repo. External authorities (RUSTSEC
   / GHSA / CVE / vendor advisories) only.
+
+  Per-fix YAML frontmatter (--- ... ---) inside ::security-fix is
+  intentionally avoided — the inner `---` confuses the MDC parser when
+  ::security-fix is nested inside ::marketing-section and detaches every
+  block after the first from the band. Pass props inline instead.
 -->
----
-title: Security Fixes — FastYoke
-summary: Known security findings and their fix status across FastYoke releases.
-order: 6
----
 
 ::hero{eyebrow="Trust" title="Security fixes" tagline="A running log of known security findings and the releases that resolved them."}
 ::
@@ -38,14 +44,7 @@ and under triage.
 
 ::marketing-section{band="gray" maxWidth="6xl"}
 
-::security-fix
----
-title: Admin session tokens moved out of browser storage (XSS hardening)
-status: fixed
-fixedIn: "3.16.0"
-fixedAt: "2026-06-04"
----
-
+::security-fix{title="Admin session tokens moved out of browser storage (XSS hardening)" status="fixed" fixedIn="3.16.0" fixedAt="2026-06-04"}
 The admin application previously kept its session token (a JWT) in the
 browser's `localStorage`. A script injected through a cross-site-scripting
 flaw could read it from storage and reuse it elsewhere. The token is now
@@ -58,14 +57,7 @@ rather than a portable, stealable token. The platform-admin and
 organization-admin consoles received the same treatment.
 ::
 
-::security-fix
----
-title: Stricter origin matching for embedded-form framing
-status: fixed
-fixedIn: "3.16.0"
-fixedAt: "2026-06-04"
----
-
+::security-fix{title="Stricter origin matching for embedded-form framing" status="fixed" fixedIn="3.16.0" fixedAt="2026-06-04"}
 Tenants choose which sites may embed their hosted forms in an iframe, and
 FastYoke enforces that allow-list with a Content-Security-Policy
 `frame-ancestors` directive. Origin comparison is now scheme-exact: a bare
@@ -76,17 +68,7 @@ allowed host could satisfy the check. No abuse was observed; this tightens the
 embedding boundary against a downgraded-origin framing attempt.
 ::
 
-::security-fix
----
-title: Uninitialized memory disclosure in the ws library (build-time dependency)
-status: fixed
-fixedIn: "3.16.0"
-fixedAt: "2026-06-04"
-advisory:
-  label: GHSA-58qx-3vcg-4xpx
-  url: https://github.com/advisories/GHSA-58qx-3vcg-4xpx
----
-
+::security-fix{title="Uninitialized memory disclosure in the ws library (build-time dependency)" status="fixed" fixedIn="3.16.0" fixedAt="2026-06-04" advisoryLabel="GHSA-58qx-3vcg-4xpx" advisoryUrl="https://github.com/advisories/GHSA-58qx-3vcg-4xpx"}
 A moderate advisory (CVE-2026-45736) in the `ws` Node WebSocket library
 reported that `websocket.close()` could disclose uninitialized memory when
 given a typed-array reason argument. In FastYoke `ws` appears only as a
@@ -98,17 +80,7 @@ path. We updated to `ws` ≥ 8.20.1 to clear the advisory and keep the
 dependency tree clean.
 ::
 
-::security-fix
----
-title: TLS hostname-verification regression in lettre's boring-tls backend
-status: fixed
-fixedIn: "3.1.2"
-fixedAt: "2026-05-15"
-advisory:
-  label: RUSTSEC-2026-0141
-  url: https://rustsec.org/advisories/RUSTSEC-2026-0141
----
-
+::security-fix{title="TLS hostname-verification regression in lettre's boring-tls backend" status="fixed" fixedIn="3.1.2" fixedAt="2026-05-15" advisoryLabel="RUSTSEC-2026-0141" advisoryUrl="https://rustsec.org/advisories/RUSTSEC-2026-0141"}
 A bug in lettre 0.11.21's boring-tls integration silently disabled TLS
 hostname verification for callers on that backend. FastYoke compiles lettre
 with rustls, so no shipped release of FastYoke was exposed to the vulnerable
@@ -116,14 +88,7 @@ code path. We bumped to 0.11.22 to clear the advisory and remove the flagged
 crate from our dependency tree.
 ::
 
-::security-fix
----
-title: Production CORS now refuses to start without an allow-list
-status: fixed
-fixedIn: "3.1.0"
-fixedAt: "2026-05-15"
----
-
+::security-fix{title="Production CORS now refuses to start without an allow-list" status="fixed" fixedIn="3.1.0" fixedAt="2026-05-15"}
 The backend previously fell back to a permissive
 `Access-Control-Allow-Origin: *` when `CORS_ALLOWED_ORIGINS` was unset. We
 changed production deploys to refuse to start without an explicit allow-list,
@@ -132,28 +97,14 @@ local-dev environments keep the permissive fallback so browser-based testing
 isn't blocked.
 ::
 
-::security-fix
----
-title: API-layer audit remediation
-status: fixed
-fixedIn: "3.1.0"
-fixedAt: "2026-05-15"
----
-
+::security-fix{title="API-layer audit remediation" status="fixed" fixedIn="3.1.0" fixedAt="2026-05-15"}
 We ran a comprehensive audit of the API layer covering tenant-isolation gaps,
 SSRF egress vectors, authentication hardening, and reflected XSS surfaces.
 All findings were remediated and shipped before any release of v3 reached
 general availability.
 ::
 
-::security-fix
----
-title: Connection-listing endpoints now require explicit permission
-status: fixed
-fixedIn: "3.1.0"
-fixedAt: "2026-05-15"
----
-
+::security-fix{title="Connection-listing endpoints now require explicit permission" status="fixed" fixedIn="3.1.0" fixedAt="2026-05-15"}
 The endpoints that list and read integration connections previously allowed
 any authenticated identity to enumerate which providers a tenant had
 configured — a useful reconnaissance signal for an attacker holding a
@@ -162,14 +113,7 @@ connection creation and deletion. The cancel endpoint for FSM jobs was also
 tightened to resolve the tenant id from the session, not from request input.
 ::
 
-::security-fix
----
-title: Per-route rate limiting on unauthenticated surfaces
-status: fixed
-fixedIn: "3.1.0"
-fixedAt: "2026-05-15"
----
-
+::security-fix{title="Per-route rate limiting on unauthenticated surfaces" status="fixed" fixedIn="3.1.0" fixedAt="2026-05-15"}
 Three unauthenticated request paths — login, invitation acceptance, and
 public form submission — previously had no per-IP throttle and were bounded
 only by CPU. Each now mounts a token-bucket limiter with a `Retry-After`
@@ -178,7 +122,5 @@ IP; form submission throttles per `(source IP, form slug)` so cross-form
 abuse from one IP is caught while a single user submitting to multiple forms
 is not penalised.
 ::
-
-<p class="mt-12 text-xs" style="color: var(--brand-text-secondary)">Last updated: 2026-06-04</p>
 
 ::

@@ -37,6 +37,7 @@ The Sovereignty Triad
 #title
 Three guarantees you won't get from a typical LCAP
 
+#default
   ::feature-card{title="01. UI/UX Sovereignty (Next.js & Astro)" summary="Stop compromising your user experience with generic, drag-and-drop dashboards. FastYoke's Advanced App Builder generates standard Next.js and Astro applications. Deploy on [Vercel via our marketplace](/pricing#hosting), or any host you already use — you own the frontend repository."}
   ::
   ::feature-card{title="02. Logic Sovereignty (Rust / Wasm)" summary="Ditch slow, proprietary scripting languages. FastYoke's execution layer is powered by a sub-microsecond Rust engine. Your core business logic is compiled to WebAssembly and rigidly enforced by a state machine. It runs anywhere, at edge speeds."}
@@ -54,6 +55,7 @@ How it works
 #title
 The primitives behind the sovereignty
 
+#default
 #title
 Sandboxed guards
 
@@ -80,6 +82,7 @@ WCAG 2.1 AA enforced in CI. VPAT-ready.
 #lede
 Every PR runs Playwright + axe-core across every route in the admin SPA. Brand color saves are mathematically validated against WCAG 1.4.3 contrast thresholds — the platform offers a one-click compliant shade or refuses the save. ARIA live regions and a focus-trap modal primitive ship at the layout root. The procurement document writes itself.
 
+#default
   ::feature-card{title="Axe-core CI gate" summary="WCAG 2.1 AA structural checks fail the build on critical or serious violations. Allowlist entries auto-expire after 90 days — there's no mute-and-forget path."}
   ::
   ::feature-card{title="Theme contrast on save" summary="Branding hex codes validated against 4.5:1 / 3:1 thresholds in real time. Auto-suggests the nearest compliant shade; explicit bypass writes an audit row to a tenant-scoped, append-only ledger."}
@@ -93,6 +96,7 @@ TypeScript
 #caption
 Live workflow state in a dozen lines
 
+#default
 ```tsx title="JobPage.tsx"
 import { useJob, WorkflowHistory, useTransitionJob } from '@fastyoke/sdk';
 
@@ -952,6 +956,111 @@ non-SMS notifications (e.g., email).
 
 ---
 
+# Security Fixes — FastYoke
+
+> Known security findings and their fix status across FastYoke releases.
+
+<!--
+  Curation note: add a new ::security-fix block here in the same
+  CHANGELOG-curation session where you bless the corresponding
+  ### Security bullet. Keep prose plain-English. NEVER link to
+  the private fastyoke2 GitHub repo. External authorities (RUSTSEC
+  / GHSA / CVE / vendor advisories) only.
+
+  Per-fix YAML frontmatter (--- ... ---) inside ::security-fix is
+  intentionally avoided — the inner `---` confuses the MDC parser when
+  ::security-fix is nested inside ::marketing-section and detaches every
+  block after the first from the band. Pass props inline instead.
+-->
+
+
+
+<section class="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
+
+FastYoke publishes each material security fix once it ships. This page lists
+known findings — both ones we found internally and ones reported by customers
+or external researchers — and shows the release that resolved each. For our
+broader privacy posture and legal terms, see [Privacy](/privacy) and
+[Terms](/terms).
+
+Email **security@fastyoke.io** with steps to reproduce and any impact you've
+observed. We acknowledge new reports within two business days.
+
+Status: **Fixed** — resolved in the listed release; customers on that version
+or newer are not exposed. **Mitigated** — a compensating control prevents
+exploitation; a code-level fix is pending. **Investigating** — acknowledged
+and under triage.
+
+</section>::
+
+
+The admin application previously kept its session token (a JWT) in the
+browser's `localStorage`. A script injected through a cross-site-scripting
+flaw could read it from storage and reuse it elsewhere. The token is now
+carried in an `HttpOnly`, `Secure`, `SameSite=Strict` cookie that page scripts
+cannot read, and it is no longer written to `localStorage`; the live-updates
+WebSocket also authenticates from that cookie instead of a token placed in the
+URL. This is defense-in-depth — we have no report of an exploit — that limits
+the reach of any future cross-site-scripting flaw to a single browser tab
+rather than a portable, stealable token. The platform-admin and
+organization-admin consoles received the same treatment.
+
+Tenants choose which sites may embed their hosted forms in an iframe, and
+FastYoke enforces that allow-list with a Content-Security-Policy
+`frame-ancestors` directive. Origin comparison is now scheme-exact: a bare
+host on the allow-list matches only its `https://` origin, and an entry that
+already includes a scheme matches that scheme exactly. Previously the scheme
+was disregarded when comparing, so an insecure (`http://`) variant of an
+allowed host could satisfy the check. No abuse was observed; this tightens the
+embedding boundary against a downgraded-origin framing attempt.
+
+A moderate advisory (CVE-2026-45736) in the `ws` Node WebSocket library
+reported that `websocket.close()` could disclose uninitialized memory when
+given a typed-array reason argument. In FastYoke `ws` appears only as a
+build-, development-, and test-time transitive dependency (Nuxt tooling and
+the test DOM environment); the shipped product uses the browser's native
+WebSocket on the client and a Rust WebSocket server on the backend — neither
+is the `ws` library — so no shipped release was exposed to the vulnerable
+path. We updated to `ws` ≥ 8.20.1 to clear the advisory and keep the
+dependency tree clean.
+
+A bug in lettre 0.11.21's boring-tls integration silently disabled TLS
+hostname verification for callers on that backend. FastYoke compiles lettre
+with rustls, so no shipped release of FastYoke was exposed to the vulnerable
+code path. We bumped to 0.11.22 to clear the advisory and remove the flagged
+crate from our dependency tree.
+
+The backend previously fell back to a permissive
+`Access-Control-Allow-Origin: *` when `CORS_ALLOWED_ORIGINS` was unset. We
+changed production deploys to refuse to start without an explicit allow-list,
+matching the fail-closed posture used for the JWT signing secret. Sandbox and
+local-dev environments keep the permissive fallback so browser-based testing
+isn't blocked.
+
+We ran a comprehensive audit of the API layer covering tenant-isolation gaps,
+SSRF egress vectors, authentication hardening, and reflected XSS surfaces.
+All findings were remediated and shipped before any release of v3 reached
+general availability.
+
+The endpoints that list and read integration connections previously allowed
+any authenticated identity to enumerate which providers a tenant had
+configured — a useful reconnaissance signal for an attacker holding a
+low-privilege token. They now require the same permission that gates
+connection creation and deletion. The cancel endpoint for FSM jobs was also
+tightened to resolve the tenant id from the session, not from request input.
+
+Three unauthenticated request paths — login, invitation acceptance, and
+public form submission — previously had no per-IP throttle and were bounded
+only by CPU. Each now mounts a token-bucket limiter with a `Retry-After`
+response on rejection. Login and invitation acceptance throttle per source
+IP; form submission throttles per `(source IP, form slug)` so cross-form
+abuse from one IP is caught while a single user submitting to multiple forms
+is not penalised.
+
+::
+
+---
+
 # Channel Partners & ISVs — FastYoke
 
 > Early access program for systems integrators, channel partners, and independent software vendors building on the FastYoke aPaaS.
@@ -977,173 +1086,6 @@ If either of those is you, we'd love to talk.
 - **Early features.** Preview access to the partner-management dashboard, branded tenant onboarding flows, and the multi-tenant operator console before they ship to general availability.
 
 This page is a placeholder while we shape the program. Specific terms, pricing, and signup mechanics will land here when the early-access window opens. Drop a note to [partners@fastyoke.io](mailto:partners@fastyoke.io) if you want to be on the first-cohort list.
-::
-
----
-
-# security-fixes
-
-<!--
-  Curation note: add a new ::security-fix block here in the same
-  CHANGELOG-curation session where you bless the corresponding
-  ### Security bullet. Keep prose plain-English. NEVER link to
-  the private fastyoke2 GitHub repo. External authorities (RUSTSEC
-  / GHSA / CVE / vendor advisories) only.
--->
----
-title: Security Fixes — FastYoke
-summary: Known security findings and their fix status across FastYoke releases.
-order: 6
----
-
-
-
-<section class="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
-
-FastYoke publishes each material security fix once it ships. This page lists
-known findings — both ones we found internally and ones reported by customers
-or external researchers — and shows the release that resolved each. For our
-broader privacy posture and legal terms, see [Privacy](/privacy) and
-[Terms](/terms).
-
-Email **security@fastyoke.io** with steps to reproduce and any impact you've
-observed. We acknowledge new reports within two business days.
-
-Status: **Fixed** — resolved in the listed release; customers on that version
-or newer are not exposed. **Mitigated** — a compensating control prevents
-exploitation; a code-level fix is pending. **Investigating** — acknowledged
-and under triage.
-
-</section>::
-
-
----
-title: Admin session tokens moved out of browser storage (XSS hardening)
-status: fixed
-fixedIn: "3.16.0"
-fixedAt: "2026-06-04"
----
-
-The admin application previously kept its session token (a JWT) in the
-browser's `localStorage`. A script injected through a cross-site-scripting
-flaw could read it from storage and reuse it elsewhere. The token is now
-carried in an `HttpOnly`, `Secure`, `SameSite=Strict` cookie that page scripts
-cannot read, and it is no longer written to `localStorage`; the live-updates
-WebSocket also authenticates from that cookie instead of a token placed in the
-URL. This is defense-in-depth — we have no report of an exploit — that limits
-the reach of any future cross-site-scripting flaw to a single browser tab
-rather than a portable, stealable token. The platform-admin and
-organization-admin consoles received the same treatment.
-
----
-title: Stricter origin matching for embedded-form framing
-status: fixed
-fixedIn: "3.16.0"
-fixedAt: "2026-06-04"
----
-
-Tenants choose which sites may embed their hosted forms in an iframe, and
-FastYoke enforces that allow-list with a Content-Security-Policy
-`frame-ancestors` directive. Origin comparison is now scheme-exact: a bare
-host on the allow-list matches only its `https://` origin, and an entry that
-already includes a scheme matches that scheme exactly. Previously the scheme
-was disregarded when comparing, so an insecure (`http://`) variant of an
-allowed host could satisfy the check. No abuse was observed; this tightens the
-embedding boundary against a downgraded-origin framing attempt.
-
----
-title: Uninitialized memory disclosure in the ws library (build-time dependency)
-status: fixed
-fixedIn: "3.16.0"
-fixedAt: "2026-06-04"
-advisory:
-  label: GHSA-58qx-3vcg-4xpx
-  url: https://github.com/advisories/GHSA-58qx-3vcg-4xpx
----
-
-A moderate advisory (CVE-2026-45736) in the `ws` Node WebSocket library
-reported that `websocket.close()` could disclose uninitialized memory when
-given a typed-array reason argument. In FastYoke `ws` appears only as a
-build-, development-, and test-time transitive dependency (Nuxt tooling and
-the test DOM environment); the shipped product uses the browser's native
-WebSocket on the client and a Rust WebSocket server on the backend — neither
-is the `ws` library — so no shipped release was exposed to the vulnerable
-path. We updated to `ws` ≥ 8.20.1 to clear the advisory and keep the
-dependency tree clean.
-
----
-title: TLS hostname-verification regression in lettre's boring-tls backend
-status: fixed
-fixedIn: "3.1.2"
-fixedAt: "2026-05-15"
-advisory:
-  label: RUSTSEC-2026-0141
-  url: https://rustsec.org/advisories/RUSTSEC-2026-0141
----
-
-A bug in lettre 0.11.21's boring-tls integration silently disabled TLS
-hostname verification for callers on that backend. FastYoke compiles lettre
-with rustls, so no shipped release of FastYoke was exposed to the vulnerable
-code path. We bumped to 0.11.22 to clear the advisory and remove the flagged
-crate from our dependency tree.
-
----
-title: Production CORS now refuses to start without an allow-list
-status: fixed
-fixedIn: "3.1.0"
-fixedAt: "2026-05-15"
----
-
-The backend previously fell back to a permissive
-`Access-Control-Allow-Origin: *` when `CORS_ALLOWED_ORIGINS` was unset. We
-changed production deploys to refuse to start without an explicit allow-list,
-matching the fail-closed posture used for the JWT signing secret. Sandbox and
-local-dev environments keep the permissive fallback so browser-based testing
-isn't blocked.
-
----
-title: API-layer audit remediation
-status: fixed
-fixedIn: "3.1.0"
-fixedAt: "2026-05-15"
----
-
-We ran a comprehensive audit of the API layer covering tenant-isolation gaps,
-SSRF egress vectors, authentication hardening, and reflected XSS surfaces.
-All findings were remediated and shipped before any release of v3 reached
-general availability.
-
----
-title: Connection-listing endpoints now require explicit permission
-status: fixed
-fixedIn: "3.1.0"
-fixedAt: "2026-05-15"
----
-
-The endpoints that list and read integration connections previously allowed
-any authenticated identity to enumerate which providers a tenant had
-configured — a useful reconnaissance signal for an attacker holding a
-low-privilege token. They now require the same permission that gates
-connection creation and deletion. The cancel endpoint for FSM jobs was also
-tightened to resolve the tenant id from the session, not from request input.
-
----
-title: Per-route rate limiting on unauthenticated surfaces
-status: fixed
-fixedIn: "3.1.0"
-fixedAt: "2026-05-15"
----
-
-Three unauthenticated request paths — login, invitation acceptance, and
-public form submission — previously had no per-IP throttle and were bounded
-only by CPU. Each now mounts a token-bucket limiter with a `Retry-After`
-response on rejection. Login and invitation acceptance throttle per source
-IP; form submission throttles per `(source IP, form slug)` so cross-form
-abuse from one IP is caught while a single user submitting to multiple forms
-is not penalised.
-
-<p class="mt-12 text-xs" style="color: var(--brand-text-secondary)">Last updated: 2026-06-04</p>
-
 ::
 
 ---
