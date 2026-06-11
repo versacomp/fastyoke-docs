@@ -1,12 +1,12 @@
 ---
 title: Advanced App Builder
-summary: Enterprise SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
+summary: Enterprise / ISV SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
 order: 2
 ---
 
 # Advanced App Builder
 
-Enterprise-tier tenants see an **Advanced** tab on every app at
+Enterprise / ISV tier tenants see an **Advanced** tab on every app at
 `/admin/apps/:id/advanced`. It's a thin shell around the app's
 `advanced_config_json` envelope and a handful of delivery actions.
 

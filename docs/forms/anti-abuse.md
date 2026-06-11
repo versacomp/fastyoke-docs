@@ -33,7 +33,7 @@ Turnstile API before any other validation runs — a failed or missing
 verify returns `400 Bad Request` with error code `challenge_failed`.
 
 ::callout{type="tip" title="Pro and above"}
-Pro, Team, and Enterprise forms do not require Turnstile. On those
+Pro, Team, and Enterprise / ISV forms do not require Turnstile. On those
 tiers the widget is not rendered and the field is not expected.
 ::
 
@@ -63,7 +63,7 @@ tier:
 | Solo       | 100                |
 | Pro         | 1,000              |
 | Team        | Unlimited          |
-| Enterprise  | Unlimited          |
+| Enterprise / ISV | Unlimited          |
 
 Exceeding the cap returns `429 Too Many Requests` with error code
 `tier_quota_exceeded`. The cap resets at 00:00 UTC.
@@ -83,7 +83,7 @@ form slug. The limits are sized by tier:
 | Solo       | 10 / minute  | 3               |
 | Pro         | 60 / minute  | 10              |
 | Team        | 600 / minute | 50              |
-| Enterprise  | 600 / minute | 50              |
+| Enterprise / ISV | 600 / minute | 50              |
 
 The bucket starts full (burst allowance), then refills at the refill
 rate. Requests beyond the available tokens return `429 Too Many

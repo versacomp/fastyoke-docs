@@ -19,7 +19,7 @@ discharge events update the matching patient encounter and bed in Patient Flow.
 ## Data protection
 
 Patient identifiers are encrypted at rest. The connector is available to
-Enterprise customers under a Business Associate Agreement; your administrator
+Enterprise / ISV customers under a Business Associate Agreement; your administrator
 enables it for your organization once that agreement is in place.
 
 ## Enabling

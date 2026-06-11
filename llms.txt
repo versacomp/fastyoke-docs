@@ -8,6 +8,7 @@
 - [Free Online Form Builder — FastYoke Solo Plan](https://www.fastyoke.io/free-forms): Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
 - [Terms of Service — FastYoke](https://www.fastyoke.io/terms): The terms governing your use of FastYoke — eligibility, accounts, acceptable use, SMS messaging consent, billing, and the standard disclaimers and liability limits.
 - [SMS Opt-In — FastYoke](https://www.fastyoke.io/sms-opt-in): How FastYoke users opt in to receive transactional SMS messages, with screenshots of the in-product consent screen and the seven required disclosures.
+- [Channel Partners & ISVs — FastYoke](https://www.fastyoke.io/channel-partners): Early access program for systems integrators, channel partners, and independent software vendors building on the FastYoke aPaaS.
 - [security-fixes](https://www.fastyoke.io/security-fixes)
 - [Yoke Architect — A Thesis](https://www.fastyoke.io/yoke-architect)
 
@@ -22,7 +23,7 @@
 
 ## Apps
 
-- [Advanced App Builder](https://www.fastyoke.io/docs/apps/advanced): Enterprise SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
+- [Advanced App Builder](https://www.fastyoke.io/docs/apps/advanced): Enterprise / ISV SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
 - [Simple Project Tracker](https://www.fastyoke.io/docs/apps/simple-project-tracker): Free marketplace app — organize projects, tasks, and comments with a Kanban board.
 - [Studio wizard](https://www.fastyoke.io/docs/apps/studio-wizard): Wix-style 4-step builder — pick a layout, brand it, choose entities, ship a themed multi-page extension.
 - [Inventory Yoke](https://www.fastyoke.io/docs/apps/inventory-yoke)
@@ -83,7 +84,7 @@
 - [Reset Turnstile when you're locked out in dev](https://www.fastyoke.io/docs/forms/recipes/reset-turnstile-in-dev): One admin action clears the per-tenant counters.
 - [File uploads and scanning](https://www.fastyoke.io/docs/forms/tutorials/301-file-uploads-and-scanning): Collect insurance card images; watch them flow through the three-layer scanner.
 - [Anti-abuse tuning](https://www.fastyoke.io/docs/forms/tutorials/301-anti-abuse): Turnstile, honeypot, daily cap — what each catches and how to reset when you're locked out in dev.
-- [Custom CSS](https://www.fastyoke.io/docs/forms/tutorials/301-custom-css): Wire your brand's exact hex tokens with per-form CSS — Enterprise only.
+- [Custom CSS](https://www.fastyoke.io/docs/forms/tutorials/301-custom-css): Wire your brand's exact hex tokens with per-form CSS — Enterprise / ISV only.
 - [Server-to-server submission](https://www.fastyoke.io/docs/forms/tutorials/301-http-ingestion): Pipe an upstream scheduler's POSTs into the form via the HTTP ingestion API.
 - [Vanity PDF filenames](https://www.fastyoke.io/docs/forms/tutorials/301-vanity-filenames): Replace the default `submission-<id>.pdf` with a readable per-submission filename.
 - [Embed forms on your own site](https://www.fastyoke.io/docs/forms/embed): Drop a single script tag into any page to render a FastYoke form inline, with theme overrides and origin allowlists.

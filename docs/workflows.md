@@ -94,7 +94,7 @@ override and its justification.
 
 ## Inheritance
 
-Enterprise tenants participating in org-scoped governance receive
+Enterprise / ISV tenants participating in org-scoped governance receive
 read-only mirrors of master templates. The builder renders these
 as locked — edits happen upstream in the master tenant and
 propagate via the inheritance sync engine.

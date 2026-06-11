@@ -9,7 +9,7 @@ order: 5
 Forms ship across all tiers. The differences are in scale and
 configuration depth, not feature gates.
 
-| Capability                            | Solo           | Pro              | Team             | Enterprise       |
+| Capability                            | Solo           | Pro              | Team             | Enterprise / ISV |
 | ------------------------------------- | --------------- | ---------------- | ---------------- | ---------------- |
 | Active (published) forms              | 3               | Unlimited        | Unlimited        | Unlimited        |
 | Daily submissions (aggregate)         | 100             | 1,000            | Unlimited        | Unlimited        |

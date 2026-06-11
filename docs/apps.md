@@ -30,7 +30,7 @@ An app row in `apps` carries:
 | `navigation_json` | Ordered array of `{label, page_slug}` entries |
 | `theme_id` | Optional override; falls back to the tenant's default theme |
 | `custom_css` | Per-app CSS layered after the theme — for fine-grained tweaks |
-| `advanced_config_json` | Enterprise-only; see Advanced App Builder |
+| `advanced_config_json` | Enterprise / ISV only; see Advanced App Builder |
 
 ## Creating an app
 
@@ -88,7 +88,7 @@ If the tweak would apply to more than one app, <em>fork the
 
 ## Advanced App Builder (enterprise)
 
-Enterprise-tier tenants see an additional **Advanced** tab at
+Enterprise / ISV tier tenants see an additional **Advanced** tab at
 `/admin/apps/:id/advanced`. It holds two markdown artifacts
 (`engineering_spec` + `feature_phases`) that describe the app's
 intended SPA shape, a health panel that classifies every nav entry

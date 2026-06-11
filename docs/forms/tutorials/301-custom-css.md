@@ -1,6 +1,6 @@
 ---
 title: "Custom CSS"
-summary: "Wire your brand's exact hex tokens with per-form CSS — Enterprise only."
+summary: "Wire your brand's exact hex tokens with per-form CSS — Enterprise / ISV only."
 order: 13
 tier: "301"
 ---
@@ -20,10 +20,10 @@ Finish [Anti-abuse tuning](/docs/forms/tutorials/301-anti-abuse).
 You need a published `Patient Intake` form with shields on.
 ::
 
-::callout{type="warn" title="Enterprise tier"}
+::callout{type="warn" title="Enterprise / ISV tier"}
 Custom CSS is gated by the `forms_custom_css` feature flag on the
 tenant. Lower tiers see the theme tokens panel but not the **Custom
-CSS** textarea. If the textarea is missing on an Enterprise tenant,
+CSS** textarea. If the textarea is missing on an Enterprise / ISV tenant,
 confirm the flag is set under **Settings → Feature flags**.
 ::
 

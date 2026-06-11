@@ -144,7 +144,7 @@ error code `tier_quota_exceeded`. Upgrade to Pro for 1-year tokens and
 unlimited submission caps.
 ::
 
-| Limit | Solo | Pro | Team | Enterprise |
+| Limit | Solo | Pro | Team | Enterprise / ISV |
 |-------|-------|-----|------|------------|
 | Maximum token lifetime | 30 days | 1 year | 1 year | 1 year |
 | Default lifetime pre-filled in UI | 7 days | 30 days | 30 days | 30 days |

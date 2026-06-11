@@ -4,8 +4,6 @@ summary: Build unlimited forms for free. Drag-and-drop builder, multi-page flows
 order: 4
 ---
 
-::marketing-section{band="white" maxWidth="6xl"}
-
 ::hero{eyebrow="SOLO PLAN · FREE FOREVER" title="Build forms for free. No vendor lock-in." tagline="The same form builder our enterprise customers ship to production — available free for personal projects and small businesses on the Solo plan."}
 ::signup-cta{size="lg" variant="primary" location="freeforms-hero"}
 Start free — no credit card
@@ -13,8 +11,6 @@ Start free — no credit card
 ::cta-button{to="/docs/forms" variant="secondary" size="lg"}
 Read the docs
 ::
-::
-
 ::
 
 ::marketing-section{band="gray" maxWidth="3xl"}

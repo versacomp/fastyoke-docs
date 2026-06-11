@@ -11,10 +11,10 @@ summary: Known security findings and their fix status across FastYoke releases.
 order: 6
 ---
 
-::marketing-section{band="white" maxWidth="6xl"}
-
 ::hero{eyebrow="Trust" title="Security fixes" tagline="A running log of known security findings and the releases that resolved them."}
 ::
+
+::marketing-section{band="white" maxWidth="6xl"}
 
 <section class="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
 
