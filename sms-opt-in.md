@@ -7,7 +7,7 @@ order: 5
 ::hero{eyebrow="SMS" title="SMS opt-in workflow" tagline="How FastYoke users consent to receive transactional SMS messages, with screenshots of the in-product consent screen and all required disclosures."}
 ::
 
-<section class="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
+::marketing-section{band="white" maxWidth="3xl"}
 
 **Last updated:** 2026-05-26.
 
@@ -157,4 +157,4 @@ non-SMS notifications (e.g., email).
 - **This page (opt-in workflow + screenshots):**
   [https://www.fastyoke.io/sms-opt-in](https://www.fastyoke.io/sms-opt-in)
 
-</section>
+::

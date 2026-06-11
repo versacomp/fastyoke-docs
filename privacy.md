@@ -7,7 +7,7 @@ order: 3
 ::hero{eyebrow="Privacy" title="Privacy notice" tagline="A plain-language summary of what FastYoke collects, why, and the rights you have over that data."}
 ::
 
-<section class="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
+::marketing-section{band="white" maxWidth="3xl"}
 
 **Last updated:** 2026-05-26.
 
@@ -234,4 +234,4 @@ requests, breach reports, EU/UK representative inquiries.
 [security@fastyoke.io](mailto:security@fastyoke.io) — anything
 that looks like an active vulnerability.
 
-</section>
+::

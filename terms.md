@@ -7,7 +7,7 @@ order: 4
 ::hero{eyebrow="Legal" title="Terms of service" tagline="The rules of the road for using FastYoke — accounts, acceptable use, SMS messaging, billing, and the standard legal boilerplate."}
 ::
 
-<section class="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
+::marketing-section{band="white" maxWidth="3xl"}
 
 **Last updated:** 2026-05-26.
 
@@ -255,4 +255,4 @@ Privacy requests, breach reports, or anything that looks like
 an active vulnerability are routed separately — see the
 contact addresses in the [Privacy Notice](/privacy).
 
-</section>
+::

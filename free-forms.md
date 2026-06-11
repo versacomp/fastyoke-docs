@@ -4,6 +4,8 @@ summary: Build unlimited forms for free. Drag-and-drop builder, multi-page flows
 order: 4
 ---
 
+::marketing-section{band="white" maxWidth="6xl"}
+
 ::hero{eyebrow="SOLO PLAN · FREE FOREVER" title="Build forms for free. No vendor lock-in." tagline="The same form builder our enterprise customers ship to production — available free for personal projects and small businesses on the Solo plan."}
 ::signup-cta{size="lg" variant="primary" location="freeforms-hero"}
 Start free — no credit card
@@ -13,11 +15,19 @@ Read the docs
 ::
 ::
 
+::
+
+::marketing-section{band="gray" maxWidth="3xl"}
+
 ::prose-container{max-width="3xl" padding="md"}
 
 Most form builders trap your data, watermark your pages, and make you pay just to remove their logo. **FastYoke takes the opposite approach.** Build unlimited forms on the Solo plan, host them on your own domain when you upgrade, and export your data any time you want.
 
 ::
+
+::
+
+::marketing-section{band="white" maxWidth="6xl"}
 
 ::prose-container{max-width="6xl" padding="lg"}
 
@@ -48,6 +58,10 @@ What you get on Solo
   ::
 ::
 
+::
+
+::marketing-section{band="gray" maxWidth="6xl"}
+
 ::prose-container{max-width="6xl" padding="lg"}
 
 Who it's for
@@ -62,6 +76,10 @@ Who it's for
   ::feature-card{title="Small businesses" summary="Intake forms, customer waivers, vendor onboarding, contact requests. Everything a $30/month form builder gives you, plus PDF generation and file scanning, plus the option to upgrade to a Pro plan when you want a custom domain or your own brand."}
   ::
 ::
+
+::
+
+::marketing-section{band="white" maxWidth="3xl"}
 
 ::prose-container{max-width="3xl" padding="lg"}
 
@@ -80,5 +98,7 @@ Compare plans
 ::
 
 </div>
+
+::
 
 ::

@@ -29,15 +29,13 @@ Build a form free
 See the features
 ::
 
-
 Traditional Low-Code Application Platforms force a brutal compromise: speed to market in exchange for proprietary vendor lock-in. **FastYoke shatters this paradigm.** We empower Independent Software Vendors to visually generate enterprise-grade applications that compile down to standard, ejectable codebases.
 
-
-
+#eyebrow
 The Sovereignty Triad
 
-## Three guarantees you won't get from a typical LCAP
-
+#title
+Three guarantees you won't get from a typical LCAP
 
   ::feature-card{title="01. UI/UX Sovereignty (Next.js & Astro)" summary="Stop compromising your user experience with generic, drag-and-drop dashboards. FastYoke's Advanced App Builder generates standard Next.js and Astro applications. Deploy on [Vercel via our marketplace](/pricing#hosting), or any host you already use — you own the frontend repository."}
   ::
@@ -45,36 +43,42 @@ The Sovereignty Triad
   ::
   ::feature-card{title="03. Data Sovereignty (The SQLite Fleet)" summary="Multi-tenant databases are a compliance nightmare. FastYoke uses a Fleet of Files architecture: every single tenant operates on their own physically isolated SQLite database, continuously synced via Litestream. Complete data isolation, portability, and auditability."}
   ::
+::
 
 De-risk your platform strategy today. Prototype and scale on FastYoke with absolute exit certainty. If you ever outgrow us, you take your Next.js frontend, your compiled Wasm rules, and your raw SQLite databases with you. Architect your next platform without the handcuffs.
+::
 
-
+#eyebrow
 How it works
 
-## The primitives behind the sovereignty
+#title
+The primitives behind the sovereignty
 
+#title
+Sandboxed guards
 
-  ::feature-card{title="Sandboxed guards" summary="JSONLogic predicates by default, Wasm when you need compute — never raw eval. Fuel-capped, memory-bounded, audit-ready."}
-  ::
-  ::feature-card{title="Tenant-isolated" summary="Every query carries a WHERE tenant_id clause by construction. Per-tenant SQLite files keep data locality strict and portable."}
-  ::
-  ::feature-card{title="Typed SDK" summary="The `@fastyoke/sdk` package ships React hooks, Zod schemas, and a realtime WebSocket client. Familiar ergonomics; zero boilerplate."}
-  ::
-  ::feature-card{title="Ship extensions" summary="Pack a React SPA as a tenant-scoped bundle. Load at runtime behind a scanner + minted JWT — marketplace-ready by design."}
-  ::
+JSONLogic predicates by default, Wasm when you need compute — never raw eval. Fuel-capped, memory-bounded, audit-ready.
 
+#media
+::
 
+#title
+Typed SDK
+
+The `@fastyoke/sdk` package ships React hooks, Zod schemas, and a realtime WebSocket client. Familiar ergonomics; zero boilerplate.
+
+#media
+::
+::
+
+#eyebrow
 Compliance, by construction
 
-## WCAG 2.1 AA enforced in CI. VPAT-ready.
+#title
+WCAG 2.1 AA enforced in CI. VPAT-ready.
 
-Every PR runs Playwright + axe-core across every route in the
-admin SPA. Brand color saves are mathematically validated
-against WCAG 1.4.3 contrast thresholds — the platform offers
-a one-click compliant shade or refuses the save. ARIA live
-regions and a focus-trap modal primitive ship at the layout
-root. The procurement document writes itself.
-
+#lede
+Every PR runs Playwright + axe-core across every route in the admin SPA. Brand color saves are mathematically validated against WCAG 1.4.3 contrast thresholds — the platform offers a one-click compliant shade or refuses the save. ARIA live regions and a focus-trap modal primitive ship at the layout root. The procurement document writes itself.
 
   ::feature-card{title="Axe-core CI gate" summary="WCAG 2.1 AA structural checks fail the build on critical or serious violations. Allowlist entries auto-expire after 90 days — there's no mute-and-forget path."}
   ::
@@ -82,6 +86,7 @@ root. The procurement document writes itself.
   ::
   ::feature-card{title="Focus + announcements" summary="Radix-based Modal primitive owns Tab cycling, Escape dismissal, and focus restoration. ARIA announcer at the admin shell root delivers state-change messages to screen readers without visible chrome."}
   ::
+::
 
 #eyebrow
 TypeScript
@@ -112,28 +117,21 @@ export function JobPage({ id }: { id: string }) {
 
 #footer
 Full walkthrough in the [SDK reference](/docs/sdk/reference) and the [CRUD UI recipe](/docs/recipes/sdk-crud-ui).
-
+::
 
 Works anywhere fetch works
 
 **Next.js · Remix · Astro · your own Node server**
 
+::
 
-<section class="mt-8 bg-[var(--brand-bg-surface-raised)] py-20">
-<div class="mx-auto max-w-3xl px-4 text-center">
-
-## One install. Full backend.
+#title
+One install. Full backend.
 
 Sign up direct and you get an isolated FastYoke tenant — dedicated database, scoped API token, the full SDK. Or install from the Vercel Marketplace to skip credential wiring entirely: your env vars get auto-injected into your Next.js project in one OAuth handshake.
 
-<div class="mt-6 flex flex-wrap items-center justify-center gap-3">
 
-
-
-</div>
-
-</div>
-</section>
+::
 
 ---
 
@@ -141,6 +139,16 @@ Sign up direct and you get an isolated FastYoke tenant — dedicated database, s
 
 > Simple pricing that scales from a side project to a regulated fleet. Free with every Vercel Marketplace install; paid tiers on request.
 
+#default
+::
+
+#default
+::
+
+#default
+::
+
+#default
 <h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">Frequently asked</h2>
 
 <div class="mt-8 grid gap-8 text-left sm:grid-cols-2">
@@ -220,9 +228,7 @@ Sign up direct and you get an isolated FastYoke tenant — dedicated database, s
   </div>
 </div>
 
-
-<section class="bg-[var(--brand-bg-surface-raised)] py-16">
-<div class="mx-auto max-w-3xl px-4 text-center">
+#default
 <h2 class="text-2xl font-semibold tracking-tight text-[var(--brand-text-primary)]">Start on Solo. Upgrade when you need it.</h2>
 <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
 
@@ -231,16 +237,13 @@ Sign up direct and you get an isolated FastYoke tenant — dedicated database, s
 Talk to sales
 
 </div>
-</div>
-</section>
+::
 
 ---
 
 # Privacy Notice — FastYoke
 
 > How FastYoke handles personal data submitted through public forms, account info, and product telemetry. Plain-language summary plus the data subject's rights.
-
-<section class="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
 
 **Last updated:** 2026-05-26.
 
@@ -467,8 +470,6 @@ requests, breach reports, EU/UK representative inquiries.
 [security@fastyoke.io](mailto:security@fastyoke.io) — anything
 that looks like an active vulnerability.
 
-</section>
-
 ---
 
 # Free Online Form Builder — FastYoke Solo Plan
@@ -479,8 +480,14 @@ Start free — no credit card
 Read the docs
 ::
 
+::
+
+
 
 Most form builders trap your data, watermark your pages, and make you pay just to remove their logo. **FastYoke takes the opposite approach.** Build unlimited forms on the Solo plan, host them on your own domain when you upgrade, and export your data any time you want.
+
+
+::
 
 
 
@@ -508,6 +515,9 @@ What you get on Solo
   ::feature-card{title="Your data, exportable" summary="Submissions land in a SQLite database you can export with one command. No vendor lock-in — your data is yours, in a portable format."}
   ::
 
+::
+
+
 
 Who it's for
 
@@ -518,6 +528,9 @@ Who it's for
   ::
   ::feature-card{title="Small businesses" summary="Intake forms, customer waivers, vendor onboarding, contact requests. Everything a $30/month form builder gives you, plus PDF generation and file scanning, plus the option to upgrade to a Pro plan when you want a custom domain or your own brand."}
   ::
+
+::
+
 
 
 ## Ready when your form is.
@@ -534,13 +547,13 @@ Compare plans
 
 ::
 
+::
+
 ---
 
 # Terms of Service — FastYoke
 
 > The terms governing your use of FastYoke — eligibility, accounts, acceptable use, SMS messaging consent, billing, and the standard disclaimers and liability limits.
-
-<section class="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
 
 **Last updated:** 2026-05-26.
 
@@ -788,15 +801,11 @@ Privacy requests, breach reports, or anything that looks like
 an active vulnerability are routed separately — see the
 contact addresses in the [Privacy Notice](/privacy).
 
-</section>
-
 ---
 
 # SMS Opt-In — FastYoke
 
 > How FastYoke users opt in to receive transactional SMS messages, with screenshots of the in-product consent screen and the seven required disclosures.
-
-<section class="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
 
 **Last updated:** 2026-05-26.
 
@@ -946,8 +955,6 @@ non-SMS notifications (e.g., email).
 - **This page (opt-in workflow + screenshots):**
   [https://www.fastyoke.io/sms-opt-in](https://www.fastyoke.io/sms-opt-in)
 
-</section>
-
 ---
 
 # security-fixes
@@ -966,6 +973,7 @@ order: 6
 ---
 
 
+
 <section class="mx-auto max-w-3xl px-4 py-8 text-base leading-relaxed text-[var(--brand-text-secondary)]">
 
 FastYoke publishes each material security fix once it ships. This page lists
@@ -981,6 +989,9 @@ Status: **Fixed** — resolved in the listed release; customers on that version
 or newer are not exposed. **Mitigated** — a compensating control prevents
 exploitation; a code-level fix is pending. **Investigating** — acknowledged
 and under triage.
+
+</section>::
+
 
 ---
 title: Admin session tokens moved out of browser storage (XSS hardening)
@@ -1109,7 +1120,7 @@ is not penalised.
 
 <p class="mt-12 text-xs" style="color: var(--brand-text-secondary)">Last updated: 2026-06-04</p>
 
-</section>
+::
 
 ---
 
@@ -1123,87 +1134,92 @@ There are two ways to build software for a business. The first is the way most n
 
 This document explains the second way, why we chose it, and what it costs us not to.
 
----
+  #title
+  ## What a Yoke App actually is
 
-## What a Yoke App actually is
+  #default
+  A **Yoke App** — what FastYoke calls a multi-board declarative application — is a single document. Internally we call it a YokeDoc. It has:
 
-A **Yoke App** — what FastYoke calls a multi-board declarative application — is a single document. Internally we call it a YokeDoc. It has:
+  - A handful of **boards** — finite-state machines, each bound to an entity (an Order, a Patient, a Work Order, a Bed Request).
+  - **States**, **transitions**, optional **guards** (sandboxed predicates), and optional **engine primitives** bound to those transitions (schedule, notify, escalate, render PDF, aggregate, approve).
+  - **Pages** that render the boards — list views, detail templates, related-record cards.
+  - **Bridges** to other Yoke Apps in your tenant (your CRM customer profile shows the work orders from your Field Service Yoke; no code).
+  - A **tier** — free, Pro-trial, or paid.
+  - An optional **engine manifest** declaring what extra capabilities the app needs.
 
-- A handful of **boards** — finite-state machines, each bound to an entity (an Order, a Patient, a Work Order, a Bed Request).
-- **States**, **transitions**, optional **guards** (sandboxed predicates), and optional **engine primitives** bound to those transitions (schedule, notify, escalate, render PDF, aggregate, approve).
-- **Pages** that render the boards — list views, detail templates, related-record cards.
-- **Bridges** to other Yoke Apps in your tenant (your CRM customer profile shows the work orders from your Field Service Yoke; no code).
-- A **tier** — free, Pro-trial, or paid.
-- An optional **engine manifest** declaring what extra capabilities the app needs.
+  That's it. It is one tree of data. It has no methods. It does not "run." It is *applied* — by an interpreter that knows how to make it real.
 
-That's it. It is one tree of data. It has no methods. It does not "run." It is *applied* — by an interpreter that knows how to make it real.
+  This sounds like a small distinction. It is not.
 
-This sounds like a small distinction. It is not.
+  #title
+  ## What Yoke Architect is
 
----
+  #default
+  **Yoke Architect** is the FastYoke surface that builds Yoke Apps. Open the Studio, choose Yoke mode, and you land in a wizard whose first decision is where to start. Five starting points are on the roadmap; they ship in waves:
 
-## What Yoke Architect is
+  ::feature-grid{columns="2"}
+    ::feature-card{title="Blank" summary="An empty Task board to grow from. Available now."}
+    ::
+    ::feature-card{title="From a vertical" summary="A curated recipe from our library: independent auto shop, hospital patient throughput, field service, sales pipeline, compliance program, inventory operations, general ledger. Each one is a real Yoke App, not a wireframe. Rolling out next."}
+    ::
+    ::feature-card{title="Clone an installed Yoke" summary="Start from one you already use. Rolling out next."}
+    ::
+    ::feature-card{title="Promote an app" summary="Take an existing single-board app you've built and reshape it into a Yoke; we wrap your boards and pages into the draft for you. Rolling out next."}
+    ::
+    ::feature-card{title="From a brief" summary="Type one sentence describing what you want; an AI drafts the full Yoke for you to edit. Rolling out next, Pro+ only."}
+    ::
+  ::
 
-**Yoke Architect** is the FastYoke surface that builds Yoke Apps. Open the Studio, choose Yoke mode, and you land in a wizard whose first decision is where to start. Five starting points are on the roadmap; they ship in waves:
+  After the entry point, you edit boards, pick branding, choose a tier — free or Pro-trial — and click Save & Activate. The wizard never asks you to write code. It also never lies to you about what it's doing: the draft you see is the literal document that gets installed.
 
-1. **Blank** — an empty Task board to grow from. *Available now.*
-2. **From a vertical** — a curated recipe from our library: independent auto shop, hospital patient throughput, field service, sales pipeline, compliance program, inventory operations, general ledger. Each one is a real Yoke App, not a wireframe. *Rolling out next.*
-3. **Clone an installed Yoke** — start from one you already use. *Rolling out next.*
-4. **Promote an app** — take an existing single-board app you've built and reshape it into a Yoke; we wrap your boards and pages into the draft for you. *Rolling out next.*
-5. **From a brief** — type one sentence describing what you want; an AI drafts the full Yoke for you to edit. *Rolling out next, Pro+ only.*
+  For the FastYoke engineering team, the same wizard is engineered to also produce a **paste-able patch**: the same YokeDoc compiles to Rust constants, installer and uninstaller functions, JSON assets, integration tests, and a customer doc page — everything needed to ship the app as a public marketplace listing. The wizard's two outputs (your tenant's database, or a unified diff against our codebase) come from the same description through two different interpreters.
 
-After the entry point, you edit boards, pick branding, choose a tier — free or Pro-trial — and click Save & Activate. The wizard never asks you to write code. It also never lies to you about what it's doing: the draft you see is the literal document that gets installed.
+  <blockquote class="yugabyte-quote">Stay with that sentence. It is the entire thesis.</blockquote>
 
-For the FastYoke engineering team, the same wizard is engineered to also produce a **paste-able patch**: the same YokeDoc compiles to Rust constants, installer and uninstaller functions, JSON assets, integration tests, and a customer doc page — everything needed to ship the app as a public marketplace listing. The wizard's two outputs (your tenant's database, or a unified diff against our codebase) come from the same description through two different interpreters.
+  #title
+  ## Apps as data
 
-Stay with that sentence. It is the entire thesis.
+  #default
+  The decision underneath Yoke Architect is older than no-code, older than software, older than computers. It is the decision Lisp made in 1958, the decision Haskell made in 1990, the decision Terraform made when it separated `plan` from `apply`. **Programs are values. Effects are explicit. Composition is the primary verb.**
 
----
+  A YokeDoc is a value. Two YokeDocs are equal if their fields are equal. You can compare them, hash them, serialize them, snapshot them, fork them. You can hand one to a junior engineer and they can read it without running it. You can hand one to a language model and it can produce another one, and you can compare the two. You can save every revision a tenant has ever authored in an append-only history ledger and replay any of them on a fresh database.
 
-## Apps as data
+  The validator is a function. Given a YokeDoc, it returns either OK or a structured list of what is wrong — never mid-state, never partial, never with side effects. We can run it on the client, on the server, on the LLM's output, and on the recipe library at build time. It is the same function each time, and it will produce the same answer each time.
 
-The decision underneath Yoke Architect is older than no-code, older than software, older than computers. It is the decision Lisp made in 1958, the decision Haskell made in 1990, the decision Terraform made when it separated `plan` from `apply`. **Programs are values. Effects are explicit. Composition is the primary verb.**
+  The materializer is an interpreter. It receives a YokeDoc and a mode — "install this into the calling tenant" or "emit a patch against our codebase" — and it walks the document once, structurally, to produce its result. The mode is a tagged enum. Adding a third mode (lint, document, simulate) is purely additive; the document never knows.
 
-A YokeDoc is a value. Two YokeDocs are equal if their fields are equal. You can compare them, hash them, serialize them, snapshot them, fork them. You can hand one to a junior engineer and they can read it without running it. You can hand one to a language model and it can produce another one, and you can compare the two. You can save every revision a tenant has ever authored in an append-only history ledger and replay any of them on a fresh database.
+  The boards are categories. States are objects, transitions are morphisms, guards are composition constraints. Self-loops are identity. Two transitions compose if the first's target equals the second's source. Cancellation is not a state, because cancellation is not a morphism — it is a runtime override from outside the category, modeled as such throughout the system. None of this is decoration. It is what made the FSM engine simple enough to be correct.
 
-The validator is a function. Given a YokeDoc, it returns either OK or a structured list of what is wrong — never mid-state, never partial, never with side effects. We can run it on the client, on the server, on the LLM's output, and on the recipe library at build time. It is the same function each time, and it will produce the same answer each time.
+  Engine primitives are typed effects. A binding declares "fire this primitive at this trigger with this configuration." It does not declare *how* the primitive runs. The runtime threads tenant context through the primitive; the binding is pure data. This is the algebraic-effects pattern you would see in OCaml 5 or Koka, in a Rust framework that does not have first-class effects, dressed up to feel native.
 
-The materializer is an interpreter. It receives a YokeDoc and a mode — "install this into the calling tenant" or "emit a patch against our codebase" — and it walks the document once, structurally, to produce its result. The mode is a tagged enum. Adding a third mode (lint, document, simulate) is purely additive; the document never knows.
+  The vertical registry is a homoiconic value space. Each recipe is a Yoke App description sitting next to its metadata. The registry can sample from itself — when you ask an AI to draft a Yoke from a brief, the AI's prompt includes three randomly chosen recipes as examples of what a valid description looks like. The library teaches the model. The model's output goes through the same validator the library entries pass at build time. The loop closes.
 
-The boards are categories. States are objects, transitions are morphisms, guards are composition constraints. Self-loops are identity. Two transitions compose if the first's target equals the second's source. Cancellation is not a state, because cancellation is not a morphism — it is a runtime override from outside the category, modeled as such throughout the system. None of this is decoration. It is what made the FSM engine simple enough to be correct.
+  #title
+  ## What this gets you
 
-Engine primitives are typed effects. A binding declares "fire this primitive at this trigger with this configuration." It does not declare *how* the primitive runs. The runtime threads tenant context through the primitive; the binding is pure data. This is the algebraic-effects pattern you would see in OCaml 5 or Koka, in a Rust framework that does not have first-class effects, dressed up to feel native.
+  #default
+  Most no-code platforms cannot reproduce your app from a description, because there is no description. They can show you what your app looks like; they cannot tell you what it *is*. Yoke Architect can answer:
 
-The vertical registry is a homoiconic value space. Each recipe is a Yoke App description sitting next to its metadata. The registry can sample from itself — when you ask an AI to draft a Yoke from a brief, the AI's prompt includes three randomly chosen recipes as examples of what a valid description looks like. The library teaches the model. The model's output goes through the same validator the library entries pass at build time. The loop closes.
+  - **What changed between version 4 and version 7 of my Yoke?** (Diff two YokeDoc revisions in the history ledger.)
+  - **What does my Yoke do on the order-paid transition?** (Read the bindings on that transition.)
+  - **Can I export my Yoke, hand it to my partner, and have them install it on their tenant?** (Yes — clone-by-export is built in.)
+  - **Can I send my Yoke to an LLM and ask it to add a returns-and-refunds board?** (Yes — the validator catches the model's drift, the wizard surfaces the model's warnings, the human edits before saving.)
+  - **Can I, as a FastYoke engineer, take a tenant-authored Yoke and ship it back into our marketplace as a curated recipe?** (Yes — the export helper is the inverse of the materializer; round-tripping is a tested property.)
+  - **If a primitive scheduler accidentally fires a million times, can I bound it?** (Yes — primitives carry rate limits, trigger budgets, and self-loop guards as first-class concerns, not patched-in checks.)
 
----
+  <blockquote class="yugabyte-quote">None of this requires a rewrite. None of it requires a "Yoke 2.0." It is what falls out of treating the app as a value in the first place.</blockquote>
 
-## What this gets you
+  #title
+  ## An ode to Haskell
 
-Most no-code platforms cannot reproduce your app from a description, because there is no description. They can show you what your app looks like; they cannot tell you what it *is*. Yoke Architect can answer:
+  #default
+  Yoke Architect is not written in Haskell. It is Rust on the server and TypeScript on the client. Our team does not write monad transformer stacks at lunch. But the *attitude* about programs — that they should be values you can reason about, that effects should be explicit, that composition should be the primary verb, that the pure region should be as large as possible and the imperative shell as small — that attitude is Haskell's, and Lisp's before it, and the lambda calculus's before that.
 
-- **What changed between version 4 and version 7 of my Yoke?** (Diff two YokeDoc revisions in the history ledger.)
-- **What does my Yoke do on the order-paid transition?** (Read the bindings on that transition.)
-- **Can I export my Yoke, hand it to my partner, and have them install it on their tenant?** (Yes — clone-by-export is built in.)
-- **Can I send my Yoke to an LLM and ask it to add a returns-and-refunds board?** (Yes — the validator catches the model's drift, the wizard surfaces the model's warnings, the human edits before saving.)
-- **Can I, as a FastYoke engineer, take a tenant-authored Yoke and ship it back into our marketplace as a curated recipe?** (Yes — the export helper is the inverse of the materializer; round-tripping is a tested property.)
-- **If a primitive scheduler accidentally fires a million times, can I bound it?** (Yes — primitives carry rate limits, trigger budgets, and self-loop guards as first-class concerns, not patched-in checks.)
+  When we run into a design wart, our instinct is to make the system *more functional*: more append-only, more declarative, more composable, fewer hidden mutations. When we found a place where our schema versions were updated in place rather than appended, we filed it as wrong and put a fix on the books, because that is what the architecture demanded — even though the in-place update worked correctly. When we needed an LLM in the loop and could not make it deterministic, we did not try to fight the non-determinism; we put the model behind the same pure validator the rest of the system uses, and treated its output as an oracle to be checked, not an authority to be trusted.
 
-None of this requires a rewrite. None of it requires a "Yoke 2.0." It is what falls out of treating the app as a value in the first place.
+  <blockquote class="yugabyte-quote">We did not call any of this "functional programming" during the design. We called it "the simplest thing that could possibly work." That is usually a tell.</blockquote>
 
----
-
-## An ode to Haskell
-
-Yoke Architect is not written in Haskell. It is Rust on the server and TypeScript on the client. Our team does not write monad transformer stacks at lunch. But the *attitude* about programs — that they should be values you can reason about, that effects should be explicit, that composition should be the primary verb, that the pure region should be as large as possible and the imperative shell as small — that attitude is Haskell's, and Lisp's before it, and the lambda calculus's before that.
-
-When we run into a design wart, our instinct is to make the system *more functional*: more append-only, more declarative, more composable, fewer hidden mutations. When we found a place where our schema versions were updated in place rather than appended, we filed it as wrong and put a fix on the books, because that is what the architecture demanded — even though the in-place update worked correctly. When we needed an LLM in the loop and could not make it deterministic, we did not try to fight the non-determinism; we put the model behind the same pure validator the rest of the system uses, and treated its output as an oracle to be checked, not an authority to be trusted.
-
-We did not call any of this "functional programming" during the design. We called it "the simplest thing that could possibly work." That is usually a tell.
-
-This is the architecture we want to put under FastYoke for the long run. Yoke Architect is the first product to expose it. Every Yoke App you build with it is a value — yours, ours, the AI's, and the next engineer who reads your code's. We borrowed the soul of a language, not its syntax. We think you will feel it the first time you ship a Yoke from a one-sentence brief and the LLM produces something you can actually read.
-
----
+  This is the architecture we want to put under FastYoke for the long run. Yoke Architect is the first product to expose it. Every Yoke App you build with it is a value — yours, ours, the AI's, and the next engineer who reads your code's. We borrowed the soul of a language, not its syntax. We think you will feel it the first time you ship a Yoke from a one-sentence brief and the LLM produces something you can actually read.
 
 **Try Yoke Architect.** Open your Studio, switch to Yoke mode, and start with any of the five entry points. If you build something interesting, [tell us](mailto:hello@fastyoke.io). If you build something boring, that's a good sign — it means the architecture got out of your way.
 

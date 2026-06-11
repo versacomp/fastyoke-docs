@@ -4,17 +4,26 @@ summary: Simple pricing that scales from a side project to a regulated fleet. Fr
 order: 2
 ---
 
+::marketing-section{band="white" maxWidth="3xl"}
+#default
 ::hero{eyebrow="Pricing" title="Simple pricing that scales with you" tagline="Install free from the Vercel Marketplace and grow into the tier you need. No seat counts on the starter tier, no per-event gating on the core FSM."}
 ::
+::
 
+::marketing-section{band="gray" maxWidth="6xl"}
+#default
 ::pricing-table
 ::
-
-::pricing-forms-matrix
 ::
 
-::prose-container{max-width="3xl" padding="lg"}
+::marketing-section{band="white" maxWidth="6xl"}
+#default
+::pricing-forms-matrix
+::
+::
 
+::marketing-section{band="gray" maxWidth="3xl"}
+#default
 <h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">Frequently asked</h2>
 
 <div class="mt-8 grid gap-8 text-left sm:grid-cols-2">
@@ -93,11 +102,10 @@ order: 2
     </p>
   </div>
 </div>
-
 ::
 
-<section class="bg-[var(--brand-bg-surface-raised)] py-16">
-<div class="mx-auto max-w-3xl px-4 text-center">
+::marketing-section{band="white" maxWidth="3xl"}
+#default
 <h2 class="text-2xl font-semibold tracking-tight text-[var(--brand-text-primary)]">Start on Solo. Upgrade when you need it.</h2>
 <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
 
@@ -112,5 +120,4 @@ Talk to sales
 ::
 
 </div>
-</div>
-</section>
+::

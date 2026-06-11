@@ -11,6 +11,8 @@ summary: Known security findings and their fix status across FastYoke releases.
 order: 6
 ---
 
+::marketing-section{band="white" maxWidth="6xl"}
+
 ::hero{eyebrow="Trust" title="Security fixes" tagline="A running log of known security findings and the releases that resolved them."}
 ::
 
@@ -31,6 +33,10 @@ Status: **Fixed** — resolved in the listed release; customers on that version
 or newer are not exposed. **Mitigated** — a compensating control prevents
 exploitation; a code-level fix is pending. **Investigating** — acknowledged
 and under triage.
+
+</section>::
+
+::marketing-section{band="gray" maxWidth="6xl"}
 
 ::security-fix
 ---
@@ -175,4 +181,4 @@ is not penalised.
 
 <p class="mt-12 text-xs" style="color: var(--brand-text-secondary)">Last updated: 2026-06-04</p>
 
-</section>
+::
