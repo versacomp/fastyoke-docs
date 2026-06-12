@@ -38,6 +38,20 @@ Build a form free
 ::cta-button{to="/free-forms" variant="secondary" size="lg"}
 See the features
 ::
+
+#story-c-eyebrow
+STUDIO · COMING SOON
+
+#story-c-title
+Build an app, not a <em>config</em>.
+
+#story-c-tagline
+Compose real software from finite-state boards — generate it, version it, own it. Studio is how you build an app on FastYoke.
+
+#story-c-cta
+::cta-button{to="/studio" variant="primary" size="lg"}
+Explore Studio
+::
 ::
 
 ::marketing-section{band="white" maxWidth="3xl"}

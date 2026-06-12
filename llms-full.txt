@@ -27,6 +27,18 @@ The same form builder our enterprise customers ship to production — free for p
 Build a form free
 
 See the features
+
+#story-c-eyebrow
+STUDIO · COMING SOON
+
+#story-c-title
+Build an app, not a <em>config</em>.
+
+#story-c-tagline
+Compose real software from finite-state boards — generate it, version it, own it. Studio is how you build an app on FastYoke.
+
+#story-c-cta
+Explore Studio
 ::
 
 Traditional Low-Code Application Platforms force a brutal compromise: speed to market in exchange for proprietary vendor lock-in. **FastYoke shatters this paradigm.** We empower Independent Software Vendors to visually generate enterprise-grade applications that compile down to standard, ejectable codebases.
@@ -1086,6 +1098,77 @@ If either of those is you, we'd love to talk.
 - **Early features.** Preview access to the partner-management dashboard, branded tenant onboarding flows, and the multi-tenant operator console before they ship to general availability.
 
 This page is a placeholder while we shape the program. Specific terms, pricing, and signup mechanics will land here when the early-access window opens. Drop a note to [partners@fastyoke.io](mailto:partners@fastyoke.io) if you want to be on the first-cohort list.
+::
+
+---
+
+# Studio — Build an app on FastYoke
+
+#eyebrow
+STUDIO
+
+#default
+# Build an app, not a config.
+
+Studio is how you build real software on FastYoke — applications composed
+from finite-state boards you can generate, version, diff, and own. The
+pieces you need are here today. The unified visual canvas is **coming soon**.
+
+#eyebrow
+Available today
+
+#title
+Three ways to build, shipping now
+
+#default
+  ::feature-card{title="Studio wizard" summary="Pick a layout, brand it, choose your annotated entities, and ship a themed multi-page app extension. On rails and deterministic — the same picks produce the same bundle every time."}
+  ::cta-button{to="/docs/apps/studio-wizard" variant="secondary" size="sm"}
+  Read the docs
+  ::
+  ::
+  ::feature-card{title="Advanced App Builder" summary="The enterprise / ISV delivery surface: author engineering specs (by hand or with AI), track nav and page health, and download a handoff zip for an external SDK developer."}
+  ::cta-button{to="/docs/apps/advanced" variant="secondary" size="sm"}
+  Read the docs
+  ::
+  ::
+  ::feature-card{title="Yoke Architect" summary="Your app is a value — one tree of data with boards, states, guards, pages, and bridges. Read it, version it, regenerate it, compile it."}
+  ::cta-button{to="/yoke-architect" variant="secondary" size="sm"}
+  Read the thesis
+  ::
+  ::
+::
+
+#eyebrow
+Coming soon
+
+#title
+## The unified visual canvas
+
+#default
+We're building a single visual surface that ties the wizard, the Advanced
+App Builder, and the Yoke Architect composer together — drag a board, wire a
+transition, preview the app, and ship it, without leaving the canvas. It's
+**coming soon**. Create a free account now and you'll be ready the day it
+lands.
+
+::
+
+#title
+## Why apps-as-data?
+
+#default
+Studio rests on a simple, opinionated idea: your app should be a document you
+can read, not hidden imperative state inside an editor. That thesis — and an
+ode to Haskell — lives in **Yoke Architect**.
+
+Read the thesis
+::
+
+#title
+## Start building
+
+#default
+
 ::
 
 ---

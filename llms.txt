@@ -10,6 +10,7 @@
 - [SMS Opt-In — FastYoke](https://www.fastyoke.io/sms-opt-in): How FastYoke users opt in to receive transactional SMS messages, with screenshots of the in-product consent screen and the seven required disclosures.
 - [Security Fixes — FastYoke](https://www.fastyoke.io/security-fixes): Known security findings and their fix status across FastYoke releases.
 - [Channel Partners & ISVs — FastYoke](https://www.fastyoke.io/channel-partners): Early access program for systems integrators, channel partners, and independent software vendors building on the FastYoke aPaaS.
+- [Studio — Build an app on FastYoke](https://www.fastyoke.io/studio)
 - [Yoke Architect — A Thesis](https://www.fastyoke.io/yoke-architect)
 
 ## Documentation
