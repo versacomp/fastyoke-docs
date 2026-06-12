@@ -124,6 +124,21 @@
 
 - [Pages](https://www.fastyoke.io/docs/pages): Block-based workspace pages that embed FastYoke data into your operator UI.
 
+## primitives
+
+- [Engine Primitives](https://www.fastyoke.io/docs/primitives)
+- [Aggregator](https://www.fastyoke.io/docs/primitives/aggregator)
+- [Approval Gate](https://www.fastyoke.io/docs/primitives/approval-gate)
+- [Cross-Entity Transition](https://www.fastyoke.io/docs/primitives/cross-entity-transition)
+- [Field Compute](https://www.fastyoke.io/docs/primitives/field-compute)
+- [Field Mutator](https://www.fastyoke.io/docs/primitives/field-mutator)
+- [Notifier](https://www.fastyoke.io/docs/primitives/notifier)
+- [PDF Generator](https://www.fastyoke.io/docs/primitives/pdf-generator)
+- [Record Spawner](https://www.fastyoke.io/docs/primitives/record-spawner)
+- [Scheduler](https://www.fastyoke.io/docs/primitives/scheduler)
+- [SLA Timer](https://www.fastyoke.io/docs/primitives/sla-timer)
+- [Trigger Predicates](https://www.fastyoke.io/docs/primitives/trigger-predicates)
+
 ## Recipes
 
 - [Webhook Intake](https://www.fastyoke.io/docs/recipes/webhook-intake): Receive external events as FSM-backed jobs via a public form + invite token.

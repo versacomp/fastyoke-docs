@@ -9151,6 +9151,680 @@ backs the public `/p/...` URL.
 
 ---
 
+# Engine Primitives
+
+# Engine Primitives
+
+Engine Primitives are pre-built, security-vetted building blocks you attach to your Yoke's transitions, states, and fields. Each one is a small, composable unit of "engine" logic that you configure via the Yoke Studio without writing any code.
+
+Pick a primitive below to learn how to use it:
+
+| Primitive | What it does | Tier |
+|---|---|---|
+| [Aggregator](/docs/primitives/aggregator) | Roll up child records into a parent field — sum, count, average. | Solo+ |
+| [Notifier](/docs/primitives/notifier) | Send email or webhook on transitions, state changes, or field updates. | Solo (email) / Pro (webhook) |
+| [Scheduler](/docs/primitives/scheduler) | Run transitions or other primitives on a cron schedule. | Pro |
+| [SLA Timer](/docs/primitives/sla-timer) | Escalate stuck jobs after a fixed duration. | Pro |
+| [PDF Generator](/docs/primitives/pdf-generator) | Render PDFs from typst templates on transitions. | Pro |
+| [Approval Gate](/docs/primitives/approval-gate) | Block transitions behind N-of-M approver votes. | Pro |
+| [Field Compute](/docs/primitives/field-compute) | Compute virtual fields at read time using formulas. | Solo+ |
+| [Field Mutator](/docs/primitives/field-mutator) | Atomically increment, decrement, or set a field — with bounds. | Solo+ |
+| [Record Spawner](/docs/primitives/record-spawner) | Create entity records as a side effect of events. | Pro |
+| [Cross-Entity Transition](/docs/primitives/cross-entity-transition) | Fire an FSM event on a related entity's job. | Pro |
+
+## Trigger predicates
+
+Every primitive that fires on entity changes can use an optional **[trigger predicate](/docs/primitives/trigger-predicates)** to filter exactly when it runs — fire on a boolean edge, on a threshold crossing, or only when a specific value appears.
+
+---
+
+# Aggregator
+
+# Aggregator
+
+The Aggregator primitive computes a value over child records of a parent and writes the result to a parent field. It supports five reducers (sum, count, avg, min, max) and an optional `where:` filter so you can compute aggregates over a subset of children.
+
+## Configuration
+
+| Field | Type | Description |
+|---|---|---|
+| `source_entity` | string | The child entity name (e.g. `OrderLine`). |
+| `parent_entity` | string | The parent entity name (e.g. `Order`). |
+| `parent_link_field` | string | The field on the child that holds the parent's id (e.g. `order_id`). |
+| `aggregate` | enum | One of `sum`, `count`, `avg`, `min`, `max`. |
+| `source_field` | string | The child field to aggregate. Required unless `aggregate=count`. |
+| `target_field` | string | The parent field that receives the result. |
+| `where` | JSONLogic object | Optional. Only child rows where the predicate evaluates true are included. |
+
+## Example: Sum of approved-only line items
+
+```toml
+[[bindings]]
+primitive = "fastyoke.aggregator"
+trigger = { kind = "on_field_change", entity = "OrderLine", field = "amount" }
+config = {
+  source_entity = "OrderLine",
+  parent_entity = "Order",
+  parent_link_field = "order_id",
+  aggregate = "sum",
+  source_field = "amount",
+  target_field = "approved_total",
+  where = { "==": [{ var = "status" }, "approved"] }
+}
+```
+
+When any `OrderLine.amount` changes, Aggregator recomputes the sum of `amount` across all `OrderLine` rows linked to the same `Order` where `status == "approved"`, and writes the result to `Order.approved_total`.
+
+## When to use it
+
+- Order totals from line items.
+- Payment running totals from a payment ledger (combined with `where:` filter on status).
+- Inventory on-hand summed across all warehouses for a single SKU.
+
+## What it can't do
+
+- Atomic delta-write — Aggregator recomputes from children. For "add 5 to this counter" use [Field Mutator](/docs/primitives/field-mutator).
+- Cross-entity lookup — Aggregator works on a single parent-child relationship. To denormalize a value from a different entity, see [Field Compute](/docs/primitives/field-compute).
+
+---
+
+# Approval Gate
+
+# Approval Gate
+
+The Approval Gate primitive intercepts a transition request, writes a pending-approval marker to the event log, and waits until enough approver votes arrive before letting the underlying transition fire. The job's state stays put while a request is pending; the transition runs exactly once when the threshold is met.
+
+## Configuration
+
+| Field | Type | Description |
+|---|---|---|
+| `trigger.board` | string | Board name. |
+| `trigger.event` | string | The transition event to gate. |
+| `required_approvers` | integer | Number of distinct voters who must say yes (e.g. `2`). |
+| `approver_roles` | string[] | Roles that count as approvers (e.g. `["admin", "manager"]`). |
+| `max_approvers` | integer | Optional. Caps the number of voters allowed; defaults to `required_approvers`. |
+
+## Example: Expense approval requires two managers
+
+```toml
+[[bindings]]
+primitive = "fastyoke.approval-gate"
+trigger = { kind = "on_transition", board = "Expense", event = "approve" }
+config = {
+  required_approvers = 2,
+  approver_roles = ["admin", "manager"]
+}
+```
+
+The first time a user requests the `approve` event on an Expense, the engine writes an `__awaiting_approval__` row to the event log and returns without changing state. Subsequent calls by other users vote on that pending request via the approval vote endpoints. When two distinct admins or managers vote yes, the `approve` transition fires.
+
+## When to use it
+
+- Expense or PO approvals that require multiple sign-offs.
+- Refund / credit issuance gated on a manager's review.
+- Any "two-key" workflow where one operator shouldn't be able to single-handedly advance a job.
+
+## What it can't do
+
+- Allow the requester to also vote. The user who requested the transition is excluded from the voter count.
+- Time out automatically. Pair Approval Gate with an [SLA Timer](/docs/primitives/sla-timer) bound to the same state to auto-deny or escalate stale requests.
+- Combine "anyone who hasn't seen this" voting with quorum logic. V1 is plain N-of-M with role filtering.
+
+---
+
+# Cross-Entity Transition
+
+# Cross-Entity Transition
+
+The Cross-Entity Transition primitive fires an FSM event on a job belonging to a *different* entity from the one that triggered it. It's the declarative way to express "when an Order is marked paid, advance the related Customer's lifecycle" — the cascade that today is hand-rolled in several verticals.
+
+## Configuration
+
+| Field | Type | Description |
+|---|---|---|
+| `fk_path` | string | Single-hop path on the trigger entity that resolves to the target record's id (e.g. `entity.customer_id`). |
+| `target_schema_name` | string | The FSM schema bound to the target entity (e.g. `customer_lifecycle`). |
+| `target_entity_name` | string | The target entity's name. |
+| `event_name` | string | The FSM event to fire on the target's job. |
+| `idempotency` | enum | `skip_if_current_state_matches_post_transition` (default — no-op if the target is already in the post-event state) or `always_fire`. |
+| `on_concurrent_conflict` | enum | `swallow` (default — return Ok on a Conflict, matching how all today's hand-rolled callers behave) or `error`. |
+
+## Example: When an Order is paid, advance its Customer to active
+
+```toml
+[[bindings]]
+primitive = "fastyoke.cross_entity_transition"
+trigger = {
+  kind = "on_field_change",
+  entity = "Order",
+  field = "paid",
+  when = {
+    "and": [
+      { "==": [{ var = "before.paid" }, false] },
+      { "==": [{ var = "after.paid" }, true] }
+    ]
+  }
+}
+target_entity = "Order"
+config = {
+  fk_path = "entity.customer_id",
+  target_schema_name = "customer_lifecycle",
+  target_entity_name = "Customer",
+  event_name = "go_live",
+  idempotency = "skip_if_current_state_matches_post_transition",
+  on_concurrent_conflict = "swallow"
+}
+```
+
+When an Order's `paid` field flips from false to true, the engine resolves the Order's `customer_id`, finds the Customer's lifecycle job, and fires `go_live` against it. The default idempotency setting means firing the same trigger again is a no-op once the customer is already live. Concurrent-conflict swallowing matches the behavior of the hand-rolled cascades in payments, urgent care, and CRM conversions.
+
+## When to use it
+
+- Lifecycle promotion: paying an Order activates the linked Customer, marking a Visit paid checks the patient out.
+- Quote → Order → Opportunity cascades, where advancing one job needs to advance another.
+- Any "if A then advance B" rule that today lives in cross-table backend code.
+
+## What it can't do
+
+- Resolve multi-hop FK paths. V1 supports `entity.<field>` only; deeper paths are deferred.
+- Skip the target's guards. The target FSM's guards still run — `apply_transition` is invoked exactly as if a human had fired the event.
+- Run pre-commit. Cross-entity transitions always fire after the originating event commits, so the user's action succeeds even if the cascade can't.
+- Survive a schema rename. If the target schema disappears or its event is removed between save and runtime, the engine logs a schema-drift audit row and skips the cascade.
+
+---
+
+# Field Compute
+
+# Field Compute
+
+The Field Compute primitive adds a virtual field to an entity, computed at read time from a small JavaScript-style formula. Nothing is stored on disk — the computation runs every time the entity is read, in a fuel-bounded sandbox.
+
+## Configuration
+
+| Field | Type | Description |
+|---|---|---|
+| `target_entity` | string | The entity whose read response gains the virtual field. |
+| `field` | string | The virtual field name (must not collide with a stored column). |
+| `formula` | string | A short expression in the sandboxed evaluator (e.g. `entity.total - entity.amount_paid`). |
+| `mode` | enum | V1 supports only `merge` — the result is merged into the response object under `field`. |
+| `fuel_budget` | integer | Optional. Per-evaluation instruction ceiling; defaults to 10,000, capped at 100,000. |
+
+## Example: Balance due on an Order
+
+```toml
+[[bindings]]
+primitive = "fastyoke.field_compute"
+trigger = { kind = "on_entity_read", entity = "Order" }
+target_entity = "Order"
+config = {
+  field = "balance_due",
+  formula = "entity.total - entity.amount_paid",
+  mode = "merge"
+}
+```
+
+Every time an Order is read, the engine evaluates `entity.total - entity.amount_paid` inside the sandbox and adds the result to the response under `balance_due`. Bulk list reads cache the binding lookup so a 100-row response evaluates the formula 100 times but reads the binding configuration once.
+
+## When to use it
+
+- Derived totals that don't warrant a write column (`balance_due`, `is_overdue`, `days_open`).
+- Aggregating a couple of stored fields into a single display value.
+- Boolean flags computed from payload state (e.g. `entity.shipped && !entity.invoiced`).
+
+## What it can't do
+
+- Persist the computed value. For "writeback on event" use [Aggregator](/docs/primitives/aggregator) or [Field Mutator](/docs/primitives/field-mutator).
+- Reach across entities or talk to the network. The sandbox has no host imports; only `entity` is bound.
+- Run unbounded code. Formulas are fuel-capped (default 10k instructions) and memory-capped (1 MiB).
+- Take a non-deterministic input. Same `entity` always produces the same output.
+
+---
+
+# Field Mutator
+
+# Field Mutator
+
+The Field Mutator primitive performs an atomic field-level update on a target entity in response to a trigger. It can add a delta, set a value, or enforce minimum and maximum bounds — and the bound check can run pre-commit so a violation aborts the originating event.
+
+## Configuration
+
+| Field | Type | Description |
+|---|---|---|
+| `target_entity` | string | Entity whose field is being mutated. |
+| `target_lookup_path` | string | Single-hop path on the trigger entity that resolves to the target's id (e.g. `entity.item_id`). |
+| `field` | string | The field on `target_entity` to update. |
+| `delta_source` | string | Path on the trigger entity that supplies the delta or set value (e.g. `entity.quantity`). |
+| `delta_op` | enum | `add` (delta is added to the current value) or `set` (delta replaces the current value). |
+| `min_bound` | number | Optional lower bound. Combine with `enforce_bounds=true` for hard nonnegative invariants. |
+| `max_bound` | number | Optional upper bound. |
+| `enforce_bounds` | boolean | `true` runs pre-commit (a violation rolls back the originating event with 422). `false` runs post-commit (a violation no-ops the mutation and writes an audit row, but the originating event still succeeds). |
+| `storage_scope` | enum | `entity` (default — mutates `target_entity.data_payload[field]`) or `tenant_counter` (mutates a tenant-wide counter keyed by your Yoke slug + a key you supply — used for lifetime quotas). |
+
+## Example: Decrement inventory on a stock movement (nonnegative-enforced)
+
+```toml
+[[bindings]]
+primitive = "fastyoke.field_mutator"
+trigger = { kind = "on_record_create", entity = "StockMovement" }
+target_entity = "InventoryItem"
+config = {
+  target_lookup_path = "entity.item_id",
+  field = "qty_on_hand",
+  delta_source = "entity.quantity",
+  delta_op = "add",
+  min_bound = 0,
+  enforce_bounds = true
+}
+```
+
+When a `StockMovement` is created, the engine atomically updates `InventoryItem.qty_on_hand` by the movement's `quantity`. If the result would drop below zero, the originating create fails with a 422 — your `StockMovement` is never written, your inventory never goes negative.
+
+## When to use it
+
+- Inventory increment / decrement with a nonnegative invariant.
+- Counter primitives where you don't want to recompute from children (the [Aggregator](/docs/primitives/aggregator) anti-case).
+- Free-tier lifetime quotas (`storage_scope = "tenant_counter"`) — declarative replacement for hand-rolled cap tables.
+
+## What it can't do
+
+- Multi-hop FK resolution. V1 supports `entity.<field>` only; lookups like `entity.customer.account_id` are deferred.
+- Multiple mutators on the same `(entity, field)` pair. The validator rejects this at save time to avoid write-conflict races.
+- Cross-tenant counters. Counters are always scoped by tenant and Yoke slug.
+- Run unbounded operations. Each atomic update is bounded by the per-statement timeout.
+
+---
+
+# Notifier
+
+# Notifier
+
+The Notifier primitive fires an outbound message when one of your Yoke's triggers matches. It supports two channels — email (free) and webhook (Pro) — and uses Mustache-style `{{path}}` substitution against the entity's payload to template the subject, body, and recipient list.
+
+## Configuration
+
+| Field | Type | Description |
+|---|---|---|
+| `channel` | enum | `email` or `webhook`. |
+| `to` | string[] | Email recipient list. Each entry may be a literal address or a `{{path}}` reference into the entity payload. Used when `channel = "email"`. |
+| `subject` | string | Email subject template. Used when `channel = "email"`. |
+| `body_template` | string | Message body template. Used for both channels. |
+| `webhook_url` | string | Destination URL when `channel = "webhook"`. Must be `https://` and pre-allowlisted in your tenant settings. |
+| `webhook_secret` | string | Optional shared secret used to HMAC-sign the webhook body. |
+
+`{{path}}` references resolve against the entity's `data_payload` for transition and state triggers, against the changed record for record-create or field-change triggers.
+
+## Example: Email the customer when an Order is fulfilled
+
+```toml
+[[bindings]]
+primitive = "fastyoke.notifier"
+trigger = { kind = "on_transition", board = "Order", event = "fulfill" }
+config = {
+  channel = "email",
+  to = ["{{owner_email}}"],
+  subject = "Order {{order_number}} fulfilled",
+  body_template = "Order {{order_number}} for {{customer_name}} has been fulfilled."
+}
+```
+
+## Example: Webhook on every state change of a Ticket
+
+```toml
+[[bindings]]
+primitive = "fastyoke.notifier"
+trigger = { kind = "on_state_entry", board = "Ticket", state = "Resolved" }
+config = {
+  channel = "webhook",
+  webhook_url = "https://hooks.example.com/yoke/ticket-resolved",
+  webhook_secret = "<your-shared-secret>",
+  body_template = "{\"ticket_id\": \"{{id}}\", \"customer\": \"{{customer_name}}\"}"
+}
+```
+
+## When to use it
+
+- Customer-facing email on lifecycle events (order shipped, quote sent, appointment confirmed).
+- Operator alerts on edge cases that don't warrant a full FSM transition.
+- Outbound webhook bridging to a third-party system that isn't a first-class connector yet.
+
+## What it can't do
+
+- Render a PDF attachment — use [PDF Generator](/docs/primitives/pdf-generator) and attach the resulting `file_id` in a follow-up step.
+- Block a transition until the recipient acknowledges — use [Approval Gate](/docs/primitives/approval-gate).
+- Exceed the rate limit. Notifier is capped at 100 invocations per tenant per minute across all notifier bindings; excess invocations are skipped and recorded.
+
+---
+
+# PDF Generator
+
+# PDF Generator
+
+The PDF Generator primitive renders a typst-source template using the entity's payload as the substitution context, writes the resulting PDF to storage, and attaches the new file id to a field on the entity. It runs asynchronously so the originating transition is never blocked by typst compilation.
+
+## Configuration
+
+| Field | Type | Description |
+|---|---|---|
+| `template` | string | Full typst source. Use `{{entity.field}}` substitutions to interpolate payload values. |
+| `attach_to_field` | string | The entity field that receives the resulting `file_id`. |
+| `filename_template` | string | Filename template, also Mustache-style (e.g. `quote-{{quote_number}}.pdf`). |
+
+## Example: Render a quote PDF when a Quote is sent
+
+```toml
+[[bindings]]
+primitive = "fastyoke.pdf-generator"
+trigger = { kind = "on_transition", board = "Quote", event = "send_quote" }
+config = {
+  template = """
+    #set page(\"us-letter\")
+    = Quote {{quote_number}}
+    Customer: {{customer_name}}
+    Total: ${{total}}
+  """,
+  attach_to_field = "quote_pdf",
+  filename_template = "quote-{{quote_number}}.pdf"
+}
+```
+
+When the `send_quote` transition commits, the engine renders the typst source against the Quote's payload, uploads the PDF to tenant-scoped storage, and writes the resulting `file_id` to `Quote.quote_pdf`.
+
+## When to use it
+
+- Customer-facing documents that need precise typography (quotes, invoices, statements).
+- Compliance artifacts produced as a side effect of a transition (signed agreements, audit reports).
+- Anything else where the same template fills with per-entity values.
+
+## What it can't do
+
+- Render synchronously and surface the PDF in the transition response. The render is asynchronous to keep transitions fast — the field is populated when the render finishes.
+- Reach over typst's sandbox. Templates have no host-system access and no network access.
+- Exceed your tenant's daily render cap. The same anti-abuse cap that covers Forms typst renders applies here.
+- Attach the PDF to email automatically. Pair PDF Generator with [Notifier](/docs/primitives/notifier) and reference the attached `file_id`.
+
+---
+
+# Record Spawner
+
+# Record Spawner
+
+The Record Spawner primitive creates an entity record when a trigger fires, using a deterministic id template so retries are idempotent. It can also delete that record when a paired `clear_when:` predicate becomes true — the "spawn-when-broken, clear-when-recovered" pattern — and can optionally spawn a paired FSM job in the same step.
+
+## Configuration
+
+| Field | Type | Description |
+|---|---|---|
+| `spawn_entity` | string | The entity to create. |
+| `id_template` | string | Mustache-style template that produces the spawned record's id (e.g. `inv-alert-{{entity.id}}`). Determinism is what makes upserts safe. |
+| `payload_template` | object | Mustache-rendered JSON object that becomes the spawned record's payload. |
+| `on_collision` | enum | `upsert` (overwrite if exists), `skip` (no-op if exists), or `error`. |
+| `clear_when` | JSONLogic object | Optional. When the predicate evaluates true, the spawned record is deleted instead of created. |
+| `also_spawn_job` | object | Optional. `{ schema_name, initial_state }` — also creates a job bound to the spawned record. |
+
+## Example: Inventory low-stock alert (spawn when below reorder point, clear when restocked)
+
+```toml
+[[bindings]]
+primitive = "fastyoke.record_spawner"
+trigger = {
+  kind = "on_field_change",
+  entity = "InventoryItem",
+  field = "qty_on_hand",
+  when = { "<": [{ var = "after.qty_on_hand" }, { var = "after.reorder_point" }] }
+}
+target_entity = "InventoryItem"
+config = {
+  spawn_entity = "InventoryAlert",
+  id_template = "inv-alert-{{entity.id}}",
+  payload_template = {
+    item_id = "{{entity.id}}",
+    on_hand = "{{after.qty_on_hand}}",
+    reorder_point = "{{entity.reorder_point}}",
+    status = "open"
+  },
+  on_collision = "upsert",
+  clear_when = {
+    ">=": [{ var = "after.qty_on_hand" }, { var = "after.reorder_point" }]
+  }
+}
+```
+
+When `qty_on_hand` drops below `reorder_point`, the engine upserts an `InventoryAlert` row with a deterministic id. When `qty_on_hand` rises back above `reorder_point` later, the same row is deleted. Retrying the original event is safe because the id is derived from the source record.
+
+## When to use it
+
+- Watchdog patterns: spawn an alert row when a condition goes bad, clear it when the condition recovers.
+- Cascade workflows: spawn a follow-up record (and its job) as a side effect of a transition.
+- Bulk materialization: pair with [Scheduler](/docs/primitives/scheduler) to run a periodic sweep that creates rows for everything matching a predicate.
+
+## What it can't do
+
+- Trigger on entity reads. Reads must not create records; only write-side triggers are supported.
+- Resolve multi-hop FK paths. V1 paths are single-hop.
+- Bypass the cascade budget. Each spawned record fires its own `on_record_create` bindings — the engine caps total invocations per originating event to keep accidental loops from running away.
+
+---
+
+# Scheduler
+
+# Scheduler
+
+The Scheduler primitive runs an action on a cron-style schedule. Each tick, it can either fire a transition against every job bound to a board, or invoke another primitive (most often [Notifier](/docs/primitives/notifier)) with a fixed config.
+
+## Configuration
+
+| Field | Type | Description |
+|---|---|---|
+| `trigger.cron` | string | Standard 5- or 6-field cron expression, evaluated in UTC. Validated at save time. |
+| `fire.kind` | enum | `transition` or `primitive`. |
+| `fire.board` | string | Board name. Required when `fire.kind = "transition"`. |
+| `fire.event` | string | FSM event to fire. Required when `fire.kind = "transition"`. |
+| `fire.primitive` | string | Slug of the primitive to invoke. Required when `fire.kind = "primitive"`. |
+| `fire.config` | object | Config to pass to the named primitive. Required when `fire.kind = "primitive"`. |
+
+## Example: Fire a `send_invoice` event every weekday at 9 AM UTC
+
+```toml
+[[bindings]]
+primitive = "fastyoke.scheduler"
+trigger = { kind = "on_schedule", cron = "0 9 * * 1-5" }
+config = {
+  fire = { kind = "transition", board = "Subscription", event = "send_invoice" }
+}
+```
+
+At each tick, Scheduler invokes `apply_transition` against every subscription job bound to the `Subscription` board. Guards still apply — a guard that returns false on a given job means that job is silently skipped.
+
+## Example: Send a daily digest via Notifier
+
+```toml
+[[bindings]]
+primitive = "fastyoke.scheduler"
+trigger = { kind = "on_schedule", cron = "0 8 * * *" }
+config = {
+  fire = {
+    kind = "primitive",
+    primitive = "fastyoke.notifier",
+    config = {
+      channel = "email",
+      to = ["ops@example.com"],
+      subject = "Daily ops digest",
+      body_template = "Today's open tickets: ..."
+    }
+  }
+}
+```
+
+## When to use it
+
+- Daily / weekly / hourly recurring transitions (subscription billing, recurring task spawn).
+- Periodic notifier dispatch (morning digest, end-of-day summary).
+- Polling-like patterns paired with a [Record Spawner](/docs/primitives/record-spawner) or [Field Mutator](/docs/primitives/field-mutator).
+
+## What it can't do
+
+- Replay missed ticks. If the VM is down at the tick time, the tick is skipped — Scheduler will not catch up on restart. For at-least-once guarantees, model the work as a queued entity record instead.
+- Sub-minute scheduling. The minimum granularity is the standard cron one-minute resolution.
+- Pile up. Each binding fires at most once per tick — overlapping schedules don't double-fire.
+
+---
+
+# SLA Timer
+
+# SLA Timer
+
+The SLA Timer primitive arms a deadline when a job enters a state, then fires an escalation action — either a transition or another primitive — if the job is still in that state when the deadline elapses. If the job moves on before the timer fires, the timer is silently cleared.
+
+## Configuration
+
+| Field | Type | Description |
+|---|---|---|
+| `trigger.board` | string | Board name. |
+| `trigger.state` | string | The state whose entry arms the timer. |
+| `after` | ISO-8601 duration | How long to wait (e.g. `PT4H` for four hours, `P1D` for one day). Minimum one minute, maximum 90 days. |
+| `escalate.kind` | enum | `transition` or `primitive`. |
+| `escalate.event` | string | FSM event to fire on escalation. Required when `escalate.kind = "transition"`. |
+| `escalate.primitive` | string | Slug of the primitive to invoke. Required when `escalate.kind = "primitive"`. |
+| `escalate.config` | object | Config to pass to the named primitive. Required when `escalate.kind = "primitive"`. |
+
+## Example: Auto-escalate Tickets that sit in Open for 4 hours
+
+```toml
+[[bindings]]
+primitive = "fastyoke.sla-timer"
+trigger = { kind = "on_state_entry", board = "Ticket", state = "Open" }
+config = {
+  after = "PT4H",
+  escalate = { kind = "transition", event = "auto_escalate" }
+}
+```
+
+When a Ticket enters `Open`, an `__sla_armed__` marker is appended to the event log with the deadline. At each cron tick, the engine checks for armed markers whose deadline has passed *and* whose job is still in the armed state. Those jobs receive the `auto_escalate` event. If a Ticket moves out of `Open` before the four hours elapse, the marker is silently cleared.
+
+## When to use it
+
+- Customer-support SLAs (escalate to a senior agent after N hours).
+- Dispatch waiting on driver acceptance (fall back to the next driver after N minutes).
+- Approval workflows that auto-deny if a quorum doesn't sign off within N days.
+
+## What it can't do
+
+- Sub-minute precision. The minimum duration is one minute; ticks run on the same cadence as [Scheduler](/docs/primitives/scheduler).
+- Multi-step escalation chains in a single binding. Use two SLA Timers, the second armed by the state your first timer transitions into.
+- Replay missed ticks if the VM was down at the exact deadline. The next tick after the VM is back catches up.
+
+---
+
+# Trigger Predicates
+
+# Trigger Predicates
+
+Every primitive bound to an `on_field_change`, `on_record_create`, or `on_transition` trigger can carry an optional `when:` predicate. The predicate is evaluated each time the trigger matches; the primitive only fires when the predicate returns true. This is how you express edges, threshold crossings, and value-specific filters without writing any code.
+
+## The `when:` field
+
+Add `when:` directly to the trigger object in your binding:
+
+```toml
+trigger = {
+  kind = "on_field_change",
+  entity = "Order",
+  field = "paid",
+  when = {
+    "and": [
+      { "==": [{ var = "before.paid" }, false] },
+      { "==": [{ var = "after.paid" }, true] }
+    ]
+  }
+}
+```
+
+The predicate is plain [JSONLogic](https://jsonlogic.com) and runs in the same sandbox FSM guards use — fuel-bounded, no host imports, deterministic.
+
+## What's in scope
+
+The evaluator has four bound variables:
+
+| Variable | Description |
+|---|---|
+| `before` | The entity payload *before* the change. Empty for `on_record_create`. |
+| `after` | The entity payload *after* the change. Same as `entity` for `on_record_create`. |
+| `entity` | The full entity payload at trigger time. For `on_transition`, this is the entity at the moment the transition fired. |
+| `now` | The current time in epoch milliseconds, injected by the dispatcher. |
+
+Use `{ var: "before.field" }` and `{ var: "after.field" }` to compare before-and-after values; `{ var: "entity.field" }` for direct payload reads.
+
+## Preset shortcuts (Yoke Studio toolbar)
+
+The Yoke Studio renders four preset buttons that produce the most common predicate shapes:
+
+### Edge: false → true
+
+```json
+{
+  "and": [
+    { "==": [{ "var": "before.<field>" }, false] },
+    { "==": [{ "var": "after.<field>" }, true] }
+  ]
+}
+```
+
+Fires only on the tick a boolean field flips from false to true. Use for "first time the order is marked paid" or "first time a checkbox is checked."
+
+### Threshold crossed below
+
+```json
+{
+  "and": [
+    { ">=": [{ "var": "before.<field>" }, { "var": "threshold" }] },
+    { "<": [{ "var": "after.<field>" }, { "var": "threshold" }] }
+  ]
+}
+```
+
+Fires only on the tick a numeric field crosses below a threshold. Use for inventory drop-below-reorder-point alerts.
+
+### Threshold crossed above
+
+```json
+{
+  "and": [
+    { "<=": [{ "var": "before.<field>" }, { "var": "threshold" }] },
+    { ">": [{ "var": "after.<field>" }, { "var": "threshold" }] }
+  ]
+}
+```
+
+Mirror image of "threshold crossed below." Use for budget overruns, capacity-met events.
+
+### Value changed
+
+```json
+{ "!=": [{ "var": "before.<field>" }, { "var": "after.<field>" }] }
+```
+
+Fires only when the field value differs from the prior tick. Cheap general-purpose change detector.
+
+## Validation
+
+- The predicate must parse as JSONLogic at save time. Syntax errors are rejected with a 422.
+- The predicate is fuel-bounded; a runaway predicate is treated as falsy and a `__primitive_predicate_error__` row is written to the event log.
+- Degenerate predicates (always-true / always-false) are rejected at save time — they indicate a misconfiguration.
+
+## When to use it
+
+- Boolean edges: fire once on the false → true transition, not every subsequent write of `true`.
+- Threshold crossings: alert on the tick a number crosses a limit, then stay quiet until it crosses back.
+- Value-specific filters: fire only when `status` becomes `approved`, not when it churns through other values.
+
+## What it can't do
+
+- Reach outside `{ before, after, entity, now }`. The predicate has no host access.
+- Block the trigger. The predicate filters whether the primitive fires; it doesn't abort the originating event.
+- Replace [Field Compute](/docs/primitives/field-compute) for derived field math — that primitive is for read-time formulas, not trigger filtering.
+
+---
+
 # Webhook Intake
 
 > Receive external events as FSM-backed jobs via a public form + invite token.
