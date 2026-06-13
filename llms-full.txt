@@ -1219,7 +1219,7 @@ This sounds like a small distinction. It is not.
 
 After the entry point, you edit boards, pick branding, choose a tier — free or Pro-trial — and click Save & Activate. The wizard never asks you to write code. It also never lies to you about what it's doing: the draft you see is the literal document that gets installed.
 
-For the FastYoke engineering team, the same wizard is engineered to also produce a **paste-able patch**: the same YokeDoc compiles to Rust constants, installer and uninstaller functions, JSON assets, integration tests, and a customer doc page — everything needed to ship the app as a public marketplace listing. The wizard's two outputs (your tenant's database, or a unified diff against our codebase) come from the same description through two different interpreters.
+For the FastYoke engineering team, the same wizard is engineered to also produce a **paste-able patch**: the same YokeDoc compiles to Rust constants, installer and uninstaller functions, JSON assets, integration tests, and a customer doc page — everything needed to ship the app as a public marketplace listing. Both outputs — your tenant's database, or a unified diff against our codebase — come from the same description walked once by the same interpreter; only the writer at the end of the walk differs.
 
 <blockquote class="yugabyte-quote">Stay with that sentence. It is the entire thesis.</blockquote>
 ::
