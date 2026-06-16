@@ -15,11 +15,20 @@ order: 2
 
 ::marketing-section{band="white" maxWidth="6xl"}
 #default
+::pricing-metered-matrix
+::
+
+::pricing-calculator
+::
+::
+
+::marketing-section{band="gray" maxWidth="6xl"}
+#default
 ::pricing-forms-matrix
 ::
 ::
 
-::marketing-section{band="gray" maxWidth="3xl"}
+::marketing-section{band="white" maxWidth="3xl"}
 #default
 <h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">Frequently asked</h2>
 
@@ -101,7 +110,7 @@ order: 2
 </div>
 ::
 
-::marketing-section{band="white" maxWidth="3xl"}
+::marketing-section{band="gray" maxWidth="3xl"}
 #default
 <h2 class="text-2xl font-semibold tracking-tight text-[var(--brand-text-primary)]">Start on Solo. Upgrade when you need it.</h2>
 <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
