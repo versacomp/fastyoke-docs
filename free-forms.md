@@ -17,7 +17,7 @@ Read the docs
 
 ::prose-container{max-width="3xl" padding="md"}
 
-Most form builders trap your data, watermark your pages, and make you pay just to remove their logo. **FastYoke takes the opposite approach.** Build unlimited forms on the Solo plan, host them on your own domain when you upgrade, and export your data any time you want.
+Most form builders trap your data, watermark your pages, and make you pay just to remove their logo. **FastYoke&trade; takes the opposite approach.** Build unlimited forms on the Solo plan, host them on your own domain when you upgrade, and export your data any time you want.
 
 ::
 

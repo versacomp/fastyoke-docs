@@ -41,7 +41,7 @@ Compose real software from finite-state boards — generate it, version it, own 
 Explore Studio
 ::
 
-Traditional Low-Code Application Platforms force a brutal compromise: speed to market in exchange for proprietary vendor lock-in. **FastYoke shatters this paradigm.** We empower Independent Software Vendors to visually generate enterprise-grade applications that compile down to standard, ejectable codebases.
+Traditional Low-Code Application Platforms force a brutal compromise: speed to market in exchange for proprietary vendor lock-in. **FastYoke&trade; shatters this paradigm.** We empower Independent Software Vendors to visually generate enterprise-grade applications that compile down to standard, ejectable codebases.
 
 #eyebrow
 The Sovereignty Triad
@@ -177,7 +177,7 @@ Sign up direct and you get an isolated FastYoke tenant — dedicated database, s
   <div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">How do upgrades work?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
-      Vercel handles the install; FastYoke handles the upgrade.
+      Vercel handles the install; FastYoke&trade; handles the upgrade.
       Pro, Team, and Enterprise / ISV route through our billing
       surface — Solo and Pro are hard-capped on transition
       volume, Team can opt in to metered overages, Enterprise / ISV
@@ -495,7 +495,7 @@ Read the docs
 
 
 
-Most form builders trap your data, watermark your pages, and make you pay just to remove their logo. **FastYoke takes the opposite approach.** Build unlimited forms on the Solo plan, host them on your own domain when you upgrade, and export your data any time you want.
+Most form builders trap your data, watermark your pages, and make you pay just to remove their logo. **FastYoke&trade; takes the opposite approach.** Build unlimited forms on the Solo plan, host them on your own domain when you upgrade, and export your data any time you want.
 
 
 ::
@@ -968,6 +968,71 @@ non-SMS notifications (e.g., email).
 
 ---
 
+# Trademarks — FastYoke
+
+> Acknowledgment of third-party trademarks referenced in the FastYoke product, and a statement that FastYoke uses them nominatively without implying endorsement or affiliation.
+
+**Last updated:** 2026-06-16.
+
+This page acknowledges third-party trademarks referenced in the
+FastYoke&trade; product, marketing site, and documentation. FastYoke
+uses these marks **nominatively** — only to identify the third-party
+services that FastYoke integrates with, configures, or refers to in
+copy. Such use does not imply endorsement, sponsorship, or affiliation
+by the trademark holders, nor any partnership beyond the technical
+integrations described in the product.
+
+## FastYoke's own marks
+
+"FastYoke," the FastYoke wordmark, and the FastYoke logo are
+trademarks of FastYoke / Versacomp. All rights reserved. The
+"Powered by FastYoke" badge is provided under the separate
+permission terms documented in the [Terms of Service](/terms).
+
+## Third-party trademarks
+
+The marks below appear in user-facing surfaces of the FastYoke product
+(integration cards, setup flows, settings panels, or marketing copy).
+Each mark is the property of its respective owner; the **Use in
+FastYoke** column describes only where the name appears in our UI or
+copy, not any partnership or certification.
+
+| Mark | Owner | Where it appears in FastYoke |
+|---|---|---|
+| QuickBooks&reg; | Intuit Inc. | "Connect QuickBooks" integration card; QuickBooks Online sync configuration under Settings &rarr; Integrations |
+| Stripe&reg; | Stripe, Inc. | Billing settings; add-on Marketplace checkout; payment-method UI; pricing pages |
+| Gmail&trade; | Google LLC | Mail provider card under Yoke email sync ("Connect Gmail") |
+| Outlook&reg; | Microsoft Corporation | Mail provider card under Yoke email sync ("Connect Outlook") |
+| Salesforce&reg; | Salesforce, Inc. | Salesforce Connector add-on; Connections form (consumer key / consumer secret / login URL); Sync action under Integrations |
+| WorkOS&trade; | WorkOS, Inc. | WorkOS AuthKit sign-in handoff; WorkOS Identity card under Settings (Organization, MFA policy); compliance connector |
+| GitHub&reg; | GitHub, Inc. | "FastYoke GitHub App" compliance connector (read-only posture); installation-id setup form |
+| Twilio&reg; | Twilio Inc. | Twilio (SMS) provider option under Connections; credential form (Account SID, Auth Token, From Number) |
+| SendGrid&reg; | Twilio Inc. | SendGrid (Email) provider option under Connections; API key credential form |
+| AWS&reg; | Amazon Web Services, Inc. | AWS (SecurityAudit) cross-account compliance connector; opt-in disclosure copy on SMS / email 2FA enrollment |
+| Anthropic&reg; / Claude&trade; | Anthropic, PBC | LLM provider option under Settings &rarr; LLM (model selector lists Claude models); App Builder authoring flow ("Calling Claude…"); BYOK Anthropic API key field on Yoke settings |
+| OpenAI&trade; / ChatGPT&trade; | OpenAI, OpCo, LLC | LLM provider option under Settings &rarr; LLM (model selector lists GPT models); OpenAI-compatible custom endpoint hint copy |
+| Google&reg; Gemini&trade; | Google LLC | LLM provider option under Settings &rarr; LLM (model selector lists Gemini models) |
+| DeepSeek&trade; | DeepSeek (Hangzhou DeepSeek Artificial Intelligence Co., Ltd.) | LLM provider option under Settings &rarr; LLM |
+| Fly.io&trade; | Fly.io, Inc. | Deployment target referenced in the README and ops documentation |
+
+If you believe your trademark is being used incorrectly on this page
+or elsewhere in FastYoke — including incorrect ownership, wrong
+&trade; / &reg; designation, or use that crosses from nominative into
+suggesting endorsement — please email
+[legal@fastyoke.io](mailto:legal@fastyoke.io) and we will correct or
+remove the reference promptly.
+
+## A note on the &trade; and &reg; symbols
+
+The `&reg;` symbol is used where we believe the mark is federally
+registered in at least one major jurisdiction. The `&trade;` symbol
+is used for marks claimed by their owner where we have not verified
+registration. We default to `&trade;` when uncertain. The presence or
+absence of either symbol on this page does not affect the underlying
+rights of the mark holder.
+
+---
+
 # Security Fixes — FastYoke
 
 > Known security findings and their fix status across FastYoke releases.
@@ -1082,7 +1147,7 @@ is not penalised.
 
 We're opening an early-access track for two audiences:
 
-- **Independent Software Vendors** shipping vertical SaaS products to enterprise customers — automotive, healthcare, field service, hospitality, regulated industries. FastYoke's Fleet-of-Files architecture and ejectable codebase contract are designed to fit your customer-isolation, exit-certainty, and compliance posture out of the box.
+- **Independent Software Vendors** shipping vertical SaaS products to enterprise customers — automotive, healthcare, field service, hospitality, regulated industries. FastYoke&trade;'s Fleet-of-Files architecture and ejectable codebase contract are designed to fit your customer-isolation, exit-certainty, and compliance posture out of the box.
 - **Channel Partners and Systems Integrators** who deliver, customize, or white-label SaaS on behalf of multiple customers. We'll wire up the operator surface, billing rev-share, branding controls, and the tenant-fleet management console you need to run a portfolio cleanly.
 
 If either of those is you, we'd love to talk.
@@ -1110,7 +1175,7 @@ STUDIO
 #default
 # Build an app, not a config.
 
-Studio is how you build real software on FastYoke — applications composed
+Studio is how you build real software on FastYoke&trade; — applications composed
 from finite-state boards you can generate, version, diff, and own. The
 pieces you need are here today. The unified visual canvas is **coming soon**.
 
@@ -1187,7 +1252,7 @@ This document explains the second way, why we chose it, and what it costs us not
 ## What a Yoke App actually is
 
 #default
-A **Yoke App** — what FastYoke calls a multi-board declarative application — is a single document. Internally we call it a YokeDoc. It has:
+A **Yoke App** — what FastYoke&trade; calls a multi-board declarative application — is a single document. Internally we call it a YokeDoc. It has:
 
 - A handful of **boards** — finite-state machines, each bound to an entity (an Order, a Patient, a Work Order, a Bed Request).
 - **States**, **transitions**, optional **guards** (sandboxed predicates), and optional **engine primitives** bound to those transitions (schedule, notify, escalate, render PDF, aggregate, approve).

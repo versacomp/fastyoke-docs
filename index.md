@@ -55,7 +55,7 @@ Explore Studio
 ::
 
 ::marketing-section{band="white" maxWidth="3xl"}
-Traditional Low-Code Application Platforms force a brutal compromise: speed to market in exchange for proprietary vendor lock-in. **FastYoke shatters this paradigm.** We empower Independent Software Vendors to visually generate enterprise-grade applications that compile down to standard, ejectable codebases.
+Traditional Low-Code Application Platforms force a brutal compromise: speed to market in exchange for proprietary vendor lock-in. **FastYoke&trade; shatters this paradigm.** We empower Independent Software Vendors to visually generate enterprise-grade applications that compile down to standard, ejectable codebases.
 ::
 
 ::marketing-section{band="white" maxWidth="6xl"}

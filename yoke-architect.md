@@ -20,7 +20,7 @@ This document explains the second way, why we chose it, and what it costs us not
 ## What a Yoke App actually is
 
 #default
-A **Yoke App** — what FastYoke calls a multi-board declarative application — is a single document. Internally we call it a YokeDoc. It has:
+A **Yoke App** — what FastYoke&trade; calls a multi-board declarative application — is a single document. Internally we call it a YokeDoc. It has:
 
 - A handful of **boards** — finite-state machines, each bound to an entity (an Order, a Patient, a Work Order, a Bed Request).
 - **States**, **transitions**, optional **guards** (sandboxed predicates), and optional **engine primitives** bound to those transitions (schedule, notify, escalate, render PDF, aggregate, approve).

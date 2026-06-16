@@ -12,7 +12,7 @@ STUDIO
 #default
 # Build an app, not a config.
 
-Studio is how you build real software on FastYoke — applications composed
+Studio is how you build real software on FastYoke&trade; — applications composed
 from finite-state boards you can generate, version, diff, and own. The
 pieces you need are here today. The unified visual canvas is **coming soon**.
 ::

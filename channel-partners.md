@@ -13,7 +13,7 @@ order: 9
 
 We're opening an early-access track for two audiences:
 
-- **Independent Software Vendors** shipping vertical SaaS products to enterprise customers — automotive, healthcare, field service, hospitality, regulated industries. FastYoke's Fleet-of-Files architecture and ejectable codebase contract are designed to fit your customer-isolation, exit-certainty, and compliance posture out of the box.
+- **Independent Software Vendors** shipping vertical SaaS products to enterprise customers — automotive, healthcare, field service, hospitality, regulated industries. FastYoke&trade;'s Fleet-of-Files architecture and ejectable codebase contract are designed to fit your customer-isolation, exit-certainty, and compliance posture out of the box.
 - **Channel Partners and Systems Integrators** who deliver, customize, or white-label SaaS on behalf of multiple customers. We'll wire up the operator surface, billing rev-share, branding controls, and the tenant-fleet management console you need to run a portfolio cleanly.
 
 If either of those is you, we'd love to talk.

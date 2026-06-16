@@ -36,7 +36,7 @@ order: 2
   <div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">How do upgrades work?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
-      Vercel handles the install; FastYoke handles the upgrade.
+      Vercel handles the install; FastYoke&trade; handles the upgrade.
       Pro, Team, and Enterprise / ISV route through our billing
       surface — Solo and Pro are hard-capped on transition
       volume, Team can opt in to metered overages, Enterprise / ISV
