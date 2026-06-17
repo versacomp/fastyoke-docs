@@ -18,6 +18,8 @@ notices on top. If something here conflicts with a notice that
 operator presented to you, the operator's notice prevails for
 that interaction.
 
+> www.fastyoke.io sets zero cookies. [Here's why →](/no-cookies)
+
 ## TL;DR
 
 - **What we collect:** form submissions you send, account info if

@@ -11,6 +11,7 @@
 - [Trademarks — FastYoke](https://www.fastyoke.io/trademarks): Acknowledgment of third-party trademarks referenced in the FastYoke product, and a statement that FastYoke uses them nominatively without implying endorsement or affiliation.
 - [Security Fixes — FastYoke](https://www.fastyoke.io/security-fixes): Known security findings and their fix status across FastYoke releases.
 - [Channel Partners & ISVs — FastYoke](https://www.fastyoke.io/channel-partners): Early access program for systems integrators, channel partners, and independent software vendors building on the FastYoke aPaaS.
+- [No cookies — FastYoke](https://www.fastyoke.io/no-cookies): Zero cookies on the marketing site, one strictly-necessary session cookie on the app, no third-party trackers anywhere.
 - [Studio — Build an app on FastYoke](https://www.fastyoke.io/studio)
 - [Yoke Architect — A Thesis](https://www.fastyoke.io/yoke-architect)
 
