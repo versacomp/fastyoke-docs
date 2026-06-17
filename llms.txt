@@ -33,6 +33,7 @@
 - [Apps](https://www.fastyoke.io/docs/apps): Group pages under a shared slug + theme; the user-facing face of your tenant.
 - [Dejavoo SPIn Payments](https://www.fastyoke.io/docs/apps/dejavoo-spin): Take card-present payments on your Dejavoo terminals from the parts counter and service cashier.
 - [Auto Dealer Yoke](https://www.fastyoke.io/docs/apps/auto-dealer-yoke): Run your service drive and parts counter with integrated card-present payments.
+- [POS](https://www.fastyoke.io/docs/apps/pos)
 - [Compliance Yoke](https://www.fastyoke.io/docs/apps/compliance): Continuous control monitoring and audit readiness — SOC 2 first, framework-agnostic.
 - [Cross-App Connections](https://www.fastyoke.io/docs/apps/cross-app-bridge)
 - [EHR / ADT Connector](https://www.fastyoke.io/docs/apps/ehr-connector)
