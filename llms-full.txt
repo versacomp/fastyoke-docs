@@ -169,6 +169,61 @@ Sign up direct and you get an isolated FastYoke tenant — dedicated database, s
 ::
 
 #default
+<h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">Compare to what you're paying now</h2>
+<p class="mt-3 text-sm text-[var(--brand-text-secondary)]">
+  The Team tier sits where most product teams land — five admin users,
+  three tenants, the Advanced App Builder, and 1M transitions a month.
+  Here's how the same workload prices on the platforms it most often
+  replaces.
+</p>
+
+<div class="mt-6 overflow-x-auto">
+  <table role="table" class="w-full min-w-[640px] border-collapse text-sm">
+    <thead>
+      <tr class="border-b" style="border-color: var(--brand-sidebar-border)">
+        <th class="px-3 py-3 text-left font-medium" style="color: var(--brand-text-secondary)">Scenario</th>
+        <th class="px-3 py-3 text-left font-medium" style="color: var(--brand-text-secondary)">Typical alternative</th>
+        <th class="px-3 py-3 text-left font-medium" style="color: var(--brand-text-secondary)">FastYoke&trade; Team</th>
+        <th class="px-3 py-3 text-left font-medium" style="color: var(--brand-text-secondary)">You save</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-t" style="border-color: var(--brand-sidebar-border)">
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)">5-dev product team on an internal-tools builder</td>
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)">Retool Business — $50/user × 5 = <strong>$250/mo</strong></td>
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)"><strong>$180/mo</strong></td>
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)">~28%</td>
+      </tr>
+      <tr class="border-t" style="border-color: var(--brand-sidebar-border)">
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)">Mid-volume SaaS on a managed backend</td>
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)">Supabase Team — <strong>~$599/mo</strong> (Team seat + typical usage)</td>
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)"><strong>$180/mo</strong></td>
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)">~70%</td>
+      </tr>
+      <tr class="border-t" style="border-color: var(--brand-sidebar-border)">
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)">No-code app team on a hosted builder</td>
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)">Bubble Team — <strong>$399/mo</strong></td>
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)"><strong>$180/mo</strong></td>
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)">~55%</td>
+      </tr>
+      <tr class="border-t" style="border-color: var(--brand-sidebar-border)">
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)">DIY stack — managed Postgres + queue + auth + edge host</td>
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)"><strong>$400–600/mo</strong> across 4 vendors</td>
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)"><strong>$180/mo</strong> (one bill)</td>
+        <td class="px-3 py-3" style="color: var(--brand-text-primary)">55%+</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p class="mt-4 text-xs italic text-[var(--brand-text-secondary)]">
+  Competitor prices are public list rates as of June 2026. Numbers exclude
+  the engineering hours you'd spend wiring four vendors together —
+  FastYoke is a single binary with the FSM engine, tenant isolation,
+  realtime, and the SDK already wired.
+</p>
+
+#default
 <h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">Frequently asked</h2>
 
 <div class="mt-8 grid gap-8 text-left sm:grid-cols-2">
