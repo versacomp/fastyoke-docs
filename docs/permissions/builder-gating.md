@@ -53,31 +53,39 @@ the builder check the more specific permission (e.g. you can enter
 the Forms builder with `forms.create` but the Publish button stays
 disabled without `forms.publish`).
 
-## Using the guard in your extension
+## Gating a surface in your extension
 
-If your extension ships a custom builder or admin surface, wrap its
-route in `RequirePermission` and name the permission your surface
-requires:
+`RequirePermission` itself is an internal admin-shell component
+today — it hard-codes a redirect to `/admin` and is not re-exported
+from `@fastyoke/sdk`. A reusable SDK guard is on the roadmap.
+
+Until then, an extension gates its own authoring surface in two
+layers, mirroring what the admin shell does:
+
+1. **Declare the permission id in your extension manifest** so it
+   appears in the role editor and admins can grant it to a custom
+   role. Pick an id namespaced to your extension, e.g.
+   `myext.author`.
+
+2. **Enforce server-side, hide client-side.** Every endpoint your
+   surface calls must check the permission on the backend — that is
+   the actual security boundary. To avoid rendering the editor for a
+   user who would only hit a 403 on submit, fetch the caller's
+   permissions from `GET /api/v1/me/permissions` and conditionally
+   render or redirect:
 
 ```ts
-import { RequirePermission } from '@fastyoke/sdk';
+const { permissions } = await fetch('/api/v1/me/permissions', {
+  headers: { Authorization: `Bearer ${jwt}` },
+}).then((r) => r.json());
 
-export default {
-  routes: [
-    {
-      path: '/extensions/my-builder',
-      component: () => import('./MyBuilder.vue'),
-      meta: {
-        guard: RequirePermission({ permission: 'myext.author' }),
-      },
-    },
-  ],
-};
+if (!permissions.includes('myext.author')) {
+  // redirect to your extension's read-only landing surface
+}
 ```
 
-Declare the permission id (`myext.author`) in your extension manifest
-so it appears in the role editor — admins can then grant it to whatever
-custom role makes sense for their tenant.
+The client-side check is a UX layer; the backend check is the
+security boundary. Both must exist.
 
 ## What the guard does NOT do
 
