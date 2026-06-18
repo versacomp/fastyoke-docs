@@ -44,6 +44,15 @@ and under triage.
 
 ::marketing-section{band="gray" maxWidth="6xl"}
 
+::security-fix{title="Role-based access control enforcement hardening" status="fixed" fixedIn="3.19.0" fixedAt="2026-06-07"}
+We closed gaps where some authorization checks weren't consistently enforced: certain
+entity-write actions and the Settings area could be reached by roles that shouldn't have
+had access. Role permissions are now enforced on entity writes, Settings is restricted to
+administrators and managers, and the Manager system role was completed so role names
+resolve correctly. No abuse was observed; this tightens least-privilege enforcement across
+the admin application.
+::
+
 ::security-fix{title="Admin session tokens moved out of browser storage (XSS hardening)" status="fixed" fixedIn="3.16.0" fixedAt="2026-06-04"}
 The admin application previously kept its session token (a JWT) in the
 browser's `localStorage`. A script injected through a cross-site-scripting
