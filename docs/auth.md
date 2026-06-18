@@ -178,3 +178,7 @@ critical security bug. The `CurrentUser` extractor resolves the
 per-tenant `SqlitePool` via `tenant_pool_manager.get_pool()` so
 handlers can't accidentally query another tenant's data even if
 they bind the wrong tenant_id string.
+
+## See also
+
+Authentication establishes who you are. See [Permissions](/docs/permissions) for what you can do.

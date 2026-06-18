@@ -1577,6 +1577,10 @@ Start with [Getting Started](/docs/getting-started) — it walks you
 Head to the [SDK quickstart](/docs/sdk/quickstart) or the
   [CLI reference](/docs/cli) to wire FastYoke into your own tooling.
 
+See [Permissions](/docs/permissions) for the role model, the full
+  permission catalog, the role-change audit log, and the frontend
+  builder-gating primitive.
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.
@@ -3127,6 +3131,10 @@ per-tenant `SqlitePool` via `tenant_pool_manager.get_pool()` so
 handlers can't accidentally query another tenant's data even if
 they bind the wrong tenant_id string.
 
+## See also
+
+Authentication establishes who you are. See [Permissions](/docs/permissions) for what you can do.
+
 ---
 
 # Command Reference
@@ -4229,6 +4237,8 @@ submission. Two kinds:
 Both paths are deterministic: the same `payload_json` re-renders to
 a byte-identical PDF. Templates are configured per form in the
 admin shell's Forms Builder.
+
+Builder access requires the `forms.create` or `forms.update` permission. See [Builder gating](/docs/permissions/builder-gating).
 
 ---
 
@@ -9479,6 +9489,413 @@ backs the public `/p/...` URL.
 
 ---
 
+# Permissions
+
+> Roles, the permission catalog, the audit log, and the frontend builder-gating primitive.
+
+# Permissions
+
+FastYoke ships role-based access control with a fixed catalog of
+permissions and four built-in system roles. Tenant admins can also
+define their own custom roles by selecting any subset of the catalog.
+Every API call and every authoring surface checks the calling user's
+effective permissions on the way in.
+
+## Tenant scope
+
+Roles and role assignments are **tenant-scoped**. A user invited to two
+tenants gets a separate role assignment in each. There is no cross-
+tenant role sharing and no cross-tenant permission inheritance.
+
+## The four system roles
+
+| Role | What it can do |
+|------|----------------|
+| `system:admin` | Everything — the only role that can create, edit, and delete custom roles, manage users, manage billing, and configure SSO. |
+| `system:manager` | Owns the full content surface: FSM schemas, jobs, entities, forms, files, apps, PDFs, pages, projects, branding, themes, and connections. Cannot manage users or roles, cannot manage billing, cannot manage SSO. |
+| `system:member` | Day-to-day operations: read everywhere, plus create / update entities, transition jobs, edit form drafts, upload files. Designed for operators who run the workflow without authoring it. |
+| `system:viewer` | Read-only on every surface. Sees the audit log too (read-only is read-only — there is no surface a viewer can change). |
+
+## Custom roles
+
+An admin opens **Users → Roles**, creates a new role, names it, checks
+the permissions it should hold, and saves. Custom roles inherit nothing
+implicitly — every permission is an explicit checkbox. A user can be
+assigned a system role *and* a custom role; their effective permissions
+are the union of both.
+
+## Effective permissions
+
+A user's effective set is the **union** of every role assigned to
+them. Permissions are additive — there is no deny-list, no negative
+grant. A user with `system:viewer` plus a custom role that adds
+`forms.update` can edit form drafts.
+
+## See also
+
+- The full [permission catalog](/docs/permissions/permission-catalog) — every id, grouped by domain.
+- The [role-change audit log](/docs/permissions/audit-log) — what gets recorded when an admin changes a role assignment.
+- The [builder-gating primitive](/docs/permissions/builder-gating) — what `RequirePermission` does in the frontend.
+
+---
+
+# Permission catalog
+
+> Every permission id FastYoke ships, grouped by domain. The single source of truth lives in backend/src/permissions/catalog.rs.
+
+# Permission catalog
+
+Every permission FastYoke ships is listed below, grouped by domain.
+Custom roles select any subset of these; the four [system roles](/docs/permissions)
+each hold a fixed subset defined in code.
+
+The canonical list lives in `backend/src/permissions/catalog.rs`.
+Hit `GET /tenant/permissions` from any tool that needs the live set —
+the endpoint returns the same data as JSON.
+
+## Users & roles
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `users.read` | View users | List and view tenant users. |
+| `users.invite` | Invite users | Send invitations to new users. |
+| `users.update` | Update users | Edit user profile and role assignment. |
+| `users.delete` | Remove users | Remove users from the tenant. |
+| `roles.read` | View roles | List and view roles and their permissions. |
+| `roles.manage` | Manage roles | Create, edit, and delete custom roles. |
+
+## FSM schemas
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `fsm.read` | View FSMs | List and view FSM schemas. |
+| `fsm.create` | Create FSMs | Author new FSM schemas. |
+| `fsm.update` | Edit FSMs | Edit FSM drafts (incl. annotations). |
+| `fsm.delete` | Delete FSMs | Remove FSM schemas. |
+| `fsm.publish` | Publish FSMs | Promote a draft FSM to live. |
+
+## Jobs
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `jobs.read` | View jobs | List and view job records. |
+| `jobs.create` | Create jobs | Spawn new jobs against an FSM. |
+| `jobs.transition` | Transition jobs | Drive a job through state transitions. |
+| `jobs.cancel` | Override / cancel | Force-cancel a job (admin override; bypasses guards). |
+
+## Entities
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `entities.read` | View entities | List and view entity records. |
+| `entities.create` | Create entities | Insert new entity records. |
+| `entities.update` | Update entities | Edit existing entity records. |
+| `entities.delete` | Delete entities | Remove entity records. |
+| `entities.export` | Export entities | Bulk export entity data. |
+
+## Forms
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `forms.read` | View forms | List and view form definitions. |
+| `forms.create` | Create forms | Author new forms. |
+| `forms.update` | Edit forms | Edit form drafts. |
+| `forms.publish` | Publish forms | Promote a draft form to live. |
+| `forms.delete` | Delete forms | Remove form definitions. |
+| `forms.submissions.read` | View submissions | View data submitted through forms. |
+| `forms.submissions.export` | Export submissions | Bulk export form submission data. |
+
+## Files
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `files.read` | View files | View attachments and files. |
+| `files.upload` | Upload files | Attach new files to entities and forms. |
+| `files.delete` | Delete files | Remove attachments. |
+
+## Apps
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `apps.read` | View apps | List installed apps and extensions. |
+| `apps.install` | Install apps | Install new app extensions. |
+| `apps.uninstall` | Uninstall apps | Remove app extensions. |
+
+## PDF templates
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `pdf.read` | View PDF templates | View overlay and auto-typeset PDF templates. |
+| `pdf.update` | Edit PDF templates | Edit overlay region maps and PDF settings. |
+| `pdf.publish` | Publish PDF templates | Promote PDF template drafts to live. |
+
+## Tenant config
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `tenant.settings.view` | View settings | Open the tenant Settings area (branding, themes, connections, plan, etc.). |
+| `tenant.branding.update` | Edit branding | Edit tenant branding (logo, colors, names). |
+| `tenant.theme.update` | Edit themes | Edit shared themes. |
+| `tenant.billing.read` | View billing | View invoices and current commercial tier. |
+| `tenant.billing.manage` | Manage billing | Open Checkout, change tier, manage Stripe portal. |
+| `tenant.sso.manage` | Manage SSO | Configure WorkOS / SAML / OIDC connections. |
+| `tenant.workspace.update` | Rename workspace | Change the tenant's display name. |
+| `tenant.connections.manage` | Manage connections | Configure LLM and integration credentials. |
+| `tenant.auth.manage` | Manage auth proof | Rotate JWKS keys and configure auth-proof signing. |
+
+## Audit & logs
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `audit.read` | View audit log | View role-change and admin-override logs. |
+
+## API tokens
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `tokens.manage` | Manage API tokens | Mint, list, revoke per-tenant fy_pat_* tokens. |
+
+## Pages
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `pages.manage` | Manage pages | Author and publish standalone custom pages. |
+
+## Projects
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `projects.manage` | Manage projects | Create and organize project containers for forms / pages / extensions. |
+
+## Wasm
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `wasm.execute` | Execute Wasm | Invoke admin-only Wasm execution endpoints. |
+
+## Encryption
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `tenant.encryption.manage` | Manage encryption add-on | Activate, rotate, backfill, and offboard the PII / SPI encryption add-on. |
+| `tenant.encryption.readstatus` | View encryption status | View encryption health: active version, row counts, last rotation. |
+
+## Identity
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `identity.sources.read` | View identity sources | List identity-bearing entity types declared by tenant admins. |
+| `identity.sources.write` | Manage identity sources | Create, edit, and disable identity-bearing entity types. |
+| `identity.read` | View identity | View the tenant's WorkOS Organization summary. |
+| `identity.update` | Manage identity | Edit WorkOS Organization name + MFA policy, launch Admin Portal for SSO / SCIM setup. |
+
+## Inventory
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `inventory.read` | View inventory | List and view inventory items, stock levels, and movements. |
+| `inventory.write` | Manage inventory | Post stock movements and advance inventory workflows. |
+
+## Auto Dealer
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `dealer.read` | View dealership | View repair orders, counter tickets, special orders, and payments. |
+| `dealer.write` | Manage dealership | Create and advance repair orders, counter tickets, and special orders. |
+| `dealer.payments` | Take payments | Charge, void, and refund card-present payments at the counter and cashier. |
+
+## Auto Tech
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `tech.payments` | Take payments | Charge, void, and refund card-present payments against a repair order. |
+
+## Compliance
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `compliance.read` | View compliance | View frameworks, controls, findings, and corrective actions. |
+| `compliance.write` | Manage compliance | Create and advance findings, controls, and corrective actions. |
+| `compliance.verify` | Verify corrective actions | Sign off that a corrective action's evidence is sufficient (privileged). |
+| `compliance.audit` | Audit access | Read-only, engagement-scoped access to controls, evidence, and the immutable result history for an external auditor. |
+
+## Yoke
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `yoke.read` | View Yoke briefs | View the Yoke inbox and brief details. |
+| `yoke.decide` | Decide on Yoke briefs | Apply, snooze, or dismiss Yoke briefs. Apply writes a schema_commit; dismiss-with-reason feeds template authoring. |
+
+---
+
+# Role-change audit log
+
+> What gets recorded when an admin changes a role, who can read it, and how to read it programmatically.
+
+# Role-change audit log
+
+Every change to a role, every role assignment, and every permission
+toggle on a custom role is recorded in an **append-only** audit log.
+The log is the canonical record of who had what permission at any
+point in time.
+
+## What gets recorded
+
+- Assigning a role to a user.
+- Revoking a role from a user.
+- Creating a custom role.
+- Editing a custom role (name, description, permission set).
+- Deleting a custom role.
+- Toggling any individual permission on a custom role.
+
+Each entry carries the actor email, the target user (when the entry
+records a role assignment), the role id, the permission id (when the
+entry records a permission toggle), the before / after state, and a
+timestamp.
+
+## Immutability
+
+The audit log table is **append-only at the database layer**. There
+is no edit endpoint and no delete endpoint. The same invariant holds
+for the admin-override log (`__admin_cancel__` events on the FSM
+event ledger). A compliance reader can trust that an entry, once
+recorded, is permanent.
+
+## Who can read it
+
+The `audit.read` permission. **Every system role holds it by default**,
+including `system:viewer`. Read-only is read-only — there is no
+surface a viewer can change by reading the log, so the read access is
+granted unconditionally.
+
+A custom role with no permissions does NOT hold `audit.read` — it has
+to be checked explicitly when the role is created.
+
+## Where to view it in the admin UI
+
+**Users → Audit log** in the admin shell. Entries are paginated newest-
+first; each entry expands to show the before / after diff inline.
+
+## Programmatic access
+
+`GET /tenant/audit/role-changes`
+
+- Authentication: the standard tenant JWT.
+- Required permission: `audit.read`.
+- Pagination: keyset. The response carries a `next_cursor` field;
+  pass it as the `cursor` query parameter to fetch the next page.
+- Ordering: newest first.
+
+The response is JSON. Each entry includes the actor, the target
+(user id or role id), the action, the timestamp, and a `before` /
+`after` snapshot.
+
+## See also
+
+- [Permissions overview](/docs/permissions) — the four system roles and how custom roles work.
+- The full [permission catalog](/docs/permissions/permission-catalog).
+
+---
+
+# Builder permission gating
+
+> How the frontend hides authoring surfaces from users who lack the underlying permission.
+
+# Builder permission gating
+
+The FastYoke backend has always enforced permission checks on every
+authoring API. A user without `forms.update` trying to publish a form
+draft gets a 403 — that has been true since the catalog shipped.
+
+What was missing was the **frontend** companion: until this change,
+the builder UI for Forms, Pages, Apps, Workflows, and Entities
+rendered the same way for every user, regardless of whether the user
+could actually submit changes from it. A viewer landing on the Forms
+builder saw the full editor and only discovered they had no permission
+when the publish button returned a 403.
+
+This page documents the `RequirePermission` route guard that fixed
+that gap, and shows how to use the same primitive in your own
+extension.
+
+## What the guard does
+
+`RequirePermission` is a route-level guard component. Two effects:
+
+1. **Navigation entries pointing at a gated route are hidden** from
+   users who lack the permission. The sidebar / app launcher / dropdown
+   item simply does not render.
+2. **Direct URL access to the gated route redirects** to the user's
+   nearest accessible page (their home dashboard by default). A
+   deep-linked URL no longer renders a 403 error page.
+
+Both effects ship together. A hidden surface that is reachable by URL
+is a leak; the URL redirect closes it.
+
+## Which builders are now gated
+
+Each builder requires the corresponding `<subsystem>.author` permission:
+
+| Builder | Permission |
+|---------|------------|
+| Forms builder | `forms.create`, `forms.update` |
+| Pages builder | `pages.manage` |
+| Apps builder | `apps.install` |
+| Workflows builder | `fsm.create`, `fsm.update`, `fsm.publish` |
+| Entities builder | `entities.create`, `entities.update` |
+
+A user must hold **at least one** of the permissions listed for a
+builder to reach it. Once they reach it, individual operations inside
+the builder check the more specific permission (e.g. you can enter
+the Forms builder with `forms.create` but the Publish button stays
+disabled without `forms.publish`).
+
+## Using the guard in your extension
+
+If your extension ships a custom builder or admin surface, wrap its
+route in `RequirePermission` and name the permission your surface
+requires:
+
+```ts
+import { RequirePermission } from '@fastyoke/sdk';
+
+export default {
+  routes: [
+    {
+      path: '/extensions/my-builder',
+      component: () => import('./MyBuilder.vue'),
+      meta: {
+        guard: RequirePermission({ permission: 'myext.author' }),
+      },
+    },
+  ],
+};
+```
+
+Declare the permission id (`myext.author`) in your extension manifest
+so it appears in the role editor — admins can then grant it to whatever
+custom role makes sense for their tenant.
+
+## What the guard does NOT do
+
+`RequirePermission` is a **UX layer**, not a security boundary. The
+security boundary is the backend permission check on the API the
+surface calls. An extension that gates only at the frontend and
+forgets the backend check is broken — a determined user can call the
+API directly with a tenant JWT and bypass the guard entirely.
+
+Rule: every gated frontend surface must call a backend endpoint that
+performs the same permission check server-side. The guard is for
+hiding the surface; the API check is for enforcing access.
+
+## See also
+
+- [Permissions overview](/docs/permissions) — system roles and custom roles.
+- The full [permission catalog](/docs/permissions/permission-catalog).
+- [Role-change audit log](/docs/permissions/audit-log) — what gets logged when an admin grants the new permission.
+
+---
+
 # Engine Primitives
 
 # Engine Primitives
@@ -12336,6 +12753,8 @@ The encryption add-on encrypts tenant-tagged sensitive fields at
 rest in FastYoke's databases. Tagging is opt-in and per-field —
 non-tagged data continues to be stored as plain JSON.
 
+Looking for **roles and permissions**? See [Permissions](/docs/permissions).
+
 ## What it covers
 
 | Surface | Behavior |
@@ -12654,5 +13073,7 @@ Enterprise / ISV tenants participating in org-scoped governance receive
 read-only mirrors of master templates. The builder renders these
 as locked — edits happen upstream in the master tenant and
 propagate via the inheritance sync engine.
+
+Builder access requires the `fsm.create` or `fsm.update` permission. See [Builder gating](/docs/permissions/builder-gating).
 
 ---

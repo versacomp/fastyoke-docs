@@ -119,3 +119,7 @@ submission. Two kinds:
 Both paths are deterministic: the same `payload_json` re-renders to
 a byte-identical PDF. Templates are configured per form in the
 admin shell's Forms Builder.
+
+::callout{type="info"}
+Builder access requires the `forms.create` or `forms.update` permission. See [Builder gating](/docs/permissions/builder-gating).
+::

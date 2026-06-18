@@ -34,6 +34,12 @@ Head to the [SDK quickstart](/docs/sdk/quickstart) or the
   [CLI reference](/docs/cli) to wire FastYoke into your own tooling.
 ::
 
+::callout{type="tip" title="Setting up access?"}
+See [Permissions](/docs/permissions) for the role model, the full
+  permission catalog, the role-change audit log, and the frontend
+  builder-gating primitive.
+::
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.

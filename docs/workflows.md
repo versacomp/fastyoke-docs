@@ -98,3 +98,7 @@ Enterprise / ISV tenants participating in org-scoped governance receive
 read-only mirrors of master templates. The builder renders these
 as locked — edits happen upstream in the master tenant and
 propagate via the inheritance sync engine.
+
+::callout{type="info"}
+Builder access requires the `fsm.create` or `fsm.update` permission. See [Builder gating](/docs/permissions/builder-gating).
+::

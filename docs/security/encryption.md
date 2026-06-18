@@ -9,6 +9,10 @@ The encryption add-on encrypts tenant-tagged sensitive fields at
 rest in FastYoke's databases. Tagging is opt-in and per-field —
 non-tagged data continues to be stored as plain JSON.
 
+::callout{type="info"}
+Looking for **roles and permissions**? See [Permissions](/docs/permissions).
+::
+
 ## What it covers
 
 | Surface | Behavior |

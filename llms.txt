@@ -128,6 +128,13 @@
 
 - [Pages](https://www.fastyoke.io/docs/pages): Block-based workspace pages that embed FastYoke data into your operator UI.
 
+## Permissions
+
+- [Permissions](https://www.fastyoke.io/docs/permissions): Roles, the permission catalog, the audit log, and the frontend builder-gating primitive.
+- [Permission catalog](https://www.fastyoke.io/docs/permissions/permission-catalog): Every permission id FastYoke ships, grouped by domain. The single source of truth lives in backend/src/permissions/catalog.rs.
+- [Role-change audit log](https://www.fastyoke.io/docs/permissions/audit-log): What gets recorded when an admin changes a role, who can read it, and how to read it programmatically.
+- [Builder permission gating](https://www.fastyoke.io/docs/permissions/builder-gating): How the frontend hides authoring surfaces from users who lack the underlying permission.
+
 ## primitives
 
 - [Engine Primitives](https://www.fastyoke.io/docs/primitives)
