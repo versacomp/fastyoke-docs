@@ -32,5 +32,17 @@ order: 60
     </p>
     <span class="mt-4 inline-block text-sm font-medium text-[var(--brand-primary)]">Compare →</span>
   </a>
+  <a
+    href="/compare/supabase"
+    class="block rounded-lg border border-[var(--brand-sidebar-border)] p-6 transition hover:shadow-md"
+  >
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Supabase</h3>
+    <p class="mt-2 text-sm text-[var(--brand-text-secondary)]">
+      Postgres-native backend-as-a-service vs.
+      multi-tenant operational platforms with workflow, RBAC, audit,
+      and the app surface on top.
+    </p>
+    <span class="mt-4 inline-block text-sm font-medium text-[var(--brand-primary)]">Compare →</span>
+  </a>
 </div>
 ::

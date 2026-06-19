@@ -15,6 +15,7 @@
 - [No cookies — FastYoke](https://www.fastyoke.io/no-cookies): Zero cookies on the marketing site, one strictly-necessary session cookie on the app, no third-party trackers anywhere.
 - [FastYoke vs Lovable — Compare](https://www.fastyoke.io/compare/lovable): Lovable generates custom apps from prompts. FastYoke runs multi-tenant operational platforms with built-in workflow, RBAC, and audit. Honest, side-by-side.
 - [FastYoke vs Retool — Compare](https://www.fastyoke.io/compare/retool): Retool ships internal-tools dashboards on top of your existing databases. FastYoke ships multi-tenant operational platforms with built-in workflow, RBAC, and audit. Honest, side-by-side.
+- [FastYoke vs Supabase — Compare](https://www.fastyoke.io/compare/supabase): Supabase ships a Postgres-native backend toolkit. FastYoke ships a multi-tenant operational platform with workflow, RBAC, audit, and the app surface on top. Honest, side-by-side.
 - [Studio — Build an app on FastYoke](https://www.fastyoke.io/studio)
 - [Yoke Architect — A Thesis](https://www.fastyoke.io/yoke-architect)
 

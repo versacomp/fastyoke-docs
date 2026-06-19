@@ -1266,6 +1266,18 @@ This page is a placeholder while we shape the program. Specific terms, pricing, 
     </p>
     <span class="mt-4 inline-block text-sm font-medium text-[var(--brand-primary)]">Compare →</span>
   </a>
+  <a
+    href="/compare/supabase"
+    class="block rounded-lg border border-[var(--brand-sidebar-border)] p-6 transition hover:shadow-md"
+  >
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Supabase</h3>
+    <p class="mt-2 text-sm text-[var(--brand-text-secondary)]">
+      Postgres-native backend-as-a-service vs.
+      multi-tenant operational platforms with workflow, RBAC, audit,
+      and the app surface on top.
+    </p>
+    <span class="mt-4 inline-block text-sm font-medium text-[var(--brand-primary)]">Compare →</span>
+  </a>
 </div>
 
 ---
@@ -1456,6 +1468,71 @@ Talk to sales
       <li>structured FSM workflow is the product</li>
       <li>your team grows past 5 seats and per-user pricing stings</li>
       <li>schema-driven consistency across tenants matters more than per-app pixel-control</li>
+    </ul>
+  </div>
+</div>
+
+<div class="mt-10 flex flex-wrap items-center justify-center gap-3">
+
+
+Talk to sales
+
+</div>
+::
+
+---
+
+# FastYoke vs Supabase — Compare
+
+> Supabase ships a Postgres-native backend toolkit. FastYoke ships a multi-tenant operational platform with workflow, RBAC, audit, and the app surface on top. Honest, side-by-side.
+
+#default
+<h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">What Supabase is good for</h2>
+
+<ul class="mt-6 space-y-4 text-sm text-[var(--brand-text-primary)]">
+  <li><strong>Postgres-native power.</strong> Real Postgres with full SQL, extensions, row-level security, and a polished dashboard. If you know Postgres, you know Supabase.</li>
+  <li><strong>Backend-as-a-service breadth.</strong> Auth, storage, realtime via logical replication, Edge Functions, vector — five well-integrated services behind one project, generous free tier.</li>
+  <li><strong>Bring-your-own frontend, anywhere.</strong> Their typed clients ship for Next.js, Nuxt, SvelteKit, Flutter, mobile. You build the UI; Supabase backs it.</li>
+</ul>
+
+#default
+<h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">What FastYoke is good for</h2>
+
+<ul class="mt-6 space-y-4 text-sm text-[var(--brand-text-primary)]">
+  <li><strong>Per-tenant isolation by architecture.</strong> Every workspace gets its own per-tenant SQLite database. Supabase is one Postgres per project; multi-tenant scoping is RLS policies you author yourself.</li>
+  <li><strong>App surface ships with the backend.</strong> Schema-driven entities, forms, jobs, FSM workflows, dashboards — built-in, configurable, multi-tenant-safe. With Supabase you bring all of that.</li>
+  <li><strong>Batteries-included compliance.</strong> A 68-permission catalog, four system roles, custom roles, append-only role-change audit log on every tier. Supabase ships auth and RLS; the roles + permissions + audit story is yours to assemble.</li>
+</ul>
+
+#default
+<h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">Head-to-head</h2>
+<p class="mt-3 text-sm text-[var(--brand-text-secondary)]">
+  Eight dimensions that distinguish the two products. Verdicts are
+  one sentence each — read the rows, judge for yourself.
+</p>
+
+#default
+<h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">When to choose which</h2>
+
+<div class="mt-6 grid gap-6 sm:grid-cols-2">
+  <div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Choose Supabase when…</h3>
+    <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-[var(--brand-text-primary)]">
+      <li>you want real Postgres</li>
+      <li>you're building a custom-UI app and need a typed-client backend</li>
+      <li>row-level security covers your isolation model</li>
+      <li>you have engineers comfortable writing SQL</li>
+      <li>the free tier is the right place to start</li>
+    </ul>
+  </div>
+  <div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Choose FastYoke when…</h3>
+    <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-[var(--brand-text-primary)]">
+      <li>shipping a multi-tenant platform</li>
+      <li>you want the app surface (entities, forms, FSM, dashboards) shipped with the backend</li>
+      <li>per-tenant data isolation as architecture, not policy</li>
+      <li>RBAC and audit on every tier</li>
+      <li>SQLite-per-tenant fits the workload better than one shared Postgres</li>
     </ul>
   </div>
 </div>
