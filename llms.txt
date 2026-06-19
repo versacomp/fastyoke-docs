@@ -14,6 +14,7 @@
 - [Compare — FastYoke](https://www.fastyoke.io/compare): Honest side-by-side comparisons against the platforms FastYoke is most often evaluated alongside.
 - [No cookies — FastYoke](https://www.fastyoke.io/no-cookies): Zero cookies on the marketing site, one strictly-necessary session cookie on the app, no third-party trackers anywhere.
 - [FastYoke vs Lovable — Compare](https://www.fastyoke.io/compare/lovable): Lovable generates custom apps from prompts. FastYoke runs multi-tenant operational platforms with built-in workflow, RBAC, and audit. Honest, side-by-side.
+- [FastYoke vs Retool — Compare](https://www.fastyoke.io/compare/retool): Retool ships internal-tools dashboards on top of your existing databases. FastYoke ships multi-tenant operational platforms with built-in workflow, RBAC, and audit. Honest, side-by-side.
 - [Studio — Build an app on FastYoke](https://www.fastyoke.io/studio)
 - [Yoke Architect — A Thesis](https://www.fastyoke.io/yoke-architect)
 
@@ -111,6 +112,7 @@
 - [Integrations](https://www.fastyoke.io/docs/integrations): Encrypted credential storage for outbound webhooks, Twilio, SendGrid, and custom REST endpoints.
 - [Cloud Storage Connector (OneDrive & Dropbox)](https://www.fastyoke.io/docs/integrations/cloud-storage): Automatically deposit your signed documents and form PDFs into your own OneDrive or Dropbox folder.
 - [Email Connector (Gmail & Outlook)](https://www.fastyoke.io/docs/integrations/mail-connector): Sync customer emails into your CRM, automatically — connect Gmail or Outlook/M365.
+- [Reports & Dashboards](https://www.fastyoke.io/docs/integrations/reports)
 - [Vercel](https://www.fastyoke.io/docs/integrations/vercel): Install FastYoke from the Vercel Marketplace, or sign up directly and link an existing Vercel project. Both paths end at the same tenant.
 - [Webhooks](https://www.fastyoke.io/docs/integrations/webhooks)
 

@@ -1255,6 +1255,17 @@ This page is a placeholder while we shape the program. Specific terms, pricing, 
     </p>
     <span class="mt-4 inline-block text-sm font-medium text-[var(--brand-primary)]">Compare →</span>
   </a>
+  <a
+    href="/compare/retool"
+    class="block rounded-lg border border-[var(--brand-sidebar-border)] p-6 transition hover:shadow-md"
+  >
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Retool</h3>
+    <p class="mt-2 text-sm text-[var(--brand-text-secondary)]">
+      Internal-tools dashboards on top of your databases vs.
+      multi-tenant operational platforms with workflow, RBAC, and audit.
+    </p>
+    <span class="mt-4 inline-block text-sm font-medium text-[var(--brand-primary)]">Compare →</span>
+  </a>
 </div>
 
 ---
@@ -1379,6 +1390,71 @@ This page is a placeholder while we shape the program. Specific terms, pricing, 
       <li>RBAC and audit are non-negotiable</li>
       <li>structured FSM workflow is the product</li>
       <li>ops dashboards / forms / jobs / entities are the core surface</li>
+      <li>schema-driven consistency across tenants matters more than per-app pixel-control</li>
+    </ul>
+  </div>
+</div>
+
+<div class="mt-10 flex flex-wrap items-center justify-center gap-3">
+
+
+Talk to sales
+
+</div>
+::
+
+---
+
+# FastYoke vs Retool — Compare
+
+> Retool ships internal-tools dashboards on top of your existing databases. FastYoke ships multi-tenant operational platforms with built-in workflow, RBAC, and audit. Honest, side-by-side.
+
+#default
+<h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">What Retool is good for</h2>
+
+<ul class="mt-6 space-y-4 text-sm text-[var(--brand-text-primary)]">
+  <li><strong>Connector ecosystem.</strong> Direct integrations to ~100 databases, SaaS APIs, and warehouses out of the box. Connect a Postgres, drop tables onto a canvas, ship a dashboard the same afternoon.</li>
+  <li><strong>Drag-drop visual builder.</strong> Mature WYSIWYG editor — buttons, tables, charts, modals. Engineers and PMs both ship in it without writing Vue or React.</li>
+  <li><strong>Trusted incumbent.</strong> Years of internal-tools muscle memory at companies you've heard of. Procurement-friendly, SOC 2, well-documented patterns for the dashboards every ops team builds.</li>
+</ul>
+
+#default
+<h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">What FastYoke is good for</h2>
+
+<ul class="mt-6 space-y-4 text-sm text-[var(--brand-text-primary)]">
+  <li><strong>Multi-tenant by architecture.</strong> Every workspace gets its own per-tenant SQLite database; tenant-scoped queries are enforced platform-wide, not by convention. Retool is single-workspace by design.</li>
+  <li><strong>FSM workflow as the primitive.</strong> Strict finite state machines with guards, transitions, and an append-only event ledger. Retool's Workflows are a DAG of blocks; FastYoke's are state machines with formal verification properties.</li>
+  <li><strong>Batteries-included compliance.</strong> A 68-permission catalog, four system roles, custom roles, role-change audit log, per-tenant data isolation, and encryption-at-rest support all ship in the base product.</li>
+</ul>
+
+#default
+<h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">Head-to-head</h2>
+<p class="mt-3 text-sm text-[var(--brand-text-secondary)]">
+  Eight dimensions that distinguish the two products. Verdicts are
+  one sentence each — read the rows, judge for yourself.
+</p>
+
+#default
+<h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">When to choose which</h2>
+
+<div class="mt-6 grid gap-6 sm:grid-cols-2">
+  <div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Choose Retool when…</h3>
+    <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-[var(--brand-text-primary)]">
+      <li>building internal-tools dashboards on top of an existing database</li>
+      <li>you have a mature ecosystem of SaaS tools to connect</li>
+      <li>you want a visual drag-drop editor</li>
+      <li>per-user pricing fits your team size</li>
+      <li>you don't need multi-tenant isolation</li>
+    </ul>
+  </div>
+  <div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Choose FastYoke when…</h3>
+    <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-[var(--brand-text-primary)]">
+      <li>shipping a multi-tenant platform</li>
+      <li>RBAC and audit are non-negotiable</li>
+      <li>structured FSM workflow is the product</li>
+      <li>your team grows past 5 seats and per-user pricing stings</li>
       <li>schema-driven consistency across tenants matters more than per-app pixel-control</li>
     </ul>
   </div>
@@ -8181,6 +8257,83 @@ synced and stored independently under your account.
 |---|---|
 | **Gmail** | Google Workspace or personal Gmail |
 | **Outlook / M365** | Microsoft 365, Outlook.com, or Azure AD organizational accounts |
+
+---
+
+# Reports & Dashboards
+
+# Reports & Dashboards
+
+A **report** aggregates your entity records: pick an entity, an optional filter
+(`field=value AND …`), an optional group-by field, and an aggregate
+(count / sum / average / min / max). You can group by any field your records
+store, plus the synthetic `current_state` field (a record's workflow state).
+
+## Building a report
+
+Choose:
+
+- **Entity** — which entity's records to scan.
+- **Filter** *(optional)* — a `field=value AND field2=value2` expression. Only
+  records matching every clause are counted. The same filter syntax used
+  elsewhere in FastYoke applies here.
+- **Group by** *(optional)* — split the result into one row per distinct value
+  of a field. Leave it empty for a single total.
+- **Aggregate** — how to combine the records in each group:
+
+  | Aggregate | Result                                              |
+  |-----------|-----------------------------------------------------|
+  | `count`   | Number of matching records.                         |
+  | `sum`     | Sum of a numeric field across matching records.     |
+  | `average` | Mean of a numeric field across matching records.    |
+  | `min`     | Smallest value of a field across matching records.  |
+  | `max`     | Largest value of a field across matching records.   |
+
+Reports are computed fresh each time they are read, so the numbers always
+reflect your current data.
+
+### The `current_state` field
+
+Every report can group by or filter on `current_state` — a synthetic field that
+exposes a record's workflow state. Use it to answer questions like "how many
+jobs are in each state" without storing the state on the record yourself.
+
+## Dashboards
+
+A **dashboard** lays reports out as an ordered grid of tiles. Each tile points
+at one report and renders it in one of three ways:
+
+- **Number** — a single headline value (best for an ungrouped aggregate).
+- **Bar** — one bar per group (best for a grouped count or sum).
+- **Line** — a line across groups (best for a trend over an ordered group-by).
+
+Add, reorder, and remove tiles from the dashboard editor. A report can appear on
+more than one dashboard.
+
+## Scheduled digests
+
+Pro plans and above can schedule a dashboard to email its tile values on a
+**daily** or **weekly** cadence to a list of **recipients**. The digest renders
+each tile's current value as an HTML email. A dashboard sends at most one digest
+per day, so re-running the scheduler within the same day will not double-send.
+
+## Limits
+
+Reports scan up to **50,000 records**; beyond that a result is marked as showing
+the first 50,000 rows (the `truncated` flag). Group by a higher-cardinality
+field or tighten your filter to stay under the cap.
+
+Report and dashboard counts are limited by plan, and scheduling requires a Pro
+plan or above:
+
+| Plan             | Reports | Dashboards | Scheduled digests |
+|------------------|---------|------------|-------------------|
+| Hobby            | 0       | 0          | —                 |
+| Pro              | 5       | 5          | Yes               |
+| Team             | 25      | 25         | Yes               |
+| Enterprise/Fleet | ∞       | ∞          | Yes               |
+
+Reports and dashboards are counted separately against your plan's caps.
 
 ---
 

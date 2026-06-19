@@ -21,5 +21,16 @@ order: 60
     </p>
     <span class="mt-4 inline-block text-sm font-medium text-[var(--brand-primary)]">Compare →</span>
   </a>
+  <a
+    href="/compare/retool"
+    class="block rounded-lg border border-[var(--brand-sidebar-border)] p-6 transition hover:shadow-md"
+  >
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Retool</h3>
+    <p class="mt-2 text-sm text-[var(--brand-text-secondary)]">
+      Internal-tools dashboards on top of your databases vs.
+      multi-tenant operational platforms with workflow, RBAC, and audit.
+    </p>
+    <span class="mt-4 inline-block text-sm font-medium text-[var(--brand-primary)]">Compare →</span>
+  </a>
 </div>
 ::
