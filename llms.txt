@@ -49,6 +49,11 @@
 
 - [Authentication & Scopes](https://www.fastyoke.io/docs/auth): JWT shapes, platform vs tenant context, extension tokens, SSO.
 
+## Bulk operations
+
+- [Bulk operations](https://www.fastyoke.io/docs/bulk-operations): Run the same edit, delete, or FSM transition against many entity records at once. Admin-only. Always two-step — preview the change, review what would happen, then commit (or cancel).
+- [Bulk operations API reference](https://www.fastyoke.io/docs/bulk-operations/api-reference): REST endpoints for creating a preview, listing sessions, committing or cancelling — plus the five session statuses, the eight per-row outcome codes, and the sync-versus-async dispatch threshold.
+
 ## CLI
 
 - [Command Reference](https://www.fastyoke.io/docs/cli/commands): Every subcommand for fy (extension authoring).

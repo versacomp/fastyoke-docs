@@ -35,6 +35,8 @@ Spawning paths:
 
 ## Firing a transition
 
+Need to fire the same transition on many jobs at once? See [Bulk operations](/docs/bulk-operations).
+
 From the job detail view, you see every outbound transition from
 the job's `current_state`. Click one to fire it. Three things happen
 atomically:

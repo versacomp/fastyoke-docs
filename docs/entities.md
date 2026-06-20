@@ -38,6 +38,8 @@ infer "this field is required" or "this field is an enum of three
 options" from sampled records alone. The annotation layer fills
 that gap.
 
+Need to edit or delete many records at once? See [Bulk operations](/docs/bulk-operations).
+
 Click **Annotations →** from the Entities browser to open a bulk
 editor. Per-`(entity_name, field_key)` you can set:
 
