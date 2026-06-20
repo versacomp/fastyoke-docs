@@ -138,6 +138,11 @@
 - [Page Designer integration](https://www.fastyoke.io/docs/lcap/page-designer): The `entity_field` block binds a Page Designer block to one (entity, field, record) tuple and mounts `<SmartField mode="display" />`. Annotation drives display formatting — change once, every block follows.
 - [UI config reference](https://www.fastyoke.io/docs/lcap/ui-config): Every `@ui/*` key the resolver respects, organized by field_type. The annotation row's `ui_config_json` is the single source of truth.
 
+## Messaging
+
+- [Messaging](https://www.fastyoke.io/docs/messaging): In-platform 1:1 and group DMs scoped to a tenant, with @mentions that fire notifications, edit/delete on your own messages, and real-time updates.
+- [Messaging API reference](https://www.fastyoke.io/docs/messaging/api-reference): REST endpoints for conversations + messages, the mark-read semantics, and the WebSocket kind:"message" envelope.
+
 ## Pages
 
 - [Pages](https://www.fastyoke.io/docs/pages): Block-based workspace pages that embed FastYoke data into your operator UI.

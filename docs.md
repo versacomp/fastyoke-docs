@@ -114,6 +114,11 @@ See [E-signatures](/docs/esign) for the three signing modes, what
   envelope offline.
 ::
 
+::callout{type="tip" title="Talking to your team?"}
+See [Messaging](/docs/messaging) for the in-platform DM dock,
+  @mentions, and the REST + WebSocket API.
+::
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.
