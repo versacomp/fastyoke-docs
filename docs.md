@@ -108,6 +108,12 @@ See [Permissions](/docs/permissions) for the role model, the full
   builder-gating primitive.
 ::
 
+::callout{type="tip" title="Adding e-signatures?"}
+See [E-signatures](/docs/esign) for the three signing modes, what
+  the platform records, and how a third party verifies a sealed
+  envelope offline.
+::
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.

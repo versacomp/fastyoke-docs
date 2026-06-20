@@ -1895,6 +1895,10 @@ See [Permissions](/docs/permissions) for the role model, the full
   permission catalog, the role-change audit log, and the frontend
   builder-gating primitive.
 
+See [E-signatures](/docs/esign) for the three signing modes, what
+  the platform records, and how a third party verifies a sealed
+  envelope offline.
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.
@@ -4003,6 +4007,642 @@ guide](/docs/forms/builder).
 
 ---
 
+# E-signatures
+
+> Legally-meaningful e-signatures on forms or uploaded PDFs — three modes share one sealing engine, audit chain, and public verify endpoint.
+
+# E-signatures
+
+FastYoke ships legally-meaningful e-signatures for forms and
+pre-prepared PDFs. The platform captures the evidence chain a court
+or compliance reviewer expects — signer identity, intent to sign,
+consent disclosure, timestamps, IP, user-agent — and seals every
+envelope with an ed25519 signature over a hash-chained audit log.
+The public key is published; anyone can verify a sealed envelope
+without calling FastYoke.
+
+## Three modes, one engine
+
+| Mode | When to use |
+|------|-------------|
+| **Inline ceremony** | A single signer reviews and signs a form's generated PDF at submit time. Best for consent forms, intake forms, single-party agreements. |
+| **Send for signature** | One to three named signers in a defined order, mixing inline and emailed-link capture. Best for parent / minor consent, multi-party agreements where order matters. |
+| **Uploaded PDF** | An admin uploads a prepared contract or document, drags signature and date fields onto it, then sends it for signature. Best for existing paperwork — contracts, NDAs, vendor agreements. |
+
+All three modes share the same sealing engine, audit chain, and
+Certificate of Completion. The difference is where the document
+comes from and how signers reach it.
+
+## When to use which
+
+- **Pick Inline ceremony** when one person submits a form and signs
+  it as part of the submit. The signing experience is part of the
+  form flow; no email round-trip.
+- **Pick Send for signature** when two or three parties must each
+  sign in a defined order, the form is still the source of the
+  document, and some signers need an emailed link instead of inline
+  capture.
+- **Pick Uploaded PDF** when the document already exists as a PDF
+  and isn't a form-generated artifact. The admin drags signature
+  fields onto the page coordinates that match the existing layout.
+
+## Who reads which page
+
+- **Tenant admins** — start with
+  [Forms with signing](/docs/esign/forms-with-signing) for inline +
+  multi-signer flows, or
+  [Uploaded-PDF envelopes](/docs/esign/uploaded-pdf-envelopes) for
+  contract-and-document workflows.
+- **End-user signers** — see
+  [The signer experience](/docs/esign/signer-experience) for what
+  ceremony and portal pages look like and what happens after signing.
+- **Compliance reviewers and counsel** — see
+  [Trust and verify](/docs/esign/trust-and-verify) for the audit
+  chain, the Certificate of Completion, the legal posture, and the
+  public verify endpoint with offline-verification recipes.
+
+---
+
+# Forms with signing
+
+> Configure a form for inline single-signer ceremony or multi-signer send-for-signature; the signing plan, the submit hook, and the admin dashboard.
+
+# Forms with signing
+
+This page covers the two form-driven signing modes: a single signer
+who signs inline at submit, and a configured plan of up to three
+signers who sign in order — mixing inline capture with emailed
+invitations.
+
+## Single-signer inline ceremony
+
+Open a form in the Forms Builder and set `requires_esign_ceremony`
+on the form definition. When a respondent submits the form, the
+platform parks the submission as `awaiting_signature`, mints a
+short-lived ceremony token, renders the PDF for the signer to review,
+and presents a signature pad. On signing, the platform seals the
+envelope and the submission moves to `signed`.
+
+The signer's email is taken from the first email field on the form.
+The consent disclosure shown above the signature pad is the
+platform-managed version 1 disclosure — its hash, the signer's IP,
+the user-agent, and the agreed-at timestamp all enter the audit log.
+
+## Multi-signer signing plan
+
+For two or three signers, open the **Signing** tab in the Forms
+Builder. Add one slot per signer. Each slot carries:
+
+- **Role label** — a human-readable name (`minor`, `parent1`,
+  `parent2`, `vendor`).
+- **Capture mode** — `inline` (the signer signs as part of submit)
+  or `send` (the signer receives an emailed link).
+- **Signature field** — the document field this signer's signature
+  stamps into.
+- **Email source** — either a form-field reference (e.g., the
+  `parent2_email` field) or a static address.
+- **Order tier** — an integer; signers in the same tier sign in
+  parallel, signers in higher tiers can't start until the prior
+  tier finishes.
+- **`required_when`** — a JSONLogic expression evaluated against
+  the form submission. If it evaluates falsy, the slot is skipped.
+  Example for a parent / minor consent form:
+  `{ "!=": [ { "var": "sole_guardian" }, true ] }` — parent2 is
+  only required when the form's `sole_guardian` field is not
+  checked.
+
+## Order tiers and conditional signers
+
+Order tiers determine when each signer can act. Tier 0 signers
+sign first; tier 1 starts only after every required tier 0 signer
+has signed. Conditional skipping happens at tier-entry: if a slot's
+`required_when` evaluates falsy at that moment, the slot is skipped
+and the next tier proceeds.
+
+The envelope finalizes once — the call to `finalize_envelope` runs
+on the last required signature. Skipped signers don't block
+finalization.
+
+## What the submit hook does
+
+Submitting a form with a multi-signer plan creates an `in_progress`
+envelope and a row in `esign_signers` per slot. Inline signers in
+tier 0 are presented with the ceremony page immediately. The
+remaining signers receive invitation emails with portal links.
+
+When a signer signs, the platform appends to the audit log,
+overlays that signer's signature into the document at the assigned
+field, and either advances to the next tier or finalizes the
+envelope.
+
+## Sending invitations and voiding envelopes
+
+The **Envelopes** dashboard in the admin shell lists every envelope
+across forms-with-signing and uploaded-PDF flows. From the detail
+view you can:
+
+- Resend a signer's invitation email.
+- Void an in-progress envelope with a reason. Voiding a completed
+  envelope is not supported — the sealed PDF and Certificate of
+  Completion are immutable.
+
+## API reference
+
+The submit hook fires `POST /esign/seal` automatically for the
+single-signer inline path. The explicit endpoint is available for
+advanced cases — for example, an external system that generates
+the document outside the form flow.
+
+```http
+POST /esign/seal
+Content-Type: application/json
+Authorization: Bearer <admin JWT>
+
+{
+  "envelope_id": "env_…",
+  "signers": [ { "email": "…", "ip": "…", "user_agent": "…", "agreed_at": "2026-06-19T12:00:00Z" } ]
+}
+```
+
+Response: the envelope's `verification_id`, public verify URL, and
+the Certificate of Completion attachment id.
+
+To resend a multi-signer invitation:
+
+```http
+POST /esign/envelopes/:id/signers/:signer_id/send
+Authorization: Bearer <admin JWT>
+```
+
+Returns 204 on success; the platform records the resend in the
+audit log.
+
+---
+
+# Uploaded-PDF envelopes
+
+> Upload a prepared PDF, drag signature and date fields onto it, assign each to a signer, optionally self-sign, and send.
+
+# Uploaded-PDF envelopes
+
+Use this flow when the document you want signed already exists as
+a PDF — a contract, an NDA, a vendor agreement — and isn't being
+generated by a form.
+
+The envelope's `source_kind` is `uploaded` (versus `form_submission`
+for inline / multi-signer plans on forms). Field placements live in
+the `esign_field_placements` table; coordinates are normalized
+0..1 within each page, so the document can re-render at any DPI and
+the signature still lands in the right spot.
+
+## The flow
+
+1. **Upload the PDF.** Open **Envelopes → New uploaded-PDF**. Drop
+   a PDF in. The platform creates a draft envelope with
+   `source_kind = 'uploaded'` and stores the source document as an
+   attachment.
+2. **Place fields.** Open the placement editor. Drag signature and
+   date fields onto the pages where signers will sign. Each field
+   is assigned to a specific signer slot.
+3. **Add signers.** For each signer, supply a role label, capture
+   mode (`inline` self-sign or `send` emailed link), and the
+   email-source field.
+4. **Optional self-sign.** If the admin is one of the signers,
+   the inline self-sign step happens before send. The admin's
+   signature stamps every field assigned to that admin slot.
+5. **Send.** The platform fires invitation emails to every `send`
+   signer. The envelope moves to `in_progress`. Each signer in
+   order signs the document via their portal link.
+
+When the last required signer signs, the platform stamps every
+signer's signature PNG into the corresponding field positions
+(signature fields become PDF XObjects; date fields become text
+strings rendered at the assigned coordinates), then seals the
+envelope and generates the Certificate of Completion.
+
+## Field placement details
+
+- **Signature fields** — accept a signature PNG image. Each
+  signer has one signature image; the same image stamps every
+  signature field assigned to that signer.
+- **Date fields** — accept a text string. The signer's signed-at
+  timestamp is rendered as the date on every date field assigned
+  to that signer.
+- **Coordinates** — `x`, `y`, `width`, `height` are all
+  normalized to 0..1 within the page. Origin is top-left in the
+  authoring UI; the platform flips to PDF's bottom-left origin
+  during stamping.
+- **Multi-page support** — fields can be placed on any page;
+  the page index is part of the placement record.
+
+## Self-sign step
+
+When an admin is one of the signers — for example, the company's
+counter-signature on a vendor agreement — the placement editor
+offers an inline self-sign before send. After the admin signs,
+their signature is stored as an attachment keyed against the
+self-sign slot, and the rest of the signers receive their portal
+invitations.
+
+## Voiding an in-progress envelope
+
+The same admin dashboard as forms-with-signing handles voids.
+From the envelope detail view, click **Void** and supply a reason.
+The envelope moves to `voided`; the audit log records the void and
+the reason; no further signatures can be captured. Completed
+(sealed) envelopes cannot be voided — the sealed PDF and
+Certificate of Completion are immutable.
+
+## API reference
+
+Upload a PDF and receive an envelope id:
+
+```http
+POST /esign/documents
+Content-Type: multipart/form-data
+Authorization: Bearer <admin JWT>
+
+<binary PDF body>
+```
+
+Response: `{ "envelope_id": "env_…" }`.
+
+Save field placements and signer plan on the draft:
+
+```http
+PUT /esign/envelopes/:id/draft
+Content-Type: application/json
+Authorization: Bearer <admin JWT>
+
+{
+  "signers": [ { "role_label": "vendor", "capture": "send", "email_source": { … } } ],
+  "placements": [
+    { "page": 0, "field_type": "signature", "signer_role": "vendor",
+      "x": 0.12, "y": 0.65, "width": 0.25, "height": 0.04 }
+  ]
+}
+```
+
+Admin self-sign:
+
+```http
+POST /esign/envelopes/:id/self-sign
+Content-Type: application/json
+Authorization: Bearer <admin JWT>
+
+{ "signer_role": "company_counter", "signature_png_base64": "…" }
+```
+
+Send the envelope (admin → in_progress; invitation emails dispatch):
+
+```http
+POST /esign/envelopes/:id/send
+Authorization: Bearer <admin JWT>
+```
+
+Fetch the current PDF (draft pre-send, sealed after finalize):
+
+```http
+GET /esign/envelopes/:id/document.pdf
+Authorization: Bearer <admin JWT>
+```
+
+The `source_kind` discriminator on the envelope determines how the
+last-signer hook builds the final document: `form_submission`
+re-renders from the form payload; `uploaded` stamps signatures
+onto the source PDF.
+
+## Known limits
+
+- **Field types**: only `signature` and `date` are supported today.
+  `initials` and free-text fields are deferred — they will use the
+  same placement model when they ship.
+- **PDF format**: the upload must be a real PDF, not an image-only
+  scan. The platform doesn't OCR.
+- **Document edits after placement**: changing the source PDF
+  after placements have been saved invalidates the placements;
+  upload a fresh document instead.
+
+---
+
+# The signer experience
+
+> What the signer sees and what they're agreeing to — the inline ceremony page, the emailed portal page, signature capture, and the decline path.
+
+# The signer experience
+
+Signers reach FastYoke envelopes in two ways depending on the
+configuration of the form or the envelope. Both flows share the
+same evidence capture and the same signature pad.
+
+## Ceremony page vs. portal page
+
+- **Ceremony page** is loaded directly as part of submitting a form.
+  The respondent fills out the form, hits submit, and the next
+  screen is the signing ceremony — no email round-trip.
+- **Portal page** is reached by an emailed invitation link. The
+  invitation email contains a one-time URL signed against the
+  envelope and the signer's slot. The signer clicks through and
+  arrives at the portal page.
+
+Both pages render the same content sections in the same order so
+the signer's mental model is consistent.
+
+## What's shown before signing
+
+In order:
+
+1. The fully rendered PDF preview — exactly the document that will
+   be sealed. For forms-with-signing this is the form-generated
+   PDF; for uploaded-PDF envelopes this is the source document
+   with placed fields highlighted.
+2. The consent disclosure — versioned text explaining what the
+   signer is about to do, what the platform records, and how to
+   exercise their right to withdraw. The disclosure version and
+   its content hash enter the audit log.
+3. The signer's email of record — pre-filled, displayed for
+   confirmation. The signer can't edit it; if it's wrong they
+   should decline and ask the admin to correct it.
+4. **Optional access code** — if the envelope was configured with
+   an access code, the signer enters it here. The platform
+   verifies it against the stored hash before allowing the
+   signature capture.
+
+## How signature capture works
+
+The signature pad is the shared `SignaturePad` component. Two
+input modes:
+
+- **Type** — the signer types their name and a stylized signature
+  renders.
+- **Draw** — the signer draws their signature with mouse or
+  finger.
+
+The captured signature is stored once as a PNG. If the signer is
+assigned multiple signature fields in the document, the same PNG
+stamps into every field.
+
+After capture the signer reviews and clicks **Finish** to commit.
+The platform records the signed-at timestamp, the signer's IP,
+the user-agent, appends to the hash-chained audit log, and either
+advances to the next signer (multi-signer plans) or finalizes the
+envelope.
+
+## Decline path
+
+At any point before finishing, the signer can click **Decline**.
+The portal shows a short reason field; on submit, the platform:
+
+- Records the decline event in the audit log with the supplied
+  reason, IP, and timestamp.
+- Moves the envelope to `declined`.
+- Notifies the admin via the dashboard.
+
+A declined envelope cannot be revived; the admin starts fresh if
+they still want signatures.
+
+## What happens after signing
+
+- **Single signer.** The envelope finalizes immediately. The
+  sealed PDF and Certificate of Completion become available to
+  the admin in the Envelopes dashboard.
+- **Multi-signer, more signers to go.** The signer sees a
+  confirmation screen. If the next signer's capture mode is
+  `send`, their invitation email fires automatically. If it's
+  `inline` (rare, but possible across tiers), the form flow
+  picks it up at the next submit.
+- **Last required signer.** Same confirmation screen, plus the
+  envelope finalizes — last-signer overlays stamp into the
+  document, audit chain is folded into the manifest, ed25519
+  seal is computed, Certificate of Completion is rendered, and
+  the sealed envelope is published. The admin gets a notice.
+
+## What emails the signer can expect
+
+- **Invitation email** (portal capture only). Contains the
+  envelope's role label, the sender (the admin or company),
+  and a one-time portal link. The link is signed and bound to
+  the signer's slot and envelope.
+- **Access-code email** (when an access code is configured).
+  Sent separately, contains a short numeric code. Sending the
+  link and the code separately is part of the email-control
+  identity baseline.
+- **Completion notice** — sent to every signer once the
+  envelope finalizes. Contains a link to verify the sealed
+  envelope through the public verify page.
+
+---
+
+# Trust and verify
+
+> What FastYoke records, how the audit chain is sealed, what the platform claims (and explicitly doesn't), and how a third party verifies a sealed envelope offline.
+
+# Trust and verify
+
+This page covers what the platform records on every signing event,
+how the evidence is sealed, how a third party verifies a sealed
+envelope independently, and what posture FastYoke takes on the
+legal status of those signatures.
+
+## What the platform records
+
+For every signer on every envelope:
+
+- Email of record (the address the invitation was sent to)
+- IP address at the time of signing
+- User-agent string
+- Consent disclosure version and content hash
+- Agreed-at timestamp (when consent was acknowledged)
+- Signed-at timestamp (when the signature was captured)
+- The signature image (PNG)
+
+For the envelope as a whole:
+
+- The source `document_sha256` — a SHA-256 of the exact bytes that
+  will be sealed (post-overlay for form-generated PDFs;
+  pre-stamping for uploaded PDFs is also recorded)
+- An append-only `esign_audit_log` containing every event in
+  chronological order with a hash chain
+- The signing manifest (described below)
+- The ed25519 seal over the manifest
+
+## The Certificate of Completion
+
+When the envelope finalizes, the platform renders a Certificate of
+Completion as a Typst-generated PDF. It lists every signer, every
+event from the audit log with timestamps, the document
+`document_sha256`, the manifest, and the ed25519 signature.
+
+The Certificate is attached to the envelope as a separate file. The
+admin and every signer can download it from the public verify page.
+
+## The audit log structure
+
+`esign_audit_log` is append-only at the database layer. Every row
+carries:
+
+- The event kind (signer-added, consent-agreed, signature-captured,
+  voided, declined, finalized, …)
+- A canonical-JSON payload describing the event
+- A `row_hash` = SHA-256(prior_row_hash || canonical_payload)
+
+This hash-chaining property means a single tampered row breaks the
+chain at every row that follows it. The final row's `row_hash` is
+the `chain_head` — the value folded into the manifest before the
+seal.
+
+There is no `UPDATE` or `DELETE` path on the audit log table. The
+sweep job (`backend/src/esign/sweep.rs`) only inserts rows for
+scheduled events; it never mutates existing rows.
+
+## Sealing — what we sign and how
+
+When the last required signer signs, the platform builds a
+**canonical-JSON manifest** containing:
+
+- `document_sha256` (hex)
+- `chain_head` (hex) — the final audit-log row hash
+- `signers[]` — for each signer: email, signed-at timestamp,
+  consent disclosure version, IP, user-agent
+
+The manifest is then serialized to canonical JSON exactly once;
+the resulting bytes are stored verbatim on the envelope as
+`manifest_json`, and **the same bytes** are signed with an
+ed25519 key. Verification recomputes the signature against the
+literal `manifest_json` bytes — never re-canonicalize, because
+any whitespace, key ordering, or escape difference would break
+the signature.
+
+The signing key is platform-managed and rotated on a schedule.
+Past public keys remain available via the verify-keys endpoint so
+older envelopes stay verifiable indefinitely.
+
+## Public verify endpoint
+
+A third party — a court, a buyer's counsel, a compliance system
+— verifies a sealed envelope without calling FastYoke at runtime.
+The endpoints below are public; no authentication is required.
+
+Fetch the verification record:
+
+```http
+GET /api/v1/public/esign/verify/:verification_id
+```
+
+Response includes the envelope summary, the list of signers, the
+manifest bytes, the ed25519 signature, the audit chain, and the
+public-key id used to sign.
+
+To verify the document hash against a copy you have:
+
+```http
+POST /api/v1/public/esign/verify/:verification_id
+Content-Type: multipart/form-data
+
+<the PDF you want to verify>
+```
+
+The platform computes the SHA-256 of the uploaded bytes and
+compares against the manifest's `document_sha256`.
+
+Fetch the platform's published ed25519 public keys for offline
+verification:
+
+```http
+GET /api/v1/public/esign/verify-keys
+```
+
+Response is a JSON list of `{ key_id, public_key_base64, valid_from,
+valid_to }` records. A verifier reads the response, picks the key
+whose id matches the verification record, and checks the
+signature.
+
+### Offline-verification recipe (JavaScript)
+
+```js
+import nacl from 'tweetnacl';
+import { decodeBase64, decodeUTF8 } from 'tweetnacl-util';
+
+async function verifyEnvelope(verificationId, pdfBytes) {
+  const v = await fetch(
+    `https://verify.fastyoke.io/api/v1/public/esign/verify/${verificationId}`,
+  ).then((r) => r.json());
+
+  const keys = await fetch(
+    'https://verify.fastyoke.io/api/v1/public/esign/verify-keys',
+  ).then((r) => r.json());
+
+  const pk = keys.find((k) => k.key_id === v.key_id).public_key_base64;
+
+  const sigOk = nacl.sign.detached.verify(
+    decodeUTF8(v.manifest_json),
+    decodeBase64(v.signature_base64),
+    decodeBase64(pk),
+  );
+
+  const docHash = await crypto.subtle.digest('SHA-256', pdfBytes);
+  const docHashHex = Array.from(new Uint8Array(docHash))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+
+  const docOk = docHashHex === v.document_sha256;
+
+  return { sigOk, docOk };
+}
+```
+
+The `tweetnacl` library implements ed25519 in pure JavaScript and
+works in Node, browsers, and Deno. Any ed25519 implementation
+that accepts raw 32-byte public keys and 64-byte signatures will
+also work.
+
+## Legal posture
+
+What the platform captures on every signed envelope is **intended to satisfy** the evidence chain commonly accepted for **ESIGN/UETA** in US jurisdictions: a record of the signer's identity, the
+signer's intent to sign, the consent disclosure that was shown,
+the IP and user-agent at the time of signing, and a tamper-evident
+seal over the audit chain. The platform publishes the ed25519
+public key so the evidence is independently verifiable.
+
+Identity in the current implementation is **email-control**
+baseline — the signer demonstrates control of the email address
+the invitation was sent to. This is the same identity baseline
+most e-signature platforms ship by default. Stronger factors
+(SMS verification, knowledge-based authentication, PKI
+certificates) are described in the next section as explicit
+non-features today.
+
+Use of FastYoke-sealed documents in a specific legal matter is
+for counsel to advise on. The platform produces the evidence; the
+sufficiency of that evidence for a particular dispute, in a
+particular jurisdiction, against a particular counter-party, is a
+legal judgment.
+
+## What's deferred
+
+The following are explicit non-features today. Customers who need
+them should plan accordingly until the platform ships them.
+
+- **PAdES** — PDF Advanced Electronic Signatures. The platform's
+  ed25519 seal is platform-managed and stored alongside the
+  document, not embedded as a PAdES signature in the PDF itself.
+- **RFC-3161** external timestamping. Timestamps are platform
+  clock; no third-party time-stamping authority is invoked.
+- **SMS** identity factor. The signer is not required to receive
+  or enter an SMS code to sign.
+- **KBA** — knowledge-based authentication. The signer is not
+  challenged with identity-verification questions.
+- File-level attachment encryption. Envelope attachments are
+  stored under the platform's standard encryption-at-rest, not
+  with per-envelope wrapping keys.
+
+Customers in regulated environments (some healthcare consent
+scenarios, some real-estate jurisdictions) should evaluate
+whether the email-control baseline is sufficient for their use
+case before adopting.
+
+---
+
 # Extensions (Install & Manage)
 
 > Upload third-party extension bundles, review scopes, activate, roll back.
@@ -4553,6 +5193,8 @@ a byte-identical PDF. Templates are configured per form in the
 admin shell's Forms Builder.
 
 Builder access requires the `forms.create` or `forms.update` permission. See [Builder gating](/docs/permissions/builder-gating).
+
+Need legally-binding signatures on a form? See [E-signatures](/docs/esign).
 
 ---
 

@@ -59,6 +59,14 @@
 
 - [Entities](https://www.fastyoke.io/docs/entities): Schemaless JSON records that serve as FSM guard-evaluation context.
 
+## E-signatures
+
+- [E-signatures](https://www.fastyoke.io/docs/esign): Legally-meaningful e-signatures on forms or uploaded PDFs — three modes share one sealing engine, audit chain, and public verify endpoint.
+- [Forms with signing](https://www.fastyoke.io/docs/esign/forms-with-signing): Configure a form for inline single-signer ceremony or multi-signer send-for-signature; the signing plan, the submit hook, and the admin dashboard.
+- [Uploaded-PDF envelopes](https://www.fastyoke.io/docs/esign/uploaded-pdf-envelopes): Upload a prepared PDF, drag signature and date fields onto it, assign each to a signer, optionally self-sign, and send.
+- [The signer experience](https://www.fastyoke.io/docs/esign/signer-experience): What the signer sees and what they're agreeing to — the inline ceremony page, the emailed portal page, signature capture, and the decline path.
+- [Trust and verify](https://www.fastyoke.io/docs/esign/trust-and-verify): What FastYoke records, how the audit chain is sealed, what the platform claims (and explicitly doesn't), and how a third party verifies a sealed envelope offline.
+
 ## Extensions
 
 - [Extensions (Install & Manage)](https://www.fastyoke.io/docs/extensions): Upload third-party extension bundles, review scopes, activate, roll back.

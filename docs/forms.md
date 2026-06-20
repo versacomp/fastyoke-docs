@@ -123,3 +123,7 @@ admin shell's Forms Builder.
 ::callout{type="info"}
 Builder access requires the `forms.create` or `forms.update` permission. See [Builder gating](/docs/permissions/builder-gating).
 ::
+
+::callout{type="info"}
+Need legally-binding signatures on a form? See [E-signatures](/docs/esign).
+::
