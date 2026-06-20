@@ -129,7 +129,6 @@
 - [Integrations](https://www.fastyoke.io/docs/integrations): Encrypted credential storage for outbound webhooks, Twilio, SendGrid, and custom REST endpoints.
 - [Cloud Storage Connector (OneDrive & Dropbox)](https://www.fastyoke.io/docs/integrations/cloud-storage): Automatically deposit your signed documents and form PDFs into your own OneDrive or Dropbox folder.
 - [Email Connector (Gmail & Outlook)](https://www.fastyoke.io/docs/integrations/mail-connector): Sync customer emails into your CRM, automatically — connect Gmail or Outlook/M365.
-- [Reports & Dashboards](https://www.fastyoke.io/docs/integrations/reports)
 - [Vercel](https://www.fastyoke.io/docs/integrations/vercel): Install FastYoke from the Vercel Marketplace, or sign up directly and link an existing Vercel project. Both paths end at the same tenant.
 - [Webhooks](https://www.fastyoke.io/docs/integrations/webhooks)
 
@@ -150,6 +149,11 @@
 
 - [Messaging](https://www.fastyoke.io/docs/messaging): In-platform 1:1 and group DMs scoped to a tenant, with @mentions that fire notifications, edit/delete on your own messages, and real-time updates.
 - [Messaging API reference](https://www.fastyoke.io/docs/messaging/api-reference): REST endpoints for conversations + messages, the mark-read semantics, and the WebSocket kind:"message" envelope.
+
+## Notifications
+
+- [Notifications](https://www.fastyoke.io/docs/notifications): A per-user inbox of events that need your attention. Today the platform fires notifications on @mentions only; the bell is real-time and per-user.
+- [Notifications API reference](https://www.fastyoke.io/docs/notifications/api-reference): REST endpoints for listing notifications, fetching the unread count, and marking as read — plus the WebSocket kind:"notification" envelope.
 
 ## Pages
 
@@ -186,6 +190,12 @@
 - [SPA on Cloudflare Pages with the React SDK](https://www.fastyoke.io/docs/recipes/spa-on-cloudflare-pages): Build a standalone Vite + React SPA that signs in to FastYoke, CRUDs entities with realtime, uploads files, and deploys to Cloudflare Pages.
 - [Recipes](https://www.fastyoke.io/docs/recipes): Focused walkthroughs for the common FastYoke integration patterns.
 - [Handle email bounces and complaints](https://www.fastyoke.io/docs/recipes/email-bounces): How FastYoke processes AWS SES bounce and complaint notifications, where the suppression list lives, and how to recover a recipient.
+
+## Reports
+
+- [Reports & Dashboards](https://www.fastyoke.io/docs/reports): Aggregate entity records into single numbers or grouped rollups, lay them out on tenant-shared dashboards, and email digests on a schedule.
+- [Dashboards](https://www.fastyoke.io/docs/reports/dashboards): Lay report tiles on a single page, choose a render shape per tile (number, bar, or line), and serve the dashboard as server-rendered HTML.
+- [Scheduled digests](https://www.fastyoke.io/docs/reports/digests): Attach a schedule to a dashboard and the platform emails the rendered dashboard to a list of recipients on cadence. Daily or weekly; UTC clock; Pro tier or higher.
 
 ## SDK
 

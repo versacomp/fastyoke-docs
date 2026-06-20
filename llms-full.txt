@@ -9446,83 +9446,6 @@ synced and stored independently under your account.
 
 ---
 
-# Reports & Dashboards
-
-# Reports & Dashboards
-
-A **report** aggregates your entity records: pick an entity, an optional filter
-(`field=value AND …`), an optional group-by field, and an aggregate
-(count / sum / average / min / max). You can group by any field your records
-store, plus the synthetic `current_state` field (a record's workflow state).
-
-## Building a report
-
-Choose:
-
-- **Entity** — which entity's records to scan.
-- **Filter** *(optional)* — a `field=value AND field2=value2` expression. Only
-  records matching every clause are counted. The same filter syntax used
-  elsewhere in FastYoke applies here.
-- **Group by** *(optional)* — split the result into one row per distinct value
-  of a field. Leave it empty for a single total.
-- **Aggregate** — how to combine the records in each group:
-
-  | Aggregate | Result                                              |
-  |-----------|-----------------------------------------------------|
-  | `count`   | Number of matching records.                         |
-  | `sum`     | Sum of a numeric field across matching records.     |
-  | `average` | Mean of a numeric field across matching records.    |
-  | `min`     | Smallest value of a field across matching records.  |
-  | `max`     | Largest value of a field across matching records.   |
-
-Reports are computed fresh each time they are read, so the numbers always
-reflect your current data.
-
-### The `current_state` field
-
-Every report can group by or filter on `current_state` — a synthetic field that
-exposes a record's workflow state. Use it to answer questions like "how many
-jobs are in each state" without storing the state on the record yourself.
-
-## Dashboards
-
-A **dashboard** lays reports out as an ordered grid of tiles. Each tile points
-at one report and renders it in one of three ways:
-
-- **Number** — a single headline value (best for an ungrouped aggregate).
-- **Bar** — one bar per group (best for a grouped count or sum).
-- **Line** — a line across groups (best for a trend over an ordered group-by).
-
-Add, reorder, and remove tiles from the dashboard editor. A report can appear on
-more than one dashboard.
-
-## Scheduled digests
-
-Pro plans and above can schedule a dashboard to email its tile values on a
-**daily** or **weekly** cadence to a list of **recipients**. The digest renders
-each tile's current value as an HTML email. A dashboard sends at most one digest
-per day, so re-running the scheduler within the same day will not double-send.
-
-## Limits
-
-Reports scan up to **50,000 records**; beyond that a result is marked as showing
-the first 50,000 rows (the `truncated` flag). Group by a higher-cardinality
-field or tighten your filter to stay under the cap.
-
-Report and dashboard counts are limited by plan, and scheduling requires a Pro
-plan or above:
-
-| Plan             | Reports | Dashboards | Scheduled digests |
-|------------------|---------|------------|-------------------|
-| Hobby            | 0       | 0          | —                 |
-| Pro              | 5       | 5          | Yes               |
-| Team             | 25      | 25         | Yes               |
-| Enterprise/Fleet | ∞       | ∞          | Yes               |
-
-Reports and dashboards are counted separately against your plan's caps.
-
----
-
 # Vercel
 
 > Install FastYoke from the Vercel Marketplace, or sign up directly and link an existing Vercel project. Both paths end at the same tenant.
@@ -10987,8 +10910,8 @@ platform's existing WebSocket.
   messages stay in place visually as "deleted" — the platform
   keeps a soft-delete tombstone so the thread doesn't renumber.
 - **Mention someone with `@` + name.** The platform creates a
-  notification and lights the recipient's bell. The autocomplete
-  source is your tenant's user directory.
+  [notification](/docs/notifications) and lights the recipient's
+  bell. The autocomplete source is your tenant's user directory.
 - **See unread per conversation.** Opening a thread marks it
   read; the unread count is non-own messages newer than your
   last-read timestamp.
@@ -11222,6 +11145,256 @@ overview page, scoped to API impact:
 - No attachment endpoints.
 - No reactions endpoints.
 - No full-text search endpoint.
+
+---
+
+# Notifications
+
+> A per-user inbox of events that need your attention. Today the platform fires notifications on @mentions only; the bell is real-time and per-user.
+
+# Notifications
+
+Notifications are a per-user inbox of events that need your
+attention. A bell icon in the admin shell lights when something
+happens that's directed at you, and a badge counts your unread
+items. Today the platform fires notifications on `@mentions` only
+— entity-note mentions and messaging mentions. Other event kinds
+(workflow transitions, e-signature events, form submissions, etc.)
+are explicit non-features today; see [What's not a notification
+kind today](#whats-not-a-notification-kind-today) below.
+
+## The bell
+
+A single bell icon in the top bar of the admin shell. Real-time —
+incoming notifications light the bell live over the platform's
+WebSocket; no refresh needed. The badge counts your unread items.
+Clicking the bell opens your feed; clicking an entry marks it
+read and, where there's a deep link to a host record, takes you
+to the subject.
+
+The bell is per-user — your unread count doesn't reflect anyone
+else's. There's no shared inbox today, no tenant-wide "all
+notifications" view.
+
+## Notification kinds today
+
+Two kinds ship today. The table names each kind, when it fires,
+the `subject_kind` it points at, and what's in the `snippet`.
+
+| Kind | Fires when… | `subject_kind` | What's in `snippet` |
+|---|---|---|---|
+| `note_mention` | Someone `@mentions` you in an entity note | the host entity kind | a few words of the note body |
+| `message_mention` | Someone `@mentions` you in a messaging conversation | `"conversation"` | a few words of the message body |
+
+Every notification carries these fields when you fetch it:
+
+- `id` — the notification's own id.
+- `kind` — one of the values above.
+- `actor_email` — who triggered it (the person who mentioned you).
+- `subject_kind` — what kind of record the notification points at.
+- `subject_id` — the id of that record.
+- `note_id` — populated for `note_mention` and null for everything
+  else.
+- `snippet` — a short preview of what was said.
+- `read_at` — null until you mark it read, then a timestamp.
+- `created_at` — when the notification fired.
+
+## What's not a notification kind today
+
+The following are explicit non-features today. Customers who need
+them should plan accordingly until the platform ships them.
+
+- **FSM workflow events** — transitions, guard failures, terminal-
+  state arrivals.
+- **E-signature events** — signer reminders, completion notices,
+  declines.
+- **Form-submission notifications** — a new submission landing.
+- **Marketplace app events** — installs, updates, errors from
+  installed apps.
+- **System-admin alerts** — tenant cap, quota warnings, billing
+  events.
+- **Email fallback** for missed in-app notifications. The bell
+  lights live; emails for missed-while-offline notifications come
+  later.
+
+## Tenant scope
+
+Notifications are tenant-scoped per the platform's prime
+directive. You receive notifications only for events inside the
+tenant the firing actor was in — no cross-tenant fan-out. See
+[Tenant scoping](/docs/developers/tenant-scoping) for the full
+contract.
+
+## See also
+
+- [API reference](/docs/notifications/api-reference) — REST
+  endpoints + the WebSocket `kind: "notification"` envelope.
+- [Messaging](/docs/messaging) — the source of `message_mention`
+  notifications.
+- [Entities](/docs/entities) — entity notes (the source of
+  `note_mention` notifications).
+
+---
+
+# Notifications API reference
+
+> REST endpoints for listing notifications, fetching the unread count, and marking as read — plus the WebSocket kind:"notification" envelope.
+
+# Notifications API reference
+
+This page covers the three REST endpoints and the WebSocket
+envelope that the bell uses. The same surface is available to any
+client with a tenant-scoped JWT.
+
+## Authentication
+
+Every endpoint below requires a tenant-scoped JWT — the same token
+the rest of the platform uses. See [Authentication](/docs/auth)
+for how to mint and present one.
+
+## List notifications
+
+```http
+GET /api/v1/tenant/notifications
+Authorization: Bearer <tenant JWT>
+```
+
+Query parameters:
+
+- `unread` (optional, default `false`) — when `true`, returns only
+  notifications you haven't marked read yet.
+- `limit` (optional, default `50`) — clamped to `1..200`. The
+  newest notifications come first.
+
+Response: an array of notification records:
+
+```json
+[
+  {
+    "id": "ntf_…",
+    "kind": "note_mention",
+    "actor_email": "alice@example.com",
+    "subject_kind": "entity",
+    "subject_id": "ent_…",
+    "note_id": "note_…",
+    "snippet": "…can you take a look?",
+    "read_at": null,
+    "created_at": "2026-06-20T12:00:00Z"
+  }
+]
+```
+
+Ordered newest first (`created_at DESC`).
+
+## Unread count
+
+```http
+GET /api/v1/tenant/notifications/unread-count
+Authorization: Bearer <tenant JWT>
+```
+
+Response:
+
+```json
+{ "unread": 7 }
+```
+
+The source of the bell badge. Cheap (a single count query); safe
+to poll on a short interval if you don't want to wire the
+WebSocket.
+
+## Mark as read
+
+```http
+POST /api/v1/tenant/notifications/mark-read
+Content-Type: application/json
+Authorization: Bearer <tenant JWT>
+```
+
+Body is either a specific list of ids OR a sweep:
+
+```json
+{ "ids": ["ntf_abc", "ntf_def"] }
+```
+
+```json
+{ "all": true }
+```
+
+The platform rejects a no-op request — you must supply at least
+one id in `"ids"` or set `"all": true`. Returns `400 BadRequest`
+otherwise.
+
+On success, returns 200 with `{ "marked": <number> }` — the count
+of rows transitioned from unread to read.
+
+## Errors
+
+Standard `AppError` envelope used elsewhere on the platform. The
+relevant statuses for notifications:
+
+- `400` — no-op `mark-read` (neither `ids` nor `all` supplied).
+- `401` — missing or invalid JWT.
+- `404` — a specific id in `mark-read` doesn't belong to your
+  tenant. (The server silently skips ids that aren't yours rather
+  than rejecting the whole batch; the success response's `marked`
+  count tells you how many actually flipped.)
+
+See [Error envelope](/docs/developers/errors) for the full
+status-code table and worked examples.
+
+## Real-time events
+
+### Where to connect
+
+The platform exposes a single multiplexed WebSocket at
+`/api/v1/ws`, authenticated with the same tenant JWT. The same
+endpoint serves messaging, notifications, and any other event
+kind the platform broadcasts.
+
+### Envelope shape
+
+The server emits JSON envelopes tagged by `kind`. Notifications
+use `kind: "notification"`:
+
+```json
+{
+  "kind": "notification",
+  "event": "created",
+  "notification": {
+    "id": "ntf_…",
+    "kind": "note_mention",
+    "actor_email": "alice@example.com",
+    "subject_kind": "entity",
+    "subject_id": "ent_…",
+    "note_id": "note_…",
+    "snippet": "…can you take a look?",
+    "created_at": "2026-06-20T12:00:00Z",
+    "read_at": null
+  }
+}
+```
+
+The inner `notification` object matches the REST shape exactly,
+so client code can share a parser.
+
+### Server-side filter
+
+The server only sends `kind: "notification"` envelopes scoped to
+the connected user (`recipient_user_id`). No per-kind
+subscription is necessary — you get every kind your user
+receives.
+
+### What events ship today
+
+`event: "created"` only. Mark-read doesn't broadcast — clients
+refresh the list or unread count after acting locally.
+
+### Other `kind`s
+
+The same WebSocket carries other event kinds (messages,
+maybe more in the future). Filter on `kind` and ignore what you
+don't recognize.
 
 ---
 
@@ -13765,6 +13938,265 @@ platform database to confirm rows appear.
   uses to send outbound mail.
 - [Security: encryption](/docs/security/encryption) — encryption-at-rest model
   for sensitive payloads.
+
+---
+
+# Reports & Dashboards
+
+> Aggregate entity records into single numbers or grouped rollups, lay them out on tenant-shared dashboards, and email digests on a schedule.
+
+# Reports & Dashboards
+
+This section covers reports (aggregations over your entity records),
+saved dashboards (tile layouts of those reports), and scheduled
+digests (recurring email delivery of a dashboard). The three pages
+build on each other: a dashboard groups tiles built from saved
+reports, and a digest delivers a dashboard on cadence.
+
+## What a report does
+
+A **report** aggregates entity records into a number, or a list of
+numbers grouped by a field. You pick the source entity, an optional
+filter, an optional group-by, and an aggregate function. The result
+is JSON when you fetch it programmatically; a tile on a dashboard
+when you render it.
+
+## Build a report
+
+Open **Reports** in the admin shell and choose:
+
+- **Entity** — which entity's records to scan.
+- **Filter** (optional) — `field=value AND field2=value2`
+  expression. Only records matching every clause count. Same
+  filter syntax used elsewhere on the platform.
+- **Group by** (optional) — split into one row per distinct value
+  of a field. Leave empty for a single total. The synthetic
+  `current_state` field is supported — group by workflow state
+  without modeling it as a real field.
+- **Aggregate** — how to combine records in each group. Five
+  operations, all wire-format names:
+
+| Op | Result | `aggregate_field` required? |
+|---|---|---|
+| `count` | Number of matching records | no |
+| `sum` | Sum of a numeric field | yes |
+| `avg` | Mean of a numeric field | yes |
+| `min` | Smallest value of a field | yes |
+| `max` | Largest value of a field | yes |
+
+Note the wire format names — the platform speaks `avg`, not
+`average`; `min`, not `minimum`.
+
+## Run a report
+
+From the admin UI or `POST /api/v1/tenant/reports/:id/run`. The
+response is a `ReportResult` — a list of `GroupValue` rows with
+`key` (the group value, or `null` for an ungrouped total) and
+`value` (the aggregate result).
+
+A report can be re-run as often as you like; results aren't cached
+between calls. For recurring delivery, lay the report on a
+dashboard and schedule a [digest](/docs/reports/digests).
+
+## Per-tier caps
+
+Reports are gated per tier:
+
+- **Hobby**: cannot create reports.
+- **Pro: 5** reports per tenant.
+- **Team: 25** reports per tenant.
+- **Enterprise / Fleet**: unlimited.
+
+Caps are per-tenant and count separately from dashboards — a Pro
+tenant can hold 5 reports AND 5 dashboards.
+
+## API reference
+
+```http
+POST /api/v1/tenant/reports
+GET /api/v1/tenant/reports
+GET /api/v1/tenant/reports/:id
+PATCH /api/v1/tenant/reports/:id
+DELETE /api/v1/tenant/reports/:id
+POST /api/v1/tenant/reports/:id/run
+```
+
+Create / get / patch / delete operate on the report definition;
+`run` executes the report and returns a `ReportResult`.
+
+## See also
+
+- [Dashboards](/docs/reports/dashboards) — lay tiles built from
+  reports onto a tenant-shared page.
+- [Digests](/docs/reports/digests) — email a dashboard on cadence
+  to a list of recipients.
+
+---
+
+# Dashboards
+
+> Lay report tiles on a single page, choose a render shape per tile (number, bar, or line), and serve the dashboard as server-rendered HTML.
+
+# Dashboards
+
+A **dashboard** is a collection of report tiles laid out on a single
+page. Each tile points at a saved report and chooses a render shape.
+Dashboards are tenant-scoped — every member of the tenant can view
+them. There's no per-user dashboard variant today; one tenant
+dashboard is one shared view.
+
+## What a dashboard does
+
+A saved dashboard owns a list of tiles. When you view the dashboard
+in the admin shell, the platform fetches each tile's report,
+executes it, and renders the result in the tile's chosen shape.
+When you fetch the dashboard's render endpoint, the platform
+produces the same view as server-side HTML — that's the bytes a
+scheduled [digest](/docs/reports/digests) emails out.
+
+## Add a tile
+
+From a saved report, choose three things:
+
+- **Title** — the human label that appears above the tile.
+- **Render** — one of:
+  - `number` — a single big value. Works for any aggregate
+    without a group-by (or with a single-row group-by result).
+  - `bar` — a grouped bar chart. Requires the underlying report
+    to have a group-by; each bar is one `GroupValue`.
+  - `line` — a time-series line. Requires group-by on a
+    date-typed field; the platform sorts the groups
+    chronologically.
+- **Width** — how many grid columns the tile spans on the
+  dashboard.
+
+The three render shapes are the complete set today; no `pie`, no
+`table`, no `gauge`. A report can be tiled multiple times across
+multiple dashboards in different shapes.
+
+## Render the dashboard
+
+```http
+GET /api/v1/tenant/dashboards/:id/render
+```
+
+Returns server-rendered HTML — every tile, every chart, inlined and
+ready to email. The admin UI's dashboard view uses the same
+endpoint. Scheduled [digests](/docs/reports/digests) use it too:
+the email body is the same HTML the admin UI shows.
+
+## Per-tier caps
+
+Dashboards are gated the same way as reports:
+
+- **Hobby**: cannot create dashboards.
+- **Pro: 5** dashboards per tenant.
+- **Team: 25** dashboards per tenant.
+- **Enterprise / Fleet**: unlimited.
+
+Caps are per-tenant and count separately from reports.
+
+## API reference
+
+```http
+POST /api/v1/tenant/dashboards
+GET /api/v1/tenant/dashboards
+GET /api/v1/tenant/dashboards/:id
+PATCH /api/v1/tenant/dashboards/:id
+DELETE /api/v1/tenant/dashboards/:id
+GET /api/v1/tenant/dashboards/:id/render
+```
+
+`render` returns HTML; everything else returns JSON.
+
+## See also
+
+- [Reports](/docs/reports) — build the reports that tile onto a
+  dashboard.
+- [Digests](/docs/reports/digests) — email this dashboard on a
+  schedule.
+
+---
+
+# Scheduled digests
+
+> Attach a schedule to a dashboard and the platform emails the rendered dashboard to a list of recipients on cadence. Daily or weekly; UTC clock; Pro tier or higher.
+
+# Scheduled digests
+
+A **digest** is a schedule attached to a dashboard. The platform
+renders the dashboard on cadence and emails the result to a list of
+recipients. The email body is the same HTML the dashboard's render
+endpoint produces.
+
+## Configure a schedule
+
+A digest's schedule object has four fields:
+
+- **`cadence`** — `daily` or `weekly`. These are the only two
+  cadences today.
+- **`hour_utc`** — integer 0–23. **The platform clocks digests in
+  UTC**, not the tenant's local timezone. Pick the hour that
+  matches when you want the email to arrive in your local time —
+  account for your local offset (a tenant in UTC−5 wanting an 8am
+  local digest sets `hour_utc: 13`).
+- **`weekday`** — integer 0–6 with **Mon=0**, Sun=6. Required when
+  cadence is `weekly`; ignored when cadence is `daily`.
+- **`recipients`** — list of email addresses. Any number; no
+  per-recipient personalization — everyone gets the same render.
+
+## When a digest fires
+
+A platform scheduler runs hourly. For each dashboard with a
+schedule, the scheduler checks two predicates:
+
+1. `now.hour_utc == schedule.hour_utc`
+2. For weekly: `now.weekday == schedule.weekday`
+
+If both match, the digest sends. The platform tracks `last_sent_at`
+per dashboard so a digest can't double-fire within the same hour
+even if the scheduler tick overlaps the boundary.
+
+If the dashboard's render endpoint fails at digest time, no email
+goes out for that tick; the next scheduled tick re-attempts.
+
+## Tier gating
+
+**Scheduling a digest requires Pro tier or higher.** Hobby tenants
+can build reports and dashboards but cannot attach a schedule; the
+admin UI disables the schedule editor for Hobby and the API
+rejects the schedule field on save.
+
+Once a digest is scheduled, every recipient on the list receives
+the email regardless of tenant membership. Recipients are
+addresses, not user references — you can email anyone with a
+mailbox.
+
+## What's in the email
+
+- **Subject** — names the dashboard.
+- **Body** — the HTML the render endpoint produces, embedded
+  inline. Charts render with the same shapes as the admin UI view;
+  widths follow the tile configuration.
+- **No external assets.** Everything renders inline so the email
+  works in mail clients that block remote content by default.
+
+## Pause or remove a digest
+
+Two options:
+
+- **Clear the schedule** — set the dashboard's `schedule` field to
+  `null`. The dashboard stays; emails stop. Re-add a schedule any
+  time to resume.
+- **Delete the dashboard** — removes both the layout and the
+  schedule. Recipients receive nothing further.
+
+## See also
+
+- [Reports](/docs/reports) — the reports that tile onto the
+  dashboard.
+- [Dashboards](/docs/reports/dashboards) — the layout the digest
+  emails.
 
 ---
 

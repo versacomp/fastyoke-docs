@@ -25,8 +25,8 @@ platform's existing WebSocket.
   messages stay in place visually as "deleted" — the platform
   keeps a soft-delete tombstone so the thread doesn't renumber.
 - **Mention someone with `@` + name.** The platform creates a
-  notification and lights the recipient's bell. The autocomplete
-  source is your tenant's user directory.
+  [notification](/docs/notifications) and lights the recipient's
+  bell. The autocomplete source is your tenant's user directory.
 - **See unread per conversation.** Opening a thread marks it
   read; the unread count is non-own messages newer than your
   last-read timestamp.
