@@ -98,8 +98,10 @@ Start with [Getting Started](/docs/getting-started) — it walks you
 ::
 
 ::callout{type="tip" title="Integrator?"}
-Head to the [SDK quickstart](/docs/sdk/quickstart) or the
-  [CLI reference](/docs/cli) to wire FastYoke into your own tooling.
+Start with [Developers](/docs/developers) for the day-1 invariants
+  every API consumer needs — error envelope, tenant scoping,
+  idempotency, rate limits — and links into the [SDK](/docs/sdk)
+  and [CLI](/docs/cli) from there.
 ::
 
 ::callout{type="tip" title="Setting up access?"}

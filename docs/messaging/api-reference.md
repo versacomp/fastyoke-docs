@@ -120,8 +120,9 @@ non-deleted messages in the conversation with
 - **404** — the conversation does not exist in the caller's
   tenant.
 
-Responses use the standard `AppError` JSON envelope used
-elsewhere on the platform.
+Responses use the standard `AppError` JSON envelope. See
+[Error envelope](/docs/developers/errors) for the full status-code
+table and worked examples.
 
 ## Real-time events
 

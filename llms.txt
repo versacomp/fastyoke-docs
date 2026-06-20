@@ -55,6 +55,14 @@
 - [fy-app.json Spec](https://www.fastyoke.io/docs/cli/app-spec): The versioned source-of-truth contract that fy app create and fy app add-entity read and write.
 - [CLI](https://www.fastyoke.io/docs/cli): fy — the extension-authoring CLI.
 
+## Developers
+
+- [Developers](https://www.fastyoke.io/docs/developers): Day-1 platform invariants every API consumer needs to know, plus links to every developer surface FastYoke ships.
+- [Error envelope](https://www.fastyoke.io/docs/developers/errors): The standard AppError JSON envelope, what each commonly-returned status code means in FastYoke, and three worked examples.
+- [Tenant scoping](https://www.fastyoke.io/docs/developers/tenant-scoping): How the platform enforces multi-tenancy on every request, what your code does (and doesn't) send, and why 404 and 403 mean what they mean.
+- [Idempotency](https://www.fastyoke.io/docs/developers/idempotency): Which FastYoke endpoints accept Idempotency-Key, how the platform dedupes on it, and what the safe-retry window is.
+- [Rate limits](https://www.fastyoke.io/docs/developers/rate-limits): What the platform throttles, the 429 response shape, the Retry-After header, and recommended client backoff behaviour.
+
 ## Entities
 
 - [Entities](https://www.fastyoke.io/docs/entities): Schemaless JSON records that serve as FSM guard-evaluation context.
@@ -154,7 +162,7 @@
 - [Role-change audit log](https://www.fastyoke.io/docs/permissions/audit-log): What gets recorded when an admin changes a role, who can read it, and how to read it programmatically.
 - [Builder permission gating](https://www.fastyoke.io/docs/permissions/builder-gating): How the frontend hides authoring surfaces from users who lack the underlying permission.
 
-## primitives
+## Primitives
 
 - [Engine Primitives](https://www.fastyoke.io/docs/primitives)
 - [Aggregator](https://www.fastyoke.io/docs/primitives/aggregator)
