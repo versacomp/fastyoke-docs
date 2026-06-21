@@ -56,7 +56,8 @@ plan, and complete the card checkout. Tier changes propagate within
 ~30 seconds of a successful charge. No downtime — submissions in
 flight at the moment of upgrade are counted against the old tier's
 caps; every submission from the next one onward counts against the
-new tier.
+new tier. See [Billing](/docs/billing) for how the tier base, metered
+usage, and the prepaid wallet interact once you're past Solo.
 
 Downgrades follow the reverse path. Existing submissions and forms
 are preserved; new submissions count against the lower tier's caps.

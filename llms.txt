@@ -50,6 +50,14 @@
 
 - [Authentication & Scopes](https://www.fastyoke.io/docs/auth): JWT shapes, platform vs tenant context, extension tokens, SSO.
 
+## Billing
+
+- [Billing](https://www.fastyoke.io/docs/billing): How the platform charges you — tier subscription, metered usage, prepaid wallet, top-ups, low-balance alerts, and the Stripe portal. Numbers live on /pricing.
+- [Tiers & metering](https://www.fastyoke.io/docs/billing/tiers-and-metering): The tier base + metered events the platform charges for, the metered-only org billing mode, and how the period rolls up into an invoice draft. Numbers live on /pricing.
+- [Wallet & top-ups](https://www.fastyoke.io/docs/billing/wallet-and-topups): The org-level prepaid wallet, how top-up checkout works, the $10 low-balance alert, the $0 auto-suspend, and the documented exceptions for resellers and metered-only orgs.
+- [Invoices & portal](https://www.fastyoke.io/docs/billing/invoices-and-portal): The Stripe Customer Portal as the "manage billing" surface, invoice drafts vs finalized invoices, the subscription statuses you can see, and how to change tier today.
+- [API reference](https://www.fastyoke.io/docs/billing/api-reference): REST surface for the billing tab — subscription, usage, portal, addons, checkout, metering toggle, wallet, and the wallet top-up checkout.
+
 ## Bulk operations
 
 - [Bulk operations](https://www.fastyoke.io/docs/bulk-operations): Run the same edit, delete, or FSM transition against many entity records at once. Admin-only. Always two-step — preview the change, review what would happen, then commit (or cancel).

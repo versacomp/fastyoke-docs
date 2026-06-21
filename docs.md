@@ -125,6 +125,12 @@ See [Compliance Yoke](/docs/compliance-yoke) for framework
 readiness, evidence collectors, the Auditor Room, and the
 public Trust Center.
 
+::callout{type="tip" title="Question about charges or the wallet?"}
+See [Billing](/docs/billing) for the tier base + metered
+  usage model, the prepaid wallet, low-balance alerts, the
+  $0 auto-suspend, and the Stripe Customer Portal.
+::
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.

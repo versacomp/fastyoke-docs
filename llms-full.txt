@@ -1908,6 +1908,10 @@ See [Compliance Yoke](/docs/compliance-yoke) for framework
 readiness, evidence collectors, the Auditor Room, and the
 public Trust Center.
 
+See [Billing](/docs/billing) for the tier base + metered
+  usage model, the prepaid wallet, low-balance alerts, the
+  $0 auto-suspend, and the Stripe Customer Portal.
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.
@@ -3500,6 +3504,402 @@ they bind the wrong tenant_id string.
 ## See also
 
 Authentication establishes who you are. See [Permissions](/docs/permissions) for what you can do.
+
+---
+
+# Billing
+
+> How the platform charges you — tier subscription, metered usage, prepaid wallet, top-ups, low-balance alerts, and the Stripe portal. Numbers live on /pricing.
+
+# Billing
+
+The platform charges two ways, in parallel:
+
+- **Tier subscription** — a flat monthly base for the tier you
+  bought (Solo / Pro / Team / Enterprise / Fleet).
+- **Metered usage** — per-event charges for specific operations
+  (job transitions, outbound webhooks, email egress, bundle
+  bytes). Metered charges draw down a prepaid wallet at the
+  organization level.
+
+The two are independent: a Pro-tier org pays the Pro base
+monthly **and** draws metered events from the wallet. Tier
+prices and per-event rates live on [`/pricing`](/pricing) —
+this section explains the mechanism, not the numbers.
+
+## Where billing surfaces in the app
+
+- **Admin → Settings → Billing & usage** (every tenant) —
+  current-period charges, subscription status, tier, and the
+  "Manage billing" link out to the Stripe Customer Portal.
+- **Org → Wallet** (metered orgs only) — current balance, the
+  Top Up button, alert / suspend status.
+- **Stripe Customer Portal** — past invoices, payment-method
+  changes, subscription cancel.
+
+## Numbers live on `/pricing`
+
+We don't repeat tier prices or per-event rates in docs.
+Marketing's [`/pricing`](/pricing) page is the authoritative
+source. If a number you see here ever drifts from `/pricing`,
+trust `/pricing`.
+
+## Resellers
+
+If you're managing billing for downstream customers through
+the channel-partner portal, your surface is different — rate
+cards, statements, reseller invoices. That lives under
+[`/partner-portal`](/partner-portal) and ships its own docs.
+Everything on this page is for direct-customer billing.
+
+## What's not in billing today
+
+The following are explicit non-features. Plan accordingly.
+
+- **Self-serve plan change in-product** — today, tier changes
+  go through the Stripe Customer Portal.
+- **Per-tenant wallet** — wallets are organization-scoped,
+  not tenant-scoped.
+- **Native multi-currency display** — USD only.
+- **Granular department-level cost allocation** — there's one
+  invoice per org per period.
+- **In-app spend forecasting** — the dashboard shows what
+  you've spent, not what you're projected to spend.
+
+## See also
+
+- [Tiers & metering](/docs/billing/tiers-and-metering) — what
+  the platform charges for, and the metered-only billing mode.
+- [Wallet & top-ups](/docs/billing/wallet-and-topups) — alert
+  and suspend thresholds.
+- [Invoices & portal](/docs/billing/invoices-and-portal) —
+  Stripe Customer Portal, drafts vs finalized invoices,
+  subscription statuses.
+- [API reference](/docs/billing/api-reference) — the REST
+  surface.
+
+---
+
+# Tiers & metering
+
+> The tier base + metered events the platform charges for, the metered-only org billing mode, and how the period rolls up into an invoice draft. Numbers live on /pricing.
+
+# Tiers & metering
+
+## Tier base
+
+Every paid tier carries a flat monthly base. The tier you
+bought at checkout (Solo, Pro, Team, Enterprise, or Fleet)
+sets the base; changing tier changes the base from the next
+billing period. See [`/pricing`](/pricing) for the tier
+matrix and the per-tier base price.
+
+## Metered events
+
+In addition to the tier base, the platform charges per-event
+for specific operations. The kinds you can see on your
+statement today:
+
+- **Job transitions** — every FSM transition fired against
+  one of your workflow jobs.
+- **Outbound webhooks** — every successful delivery of a
+  webhook subscription you configured.
+- **Email egress** — every outbound platform email
+  (notifications, mention emails, alerts).
+- **Extension bundle bytes** — bandwidth served from your
+  installed extensions, bucketed by byte count.
+
+Per-event rates live on [`/pricing`](/pricing). Rates live on
+`/pricing`, not in docs — anything we wrote here would drift
+the moment marketing tunes a number.
+
+## The metered-only billing mode
+
+An organization can be switched to a **metered-only** mode by
+the platform team. In that mode:
+
+- The tier base is zeroed for billing purposes — you pay only
+  for metered usage.
+- The org is exempt from the prepaid-wallet auto-suspend (see
+  [Wallet & top-ups](/docs/billing/wallet-and-topups)) because
+  billing is reconciled out-of-band.
+- The current-period draft on Settings → Billing & usage is
+  stamped accordingly so the breakdown shows usage-only.
+
+Metered-only is a per-org configuration handled by the
+platform team — there is no self-serve toggle in product
+today.
+
+## Invoice drafts
+
+At any moment during a billing period the platform maintains
+a draft of what your invoice will look like at period end.
+The draft rolls up the tier base and every metered event
+attributable to the period. You can see the current draft on
+**Settings → Billing & usage**; the finalized invoice is
+delivered through the Stripe Customer Portal at period close.
+
+## What's not in metering today
+
+- **Per-tenant usage caps** — set a hard ceiling on metered
+  events for a tenant.
+- **Custom metered events** — meter a custom action defined
+  in your workflow.
+- **Real-time spend dashboards** — what's on Settings →
+  Billing & usage updates on a cadence, not in real time.
+
+## See also
+
+- [Wallet & top-ups](/docs/billing/wallet-and-topups) — how
+  the wallet drains and what happens when it's low.
+- [Invoices & portal](/docs/billing/invoices-and-portal) —
+  the finalized-invoice flow at period end.
+- [API reference](/docs/billing/api-reference) — the
+  endpoints behind these surfaces.
+
+---
+
+# Wallet & top-ups
+
+> The org-level prepaid wallet, how top-up checkout works, the $10 low-balance alert, the $0 auto-suspend, and the documented exceptions for resellers and metered-only orgs.
+
+# Wallet & top-ups
+
+The wallet is an **organization-level** prepaid USD balance.
+Metered events draw it down; top-ups refill it. Each
+organization has exactly one wallet; tenants inside an org
+share the same balance.
+
+## Topping up
+
+From **Org → Wallet**, click **Top Up** and pick an amount.
+The platform opens a Stripe Checkout session; on successful
+payment the wallet is credited.
+
+The credit is **idempotent** at the Stripe-session level.
+The same `checkout.session.completed` event can never credit
+the wallet twice — replays and retries are safe.
+
+## Low-balance alert at $10
+
+A background sweep runs hourly. Any organization whose wallet
+balance falls below **$10** receives a `LowBalance` email and
+is stamped as alerted for the current low-balance episode.
+
+The platform sends one alert per episode, not one alert per
+sweep. An "episode" ends when the balance climbs back above
+$10 — a top-up clears the alert stamp, and a subsequent drop
+below $10 starts a new episode (and a new alert).
+
+## Auto-suspend at $0
+
+The same sweep suspends any organization whose wallet balance
+is at or below **$0**. A suspended org's tenants stop
+accepting new metered events; in-flight events still draft to
+the period draft so the unsuspend flow is clean.
+
+A top-up that brings the balance above $0 unsuspends the org
+automatically. There is no manual "unsuspend" button — pay
+your wallet up and the suspend lifts on the next sweep tick
+(or immediately, if the checkout webhook fires first).
+
+## Documented exceptions
+
+**Reseller orgs are alert-only.** Channel partners reselling
+the platform to their downstream customers are never
+auto-suspended on wallet balance — they continue to receive
+low-balance alerts so they know to top up, but the sweep
+skips the suspend pass for them. Resellers handle their
+downstream customers' billing themselves.
+
+**Metered-only orgs are exempt from auto-suspend.** Orgs
+switched to the [metered-only billing
+mode](/docs/billing/tiers-and-metering) are reconciled
+out-of-band and therefore don't drive the wallet. The sweep
+skips them for both alert and suspend passes.
+
+## What's not in the wallet today
+
+- **Auto-top-up** at a configurable threshold.
+- **Multi-card failover** if the primary payment method
+  fails.
+- **Statement PDFs** emailed at period close (you read
+  statements in the Stripe portal).
+
+## See also
+
+- [Tiers & metering](/docs/billing/tiers-and-metering) — how
+  the wallet drains.
+- [Invoices & portal](/docs/billing/invoices-and-portal) —
+  the Stripe portal for changing payment methods.
+- [API reference](/docs/billing/api-reference) — the wallet
+  and top-up checkout endpoints.
+
+---
+
+# Invoices & portal
+
+> The Stripe Customer Portal as the "manage billing" surface, invoice drafts vs finalized invoices, the subscription statuses you can see, and how to change tier today.
+
+# Invoices & portal
+
+## The Stripe Customer Portal
+
+The platform delegates payment-method changes, past-invoice
+viewing, and subscription cancellation to the **Stripe
+Customer Portal**.
+
+From the admin shell:
+
+1. Open **Settings → Billing & usage**.
+2. Click **Manage billing** — the platform calls
+   `GET /portal`, which returns a short-lived portal session
+   URL.
+3. The portal opens in a new tab; close it when you're done.
+
+We do not deep-link to specific portal pages — Stripe owns
+the navigation inside the portal.
+
+## Invoice drafts vs finalized invoices
+
+| Surface | What it shows |
+| --- | --- |
+| **Settings → Billing & usage** (in product) | The current period's **draft** — what your invoice would look like if the period closed now. Updates on a cadence. |
+| **Stripe Customer Portal** (out of product) | **Finalized** invoices for past periods. Authoritative. |
+
+Drafts are not invoices. Once the period closes, Stripe
+finalizes the draft and the result lands in the portal as a
+finalized invoice; the in-product draft for that period is
+no longer visible.
+
+## Subscription statuses
+
+The platform surfaces the current Stripe subscription status
+on the Billing & usage tab. The values you can see:
+
+- **`active`** — the subscription is in good standing.
+  Everything works.
+- **`past_due`** — a recent charge failed. Stripe will retry
+  on the schedule configured for the account; meanwhile the
+  platform keeps the subscription live.
+- **`canceled`** — the subscription has ended. Access to
+  tier-gated features stops at period end.
+- **`trialing`** — the subscription is inside a trial window.
+  Behaves like `active` until the trial ends.
+
+Other Stripe statuses (`incomplete`, `incomplete_expired`,
+`unpaid`) can appear during edge cases and are surfaced
+literally — there's no platform-side renaming.
+
+## Changing tier today
+
+Tier changes go through the **Stripe Customer Portal** today.
+From the portal you can:
+
+- Cancel the subscription (takes effect at period end).
+- Update the payment method.
+
+For an **upgrade** (Solo → Pro, Pro → Team, etc.), open
+**Settings → Billing → Upgrade** in product — the upgrade
+flow opens a fresh Stripe Checkout for the new tier.
+
+A self-serve **in-product tier change wizard** is on the
+deferred list.
+
+## What's not in this surface today
+
+- **In-product tier-change wizard** — handled via the
+  upgrade flow and the portal.
+- **In-product invoice download** — invoices live in the
+  portal.
+- **Scheduled subscription pause** — cancel-and-resubscribe
+  is the only workflow today.
+
+## See also
+
+- [Wallet & top-ups](/docs/billing/wallet-and-topups) — for
+  changing the payment method used to top up the wallet.
+- [API reference](/docs/billing/api-reference) — the
+  `/portal`, `/subscription`, and `/checkout` endpoints.
+
+---
+
+# API reference
+
+> REST surface for the billing tab — subscription, usage, portal, addons, checkout, metering toggle, wallet, and the wallet top-up checkout.
+
+# API reference
+
+Every endpoint is tenant-scoped. The platform derives the
+`tenant_id` from the JWT; you never pass it in the body or in
+a path segment.
+
+## Auth
+
+Tenant JWT in the `Authorization: Bearer …` header. Endpoints
+return `401` if the JWT is missing or invalid, `403` if the
+caller lacks the billing permission for their role.
+
+## Subscription & usage
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/v1/tenant/billing/subscription` | Current Stripe subscription status and period boundary. |
+| GET | `/api/v1/tenant/billing/usage` | Current-period roll-up: tier base + metered events + total. |
+
+**The `unavailable` response shape.** Both `/subscription`
+and `/usage` (and `/wallet`, see below) can return a body
+shape indicating the surface is "unavailable" for this tenant
+— typically a Solo-tier tenant with no subscription row yet,
+or a tenant whose org hasn't been wired into the billing
+back-end. The frontend renders an empty state in this case;
+clients integrating with the API should handle the
+`unavailable` body as a valid 200 response, not a failure.
+
+## Portal
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/v1/tenant/billing/portal` | Returns a short-lived Stripe Customer Portal session URL. |
+
+## Add-ons
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET    | `/api/v1/tenant/billing/addons` | List the tenant's active paid and free add-ons. |
+| DELETE | `/api/v1/tenant/billing/addons/:addon_key` | Disable a free add-on. (Paid add-ons cancel through the portal.) |
+
+## Checkout
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| POST | `/api/v1/tenant/billing/checkout` | Start a Stripe Checkout for a tier upgrade. Returns a session URL. |
+| POST | `/api/v1/tenant/billing/checkout/addon` | Start a Stripe Checkout for a paid add-on. Returns a session URL. |
+
+## Metering toggle
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| POST | `/api/v1/tenant/billing/metering` | Toggle whether the tenant is opted into metered event capture. |
+
+## Wallet
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET  | `/api/v1/tenant/billing/wallet` | Current org wallet balance and last-alerted-at marker. |
+| POST | `/api/v1/tenant/billing/wallet/topup-checkout` | Start a Stripe Checkout for a wallet top-up. Returns a session URL. |
+
+The wallet endpoints answer for the org that owns the calling
+tenant. A tenant that doesn't belong to a metered org gets
+the `unavailable` shape, same as the subscription endpoints.
+
+## See also
+
+- [Overview](/docs/billing) — what surfaces in the app.
+- [Wallet & top-ups](/docs/billing/wallet-and-topups) — the
+  consumer of the wallet endpoints.
+- [Invoices & portal](/docs/billing/invoices-and-portal) —
+  the consumer of `/portal` and `/subscription`.
 
 ---
 
@@ -10043,7 +10443,8 @@ plan, and complete the card checkout. Tier changes propagate within
 ~30 seconds of a successful charge. No downtime — submissions in
 flight at the moment of upgrade are counted against the old tier's
 caps; every submission from the next one onward counts against the
-new tier.
+new tier. See [Billing](/docs/billing) for how the tier base, metered
+usage, and the prepaid wallet interact once you're past Solo.
 
 Downgrades follow the reverse path. Existing submissions and forms
 are preserved; new submissions count against the lower tier's caps.
