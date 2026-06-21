@@ -6,10 +6,11 @@ order: 7
 
 # Authentication
 
-Six auth layers. Five are JWT-shaped (tenant user, platform admin,
-impersonation, extension, access tokens); the sixth is the
-long-lived `fy_pat_*` **API token** for CI pipelines and external
-integrations.
+Seven auth layers. Six are JWT-shaped (tenant user, platform
+admin, impersonation, extension, access tokens, and a one-hour
+admin **API test token** for ad-hoc API calls); the seventh is
+the long-lived `fy_pat_*` **API token** for CI pipelines and
+external integrations.
 
 ## 1. Tenant user JWT
 
@@ -142,6 +143,36 @@ belt-and-suspenders pair with the session-only checks.
 
 See the [CI scripting recipe](/docs/recipes/ci-scripting) for the
 full mint → curl → revoke walk-through.
+
+## 7. API test token JWT (one-hour bearer)
+
+A convenience tier added on top of the `fy_pat_` family for
+ad-hoc API testing without the full mint ceremony. The endpoint
+is `POST /api/v1/tenant/api-tokens/test-token`; the response is a
+standard JWT bearer (`eyJ…`) that **mirrors the calling admin's
+session authority** and expires in one hour (`TEST_TOKEN_TTL_SECS
+= 3600`).
+
+**It is not a `fy_pat_` token** — the [hard refusals](#6-long-lived-api-tokens)
+above do not apply. A test token can do whatever the minting
+admin can do, because it *is* a fresh session token. Treat it
+like a password.
+
+**Stateless** — nothing is stored. The bearer is returned once
+in the response body and never reproducible. It cannot be
+revoked; wait for the TTL to expire if you've leaked one.
+
+**Anti-delegation** — the mint endpoint refuses a non-human
+session (`fy_pat_` or another test token) with `403
+delegated_credential_refused`. A leaked PAT cannot spin up an
+unscoped session-bearing JWT and bypass its own scope ceiling.
+
+**Audit** — each mint emits a structured
+`api_test_token_generated` event with actor and tenant. The
+token itself is never logged.
+
+See [API tokens → Quick test token](/docs/auth/api-tokens#quick-test-token)
+for the in-product UI walkthrough and the full response shape.
 
 ## Scopes
 

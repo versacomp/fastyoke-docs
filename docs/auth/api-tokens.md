@@ -88,12 +88,15 @@ between step 2 and step 4 either token authenticates.
 ## REST surface
 
 - `GET /api/v1/tenant/api-tokens` — List active and revoked tokens (prefix-and-suffix preview only).
-- `POST /api/v1/tenant/api-tokens` — Mint a new token. The response body contains the full token value **once**.
+- `POST /api/v1/tenant/api-tokens` — Mint a new `fy_pat_` token. The response body contains the full token value **once**.
 - `DELETE /api/v1/tenant/api-tokens/:id` — Revoke a token. Effect is immediate.
+- `POST /api/v1/tenant/api-tokens/test-token` — Mint a one-hour session-mirroring JWT for ad-hoc API testing. See [Quick test token](#quick-test-token).
 
-The mint and revoke endpoints require a human admin
-session — calling them with another API token returns 403
-(the "cannot mint, cannot revoke other" refusals above).
+The mint, revoke, and test-token endpoints all require a
+human admin session — calling them with another API token
+returns 403 (the "cannot mint, cannot revoke other" refusals
+above, and the dedicated `delegated_credential_refused`
+refusal for the test-token endpoint).
 
 ## Walk-through
 
@@ -113,14 +116,67 @@ the reference; the recipe is the walkthrough.
 
 ## Quick test token
 
-Need to try an API call right now? On the API tokens page, choose **Generate
-test token**. You'll get a ready-to-use bearer token (and a copy-paste `curl`
-example) valid for **one hour**.
+Need to hit the API right now from `curl` or Postman without
+the full `fy_pat_` mint ceremony? **Settings → Tokens → Generate test token**
+mints a short-lived **JWT bearer** that acts as your admin
+session for one hour.
 
-A test token acts as you — it can do whatever your account can — so treat it
-like a password and don't share it. It isn't stored anywhere: copy it when the
-dialog appears, and generate a new one whenever you need it. For long-lived
-credentials used by CI or an integration, create a named API token instead.
+The dialog returns three things you can copy: the token
+itself, a ready-made `curl` line, and the absolute expiry
+timestamp.
+
+### How it differs from a `fy_pat_` token
+
+A test token is **not** a `fy_pat_` PAT. The differences
+are deliberate and load-bearing:
+
+| Property | `fy_pat_` token | Test token (JWT) |
+| --- | --- | --- |
+| Format | `fy_pat_…` prefix | A standard JWT bearer (`eyJ…`) |
+| Authority | The scope set you picked at mint time. The four [hard refusals](#hard-refusals) apply. | **Mirrors your live session** — whatever your admin account can do, the token can do. The hard refusals do **not** apply. |
+| Lifetime | Long-lived; rotate or revoke explicitly | **One hour** (`TEST_TOKEN_TTL_SECS = 3600`). Cannot be extended. |
+| Storage | Peppered hash stored in `api_tokens` | **Stateless** — nothing is stored. The bearer is returned once and never reproducible. |
+| Revocation | `DELETE /api-tokens/:id` is immediate | **Not revocable** — wait for the TTL to expire. |
+| Audit | A row per mint and revoke | A single structured `api_test_token_generated` event per mint. The token itself is **never** in the log. |
+
+Because the test token mirrors your authority, treat it
+like your password. Don't paste it into Slack, don't commit
+it, and don't share it with anyone you wouldn't hand your
+session cookie to.
+
+### Anti-delegation
+
+You cannot mint a test token from another `fy_pat_` token
+or test token. The endpoint refuses any non-human session
+with a `403 delegated_credential_refused` — a leaked PAT
+must never be able to spin up an unscoped session-bearing
+JWT and bypass its own scope ceiling. The minted bearer
+always traces back to a human admin sign-in.
+
+### REST endpoint
+
+`POST /api/v1/tenant/api-tokens/test-token` — admin
+session only, requires `tokens.manage`. No request body.
+Response shape:
+
+```json
+{
+  "token": "eyJhbGciOiJI…",
+  "token_type": "Bearer",
+  "expires_at": "2026-06-21T12:00:00Z",
+  "expires_in_secs": 3600,
+  "tenant_id": "tnt_01HW…",
+  "api_base_url": "https://www.fastyoke.io"
+}
+```
+
+### When NOT to use one
+
+A test token is for one operator, one terminal, one hour.
+For CI pipelines, server-side integrations, anything that
+will outlive an interactive session — mint a
+`fy_pat_` PAT instead. The `fy_pat_` flavor is revocable,
+scope-narrowed, and survives across browser sessions.
 
 ## See also
 
