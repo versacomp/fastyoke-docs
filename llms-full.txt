@@ -7220,6 +7220,10 @@ Builder access requires the `forms.create` or `forms.update` permission. See [Bu
 
 Need legally-binding signatures on a form? See [E-signatures](/docs/esign).
 
+Form submissions emit `form.submitted` outbound webhooks;
+see [Webhooks → Managing subscriptions](/docs/integrations/webhooks#managing-subscriptions)
+for the subscription model and REST surface.
+
 ---
 
 # Required email with confirmation copy
@@ -11455,6 +11459,162 @@ subscriptions per tenant scales with your plan:
 
 Paused subscriptions do not count toward the cap.
 
+## Managing subscriptions
+
+Outbound webhook subscriptions live at **Settings → Webhooks**
+in the admin shell. Each subscription is tenant-scoped; no
+subscription crosses tenants.
+
+### Lifecycle states
+
+- **active** — the subscription receives matching events.
+- **paused** — the subscription is configured but skipped by
+  the dispatcher. Paused subscriptions don't count toward the
+  tier cap.
+
+You toggle between the two from the settings list or via
+`PATCH /:id`.
+
+### Subscription fields
+
+| Field | Purpose |
+| --- | --- |
+| `url` | The HTTPS endpoint to POST events to. |
+| `events` | A list of event types, or `*` for the wildcard. |
+| `description` | Free-form label rendered in the settings list. |
+| Signing secret | Generated at create time; rotatable later. Used to compute the HMAC header on every delivery (see [Verifying signatures](#verifying-signatures)). |
+
+### Three event sources
+
+Events come from three places inside the platform:
+
+- **Job transitions** — every FSM transition fires the
+  matching `job.transition` or `job.admin_override`.
+- **Entity mutations** — create / update / delete on tenant
+  entity records fire `entity.created` / `entity.updated` /
+  `entity.deleted`.
+- **Form submissions** — every public form submission fires
+  `form.submitted`.
+
+The dispatcher fans out to every matching subscription per
+event. Cross-event ordering across sources is **not**
+guaranteed.
+
+## Secret rotation
+
+`POST /:id/rotate-secret` generates a new signing secret for a
+subscription. The response body contains the new secret
+**once** — the platform never reveals it again. Copy it into
+your verifier configuration immediately.
+
+### Dual-window
+
+For a grace period after rotation, both the previous and the new secrets verify deliveries. This lets your receiver
+migrate to the new secret without dropping signed bytes.
+
+### Migration pattern
+
+1. Call rotate-secret.
+2. Receive the new secret in the response. Update your
+   verifier to accept either the old OR new secret during
+   the window.
+3. Deploy the new secret as your primary verifier.
+4. After the grace window expires (or sooner if you're
+   confident), retire the old secret from your verifier.
+
+If your verifier only ever checks one secret, rotation is a
+**hard cutover** — the new secret takes effect immediately on
+the next delivery. The dual-window is opt-in on the
+receiver's side; it is not enforced server-side.
+
+## Test deliveries and replay
+
+Three non-event-driven dispatch paths, plus a read endpoint
+for inspecting history.
+
+### `POST /:id/test` — ad-hoc test delivery
+
+Fires a synthetic delivery to the subscription with a fixed
+`event` type and a fixed body. The test delivery flows
+through the **same** dispatcher real events do — same HMAC,
+same headers, same DLQ rules. The only difference: it's
+triggered manually and doesn't reflect a real tenant event.
+
+Use to smoke-test a new endpoint, verify your HMAC
+verification code, or confirm TLS is wired up.
+
+### `POST /deliveries/:delivery_id/replay` — single replay
+
+Looks up a specific past delivery by id and re-fires it. The
+replayed body is byte-identical to the original. The HMAC
+header re-signs against the **current** secret.
+
+Use after fixing a receiver bug to re-deliver one specific
+payload without affecting any other history.
+
+### `POST /:id/replay-dlq` — DLQ batch replay
+
+Re-fires every delivery in the subscription's DLQ in order.
+After replay, deliveries that succeed leave the DLQ;
+deliveries that fail re-enter the DLQ at the back.
+
+Use for bulk recovery after a receiver-side outage.
+
+### `GET /:id/deliveries` — delivery inspection
+
+Returns the recent delivery history for a subscription: per
+delivery, the timestamp, response code, attempt count, and a
+truncated copy of the last error message. Read this before
+deciding whether to replay.
+
+## SSRF guard
+
+An outbound webhook is a request the platform makes on the
+tenant's behalf. A misconfigured (or malicious) subscription
+URL could try to probe the platform's internal network. The
+SSRF guard refuses those URLs at dispatch time.
+
+### Refused classes
+
+- **Non-HTTPS URLs.** Plain HTTP is not permitted.
+- **Loopback addresses** — `127.0.0.0/8` and IPv6 `::1`.
+- **Private IPv4 ranges** — `10/8`, `172.16/12`, and
+  `192.168/16`. These are the RFC-1918 blocks.
+- **Link-local addresses** — `169.254/16` and IPv6
+  `fe80::/10`.
+- **Unique-local IPv6** — `fc00::/7`.
+
+### When the check runs
+
+The guard checks every dispatch — first attempt and retries.
+DNS responses are checked against the same rules. A
+hostname that resolves to a forbidden address is refused even
+when the hostname itself doesn't look private.
+
+### What the receiver sees
+
+The subscription is marked failed in the delivery log with a refusal message. The refusal **does NOT count toward the 10-consecutive-DLQ auto-pause threshold** — those failures
+are for real receiver-side problems, not URLs the platform
+refuses to call.
+
+## REST surface
+
+Auth is the tenant JWT; the platform derives `tenant_id`
+from the JWT and never accepts it in path or body.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET    | `/api/v1/tenant/webhooks` | List subscriptions. |
+| POST   | `/api/v1/tenant/webhooks` | Create a subscription. Response body contains the signing secret **once**. |
+| GET    | `/api/v1/tenant/webhooks/:id` | Read one subscription. |
+| PATCH  | `/api/v1/tenant/webhooks/:id` | Update URL, events, description, or paused/active. |
+| DELETE | `/api/v1/tenant/webhooks/:id` | Delete a subscription. |
+| POST   | `/api/v1/tenant/webhooks/:id/rotate-secret` | Generate a new signing secret. |
+| POST   | `/api/v1/tenant/webhooks/:id/test` | Fire an ad-hoc test delivery. |
+| GET    | `/api/v1/tenant/webhooks/:id/deliveries` | Recent delivery history. |
+| POST   | `/api/v1/tenant/webhooks/:id/replay-dlq` | DLQ batch replay. |
+| POST   | `/api/v1/tenant/webhooks/deliveries/:delivery_id/replay` | Single-delivery replay. |
+
 ---
 
 # Jobs
@@ -11595,6 +11755,11 @@ Pagination is cursor-based; default page size is 50.
   evaluation.
 - [Integrations](/docs/integrations) — outbound webhook + action
   semantics fired from transitions.
+
+Workflow transitions emit outbound webhooks; see
+[Webhooks → Managing subscriptions](/docs/integrations/webhooks#managing-subscriptions)
+for the subscription model, the three event sources, and
+the REST surface.
 
 ---
 

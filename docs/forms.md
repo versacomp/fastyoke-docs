@@ -127,3 +127,7 @@ Builder access requires the `forms.create` or `forms.update` permission. See [Bu
 ::callout{type="info"}
 Need legally-binding signatures on a form? See [E-signatures](/docs/esign).
 ::
+
+Form submissions emit `form.submitted` outbound webhooks;
+see [Webhooks → Managing subscriptions](/docs/integrations/webhooks#managing-subscriptions)
+for the subscription model and REST surface.

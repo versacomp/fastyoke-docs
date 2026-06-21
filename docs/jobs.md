@@ -140,3 +140,8 @@ Pagination is cursor-based; default page size is 50.
   evaluation.
 - [Integrations](/docs/integrations) — outbound webhook + action
   semantics fired from transitions.
+
+Workflow transitions emit outbound webhooks; see
+[Webhooks → Managing subscriptions](/docs/integrations/webhooks#managing-subscriptions)
+for the subscription model, the three event sources, and
+the REST surface.
