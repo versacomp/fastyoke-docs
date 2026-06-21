@@ -144,6 +144,12 @@ See [Marketplace](/docs/marketplace) for what a Yoke is,
   and Tenant Yokes.
 ::
 
+::callout{type="tip" title="Reselling FastYoke?"}
+See [Reseller billing](/docs/reseller-billing) for rate
+  cards, statements with margin reporting, white-label
+  invoices, and the Vendara settlement handoff.
+::
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.

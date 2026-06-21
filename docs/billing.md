@@ -45,6 +45,9 @@ cards, statements, reseller invoices. That lives under
 [`/partner-portal`](/partner-portal) and ships its own docs.
 Everything on this page is for direct-customer billing.
 
+See [Reseller billing](/docs/reseller-billing) for rate
+cards, statements, invoices, and white-label branding.
+
 ## What's not in billing today
 
 The following are explicit non-features. Plan accordingly.

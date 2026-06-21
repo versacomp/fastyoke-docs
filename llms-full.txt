@@ -1921,6 +1921,10 @@ See [Marketplace](/docs/marketplace) for what a Yoke is,
   install / uninstall mechanics, the three pricing models,
   and Tenant Yokes.
 
+See [Reseller billing](/docs/reseller-billing) for rate
+  cards, statements with margin reporting, white-label
+  invoices, and the Vendara settlement handoff.
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.
@@ -3918,6 +3922,9 @@ the channel-partner portal, your surface is different — rate
 cards, statements, reseller invoices. That lives under
 [`/partner-portal`](/partner-portal) and ships its own docs.
 Everything on this page is for direct-customer billing.
+
+See [Reseller billing](/docs/reseller-billing) for rate
+cards, statements, invoices, and white-label branding.
 
 ## What's not in billing today
 
@@ -16295,6 +16302,468 @@ Two options:
   dashboard.
 - [Dashboards](/docs/reports/dashboards) — the layout the digest
   emails.
+
+---
+
+# Reseller billing
+
+> Channel-partner billing — rate cards, white-label invoices, statements with margin reporting, and Vendara-Connect-driven settlement. For Channel Partners reselling FastYoke to their own end customers.
+
+# Reseller billing
+
+Channel Partners reselling FastYoke to their own end
+customers get a separate billing surface. This section
+documents it: rate cards, white-label invoices,
+statements, the invoice lifecycle, and the settlement
+handoff to Vendara.
+
+If you're a **direct customer** paying FastYoke for your
+own tenants, see [Billing](/docs/billing) instead. This
+page is for the **partner** side of the relationship.
+
+## Where this surface lives
+
+The reseller billing screens live in the **partner-portal**
+shell — a separate URL the partner authenticates into
+using the hosting auth-exchange flow. Inside the portal
+you see your own end-customer roster, the rate cards
+attached to each one, live statements, the invoice list,
+and the reconciliation report.
+
+## The model
+
+Three terms carry their weight across every page in this
+section:
+
+- **Wholesale** — what FastYoke charges *you*, the
+  partner, for each end-customer tenant (tier base plus
+  metered usage). You see the wholesale numbers in the
+  partner portal; your end customers never do.
+- **Retail** — what *you*, the partner, charge your end
+  customer. You set this via a rate card.
+- **Margin** — retail minus wholesale. The
+  reconciliation report breaks margin out per period
+  bucket.
+
+## End-to-end tour
+
+1. **Set a default rate card.** Any new end customer
+   inherits the markup on `__default__` until you give
+   them their own override.
+2. **Override per end customer** where the negotiated
+   terms differ. See [Rate cards](/docs/reseller-billing/rate-cards).
+3. **Configure your billing profile** so invoices carry
+   your brand instead of "FastYoke." See
+   [White-label branding](/docs/reseller-billing/white-label).
+4. **Let usage accrue.** The live statement reflects
+   what would be invoiced if the period closed right
+   now.
+5. **Generate an invoice** at period close — the
+   platform freezes the snapshot.
+6. **Issue the invoice** to Vendara. Vendara collects
+   from the end customer; your payout follows.
+7. **Reconcile** per period for margin reporting.
+
+## What's not in reseller billing today
+
+- **Multi-tier discount schedules** with volume
+  breakpoints.
+- **Per-end-customer invoice cadence** (quarterly for
+  some customers, monthly for others).
+- **Multi-currency** invoice support.
+- **Reseller-of-resellers** — sub-partner hierarchies.
+- **Auto-applied promo codes** on retail amounts.
+
+## See also
+
+- [Rate cards](/docs/reseller-billing/rate-cards)
+- [Statements & reconciliation](/docs/reseller-billing/statements-and-reconciliation)
+- [Invoices](/docs/reseller-billing/invoices)
+- [White-label branding](/docs/reseller-billing/white-label)
+- [API reference](/docs/reseller-billing/api-reference)
+- [Billing](/docs/billing) — direct-customer billing.
+- A future Channel Partner Portal section will cover the
+  deals pipeline, provisioning, and training tracks.
+
+---
+
+# Rate cards
+
+> Per-end-customer markup schedules. The __default__ sentinel applies to every end customer without an override; absent the default, wholesale + 0% is in effect. Replace is atomic.
+
+# Rate cards
+
+A **rate card** is a per-end-customer markup schedule
+that sits on top of the platform's wholesale price.
+You manage your tenant's rate cards from
+**partner-portal → Billing → Rate cards**.
+
+## The `__default__` sentinel
+
+The rate card map is keyed by end-customer slug, with
+one reserved key: `__default__`. The default rate card
+applies to every end customer who doesn't have their
+own override. If no default exists, **wholesale + 0%**
+is in effect — your retail equals your wholesale and
+your margin is zero.
+
+You can set a default and then override specific
+end customers. The lookup is: per-customer first,
+`__default__` second, zero-markup last.
+
+## Markup mechanics
+
+The rate card multiplies the platform's wholesale
+invoice line items by the markup factor. The end
+customer never sees the wholesale number on their
+invoice — the platform stores both for the
+reconciliation report only.
+
+A 25% markup on a $100 wholesale line item produces a
+$125 retail line item and a $25 margin on the
+reconciliation row. Wholesale never leaks to the
+end-customer-facing invoice.
+
+## Editing
+
+- `GET /rate-card` returns the active rate card map.
+- `PUT /rate-card` replaces it.
+
+The replace is **atomic** — partial updates require sending the full map. Sending a `PUT` with only
+`{ "acme-co": ... }` and omitting `__default__` will
+remove the default rate card, not preserve it. Read
+first, mutate locally, send the merged result.
+
+## What lives on a rate card today
+
+- Per-end-customer markup percentage.
+- Optional override label (used on the end-customer
+  invoice line in place of the platform's wholesale
+  line text).
+
+## What's not on a rate card today
+
+- **Time-windowed rates** — different markup during
+  a promotional window.
+- **Conditional markup** tied to specific products
+  or metered events.
+- **Free trial periods** per end customer.
+
+## See also
+
+- [Statements & reconciliation](/docs/reseller-billing/statements-and-reconciliation)
+  — where the markup decisions surface as margin.
+- [Invoices](/docs/reseller-billing/invoices) — where
+  the markup is locked in.
+- [API reference](/docs/reseller-billing/api-reference)
+  — the `/rate-card` endpoints.
+
+---
+
+# Statements & reconciliation
+
+> Statements are live per-end-customer roll-ups; reconciliation buckets break wholesale / retail / margin / margin % per period. Voided invoices are excluded.
+
+# Statements & reconciliation
+
+## Statements
+
+`GET /statements` returns live per-end-customer
+roll-ups. Each statement shows:
+
+- The period boundary (current period by default).
+- Line items at **retail** prices (after rate-card
+  markup).
+- The running total for the period.
+
+Statements are **never frozen.** Every request
+recomputes against the current rate card and the
+underlying utility ledger. If you change a rate card
+mid-period, the live statement reflects the new markup
+on the next request.
+
+Use statements for:
+
+- Real-time "where am I this period?" checks.
+- Investigating a dispute against a generated invoice
+  by comparing the live recompute to the frozen snapshot.
+
+## Reconciliation
+
+`GET /reconciliation` returns **period buckets** per
+scope (the partner aggregate plus one per end customer).
+Each bucket carries four numbers:
+
+| Column | Meaning |
+| --- | --- |
+| `wholesale` | What FastYoke charged the partner. |
+| `retail` | What the partner charged the end customer. |
+| `margin` | `retail - wholesale`. |
+| `margin %` | `margin / retail` as a decimal. |
+
+**voided invoices are excluded from the reconciliation buckets.** A voided invoice's line items don't roll into either the wholesale or the retail column. The margin row treats it as if the invoice never existed.
+
+This matters when you void-and-reissue: the voided
+row drops out and the new row replaces it cleanly. The
+reconciliation report stays the source of truth for
+"actual realized margin this period."
+
+## Empty buckets
+
+Scopes with no activity in a period get **explicit empty rows** in the response — zeros across all four columns — rather than being silently omitted.
+This is so the partner sees explicit coverage rather
+than wondering whether a missing row means "no activity"
+or "endpoint dropped it."
+
+## What's not in reconciliation today
+
+- **Weekly cadence** — periods are monthly.
+- **Day-of-week bucket alignment** — periods align to
+  calendar month boundaries.
+- **Exportable CSV** of the reconciliation rows.
+
+## See also
+
+- [Rate cards](/docs/reseller-billing/rate-cards) — the
+  upstream of every margin number.
+- [Invoices](/docs/reseller-billing/invoices) — what
+  gets reconciled.
+- [API reference](/docs/reseller-billing/api-reference)
+  — the `/statements` and `/reconciliation` endpoints.
+
+---
+
+# Invoices
+
+> Lifecycle is live → generated/frozen → issued → settled. Void applies only before issue. Vendara Connect collects from the end customer.
+
+# Invoices
+
+A reseller invoice moves through a small, ordered set
+of states. Each transition is explicit; no state
+flows automatically except `issued → settled`, which
+the platform polls Vendara for.
+
+## Lifecycle states
+
+| State | Meaning |
+| --- | --- |
+| `live` | Pre-generation. Visible only via `/statements` (live recompute). |
+| `generated` / `frozen` | Snapshot captured by `POST /invoices/generate`. Immutable as a row. |
+| `issued` | Handed to Vendara via `POST /invoices/:id/issue`. Vendara collects from the end customer. |
+| `settled` | Vendara reported the payment closed. The platform polls and stamps the state. |
+| `void` | Cancelled before issue. See "Void semantics" below. |
+
+## Generate
+
+`POST /invoices/generate` walks every end customer with
+activity in the period and writes an immutable
+`reseller_invoices` row for each. The snapshot
+forever reflects the rate card and the utility ledger
+**at generate time** — changing a rate card after
+generation doesn't change the generated row.
+
+The snapshot stores enough state forward-compat that
+the platform can replay the right line item amounts
+even if rate cards change later. This is the contract
+that lets reconciliation reports stay deterministic
+months after the fact.
+
+## Issue
+
+`POST /invoices/:id/issue` POSTs the invoice body to
+your connected Vendara merchant account. **Issue locks the row** — once Vendara has the invoice, you cannot
+edit a line on it through any API.
+
+Vendara handles collection: it presents the invoice to
+the end customer, accepts payment, and reports
+settlement back. Your payout follows Vendara's
+standard settlement cadence.
+
+Vendara Connect setup (authorizing your merchant
+account) lives in the **partner-portal payment-connection
+surface**, not here.
+
+## Void semantics
+
+`POST /invoices/:id/void` voids a `generated` invoice
+that has not yet been issued. The row's state flips to
+`void`; the reconciliation report excludes it from
+that period's buckets.
+
+**You cannot void an issued invoice.** Once Vendara
+has the row, corrections happen via a credit memo
+against the next period — credit memos are on the
+deferred list.
+
+## REST surface
+
+- `GET  /invoices` — list (frozen) invoices.
+- `POST /invoices/generate` — generate from the
+  current live statement.
+- `GET  /invoices/:id` — fetch one frozen invoice.
+- `POST /invoices/:id/issue` — hand to Vendara.
+- `POST /invoices/:id/void` — void
+  (generated-only).
+
+## What's not in invoices today
+
+- **Credit memos** against issued invoices.
+- **Auto-issue** on a cadence at period close.
+- **Invoice PDF preview** without generating.
+- **Scheduled void** at a future date.
+
+## See also
+
+- [Rate cards](/docs/reseller-billing/rate-cards) —
+  the markup that gets locked at generation.
+- [Statements & reconciliation](/docs/reseller-billing/statements-and-reconciliation)
+  — how voided invoices flow through the report.
+- [White-label branding](/docs/reseller-billing/white-label)
+  — what the end customer sees on the invoice.
+- [API reference](/docs/reseller-billing/api-reference)
+  — invoice endpoints and the `invoice_locked` error.
+
+---
+
+# White-label branding
+
+> Configure invoice line items with your own brand. The platform never inserts the string "FastYoke" into a reseller invoice. {period} is the only built-in substitution.
+
+# White-label branding
+
+Your billing profile controls what your end customers
+see on their invoices. Configure it at
+**partner-portal → Billing → Profile**, or via
+`GET /profile` and `PUT /profile`.
+
+## The brand invariant
+
+The platform **never inserts the string "FastYoke" into a reseller invoice.** This is a load-bearing
+contract enforced at the integration layer; even error
+states that bypass the template never leak the string
+"FastYoke" onto the customer-facing line.
+
+If you ever see "FastYoke" appear on an end-customer
+invoice, that's a platform bug — report it.
+
+## The two profile columns
+
+| Column | Purpose |
+| --- | --- |
+| `item_name_template` | Template string the platform renders per line item. Supports `{period}` substitution. |
+| `item_description` | Free-form prose accompanying each line item. No substitution. |
+
+Set both via `PUT /profile`:
+
+```json
+{
+  "item_name_template": "Acme Co Platform Services — {period}",
+  "item_description": "Monthly platform subscription and metered usage."
+}
+```
+
+## The `{period}` substitution
+
+`{period}` is the only built-in substitution today. At
+render time the platform replaces it with the invoice's
+period boundary, formatted as `YYYY-MM` (e.g., `2026-06`).
+
+A template of `"Acme Co Platform Services — {period}"`
+renders as `"Acme Co Platform Services — 2026-06"` on
+the end customer's invoice line.
+
+Other placeholders are not supported. Custom branding
+beyond this template plus the description column is on
+the deferred list.
+
+## What's not in the profile today
+
+- **Logo upload** — invoice rendering ships text-only.
+- **Footer text** per invoice.
+- **Multi-template** (different `item_name_template`
+  per end customer).
+- **Additional substitutions** beyond `{period}`.
+
+## See also
+
+- [Invoices](/docs/reseller-billing/invoices) — where
+  the rendered line items live.
+- [API reference](/docs/reseller-billing/api-reference)
+  — the `/profile` endpoints.
+
+---
+
+# API reference
+
+> REST surface for partner-portal billing — rate card, profile, statements, reconciliation, invoice lifecycle.
+
+# API reference
+
+Every endpoint is partner-scoped. The platform derives
+the `partner_id` from the JWT minted by the hosting
+auth-exchange flow; you never pass it in the body or
+in a path segment.
+
+## Auth
+
+Partner-portal JWT in `Authorization: Bearer …`.
+Endpoints return `401` if the JWT is missing or
+invalid, `403` if the caller lacks the partner-billing
+permission.
+
+## Rate card
+
+- `GET  /api/v1/partner-portal/billing/rate-card` —
+  read the active rate card map.
+- `PUT  /api/v1/partner-portal/billing/rate-card` —
+  replace the rate card map atomically.
+
+## Billing profile (white-label)
+
+- `GET  /api/v1/partner-portal/billing/profile` —
+  read the active billing profile.
+- `PUT  /api/v1/partner-portal/billing/profile` —
+  update `item_name_template` and `item_description`.
+
+## Statements
+
+- `GET  /api/v1/partner-portal/billing/statements` —
+  live per-end-customer roll-ups for the current
+  period (or a query-param-supplied window).
+
+## Reconciliation
+
+- `GET  /api/v1/partner-portal/billing/reconciliation` —
+  period buckets per scope with the four columns
+  (`wholesale`, `retail`, `margin`, `margin %`).
+
+## Invoices
+
+- `GET  /api/v1/partner-portal/billing/invoices` —
+  list frozen invoices.
+- `POST /api/v1/partner-portal/billing/invoices/generate` —
+  generate from the current live statement.
+- `GET  /api/v1/partner-portal/billing/invoices/:id` —
+  read one frozen invoice.
+- `POST /api/v1/partner-portal/billing/invoices/:id/issue` —
+  hand the invoice to Vendara.
+- `POST /api/v1/partner-portal/billing/invoices/:id/void` —
+  void a generated-but-not-issued invoice.
+
+## Error codes
+
+| Code | Meaning | Returned by |
+| --- | --- | --- |
+| `invoice_locked` | Attempted to mutate (edit, void) an issued invoice. | `POST /invoices/:id/void` against an issued invoice; any attempt to edit a frozen invoice's lines. |
+
+## See also
+
+- [Overview](/docs/reseller-billing).
+- [Invoices](/docs/reseller-billing/invoices) — the
+  lifecycle these endpoints drive.
+- [Rate cards](/docs/reseller-billing/rate-cards) — the
+  upstream of the markup.
 
 ---
 

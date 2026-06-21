@@ -231,6 +231,15 @@
 - [Dashboards](https://www.fastyoke.io/docs/reports/dashboards): Lay report tiles on a single page, choose a render shape per tile (number, bar, or line), and serve the dashboard as server-rendered HTML.
 - [Scheduled digests](https://www.fastyoke.io/docs/reports/digests): Attach a schedule to a dashboard and the platform emails the rendered dashboard to a list of recipients on cadence. Daily or weekly; UTC clock; Pro tier or higher.
 
+## Reseller billing
+
+- [Reseller billing](https://www.fastyoke.io/docs/reseller-billing): Channel-partner billing — rate cards, white-label invoices, statements with margin reporting, and Vendara-Connect-driven settlement. For Channel Partners reselling FastYoke to their own end customers.
+- [Rate cards](https://www.fastyoke.io/docs/reseller-billing/rate-cards): Per-end-customer markup schedules. The __default__ sentinel applies to every end customer without an override; absent the default, wholesale + 0% is in effect. Replace is atomic.
+- [Statements & reconciliation](https://www.fastyoke.io/docs/reseller-billing/statements-and-reconciliation): Statements are live per-end-customer roll-ups; reconciliation buckets break wholesale / retail / margin / margin % per period. Voided invoices are excluded.
+- [Invoices](https://www.fastyoke.io/docs/reseller-billing/invoices): Lifecycle is live → generated/frozen → issued → settled. Void applies only before issue. Vendara Connect collects from the end customer.
+- [White-label branding](https://www.fastyoke.io/docs/reseller-billing/white-label): Configure invoice line items with your own brand. The platform never inserts the string "FastYoke" into a reseller invoice. {period} is the only built-in substitution.
+- [API reference](https://www.fastyoke.io/docs/reseller-billing/api-reference): REST surface for partner-portal billing — rate card, profile, statements, reconciliation, invoice lifecycle.
+
 ## SDK
 
 - [SDK Quickstart](https://www.fastyoke.io/docs/sdk/quickstart): Install @fastyoke/sdk and mount your first extension.
