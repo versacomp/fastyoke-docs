@@ -53,3 +53,9 @@ comes from and how signers reach it.
   [Trust and verify](/docs/esign/trust-and-verify) for the audit
   chain, the Certificate of Completion, the legal posture, and the
   public verify endpoint with offline-verification recipes.
+
+## See also
+
+- [Compliance Yoke](/docs/compliance-yoke) — sealed PDFs and
+  their Certificates of Completion flow into the Compliance
+  Yoke evidence vault as audit-ready evidence.

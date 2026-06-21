@@ -27,6 +27,14 @@ tenant role sharing and no cross-tenant permission inheritance.
 | `system:member` | Day-to-day operations: read everywhere, plus create / update entities, transition jobs, edit form drafts, upload files. Designed for operators who run the workflow without authoring it. |
 | `system:viewer` | Read-only on every surface. Sees the audit log too (read-only is read-only — there is no surface a viewer can change). |
 
+## Auditor role (Compliance Yoke)
+
+The **Auditor** role is a fifth built-in system role created
+on demand when you invite an external auditor to a Compliance
+Yoke engagement. It is scoped to read engagement evidence,
+pull samples, and download the OSCAL and ZIP exports — nothing
+else. See [Auditor Room](/docs/compliance-yoke/auditor-room).
+
 ## Custom roles
 
 An admin opens **Users → Roles**, creates a new role, names it, checks

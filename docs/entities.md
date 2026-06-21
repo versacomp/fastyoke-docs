@@ -40,6 +40,8 @@ that gap.
 
 Need to edit or delete many records at once? See [Bulk operations](/docs/bulk-operations).
 
+Yoker indexes entity records and their text attachments — see [Yoker](/docs/yoker).
+
 Click **Annotations →** from the Entities browser to open a bulk
 editor. Per-`(entity_name, field_key)` you can set:
 

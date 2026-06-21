@@ -37,6 +37,8 @@ A dock icon lives on the right toolbar of the admin shell. The
 dock is persistent across pages — chat stays open while you
 navigate.
 
+The Yoker AI assistant lives in the same dock; see [Yoker](/docs/yoker).
+
 ## Who can chat with whom
 
 Messaging is **tenant members only**. Cross-tenant DMs are not supported. The

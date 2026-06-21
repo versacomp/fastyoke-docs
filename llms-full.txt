@@ -1904,6 +1904,10 @@ See [E-signatures](/docs/esign) for the three signing modes, what
 See [Messaging](/docs/messaging) for the in-platform DM dock,
   @mentions, and the REST + WebSocket API.
 
+See [Compliance Yoke](/docs/compliance-yoke) for framework
+readiness, evidence collectors, the Auditor Room, and the
+public Trust Center.
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.
@@ -3225,6 +3229,45 @@ handled separately and requires the appropriate agreements with your team.
 
 ---
 
+# Studio
+
+# Studio
+
+Studio is where you design an app or a multi-board Yoke from scratch, from a
+vertical template, from a clone of an existing app, or from a short written
+brief. It walks you through choosing a layout, branding, entities, boards, and
+engine bindings, then activates the result into your workspace.
+
+## Drafts autosave and resume
+
+Studio work lives as a **draft**. Your changes **save automatically** as you
+edit — there is no "save" button to remember, and reloading the page or coming
+back tomorrow picks up exactly where you left off.
+
+Open **Studio** from the admin sidebar to see all of your workspace's drafts:
+
+- Each draft shows its name, status, and when it was last edited (and by whom).
+- **Resume** any draft to keep working on it.
+- **Delete** drafts you no longer need.
+- **New Studio app** starts a fresh draft and drops you into the designer.
+
+Drafts are visible to every admin in your workspace, so a teammate can pick up
+a draft you started. Edits save last-writer-wins — Studio does not support two
+people editing the same draft at the same moment.
+
+## Activating
+
+When a draft is ready, **activate** it from the final review step. Activation
+creates the theme and installs the app/Yoke into your workspace; the draft is
+then marked **activated** and kept as a record. Activating does not delete the
+draft.
+
+## Who can use Studio
+
+Studio is available to workspace admins with app-install permission.
+
+---
+
 # Urgent Care Triage
 
 # Urgent Care Triage
@@ -4218,6 +4261,520 @@ curl helpers.
 
 ---
 
+# Compliance Yoke
+
+> Framework readiness, evidence collectors, an Auditor Room with deterministic sampling and OSCAL export, and a public Trust Center — wired into the platform you already run.
+
+# Compliance Yoke
+
+The Compliance Yoke is a tenant-scoped surface that maps your
+controls to industry frameworks, collects evidence from your
+cloud stack on a schedule, lets external auditors pull a
+deterministic sample, and exports OSCAL plus a ZIP package at
+the end of an engagement. It is intended to satisfy the
+evidence-collection and sampling steps of SOC 2, HIPAA, and
+ISO-27001-style audits — the platform produces the artifacts;
+your auditor renders the opinion.
+
+## Who installs it
+
+Tenants in regulated verticals (healthcare, financial services,
+public-sector, ISVs with enterprise buyers). Operators who'd
+otherwise stand up a separate GRC tool plus integrations plus
+an evidence-bucket plus a sampler script.
+
+## Gating
+
+The Compliance Yoke is a paid Marketplace listing. Two
+entitlements satisfy the gate:
+
+- **`fastyoke.compliance`** — the paid listing. Full surface.
+- **`fastyoke.compliance-demo`** — a free demo entitlement
+  scoped read-only so evaluators can see the shape before
+  buying.
+
+A request from a tenant that holds neither receives a `402
+Payment Required` whose body contains the listing slug the
+caller is missing. Frontend surfaces use that slug to render an
+upgrade prompt.
+
+## End-to-end tour
+
+1. **Pick a framework.** The frameworks list reflects what the
+   platform ships today; per-framework readiness is a roll-up of
+   category scores computed from evidence, connector results,
+   and attestations. See
+   [Frameworks & readiness](/docs/compliance-yoke/frameworks).
+2. **Connect a source.** GitHub, Fly, WorkOS, or AWS. Each
+   connector pulls the controls it can observe (branch
+   protections, MFA-on-org, IAM posture, etc.). See
+   [Evidence connectors](/docs/compliance-yoke/connectors).
+3. **Run a check.** The scheduler runs collectors on a cadence;
+   you can also fire a run-now from the dashboard. Results land
+   in a single results view alongside their controls.
+4. **Publish a posture page.** The
+   [Trust Center](/docs/compliance-yoke/trust-center) is an
+   allowlist-published page (you choose what's visible) with an
+   optional AI Q&A endpoint that answers grounded in your
+   published controls.
+5. **Open an engagement.** Invite an external auditor to the
+   [Auditor Room](/docs/compliance-yoke/auditor-room). The
+   sampler is deterministic — the same engagement window yields
+   the same sample twice.
+6. **Export.** At the end of the engagement, export an OSCAL
+   JSON document plus a ZIP package containing the OSCAL file,
+   the sampled evidence, and a cover sheet.
+
+## What's not in the Compliance Yoke today
+
+The following are explicit non-features. Customers who need
+them should plan accordingly.
+
+- **Custom frameworks** — bring your own controls and have the
+  Yoke score them.
+- **Additional connectors** beyond GitHub, Fly, WorkOS, and AWS
+  (GCP, Azure, Okta, custom HTTP probes).
+- **Sub-control evidence linkage** from arbitrary entities — wiring
+  a sales-quote record to a control as evidence.
+- **Continuous-export to GRC platforms** like Vanta or Drata.
+- **Auditor-side notes and findings** UI inside the Auditor
+  Room. Auditors pull samples and export today; their writeup
+  lives outside the platform.
+
+## See also
+
+- [Frameworks & readiness](/docs/compliance-yoke/frameworks)
+- [Evidence connectors](/docs/compliance-yoke/connectors)
+- [Auditor Room](/docs/compliance-yoke/auditor-room)
+- [Trust Center](/docs/compliance-yoke/trust-center)
+- [API reference](/docs/compliance-yoke/api-reference) for the
+  REST surface.
+- [Permissions](/docs/permissions) — the Auditor role is created
+  by the Yoke when you invite an external auditor.
+- [E-sign](/docs/esign) — sealed PDFs become evidence in the
+  vault.
+
+---
+
+# Frameworks & readiness
+
+> Frameworks, readiness scoring, drift detection, and the controls simulator — how the Compliance Yoke turns connector results plus attestations into a per-framework score.
+
+# Frameworks & readiness
+
+A **framework** is a named set of categories and controls — the
+platform ships a curated list (SOC 2-style, HIPAA-style,
+ISO-27001-style). Each tenant gets the same list; per-control
+state is tenant-scoped.
+
+A **readiness score** per framework is a roll-up of category
+scores. Each category score is computed from:
+
+- **Connector results** — what GitHub / Fly / WorkOS / AWS
+  observed on the last successful run.
+- **Evidence** — files and attestations sitting in the
+  [vault](/docs/compliance-yoke/auditor-room#evidence-vault).
+- **Attestations** — explicit operator confirmations for
+  controls that aren't observable via a connector ("we run
+  background checks on new hires").
+
+The score is a number. The platform does not publish "ready /
+not ready" as a binary — your auditor decides that.
+
+## Drift detection
+
+A control's evidence has an **expiry window**. When the
+freshest evidence ages past that window, readiness falls
+without re-running a check. The dashboard surfaces controls
+whose evidence is about to expire so you can refresh before
+they drop you below a threshold.
+
+## The controls simulator
+
+Before you connect a single source, the simulator lets you
+model the score. Useful for pre-purchase evaluation — you can
+see how close you'd be if every control had clean evidence,
+and where the gap is concentrated.
+
+| Endpoint | What it does |
+| --- | --- |
+| `GET /api/v1/tenant/compliance/simulation` | The current simulation state. |
+| `POST /api/v1/tenant/compliance/simulation/start` | Begin a new simulation against a framework. |
+| `POST /api/v1/tenant/compliance/simulation/advance` | Step forward through the simulator's decision tree. |
+
+The simulator never writes evidence or alters real readiness.
+It's a read-only "what would the score be if…" surface.
+
+## What's not in the framework model today
+
+- **Custom frameworks** — bring your own controls.
+- **Custom category mapping** — change the weighting of how
+  categories roll up.
+- **Multi-framework dashboards** — a single view that shows
+  every framework's score side-by-side.
+
+## See also
+
+- [Evidence connectors](/docs/compliance-yoke/connectors) — the
+  inputs to per-category scoring.
+- [Auditor Room](/docs/compliance-yoke/auditor-room) — what
+  happens at audit time.
+- [API reference](/docs/compliance-yoke/api-reference) for
+  request and response shapes.
+
+---
+
+# Evidence connectors
+
+> GitHub, Fly, WorkOS, and AWS evidence collectors — what each pulls, how to authorize them, the run-now button vs. the scheduler, and where results land.
+
+# Evidence connectors
+
+Connectors are read-only collectors that observe a system
+you're already running and write structured results back into
+the Compliance Yoke. The platform ships four today.
+
+## Authorizing a connector
+
+Every connector is per-tenant. You authorize each one once
+from the Compliance Yoke dashboard:
+
+- **GitHub** — OAuth app at the organization scope. The
+  platform reads repository settings, branch protections, and
+  organization-level posture (MFA enforcement, SSO required).
+- **Fly** — API token. The platform reads app posture (TLS,
+  internal-port exposure, machine count, region pinning).
+- **WorkOS** — admin API token. The platform reads directory
+  and SSO posture for tenants that use WorkOS for sign-in.
+- **AWS** — cross-account IAM role. The platform reads IAM
+  posture, S3 public-access settings, and the subset of AWS
+  Config rules the Yoke maps to framework controls.
+
+A connector's status (connected / disconnected / failing) is
+visible on `/connectors`.
+
+## Run now vs. the scheduler
+
+A background worker runs every connector on a cadence and
+writes results into the shared results table.
+
+You can also run a connector on demand. `POST /run` triggers
+the next pull for one or all connectors; results land in the
+same place the scheduler writes to. The run-now endpoint is
+gated — unentitled callers get a 402.
+
+`GET /results` returns the consolidated results view across
+every connector. Each row is keyed by control and carries the
+most recent observation, when it was taken, and which
+connector produced it.
+
+## See also: Compliance Gateway
+
+For evidence that doesn't live in GitHub / Fly / WorkOS /
+AWS — policies, vendor SOC 2 reports, internal handbooks
+sitting in your cloud drive — install the **Compliance
+Gateway** Marketplace listing. The Gateway is a separate
+listing that reads from OneDrive and Dropbox, logs every
+access, and surfaces an update diff. It complements this
+Yoke; it does not replace the four connectors above.
+
+## What's not in connectors today
+
+- **GCP, Azure, Okta** as additional connectors.
+- **Custom HTTP probes** — point the Yoke at an internal
+  endpoint and have it score a control on the response.
+- **Connector-side remediation** — the Yoke reads; it does not
+  flip a setting in your AWS account on your behalf.
+
+## See also
+
+- [Frameworks & readiness](/docs/compliance-yoke/frameworks) —
+  where the connector results land in the score.
+- [Auditor Room](/docs/compliance-yoke/auditor-room) — how
+  auditors pull a sample from the results.
+- [API reference](/docs/compliance-yoke/api-reference) for
+  endpoint shapes.
+
+---
+
+# Auditor Room
+
+> The audit-engagement workflow — invite an external auditor, give them a deterministic sample of evidence, export an OSCAL JSON document, ship them a ZIP package with everything they need.
+
+# Auditor Room
+
+An **engagement** is a time-boxed audit. You create one when
+your auditor is ready to start work. Each engagement
+references a framework and a window (a start date and an end
+date) — the platform samples only evidence taken inside that
+window.
+
+## Engagement lifecycle
+
+| Status | What it means |
+| --- | --- |
+| `draft` | You're shaping the engagement; not yet shared with the auditor. |
+| `in_progress` | The auditor has access and can pull samples. |
+| `submitted` | You've handed the engagement off to the auditor; further evidence cannot be added. |
+| `closed` | The auditor has signed off; the engagement is archived. |
+
+Each status change is appended to the engagement's history —
+the platform does not rewrite a transition once it's been
+written. (This is the same append-only event-log discipline the
+rest of the platform follows.)
+
+## The Auditor role
+
+When you invite an external auditor, the platform ensures a
+built-in **Auditor** system role exists on your tenant and
+assigns the invitee to it. The Auditor role is scoped to the
+engagement — it carries read access to evidence, the sampler,
+and the OSCAL export endpoints, and nothing else. See
+[Permissions](/docs/permissions) for the broader role model.
+
+## Deterministic sampling
+
+The sampler is the load-bearing part of the Auditor Room. It
+picks a subset of the engagement's population (the set of
+evidence rows in window) and presents it to the auditor for
+inspection.
+
+**The guarantee:** the same engagement window yields the same sample twice. The sampler is a stable hash-modulo over the
+population, seeded by the engagement; re-running it never
+shuffles the result. This matters because the auditor and the
+operator need to look at the same rows when discussing a
+finding — non-deterministic sampling makes that conversation
+impossible.
+
+The sampler does **not** publish its seed formula. If you need
+to reproduce a sample outside the platform, export the ZIP
+package — every sampled row is in it.
+
+## Evidence vault
+
+Evidence rows live in a tenant-scoped vault.
+
+- `GET /evidence` — list evidence visible to the caller.
+- `POST /evidence` — upload a new evidence file or note.
+- `POST /evidence/:id/attest` — attest to a piece of evidence.
+
+**Attestations are irrevocable.** Once an operator attests
+that a piece of evidence is true, the platform appends the
+attestation to the audit trail; it cannot be erased. If the
+underlying fact changes, attest to the new evidence and let
+the trail show the progression.
+
+Sealed-PDF artifacts from the [e-sign](/docs/esign) program
+flow into the vault as a special evidence type — see the
+e-sign Trust-and-verify page for what the seal proves.
+
+## OSCAL export
+
+`GET /audit/engagements/:id/export.oscal` returns a single
+NIST OSCAL JSON document representing the engagement: the
+framework, the controls, the sampled evidence references, and
+the engagement metadata. Hand this to your auditor or upload
+it to their GRC tool of choice.
+
+## ZIP package
+
+`GET /audit/engagements/:id/package.zip` bundles:
+
+- the OSCAL JSON,
+- the sampled evidence files,
+- a cover sheet with the engagement window, framework, and
+  the population/sample sizes.
+
+The ZIP is what most auditors actually want — it's
+self-contained, doesn't require platform access to open, and
+is the artifact you keep on file once the engagement closes.
+
+## What's not in the Auditor Room today
+
+- **Auditor findings UI** — the auditor leaves their writeup
+  outside the platform.
+- **Multi-period engagements** — every engagement is a single
+  window today.
+- **Cross-tenant auditor portal** — auditors who serve
+  multiple tenants log in to each tenant separately.
+
+## See also
+
+- [Evidence connectors](/docs/compliance-yoke/connectors) —
+  the upstream of evidence rows.
+- [Trust Center](/docs/compliance-yoke/trust-center) — the
+  public-facing companion surface.
+- [E-sign](/docs/esign) — sealed-PDF evidence.
+- [API reference](/docs/compliance-yoke/api-reference) for the
+  exact request and response shapes.
+
+---
+
+# Trust Center
+
+> A tenant-controlled public posture page with an optional AI Q&A endpoint — published from an allowlist of controls, not by redacting a full export.
+
+# Trust Center
+
+The Trust Center is the public-facing companion to the
+Compliance Yoke. You publish a posture page describing the
+controls you've implemented; prospects and auditors hit it
+without needing a platform login.
+
+## Allowlist model
+
+The public posture is an **allowlist**. Nothing is published
+until you explicitly add it. There is no "everything the Yoke
+knows minus what you redacted" mode — the safer default is
+"nothing leaves the platform unless the operator names it."
+
+When you flip the Trust Center on, you configure:
+
+- which framework(s) to publish,
+- which controls per framework to show,
+- a public slug (e.g. `acme-co`) at which the page is reachable.
+
+A request for a Trust Center slug that has not been enabled
+returns a 404. The platform never serves a partially-configured
+posture page.
+
+## AI Q&A
+
+The Trust Center has an optional **AI Q&A** endpoint at
+`POST /ai/answer`. A prospect asks a natural-language question
+("Do you encrypt customer data at rest?") and the platform
+answers grounded **only** in the published controls — not the
+full Yoke, not internal evidence files, not unrelated tenant
+data.
+
+The AI Q&A endpoint is a per-tenant toggle on the Trust Center
+config. Defaults to off. Turning it off pulls the answer
+endpoint immediately; the published posture page itself
+remains.
+
+## What's not in the Trust Center today
+
+- **Custom branding** — logos, colors, fonts on the public
+  page.
+- **Custom domains** — Trust Centers serve from the platform
+  domain.
+- **Posture-page embeds** — an iframe-friendly variant for
+  embedding on your marketing site.
+- **Scheduled posture-snapshot exports** — auto-emailing a
+  snapshot to a list of recipients on a cadence.
+
+## See also
+
+- [Frameworks & readiness](/docs/compliance-yoke/frameworks) —
+  the source of what you can publish.
+- [API reference](/docs/compliance-yoke/api-reference) for the
+  Trust Center config endpoints and the AI Q&A request shape.
+
+---
+
+# API reference
+
+> The REST surface for the Compliance Yoke — frameworks, readiness, connectors, simulator, evidence, engagements, OSCAL export, ZIP package, Trust Center, AI Q&A.
+
+# API reference
+
+Every endpoint is tenant-scoped. The platform derives the
+`tenant_id` from the JWT; you never pass it in the body or in
+a path segment.
+
+## Auth and gating
+
+- **Auth:** tenant JWT in the `Authorization: Bearer …`
+  header.
+- **Gating:** every endpoint returns `402 Payment Required`
+  unless the tenant holds either `fastyoke.compliance` (paid)
+  or `fastyoke.compliance-demo` (free demo). The body of the
+  402 carries a machine-readable error code and the listing
+  slug:
+
+```json
+{
+  "error": "compliance_not_entitled",
+  "listing_id": "fastyoke.compliance"
+}
+```
+
+## Frameworks & readiness
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/v1/tenant/compliance/frameworks` | List frameworks available on this tenant. |
+| GET | `/api/v1/tenant/compliance/readiness` | Per-framework readiness, broken down by category score. |
+
+## Connectors
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET  | `/api/v1/tenant/compliance/connectors` | List configured connectors and their status. |
+| POST | `/api/v1/tenant/compliance/connectors/github` | Connect or update GitHub. |
+| POST | `/api/v1/tenant/compliance/connectors/fly` | Connect or update Fly. |
+| POST | `/api/v1/tenant/compliance/connectors/workos` | Connect or update WorkOS. |
+| POST | `/api/v1/tenant/compliance/connectors/aws` | Connect or update AWS. |
+| POST | `/api/v1/tenant/compliance/run` | Fire an ad-hoc run; writes to the same results store the scheduler uses. |
+| GET  | `/api/v1/tenant/compliance/results` | Consolidated results across every connector. |
+
+## Controls simulator
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET  | `/api/v1/tenant/compliance/simulation` | Current simulation state. |
+| POST | `/api/v1/tenant/compliance/simulation/start` | Begin a new simulation against a framework. |
+| POST | `/api/v1/tenant/compliance/simulation/advance` | Step the simulator forward. |
+
+The simulator never writes to real readiness or evidence; it
+is a read-only modeling surface.
+
+## Evidence vault
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET  | `/api/v1/tenant/compliance/evidence` | List evidence. |
+| POST | `/api/v1/tenant/compliance/evidence` | Upload a new piece of evidence. |
+| POST | `/api/v1/tenant/compliance/evidence/:id/attest` | Attest to evidence — irrevocable. |
+
+## Audit engagements
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET  | `/api/v1/tenant/compliance/audit/engagements` | List engagements. |
+| POST | `/api/v1/tenant/compliance/audit/engagements` | Create an engagement. |
+| GET  | `/api/v1/tenant/compliance/audit/engagements/:id` | Engagement detail. |
+| POST | `/api/v1/tenant/compliance/audit/engagements/:id/status` | Transition status (draft → in_progress → submitted → closed). |
+| GET  | `/api/v1/tenant/compliance/audit/engagements/:id/export.oscal` | NIST OSCAL JSON. |
+| GET  | `/api/v1/tenant/compliance/audit/engagements/:id/package.zip` | ZIP of OSCAL + sampled evidence + cover sheet. |
+
+## Trust Center
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/v1/tenant/compliance/trust-center` | Read the Trust Center config. |
+| PUT | `/api/v1/tenant/compliance/trust-center` | Update the Trust Center config (slug, allowlisted controls, AI toggle). |
+
+## AI Q&A
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| POST | `/api/v1/tenant/compliance/ai/answer` | Answer a natural-language question grounded in the published posture only. |
+
+The AI endpoint returns 404 when the per-tenant AI toggle is
+off.
+
+## See also
+
+- [Overview](/docs/compliance-yoke) — what the surface is and
+  who installs it.
+- [Auditor Room](/docs/compliance-yoke/auditor-room) — what
+  OSCAL and ZIP actually contain.
+- [Trust Center](/docs/compliance-yoke/trust-center) — the
+  allowlist model around the public surface.
+
+---
+
 # Developers
 
 > Day-1 platform invariants every API consumer needs to know, plus links to every developer surface FastYoke ships.
@@ -4650,6 +5207,8 @@ that gap.
 
 Need to edit or delete many records at once? See [Bulk operations](/docs/bulk-operations).
 
+Yoker indexes entity records and their text attachments — see [Yoker](/docs/yoker).
+
 Click **Annotations →** from the Entities browser to open a bulk
 editor. Per-`(entity_name, field_key)` you can set:
 
@@ -4740,6 +5299,12 @@ comes from and how signers reach it.
   [Trust and verify](/docs/esign/trust-and-verify) for the audit
   chain, the Certificate of Completion, the legal posture, and the
   public verify endpoint with offline-verification recipes.
+
+## See also
+
+- [Compliance Yoke](/docs/compliance-yoke) — sealed PDFs and
+  their Certificates of Completion flow into the Compliance
+  Yoke evidence vault as audit-ready evidence.
 
 ---
 
@@ -11205,6 +11770,8 @@ A dock icon lives on the right toolbar of the admin shell. The
 dock is persistent across pages — chat stays open while you
 navigate.
 
+The Yoker AI assistant lives in the same dock; see [Yoker](/docs/yoker).
+
 ## Who can chat with whom
 
 Messaging is **tenant members only**. Cross-tenant DMs are not supported. The
@@ -11817,6 +12384,14 @@ tenant role sharing and no cross-tenant permission inheritance.
 | `system:manager` | Owns the full content surface: FSM schemas, jobs, entities, forms, files, apps, PDFs, pages, projects, branding, themes, and connections. Cannot manage users or roles, cannot manage billing, cannot manage SSO. |
 | `system:member` | Day-to-day operations: read everywhere, plus create / update entities, transition jobs, edit form drafts, upload files. Designed for operators who run the workflow without authoring it. |
 | `system:viewer` | Read-only on every surface. Sees the audit log too (read-only is read-only — there is no surface a viewer can change). |
+
+## Auditor role (Compliance Yoke)
+
+The **Auditor** role is a fifth built-in system role created
+on demand when you invite an external auditor to a Compliance
+Yoke engagement. It is scoped to read engagement evidence,
+pull samples, and download the OSCAL and ZIP exports — nothing
+else. See [Auditor Room](/docs/compliance-yoke/auditor-room).
 
 ## Custom roles
 
@@ -15644,5 +16219,259 @@ as locked — edits happen upstream in the master tenant and
 propagate via the inheritance sync engine.
 
 Builder access requires the `fsm.create` or `fsm.update` permission. See [Builder gating](/docs/permissions/builder-gating).
+
+---
+
+# Yoker (AI assistant)
+
+> A RAG-powered chat assistant in the right-toolbar dock. Ask natural-language questions grounded in your entity records and text attachments. On-VM embeddings, no external API calls.
+
+# Yoker
+
+Yoker is FastYoke's AI assistant — a RAG-powered chat that lives
+in the right-toolbar dock alongside Messaging. Ask natural-language
+questions about your tenant's entity records and their text
+attachments; the platform retrieves the most relevant chunks and
+synthesizes an answer.
+
+Two things make Yoker different from a generic chatbot wired to
+your data:
+
+1. **Embeddings run on your VM.** The platform never sends your
+   data to OpenAI, Anthropic, or any other external embedding
+   provider.
+2. **Conversations are ephemeral.** The server doesn't persist
+   your chat history; the client keeps it during a session and
+   forgets it after.
+
+## How to enable Yoker
+
+Two paths:
+
+- **Enterprise / Fleet** — Yoker is **included**. No add-on
+  needed.
+- **Pro / Team** — Yoker requires the paid `yoker` add-on at
+  **$299/mo** (rates as of June 2026; check the platform's
+  pricing page for current rates).
+
+Hobby / Solo tiers cannot use Yoker — no add-on path is offered.
+
+Without entitlement, every Yoker endpoint returns 403 with a
+`yoker_not_entitled` error code (see
+[API reference](/docs/yoker/api-reference)) and a CTA pointing at
+the add-on activation flow.
+
+## The dock
+
+Yoker lives in the right-toolbar dock — the same surface
+[Messaging](/docs/messaging) uses, different tab. The dock is
+persistent across pages; chat stays open while you navigate.
+
+Conversations are ephemeral. The platform doesn't store your chat
+history server-side — the client maintains the conversation during
+a session, the server forgets every turn after answering.
+
+## What Yoker knows today
+
+Two ingestion sources are shipped:
+
+- **Entity records.** Every entity record's `data_payload` is
+  rendered to text, chunked (sliding window 1500 chars / 200
+  overlap), embedded, and stored. Write-through on every entity
+  create or update — Yoker reflects new records within seconds.
+- **Entity file attachments — text, CSV, and Markdown only.**
+  Uploaded files with `text/*`, `text/csv`, or `text/markdown`
+  MIME types are parsed UTF-8 lossy, chunked, and embedded with
+  the source filename prefixed for context. PDF, Word, and Excel
+  attachments are **not parsed** today (see deferred list).
+
+## Privacy: on-VM, no external API calls
+
+Yoker runs all embeddings locally on the tenant's VM using ONNX
+runtime (`tract-onnx` + `all-MiniLM-L6-v2`, 384-dim). The
+platform never sends your data to external embedding providers
+(OpenAI, Anthropic, Voyage, or others).
+
+The vector store is the tenant-scoped `rag_chunks` table — chunks
+live with the tenant data and are isolated by the platform's
+prime directive. See [Tenant scoping](/docs/developers/tenant-scoping)
+for the full contract.
+
+## Backfill
+
+When you enable Yoker on a tenant with existing data, the corpus
+starts empty until you run a backfill:
+
+```http
+POST /api/v1/tenant/rag/backfill
+```
+
+The backfill walks every entity record and every text/CSV/Markdown
+attachment, re-embeds, and upserts. Idempotent via `content_hash` —
+running it twice is safe.
+
+After the initial backfill, write-through keeps the corpus current
+for entity records (create/update) and attachments (upload/delete).
+
+## What's not in Yoker today
+
+Documentary list of explicit non-features:
+
+- **PDF, Word, and Excel attachment parsing** — only text/CSV/
+  Markdown attachments are indexed today.
+- **Streaming chat responses** — responses arrive as a single
+  complete message; no token-by-token streaming.
+- **Persistent conversation history** — chat history is
+  ephemeral and client-side only.
+- **External-embedding APIs** — Yoker doesn't support sending your
+  data to OpenAI / Anthropic / other embedding providers;
+  everything stays on the VM.
+- **Platform documentation** as a corpus — Yoker can't answer
+  "how do I configure forms?" from these docs today.
+- **Workflow configuration** and operational history — Yoker
+  can't answer "what FSM transitions fired yesterday?" from job
+  audit logs today.
+
+## See also
+
+- [API reference](/docs/yoker/api-reference) — `/assistant/ask`
+  and `/rag/backfill` endpoint shapes plus the gating 403.
+- [Entities](/docs/entities) — where the records come from.
+- [Messaging](/docs/messaging) — the dock neighbor.
+
+---
+
+# Yoker API reference
+
+> REST endpoints for the Yoker assistant and the corpus backfill, plus the entitlement-gating 403 envelope and the deferred-API list.
+
+# Yoker API reference
+
+This page covers the two REST endpoints Yoker exposes plus the
+entitlement-gating response shape. Same surface is available to any
+client with a tenant-scoped admin JWT and an active Yoker
+entitlement.
+
+## Authentication
+
+Every endpoint below requires:
+
+- A **tenant-scoped JWT** — the same token the rest of the
+  platform uses. See [Authentication](/docs/auth) for how to mint
+  and present one.
+- An **active Yoker entitlement** on the tenant. See
+  [Gating](#gating) below for what happens without one.
+
+## Ask the assistant
+
+```http
+POST /api/v1/tenant/ai/assistant/ask
+Content-Type: application/json
+Authorization: Bearer <tenant JWT>
+```
+
+Request body:
+
+```json
+{
+  "message": "Which customers are overdue?",
+  "history": [
+    { "role": "user", "content": "Show me the customer entity schema." },
+    { "role": "assistant", "content": "It has fields: name, status, …" }
+  ]
+}
+```
+
+`history` is optional and client-managed — the platform doesn't
+persist conversation state. Pass prior turns if you want
+context-aware answers; omit them for a fresh question.
+
+Response:
+
+```json
+{
+  "reply": "Three customers are currently overdue: …",
+  "retrieved_chunks": [
+    { "source_kind": "entity_record", "source_id": "rec_…", "score": 0.83 }
+  ]
+}
+```
+
+`retrieved_chunks` reports the corpus chunks used to ground the
+answer. Each chunk has a `source_kind` (`entity_record` or
+`attachment`), a `source_id`, and a relevance score.
+
+## Backfill the corpus
+
+```http
+POST /api/v1/tenant/rag/backfill
+Authorization: Bearer <tenant JWT>
+```
+
+Sweeps every entity record and every text/CSV/Markdown attachment
+in the tenant; re-embeds; upserts into `rag_chunks`. Idempotent
+via `content_hash` — running it twice is safe and won't duplicate
+chunks.
+
+Response:
+
+```json
+{ "added": 142, "updated": 18, "skipped": 7 }
+```
+
+Run this after enabling Yoker on a tenant with existing data, or
+after running a heavy data import. Day-to-day writes are kept
+fresh by write-through on entity create/update and attachment
+upload/delete.
+
+## Gating
+
+Calls fail closed when the tenant doesn't have an active Yoker
+entitlement (Enterprise / Fleet tier OR active `yoker` add-on on
+Pro+):
+
+```http
+HTTP/1.1 403 Forbidden
+Content-Type: application/json
+
+{
+  "error": "yoker_not_entitled",
+  "message": "Yoker requires the Enterprise tier or the $299/mo yoker add-on on Pro+."
+}
+```
+
+Status: `403`. Same response shape for both `/assistant/ask` and
+`/rag/backfill`. The admin shell renders this as a CTA pointing
+at the add-on activation flow.
+
+## Errors
+
+Standard `AppError` envelope used elsewhere on the platform. The
+Yoker-specific surface:
+
+- **`403`** — tenant doesn't have Yoker entitlement (see
+  [Gating](#gating)).
+- **`409`** — LLM upstream returned an unexpected shape; safe to
+  retry.
+- **`503`** — embeddings model not loaded on this VM. The
+  operator owes `model.onnx` + `tokenizer.json` under
+  `backend/assets/rag/`. Surface this error to the operator
+  rather than retrying.
+
+See [Error envelope](/docs/developers/errors) for the full
+status-code table and worked examples.
+
+## What's not in the API today
+
+Same list as the [overview page](/docs/yoker), scoped to API
+impact:
+
+- No streaming endpoint — responses arrive as one complete
+  message.
+- No conversation-resume endpoint — history is client-managed.
+- No external-embedding configuration endpoint — embeddings are
+  on-VM only.
+- No per-source ingestion endpoint — backfill is all-or-nothing
+  across entity records and text attachments.
 
 ---

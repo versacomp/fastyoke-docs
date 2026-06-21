@@ -43,6 +43,7 @@
 - [Cross-App Connections](https://www.fastyoke.io/docs/apps/cross-app-bridge)
 - [EHR / ADT Connector](https://www.fastyoke.io/docs/apps/ehr-connector)
 - [Patient Flow Yoke](https://www.fastyoke.io/docs/apps/patient-flow)
+- [Studio](https://www.fastyoke.io/docs/apps/studio)
 - [Urgent Care Triage](https://www.fastyoke.io/docs/apps/urgent-care)
 
 ## Authentication
@@ -59,6 +60,15 @@
 - [Command Reference](https://www.fastyoke.io/docs/cli/commands): Every subcommand for fy (extension authoring).
 - [fy-app.json Spec](https://www.fastyoke.io/docs/cli/app-spec): The versioned source-of-truth contract that fy app create and fy app add-entity read and write.
 - [CLI](https://www.fastyoke.io/docs/cli): fy — the extension-authoring CLI.
+
+## Compliance Yoke
+
+- [Compliance Yoke](https://www.fastyoke.io/docs/compliance-yoke): Framework readiness, evidence collectors, an Auditor Room with deterministic sampling and OSCAL export, and a public Trust Center — wired into the platform you already run.
+- [Frameworks & readiness](https://www.fastyoke.io/docs/compliance-yoke/frameworks): Frameworks, readiness scoring, drift detection, and the controls simulator — how the Compliance Yoke turns connector results plus attestations into a per-framework score.
+- [Evidence connectors](https://www.fastyoke.io/docs/compliance-yoke/connectors): GitHub, Fly, WorkOS, and AWS evidence collectors — what each pulls, how to authorize them, the run-now button vs. the scheduler, and where results land.
+- [Auditor Room](https://www.fastyoke.io/docs/compliance-yoke/auditor-room): The audit-engagement workflow — invite an external auditor, give them a deterministic sample of evidence, export an OSCAL JSON document, ship them a ZIP package with everything they need.
+- [Trust Center](https://www.fastyoke.io/docs/compliance-yoke/trust-center): A tenant-controlled public posture page with an optional AI Q&A endpoint — published from an allowlist of controls, not by redacting a full export.
+- [API reference](https://www.fastyoke.io/docs/compliance-yoke/api-reference): The REST surface for the Compliance Yoke — frameworks, readiness, connectors, simulator, evidence, engagements, OSCAL export, ZIP package, Trust Center, AI Q&A.
 
 ## Developers
 
@@ -217,3 +227,8 @@
 
 - [FSM Designer](https://www.fastyoke.io/docs/workflows/builder): Draw the graph, wire transitions, compose guards, declare actions.
 - [Workflows](https://www.fastyoke.io/docs/workflows): Finite-state machines with sandboxed guards, declarative actions, and multi-version publishing.
+
+## Yoker (AI assistant)
+
+- [Yoker (AI assistant)](https://www.fastyoke.io/docs/yoker): A RAG-powered chat assistant in the right-toolbar dock. Ask natural-language questions grounded in your entity records and text attachments. On-VM embeddings, no external API calls.
+- [Yoker API reference](https://www.fastyoke.io/docs/yoker/api-reference): REST endpoints for the Yoker assistant and the corpus backfill, plus the entitlement-gating 403 envelope and the deferred-API list.

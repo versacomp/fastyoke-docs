@@ -121,6 +121,10 @@ See [Messaging](/docs/messaging) for the in-platform DM dock,
   @mentions, and the REST + WebSocket API.
 ::
 
+See [Compliance Yoke](/docs/compliance-yoke) for framework
+readiness, evidence collectors, the Auditor Room, and the
+public Trust Center.
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.
