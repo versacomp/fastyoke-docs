@@ -236,6 +236,15 @@
 - [FSM Designer](https://www.fastyoke.io/docs/workflows/builder): Draw the graph, wire transitions, compose guards, declare actions.
 - [Workflows](https://www.fastyoke.io/docs/workflows): Finite-state machines with sandboxed guards, declarative actions, and multi-version publishing.
 
+## Yoke Ledger
+
+- [Yoke Ledger](https://www.fastyoke.io/docs/yoke-ledger): A free double-entry General Ledger Yoke — Chart of Accounts, journal entries, declarative posting rules, and three financial statements your other Yokes can post into.
+- [Chart of accounts](https://www.fastyoke.io/docs/yoke-ledger/chart-of-accounts): The five account types, the code convention, the editor surface, and the deactivate-not-delete rule that preserves your historical entries.
+- [Journal entries](https://www.fastyoke.io/docs/yoke-ledger/journal-entries): Journal entries are FSM jobs. draft → posted ↔ reversed, immutable once posted, with a balance invariant the platform enforces at write time.
+- [Posting rules](https://www.fastyoke.io/docs/yoke-ledger/posting-rules): Declarative mappings from a source event to a journal entry shape. The Posting Rule Designer authors them; idempotent execution dedupes per source event.
+- [Reports](https://www.fastyoke.io/docs/yoke-ledger/reports): Trial Balance, Profit & Loss, and Balance Sheet — three financial statements computed on demand from posted entries, with reconciliation identities the platform preserves at write time.
+- [API reference](https://www.fastyoke.io/docs/yoke-ledger/api-reference): REST surface for Yoke Ledger — accounts, journal entries (with post and reverse), posting rules, the sources catalogue, and the three financial statements.
+
 ## Yoker (AI assistant)
 
 - [Yoker (AI assistant)](https://www.fastyoke.io/docs/yoker): A RAG-powered chat assistant in the right-toolbar dock. Ask natural-language questions grounded in your entity records and text attachments. On-VM embeddings, no external API calls.

@@ -70,3 +70,6 @@ The following are explicit non-features. Plan accordingly.
   subscription statuses.
 - [API reference](/docs/billing/api-reference) — the REST
   surface.
+- [Yoke Ledger](/docs/yoke-ledger) — if you want platform
+  spend on your own books, post a manual journal entry
+  against the platform-billing invoice.

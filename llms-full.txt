@@ -1912,6 +1912,11 @@ See [Billing](/docs/billing) for the tier base + metered
   usage model, the prepaid wallet, low-balance alerts, the
   $0 auto-suspend, and the Stripe Customer Portal.
 
+See [Yoke Ledger](/docs/yoke-ledger) for the free
+  double-entry General Ledger — Chart of Accounts,
+  journal entries, posting rules, and three financial
+  statements.
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.
@@ -2853,6 +2858,9 @@ mirrors; the builder locks every surface on inherited rows.
 - [Workflows](/docs/workflows) — how FSM schemas get surfaced through app pages.
 - [SDK → Block registration](/docs/sdk/reference) — extending the
   page block catalog via extensions mounted inside the app.
+- [Yoke Ledger](/docs/yoke-ledger) — the free double-entry
+  General Ledger your apps can post into via the platform's
+  posting-rule sources.
 
 ---
 
@@ -3577,6 +3585,9 @@ The following are explicit non-features. Plan accordingly.
   subscription statuses.
 - [API reference](/docs/billing/api-reference) — the REST
   surface.
+- [Yoke Ledger](/docs/yoke-ledger) — if you want platform
+  spend on your own books, post a manual journal entry
+  against the platform-billing invoice.
 
 ---
 
@@ -16620,6 +16631,499 @@ as locked — edits happen upstream in the master tenant and
 propagate via the inheritance sync engine.
 
 Builder access requires the `fsm.create` or `fsm.update` permission. See [Builder gating](/docs/permissions/builder-gating).
+
+---
+
+# Yoke Ledger
+
+> A free double-entry General Ledger Yoke — Chart of Accounts, journal entries, declarative posting rules, and three financial statements your other Yokes can post into.
+
+# Yoke Ledger
+
+Yoke Ledger is a double-entry General Ledger that other Yokes
+post into. Install it from the Marketplace and your tenant gets
+a working Chart of Accounts, an FSM-driven journal-entry
+workflow, a default posting rule, and three financial
+statements — Trial Balance, Profit & Loss, Balance Sheet.
+
+## Gating
+
+The listing is `fastyoke.yoke-ledger`. It is **free** and
+available to every paid tier from Solo and above. Install
+auto-grants the entitlement — there is no Stripe checkout
+step.
+
+## What install seeds
+
+When you install the Yoke, the platform writes three things
+into your tenant on the first request:
+
+- **The `gl_journal_entry` FSM schema** — the workflow
+  definition that drives the `draft → posted ↔ reversed`
+  lifecycle.
+- **A starter Chart of Accounts** — AR, AP, Cash, Revenue,
+  COGS, and a small set of standard accounts. You edit them
+  to match your books from there.
+- **A default posting rule** — `invoice → AR / Revenue`.
+  Any Yoke that emits an `invoice` source event posts a
+  journal entry crediting Revenue and debiting AR
+  automatically.
+
+## The never-delete-the-books guarantee
+
+If you uninstall Yoke Ledger from the Marketplace, the
+platform uninstall revokes the entitlement but retains all GL data — your accounts, your entries, your posting rules,
+your reports stay exactly where they were. Reinstall and
+they're all there. The books cannot be lost by a misclick.
+
+## What's not in Yoke Ledger today
+
+- **AR and AP modules** beyond the default invoice rule.
+- **Period close** and fiscal-year boundary workflows.
+- **Multi-currency** — USD only.
+- **Reconciliation against bank statements** — match
+  posted entries against an imported statement.
+- **Real-time consolidated reporting** across tenants in
+  the same org.
+
+## See also
+
+- [Chart of accounts](/docs/yoke-ledger/chart-of-accounts) —
+  the five account types, codes, and the editor surface.
+- [Journal entries](/docs/yoke-ledger/journal-entries) —
+  lifecycle, balance invariant, immutability.
+- [Posting rules](/docs/yoke-ledger/posting-rules) — the
+  declarative rule shape and the sources that fire them.
+- [Reports](/docs/yoke-ledger/reports) — the three financial
+  statements.
+- [API reference](/docs/yoke-ledger/api-reference) — the
+  REST surface.
+
+---
+
+# Chart of accounts
+
+> The five account types, the code convention, the editor surface, and the deactivate-not-delete rule that preserves your historical entries.
+
+# Chart of accounts
+
+Your Chart of Accounts (CoA) is the list of accounts you
+post journal entries against. The platform ships a starter
+CoA on install; you edit it from there.
+
+## The five account types
+
+Every account belongs to exactly one type. The platform
+validates the type case-sensitively against these five
+exact strings:
+
+- **Asset** — what the business owns. AR, Cash, Inventory.
+- **Liability** — what the business owes. AP, accrued
+  expenses.
+- **Equity** — owners' stake. Retained earnings,
+  contributed capital.
+- **Revenue** — income from operations.
+- **Expense** — costs of operations. COGS, payroll, rent.
+
+Wrong-case strings (`asset`, `LIABILITY`) are rejected by
+the create / patch handler — the platform won't paper over
+a typo.
+
+## Account codes
+
+Each account has a short stable identifier called a **code**
+(e.g., `1000` Cash, `1100` AR, `4000` Revenue). Codes are:
+
+- **Tenant-scoped** — every tenant picks its own
+  numbering.
+- **Unique within the tenant** — the platform rejects a
+  second account using the same code.
+- **Stable** — code is the addressing key journal entries
+  use; rename via PATCH instead of delete + recreate so
+  your existing entries stay reachable.
+
+The platform doesn't enforce a numbering scheme — you can
+use 1000/2000/3000/4000/5000 blocks, you can use your
+prior bookkeeping codes, or any convention your accountant
+prefers.
+
+## The editor surface
+
+The CoA editor lives at **Settings → Yoke Ledger → Chart
+of accounts** in the admin shell. From there you can:
+
+- Create an account inline (code + name + type).
+- PATCH an account to rename it or recategorize.
+- Deactivate an account so it disappears from the New
+  Entry picker without disturbing historical entries.
+
+There is no destructive delete. Deactivating an account
+keeps every historical entry pointing at the same code —
+posted entries still reconcile, the Trial Balance still
+balances, and a reactivation restores the account in one
+click.
+
+## What's not in the CoA today
+
+- **Sub-accounts** and account hierarchies (parent/child).
+- **Custom account-type validators** beyond the five
+  standard types.
+- **Per-tenant default-CoA templates** that an org can
+  apply when provisioning a new tenant.
+
+## See also
+
+- [Journal entries](/docs/yoke-ledger/journal-entries) —
+  what an entry against these accounts looks like.
+- [Posting rules](/docs/yoke-ledger/posting-rules) — how
+  other Yokes target your accounts by code.
+- [API reference](/docs/yoke-ledger/api-reference) — the
+  `/gl/accounts` endpoints.
+
+---
+
+# Journal entries
+
+> Journal entries are FSM jobs. draft → posted ↔ reversed, immutable once posted, with a balance invariant the platform enforces at write time.
+
+# Journal entries
+
+A journal entry is the unit of bookkeeping. Each entry has a
+date, a description, and **two or more lines** — every line
+is a debit against one account or a credit against another.
+
+Under the hood, a journal entry is a workflow job on the
+`gl_journal_entry` FSM schema. You don't have to know that
+to use it; you do have to know the three lifecycle states
+the schema models.
+
+## Money
+
+Every line carries an amount in **USD, two decimal places**.
+The platform is single-currency today (see the deferred
+list at the bottom of [the overview](/docs/yoke-ledger)).
+Amounts are stored as a fixed-precision type — no floating
+point rounding sneaks into your books.
+
+## The balance invariant
+
+Across an entry's lines, **sum of debits equals sum of credits**. The platform refuses to write an unbalanced
+draft and refuses to post one — the validation runs on
+both create and post, returning the same `unbalanced`
+error code. There is no override.
+
+This is the load-bearing double-entry property; everything
+else (Trial Balance reconciles, Balance Sheet identity holds)
+follows from it.
+
+## The three lifecycle states
+
+| State | What it is | What you can do |
+| --- | --- | --- |
+| `draft` | A pending entry, not yet on the books. | Edit lines, edit description, post, delete. Not visible in any statement. |
+| `posted` | A committed entry. Live in every statement. | Read it. **Reverse** it. Cannot edit, cannot delete. |
+| `reversed` | A posted entry whose effect has been reversed by a mirror entry. | Read it. The reversing entry is itself a separate posted entry — see "Reversing" below. |
+
+## Posted entries are immutable
+
+Once an entry is posted, its lines and amounts are
+**immutable**. There is no edit-posted-entry path; any
+attempt returns an `immutable` error. If you need to fix
+a posted entry, you reverse it and post the corrected one.
+This is the audit-trail contract: every dollar that ever
+hit your books is reconstructable from the entry log.
+
+## Reversing
+
+Reversing a posted entry writes a **new, separate posted
+entry** whose lines mirror the original — every debit
+becomes a credit, every credit becomes a debit, same
+amounts, same accounts. The original entry stays as it
+was; the reversal is what reconciles its effect to zero.
+
+After reversal the original entry's state is `reversed`
+(the FSM transition fires). The reversing entry is in
+`posted` (it's a live entry on the books). Both rows are
+visible; together they net out to zero.
+
+## What you can't do
+
+- Edit a posted entry. Returns `immutable`.
+- Delete a posted entry. The same `immutable` error.
+- Post an unbalanced draft. Returns `unbalanced`.
+
+## What's not in journal entries today
+
+- **Draft templates** for repeat-pattern entries.
+- **Recurring journal entries** (monthly amortization,
+  payroll accrual).
+- **Scheduled posting** at a future date.
+- **Multi-line attachment uploads** (receipts, invoices)
+  attached to the entry itself — today you attach via the
+  entity-attachments surface.
+
+## See also
+
+- [Chart of accounts](/docs/yoke-ledger/chart-of-accounts) —
+  what the lines reference.
+- [Posting rules](/docs/yoke-ledger/posting-rules) — how
+  source events become journal entries.
+- [Reports](/docs/yoke-ledger/reports) — how posted entries
+  roll up into statements.
+- [API reference](/docs/yoke-ledger/api-reference) — the
+  `/gl/entries` endpoints.
+
+---
+
+# Posting rules
+
+> Declarative mappings from a source event to a journal entry shape. The Posting Rule Designer authors them; idempotent execution dedupes per source event.
+
+# Posting rules
+
+A **posting rule** is a declarative mapping from a source
+event (an `invoice` created in CRM Sales, a `sale` rung up
+on POS, a `payment` recorded in the dealer payment ledger)
+to a journal entry shape. Rules are how other Yokes get
+their activity onto the books without anyone hand-typing
+journal entries.
+
+## The rule shape
+
+Each rule names:
+
+- A **source kind** — which event the rule fires on.
+- A **debit account code** — which account gets debited.
+- A **credit account code** — which account gets credited.
+- An **amount derivation** — usually "the source event's
+  amount field," sometimes a constant or a formula over
+  source fields.
+
+The platform stores rules per tenant. Two tenants can have
+different rules for the same source kind.
+
+## Sources
+
+The set of source kinds available to your tenant is exposed
+at `GET /gl/posting-rules/sources`. The default shipped
+sources include `invoice` (CRM Sales, dealer line items) and
+expand as Yokes that emit posting sources are installed.
+
+## The default seeded rule
+
+Install seeds **one rule**: `invoice → AR / Revenue`. Any
+Yoke that emits an `invoice` source posts a journal entry
+debiting AR and crediting Revenue automatically.
+
+You can:
+
+- **Edit** the rule (change accounts, change amount
+  derivation).
+- **Disable** the rule (it stops firing without being
+  removed).
+- The default rule cannot be deleted entirely — disable
+  instead. (This prevents an accidental "rule's gone, why
+  isn't my CRM posting?" moment.)
+
+## Idempotency
+
+When a source event re-fires (a webhook retry, an FSM event
+that fires twice, a replay during recovery), **the same source event creates one posted entry, not two**. The
+platform deduplicates by the source event's id within the
+tenant — a rule that fired against `invoice id=42` will
+not fire against `invoice id=42` a second time, ever.
+
+## The Posting Rule Designer
+
+The Posting Rule Designer is the in-product UI for
+authoring rules. It sits in **Settings → Yoke Ledger →
+Posting rules** and follows the same Builder-surface
+pattern as the rest of the platform's authoring tools.
+See [Workflows](/docs/workflows) for the Builder pattern
+the Designer mirrors.
+
+Designer features that customers see today:
+
+- Pick a source from the live `/sources` list.
+- Pick debit and credit accounts from your CoA.
+- Configure the amount derivation as a field from the
+  source event, a constant, or a formula.
+- Save, preview against a recent source event, enable /
+  disable.
+
+## What's not in posting rules today
+
+- **Conditional rules** — fire only when amount > X, only
+  when a tag is set, only on weekdays.
+- **Multi-leg rules** — split the amount across more than
+  two accounts.
+- **Deferral schedules** — recognize revenue over a
+  period.
+- **Rule simulation / dry-run** — preview a month's worth
+  of rule firings before enabling.
+
+## See also
+
+- [Journal entries](/docs/yoke-ledger/journal-entries) —
+  what a rule produces.
+- [Chart of accounts](/docs/yoke-ledger/chart-of-accounts)
+  — what the rule's accounts reference.
+- [Workflows](/docs/workflows) — the Builder-surface
+  pattern the Designer follows.
+- [API reference](/docs/yoke-ledger/api-reference) — the
+  `/gl/posting-rules` endpoints.
+
+---
+
+# Reports
+
+> Trial Balance, Profit & Loss, and Balance Sheet — three financial statements computed on demand from posted entries, with reconciliation identities the platform preserves at write time.
+
+# Reports
+
+Yoke Ledger ships three financial statements. Each one
+is computed on demand from your posted entries — there's
+no overnight batch, no warehouse, no separate read store.
+
+## Trial Balance
+
+Every account with its total debits and total credits over
+the report window. For the report to make sense, **debits equal credits** across the whole report — that's the daily
+integrity check that says "the books are consistent."
+
+If your Trial Balance ever doesn't balance, the cause is
+upstream of the report — the platform refuses to write an
+unbalanced entry, so a non-balancing Trial Balance points
+at a bug in the platform (or a hand-edit of the database
+that bypassed the API).
+
+## Profit & Loss
+
+Revenue minus Expenses over a period. P&L answers "did we
+make money this period?"
+
+The period boundary is a query parameter. The default
+period is the current calendar month. You can pass any
+start / end date pair and get the same shape back.
+
+## Balance Sheet
+
+A point-in-time snapshot. **Assets = Liabilities + Equity**
+— the fundamental accounting identity. The platform preserves
+this identity at write time (by enforcing the per-entry
+balance invariant); the report just adds up the surviving
+posted entries up to the as-of date.
+
+The default as-of date is today. Pass `?as_of=YYYY-MM-DD`
+to roll the snapshot back to any prior day.
+
+## Performance
+
+Reports compute on demand from the posted-entry table.
+For tenants with very large entry counts, read latency
+scales with entry count, not user count. This is fine
+for the kind of volumes most tenants run; if your books
+ever outgrow that, the deferred list below names the
+features that would address it.
+
+## What's not in reports today
+
+- **Cash Flow Statement** as a fourth statement.
+- **Comparative periods** (this period vs. last period
+  side-by-side).
+- **Exports** — CSV, XLSX, PDF.
+- **Per-department slicing** — filter the statements by
+  a department tag.
+
+## See also
+
+- [Journal entries](/docs/yoke-ledger/journal-entries) —
+  the input to every report.
+- [Chart of accounts](/docs/yoke-ledger/chart-of-accounts)
+  — the row shape of the Trial Balance.
+- [API reference](/docs/yoke-ledger/api-reference) — the
+  `/reports/*` endpoints.
+
+---
+
+# API reference
+
+> REST surface for Yoke Ledger — accounts, journal entries (with post and reverse), posting rules, the sources catalogue, and the three financial statements.
+
+# API reference
+
+Every endpoint is tenant-scoped. The platform derives the
+`tenant_id` from the JWT; you never pass it in the body or
+in a path segment.
+
+## Auth and gating
+
+- **Auth:** tenant JWT in `Authorization: Bearer …`.
+- **Gating:** the tenant must hold the
+  `fastyoke.yoke-ledger` entitlement. Install auto-grants
+  it for free; immediately after uninstall a request can
+  return `402 not_entitled` with the listing slug in the
+  body.
+
+## Accounts
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET   | `/api/v1/tenant/gl/accounts` | List the Chart of Accounts. |
+| POST  | `/api/v1/tenant/gl/accounts` | Create an account (code + name + type). |
+| PATCH | `/api/v1/tenant/gl/accounts/:code` | Rename, recategorize, or deactivate. |
+
+Wrong-case account types (`asset` instead of `Asset`) and
+duplicate codes are validation errors on create and patch.
+
+## Entries
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET  | `/api/v1/tenant/gl/entries` | List entries. Filterable by state and date range. |
+| POST | `/api/v1/tenant/gl/entries` | Create a draft entry with one or more lines. |
+| GET  | `/api/v1/tenant/gl/entries/:id` | Read one entry with its lines. |
+| POST | `/api/v1/tenant/gl/entries/:id/post` | Transition draft → posted. |
+| POST | `/api/v1/tenant/gl/entries/:id/reverse` | Write a mirror entry that reverses a posted one. |
+
+**Validation:** `POST /entries` and `POST /entries/:id/post`
+return `unbalanced` when the lines don't sum to a balanced
+entry. `POST /entries/:id/post` and `POST /entries/:id/reverse`
+return `immutable` when called against an entry in a state
+that doesn't allow the transition.
+
+## Posting rules
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET  | `/api/v1/tenant/gl/posting-rules` | List your tenant's rules. |
+| POST | `/api/v1/tenant/gl/posting-rules` | Create a rule. |
+| GET  | `/api/v1/tenant/gl/posting-rules/sources` | Catalogue of source kinds available to your tenant. |
+
+## Reports
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/v1/tenant/reports/trial-balance` | Trial Balance over an optional date range. |
+| GET | `/api/v1/tenant/reports/pnl` | Profit & Loss over an optional period. |
+| GET | `/api/v1/tenant/reports/balance-sheet` | Balance Sheet as of an optional date. |
+
+## Error codes you'll see
+
+| Code | Meaning | Returned by |
+| --- | --- | --- |
+| `unbalanced` | Lines don't sum to a balanced entry. | `POST /entries`, `POST /entries/:id/post` |
+| `not_entitled` | Tenant doesn't hold `fastyoke.yoke-ledger`. | Any endpoint, immediately after uninstall. |
+| `immutable` | Tried to mutate a posted entry. | Edit / delete of a posted entry, double-post, post-after-reverse. |
+
+## See also
+
+- [Overview](/docs/yoke-ledger) — what the Yoke is and
+  who installs it.
+- [Journal entries](/docs/yoke-ledger/journal-entries) —
+  the lifecycle these endpoints drive.
+- [Posting rules](/docs/yoke-ledger/posting-rules) — the
+  consumer of the `/sources` catalogue.
 
 ---
 

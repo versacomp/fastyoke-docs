@@ -118,3 +118,6 @@ mirrors; the builder locks every surface on inherited rows.
 - [Workflows](/docs/workflows) — how FSM schemas get surfaced through app pages.
 - [SDK → Block registration](/docs/sdk/reference) — extending the
   page block catalog via extensions mounted inside the app.
+- [Yoke Ledger](/docs/yoke-ledger) — the free double-entry
+  General Ledger your apps can post into via the platform's
+  posting-rule sources.

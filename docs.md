@@ -131,6 +131,13 @@ See [Billing](/docs/billing) for the tier base + metered
   $0 auto-suspend, and the Stripe Customer Portal.
 ::
 
+::callout{type="tip" title="Keeping the books?"}
+See [Yoke Ledger](/docs/yoke-ledger) for the free
+  double-entry General Ledger — Chart of Accounts,
+  journal entries, posting rules, and three financial
+  statements.
+::
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.
