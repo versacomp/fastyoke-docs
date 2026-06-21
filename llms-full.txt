@@ -1917,6 +1917,10 @@ See [Yoke Ledger](/docs/yoke-ledger) for the free
   journal entries, posting rules, and three financial
   statements.
 
+See [Marketplace](/docs/marketplace) for what a Yoke is,
+  install / uninstall mechanics, the three pricing models,
+  and Tenant Yokes.
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.
@@ -2861,6 +2865,8 @@ mirrors; the builder locks every surface on inherited rows.
 - [Yoke Ledger](/docs/yoke-ledger) — the free double-entry
   General Ledger your apps can post into via the platform's
   posting-rule sources.
+- [Marketplace](/docs/marketplace) — the catalogue of
+  installable Yokes your custom apps can pair with.
 
 ---
 
@@ -5049,7 +5055,7 @@ an evidence-bucket plus a sampler script.
 
 ## Gating
 
-The Compliance Yoke is a paid Marketplace listing. Two
+The Compliance Yoke is a paid [Marketplace](/docs/marketplace) listing. Two
 entitlements satisfy the gate:
 
 - **`fastyoke.compliance`** — the paid listing. Full surface.
@@ -12500,6 +12506,469 @@ the v0 surface proves out.
 
 ---
 
+# Marketplace
+
+> The catalogue of installable Yokes — what a Yoke is, free vs paid, what install seeds into your tenant, and the retention contract that says uninstall does not delete your data.
+
+# Marketplace
+
+A **Yoke** is a packaged FastYoke product — FSM schemas,
+posting rules, app surfaces, and seed data — that you
+install with one click. The Marketplace lives at
+**Settings → Marketplace** in the admin shell.
+
+## Two flavors
+
+- **Free Yokes** — install auto-grants the entitlement, no
+  Stripe checkout. Examples: [Yoke Ledger](/docs/yoke-ledger),
+  Yoker (free tier).
+- **Paid Yokes** — install opens a Stripe Checkout session;
+  the entitlement is granted when payment completes. Example:
+  [Compliance Yoke](/docs/compliance-yoke).
+
+The marketing [/pricing](/pricing) page is the authoritative
+source for dollar amounts. Marketplace docs describe the
+*model* (Free, fixed monthly, metered), not the numbers.
+
+## What install does
+
+When you click Install on a listing card, the platform:
+
+1. Checks your tenant's tier against the listing's
+   `tier_required`. If your tier is below the requirement,
+   install returns 402 with the listing slug and the required
+   tier in the body — no entitlement is granted.
+2. Grants the marketplace entitlement (free) or opens a
+   Stripe Checkout session (paid). For paid listings the
+   entitlement is granted on `checkout.session.completed`.
+3. Seeds any FSM schemas the listing owns into your tenant.
+   See [Install & uninstall](/docs/marketplace/install-and-uninstall)
+   for the `owned_schemas` contract.
+4. Seeds default rows (posting rules, accounts, sample data
+   where applicable).
+
+## What uninstall does
+
+Uninstall revokes the marketplace entitlement and blocks
+access to listing-private routes. It **does not delete your
+data**. Every FSM schema the listing owns, every entity
+record you created against those schemas, every posting rule
+or seeded row — all of it stays in your tenant. Reinstall
+and you pick up exactly where you left off.
+
+This is the load-bearing retention contract. It is true for
+every Yoke in the catalogue, free or paid.
+
+## End-to-end tour
+
+1. **Browse** the catalogue at Settings → Marketplace.
+2. **Review** the listing card — flavor, tier requirement,
+   what it seeds.
+3. **Install.** Free Yokes flip on instantly; paid Yokes
+   take you through Stripe Checkout.
+4. **Use it** from the surface the Yoke ships
+   (e.g., Settings → Yoke Ledger, Settings → Compliance
+   Yoke).
+5. **Uninstall** any time. Your data stays.
+
+## What's not in the Marketplace today
+
+The following are explicit non-features. Plan accordingly.
+
+- **In-product self-publish** for Tenant Yokes beyond what
+  Yoke Studio ships today.
+- **Listing reviews / ratings** from other tenants.
+- **Bundle discounts** at install time across multiple
+  listings.
+- **Private listings** shared by URL outside the public
+  catalogue.
+- **Listing search** and category filters in the admin
+  shell catalogue view.
+
+## See also
+
+- [Install & uninstall](/docs/marketplace/install-and-uninstall) —
+  the install decision tree and the retention contract in
+  detail.
+- [Listings & pricing](/docs/marketplace/listings-and-pricing)
+  — the three pricing models and tier gating.
+- [Tenant Yokes](/docs/marketplace/tenant-yokes) — author
+  your own listing.
+- [API reference](/docs/marketplace/api-reference) — the
+  REST surface.
+
+---
+
+# Install & uninstall
+
+> Install grants entitlement and seeds schemas; uninstall revokes entitlement and keeps every row. Reinstall is a no-op-then-grant.
+
+# Install & uninstall
+
+## Install decision tree
+
+When you POST to `/api/v1/tenant/marketplace/listings/:id/install`,
+the platform runs three checks in order:
+
+1. **Tier check.** Compare the tenant's current tier
+   against the listing's `tier_required`. If the tenant is
+   below the requirement, return `402` with the listing
+   slug and the required tier in the body. No entitlement
+   is granted; no schemas are seeded.
+2. **Pricing branch.**
+   - **Free listing** → grant the marketplace entitlement,
+     proceed to step 3.
+   - **Paid listing** → return a Stripe Checkout session
+     URL. The entitlement is granted asynchronously when
+     `checkout.session.completed` fires from Stripe; the
+     install endpoint itself does not flip the entitlement
+     for paid listings.
+3. **Seed.** Write any FSM schemas the listing owns into
+   the tenant. Seed any default rows the listing declares
+   (posting rules, accounts, sample data).
+
+## The `owned_schemas` contract
+
+Every listing declares the set of FSM schemas it owns. The
+declaration is part of the listing definition; the
+platform enforces:
+
+- **The schemas listed in `owned_schemas` are seeded on
+  install** (unless they're already present from a prior
+  install / reinstall).
+- Per platform invariant, **two listings cannot own the same schema**. The
+  platform enforces this at listing registration; an
+  attempt to register a colliding schema is rejected.
+- **The schema stays for the lifetime of the tenant.**
+  Even after uninstall, the schema row in
+  `fsm_schemas` is preserved.
+
+This is what makes the never-delete-the-data retention
+contract reliable — schemas don't get yanked out from
+under the rows that reference them.
+
+## Uninstall semantics
+
+`POST /api/v1/tenant/marketplace/listings/:id/uninstall`:
+
+- Revokes the marketplace entitlement immediately.
+- Removes the row from `marketplace_installs`.
+- Marks listing-private routes 402-gated for subsequent
+  requests.
+- **Keeps** every FSM schema the listing owns.
+- **Keeps** every entity record the tenant created against
+  those schemas.
+- **Keeps** every ancillary row seeded at install
+  (posting rules, accounts).
+
+There is no destructive-uninstall flag. The data stays.
+
+## Reinstall
+
+Reinstalling a previously uninstalled listing is a
+two-step in practice:
+
+1. The schemas already exist — the seeding step is a
+   no-op. The platform doesn't re-write or re-seed
+   anything.
+2. The entitlement is **restored**. Whatever rows your
+   tenant accumulated during the previous install
+   re-appear immediately because they never left.
+
+For paid listings, reinstall opens a new Checkout
+session — the previous payment doesn't carry forward.
+You're billed again from the moment Stripe confirms.
+
+## What's not in install/uninstall today
+
+- **Scheduled uninstall** (uninstall at a future date).
+- **Multi-tenant batch install / uninstall** from the
+  org-admin surface.
+- **Install-with-config** — supplying custom seed
+  parameters at install time (today seeds are fixed by
+  the listing definition).
+
+## See also
+
+- [Marketplace overview](/docs/marketplace) — the wrapper
+  story.
+- [Listings & pricing](/docs/marketplace/listings-and-pricing)
+  — the pricing models and tier gating.
+- [API reference](/docs/marketplace/api-reference) — the
+  install / uninstall / checkout endpoints.
+
+---
+
+# Listings & pricing
+
+> Three pricing models — Free, fixed monthly, metered. Tier gating via tier_required. Free caps via free_cap. Downgrading doesn't auto-uninstall — the entitlement stays but listing routes start refusing.
+
+# Listings & pricing
+
+## Three pricing models
+
+Every listing carries exactly one pricing model:
+
+- **`Free`** — no charge. Install auto-grants the
+  entitlement; no Stripe step. Example: Yoke Ledger.
+- **fixed monthly** — flat subscription per the listing's
+  base price. Stripe drives the billing; you see the line
+  item on your monthly invoice.
+- **metered** — billed per usage event drawn from the
+  tenant's metered-usage roll-up. The Yoker token add-on is
+  a current example. See
+  [Billing → Tiers & metering](/docs/billing/tiers-and-metering)
+  for the metering plumbing.
+
+Dollar amounts live on the marketing [/pricing](/pricing)
+page. Marketplace docs describe the model; never the
+number.
+
+## Tier gating with `tier_required`
+
+Every listing declares a `tier_required` value naming the
+minimum tier that can install it. The platform checks
+this at install time and returns 402 with the required
+tier in the body if the tenant is below.
+
+The decision is binary. There is no per-feature carve-out
+in the catalogue — if a Yoke says `tier_required: Team`,
+a Pro tenant can't install half of it. They upgrade or
+they don't get it.
+
+## Free caps with `free_cap`
+
+Some free listings carry a `free_cap` — a usage ceiling
+that, once hit, freezes new writes against the listing.
+Reads keep working; existing rows are unaffected. To
+restore writes:
+
+- Upgrade the tenant tier (caps usually drop at higher
+  tiers or are removed altogether), or
+- Wait for the rolling window to advance (some caps are
+  lifetime; some are time-windowed — read the specific
+  Yoke's docs).
+
+The Marketplace docs describe the **mechanism**; each
+Yoke's docs page describes the **specific cap**.
+
+## Marketplace add-ons
+
+A paid add-on layered on top of a Yoke is treated as its
+own listing for billing purposes: separate install,
+separate entitlement, separate checkout. Install and
+uninstall semantics are identical to primary listings.
+
+Example: the Yoker LLM add-on layers on the Yoker base
+listing. Installing the add-on doesn't change anything
+about the base Yoker entitlement; it grants a second,
+independent entitlement.
+
+## What changes when tier changes
+
+**Upgrade above `tier_required` for a previously blocked
+listing** — the listing becomes installable on the next
+install attempt. Previously blocked installs are not
+auto-completed; you click Install again.
+
+The case of downgrading below `tier_required` for an
+installed listing is the subtle one worth documenting
+clearly:
+
+- The entitlement is **not** revoked.
+- The platform **does not auto-uninstall** the listing or
+  delete data.
+- However, listing-private routes that gate on the tier
+  check (not just the entitlement check) start returning
+  402.
+
+The net effect: an installed-then-downgraded tenant
+keeps the entitlement on paper but loses access to the
+guarded routes. Re-upgrading restores access without a
+reinstall.
+
+## What's not in pricing today
+
+- **Annual prepay** — flat-pay 12 months at a discount.
+- **Founder pricing** — locked-in early-adopter rates that
+  survive future pricing changes.
+- **Trial-with-install** — start a paid Yoke without a
+  card for a fixed trial period.
+
+## See also
+
+- [Marketplace overview](/docs/marketplace).
+- [Billing → Tiers & metering](/docs/billing/tiers-and-metering)
+  — the metered-usage plumbing.
+- [Install & uninstall](/docs/marketplace/install-and-uninstall).
+
+---
+
+# Tenant Yokes (custom)
+
+> Author your own listings on a single tenant. Verticals bundle related listings together. Clone-from-source uses an existing listing as a starting point. Yoke Studio is the authoring UI.
+
+# Tenant Yokes (custom)
+
+A **Tenant Yoke** is a custom listing **you** author on a
+single tenant. Your Tenant Yoke can be installed only in
+your tenant; it never enters the public catalogue.
+
+The surface lives at **Settings → Marketplace → Tenant
+Yokes** in the admin shell.
+
+## REST surface
+
+- `POST /api/v1/tenant/marketplace/tenant-yokes` — Create a Tenant Yoke.
+- `PUT /api/v1/tenant/marketplace/tenant-yokes/:slug` — Update a Tenant Yoke definition.
+- `DELETE /api/v1/tenant/marketplace/tenant-yokes/:slug` — Delete a Tenant Yoke.
+- `GET /api/v1/tenant/marketplace/tenant-yokes/:slug/history` — Read the Tenant Yoke's change history.
+
+Each Tenant Yoke is identified by a tenant-scoped `slug`.
+Two Tenant Yokes in different tenants can share a slug —
+they're not part of the public catalogue's namespace.
+
+## Verticals
+
+A **vertical** is a curated bundle of listings that go
+together for a specific industry — Auto Dealer, Patient
+Flow, Convention, etc. Installing a vertical kicks off
+install on each listing in the bundle.
+
+- `GET /verticals` lists every vertical the platform
+  ships.
+- `GET /verticals/:slug` returns one vertical's
+  composition.
+
+Verticals are platform-curated; you don't author your
+own. They're the "start-from-bundle" companion to the
+"start-from-single-Yoke" install flow.
+
+## Clone from an existing listing
+
+You can spin up a Tenant Yoke pre-populated from any
+public listing's structure using
+`POST /clone/:source_slug`. The clone copies the source's
+shape (FSM schemas, page layouts, default seed) into a
+new Tenant Yoke owned by your tenant.
+
+This is the natural starting point when you want a
+CRM-Suite-shaped layout, an Auto-Dealer-shaped layout,
+etc., as a base for your own customizations. The clone
+is independent — updates to the source listing don't
+propagate to your clone.
+
+## Yoke Studio
+
+The Tenant Yoke definition is JSON. You can edit it
+directly via the API, but the in-product authoring
+experience is [Yoke Studio](/docs/apps/studio) — drafts,
+autosave, schema authoring, and the visual layout
+builder. Studio writes against the same REST surface
+documented above.
+
+## Primitives
+
+Tenant Yokes draw from a read-only catalogue of
+building blocks — workflows, entities, forms, pages.
+`GET /primitives` lists them; `GET /primitives/:slug`
+returns one. Authoring tooling (Yoke Studio, the
+manual JSON editor) renders the same list.
+
+## What's not in Tenant Yokes today
+
+- **Publishing a Tenant Yoke to the public catalogue.**
+- **Cross-tenant Tenant Yoke sharing** — clone an exact
+  Tenant Yoke into another tenant.
+- **Yoke versioning beyond the history endpoint** —
+  named versions, tags, rollback to a prior version.
+
+## See also
+
+- [Marketplace overview](/docs/marketplace).
+- [Yoke Studio](/docs/apps/studio) — the authoring UI.
+- [API reference](/docs/marketplace/api-reference) for the
+  request/response shapes.
+
+---
+
+# API reference
+
+> REST surface for the Marketplace — listings, install, uninstall, checkout, Tenant Yokes, verticals, clone, draft, primitives.
+
+# API reference
+
+Every endpoint is tenant-scoped. The platform derives the
+`tenant_id` from the JWT; you never pass it in the body
+or in a path segment.
+
+## Auth
+
+Tenant JWT in `Authorization: Bearer …`. Endpoints return
+`401` if the JWT is missing or invalid.
+
+## Catalogue
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/v1/tenant/marketplace/listings` | List every public listing in the catalogue. |
+
+## Install lifecycle
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| POST | `/api/v1/tenant/marketplace/listings/:id/install` | Install a listing. Free → grants entitlement + seeds. Paid → 402 if tier-blocked; otherwise hands off to checkout. |
+| POST | `/api/v1/tenant/marketplace/listings/:id/uninstall` | Revoke entitlement. Data retained. |
+| POST | `/api/v1/tenant/marketplace/listings/:id/checkout` | Open a Stripe Checkout session for a paid listing. Returns a session URL. |
+
+## Tenant Yokes
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| POST   | `/api/v1/tenant/marketplace/tenant-yokes` | Create a Tenant Yoke. |
+| PUT    | `/api/v1/tenant/marketplace/tenant-yokes/:slug` | Update a Tenant Yoke definition. |
+| DELETE | `/api/v1/tenant/marketplace/tenant-yokes/:slug` | Delete a Tenant Yoke. |
+| GET    | `/api/v1/tenant/marketplace/tenant-yokes/:slug/history` | Tenant Yoke change history. |
+| POST   | `/api/v1/tenant/marketplace/yoke-draft` | Save a draft Tenant Yoke (Studio's autosave target). |
+
+## Verticals
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/v1/tenant/marketplace/verticals` | List curated bundles. |
+| GET | `/api/v1/tenant/marketplace/verticals/:slug` | One vertical's composition. |
+
+## Clone-from-source
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| POST | `/api/v1/tenant/marketplace/clone/:source_slug` | Create a Tenant Yoke pre-populated from a public listing. |
+
+## Primitives
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/v1/tenant/marketplace/primitives` | List building-block primitives Tenant Yokes can draw from. |
+| GET | `/api/v1/tenant/marketplace/primitives/:slug` | One primitive's definition. |
+
+## Error codes
+
+| Code | Meaning | Returned by |
+| --- | --- | --- |
+| `tier_required` | The tenant's tier is below the listing's `tier_required`. Body carries the listing slug and the required tier. | `POST /listings/:id/install` |
+| `not_entitled` | The caller doesn't hold the listing's entitlement. | Listing-private routes guarded by the entitlement gate. |
+
+Both are 402 responses.
+
+## See also
+
+- [Marketplace overview](/docs/marketplace).
+- [Install & uninstall](/docs/marketplace/install-and-uninstall).
+- [Listings & pricing](/docs/marketplace/listings-and-pricing).
+- [Tenant Yokes](/docs/marketplace/tenant-yokes).
+
+---
+
 # Messaging
 
 > In-platform 1:1 and group DMs scoped to a tenant, with @mentions that fire notifications, edit/delete on your own messages, and real-time updates.
@@ -17000,7 +17469,7 @@ Builder access requires the `fsm.create` or `fsm.update` permission. See [Builde
 # Yoke Ledger
 
 Yoke Ledger is a double-entry General Ledger that other Yokes
-post into. Install it from the Marketplace and your tenant gets
+post into. Install it from the [Marketplace](/docs/marketplace) and your tenant gets
 a working Chart of Accounts, an FSM-driven journal-entry
 workflow, a default posting rule, and three financial
 statements — Trial Balance, Profit & Loss, Balance Sheet.

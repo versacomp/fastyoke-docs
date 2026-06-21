@@ -121,3 +121,5 @@ mirrors; the builder locks every surface on inherited rows.
 - [Yoke Ledger](/docs/yoke-ledger) — the free double-entry
   General Ledger your apps can post into via the platform's
   posting-rule sources.
+- [Marketplace](/docs/marketplace) — the catalogue of
+  installable Yokes your custom apps can pair with.

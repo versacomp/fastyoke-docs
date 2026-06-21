@@ -138,6 +138,12 @@ See [Yoke Ledger](/docs/yoke-ledger) for the free
   statements.
 ::
 
+::callout{type="tip" title="Browsing Yokes?"}
+See [Marketplace](/docs/marketplace) for what a Yoke is,
+  install / uninstall mechanics, the three pricing models,
+  and Tenant Yokes.
+::
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.

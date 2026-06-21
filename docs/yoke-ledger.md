@@ -7,7 +7,7 @@ order: 1
 # Yoke Ledger
 
 Yoke Ledger is a double-entry General Ledger that other Yokes
-post into. Install it from the Marketplace and your tenant gets
+post into. Install it from the [Marketplace](/docs/marketplace) and your tenant gets
 a working Chart of Accounts, an FSM-driven journal-entry
 workflow, a default posting rule, and three financial
 statements — Trial Balance, Profit & Loss, Balance Sheet.

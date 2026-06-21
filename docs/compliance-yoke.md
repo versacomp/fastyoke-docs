@@ -24,7 +24,7 @@ an evidence-bucket plus a sampler script.
 
 ## Gating
 
-The Compliance Yoke is a paid Marketplace listing. Two
+The Compliance Yoke is a paid [Marketplace](/docs/marketplace) listing. Two
 entitlements satisfy the gate:
 
 - **`fastyoke.compliance`** — the paid listing. Full surface.
