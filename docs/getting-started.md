@@ -34,3 +34,8 @@ If you already know the ropes, skip to
 [Your first form](/docs/getting-started/first-form) — it references
 back into Installation only where you genuinely need it.
 ::
+
+Building an integration against the API? The
+[ten-minute first-integration tutorial](/docs/tutorials/101-first-integration)
+is the fastest way to confirm the contract works
+end-to-end.

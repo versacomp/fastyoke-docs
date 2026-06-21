@@ -251,6 +251,13 @@
 - [Trust Center](https://www.fastyoke.io/docs/security/trust-center): How FastYoke protects your data — isolation, encryption, access control, auditability, availability, and our path to SOC 2.
 - [PII / SPI Field Encryption](https://www.fastyoke.io/docs/security/encryption): Tag entity-field annotations or form-field schemas with `is_pii` to encrypt their values at rest under a per-tenant key. Available as a $19/mo add-on at every tier.
 
+## Tutorials
+
+- [Tutorials](https://www.fastyoke.io/docs/tutorials): End-to-end developer build flows. Mint a token, ship something live, with verifiable checkpoints at every step. Three tiers — 101 first contact, 201 production patterns, 301 extending the platform.
+- [101 — Your first API integration](https://www.fastyoke.io/docs/tutorials/101-first-integration): In ten minutes, mint a one-hour test token, POST an entity, fire a workflow transition against it, and receive the matching outbound webhook. The proof at the end is a single HTTPS request you can replay.
+- [201 — Sync data into FastYoke](https://www.fastyoke.io/docs/tutorials/201-csv-importer): Build a 60-line Node script that imports a CSV of customers into your tenant's entity API. Idempotency keys keep re-runs safe, Retry-After respects rate limits, and a checkpoint file recovers from mid-batch failure.
+- [301 — Author an extension](https://www.fastyoke.io/docs/tutorials/301-author-extension): Author, sign, install, and load a tiny React extension that reads the current user's tenant_id from the SDK, fetches an entity count from the tenant API, and renders the result inside the admin shell.
+
 ## Workflows
 
 - [FSM Designer](https://www.fastyoke.io/docs/workflows/builder): Draw the graph, wire transitions, compose guards, declare actions.

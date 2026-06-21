@@ -49,3 +49,8 @@ those features ship with:
 - [E-signatures public verify](/docs/esign/trust-and-verify) — the
   offline-verification recipe and the published ed25519 public
   keys.
+
+If this is your first time, the ten-minute
+[first-integration tutorial](/docs/tutorials/101-first-integration)
+is the fastest way to confirm the contract works
+end-to-end against your tenant.

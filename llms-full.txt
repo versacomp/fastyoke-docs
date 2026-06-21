@@ -1925,6 +1925,11 @@ See [Reseller billing](/docs/reseller-billing) for rate
   cards, statements with margin reporting, white-label
   invoices, and the Vendara settlement handoff.
 
+Start with [Your first API integration](/docs/tutorials/101-first-integration)
+  — a ten-minute build that mints a token, POSTs an
+  entity, fires a transition, and watches the webhook
+  arrive on your receiver URL.
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.
@@ -5718,6 +5723,11 @@ those features ship with:
 - [E-signatures public verify](/docs/esign/trust-and-verify) — the
   offline-verification recipe and the published ed25519 public
   keys.
+
+If this is your first time, the ten-minute
+[first-integration tutorial](/docs/tutorials/101-first-integration)
+is the fastest way to confirm the contract works
+end-to-end against your tenant.
 
 ---
 
@@ -10677,6 +10687,11 @@ public URL becomes a typed ingress point for your workflow.
 If you already know the ropes, skip to
 [Your first form](/docs/getting-started/first-form) — it references
 back into Installation only where you genuinely need it.
+
+Building an integration against the API? The
+[ten-minute first-integration tutorial](/docs/tutorials/101-first-integration)
+is the fastest way to confirm the contract works
+end-to-end.
 
 ---
 
@@ -18018,6 +18033,560 @@ All endpoints require a tenant JWT and the
 `tenant.encryption.manage` permission (defaults to admins) for
 write actions. `read_status` is read by anyone with billing
 read access.
+
+---
+
+# Tutorials
+
+> End-to-end developer build flows. Mint a token, ship something live, with verifiable checkpoints at every step. Three tiers — 101 first contact, 201 production patterns, 301 extending the platform.
+
+# Tutorials
+
+A guided **build** flow per tutorial. Each one starts from
+zero state and ends with something live in your tenant.
+Every step ends with a single command you can run and an
+expected output you can compare against — if the step
+worked, you'll know at that moment, not at the end.
+
+## The tier system
+
+- **101 — First contact.** Token, one entity, one
+  transition, one webhook. About **10 minutes**.
+- **201 — Production patterns.** Idempotency keys, error
+  recovery, scripts that survive a retry mid-batch. About
+  **20 minutes**.
+- **301 — Extending the platform.** Author and ship
+  something other tenants could install. About **45
+  minutes**.
+
+## The verifiability discipline
+
+Every step ends with a checkpoint the reader can run.
+A successful step produces a specific, observable
+result. We pin the **exact** expected output (status
+code, key fields, header literal). If the platform's
+response shape ever changes, the content-invariant
+test fails before the tutorial rots.
+
+## Tutorials vs. recipes
+
+[Recipes](/docs/recipes) are different — recipes solve a single task in
+isolation — copy-paste a `curl`, get the answer, move
+on. Tutorials build a real end-to-end thing that
+exercises multiple parts of the platform at once.
+
+When a recipe is the right shape for what you need,
+cross-link into it from your code. When you're
+learning the platform, start in a tutorial.
+
+## Tutorials vs. references
+
+A tutorial gets you to "works on my machine" in
+minutes. A reference tells you why the contract is
+shaped the way it is. Tutorials cross-link reference
+pages liberally — every mysterious word is a click.
+
+## What's not in tutorials today
+
+- **Per-Yoke tutorials** (CRM Sales, Auto Dealer, etc.)
+  — those live in each Yoke's own section.
+- **Tenant Yoke authoring** — graduates from 301
+  extension authoring once publish-to-Marketplace
+  lands.
+- **Video walkthroughs** — text + verifiable command
+  output only.
+- **Migration / convert-from-X tutorials** — see the
+  [/compare pages](/compare) instead.
+- **Per-tutorial sandbox environments** — today you
+  work in your own tenant.
+
+## See also
+
+- [101 — Your first API integration](/docs/tutorials/101-first-integration)
+- [201 — Sync data into FastYoke](/docs/tutorials/201-csv-importer)
+- [301 — Author an extension](/docs/tutorials/301-author-extension)
+- [Recipes](/docs/recipes) — single-task snippets.
+- [Developers](/docs/developers) — day-1 API invariants.
+
+---
+
+# 101 — Your first API integration
+
+> In ten minutes, mint a one-hour test token, POST an entity, fire a workflow transition against it, and receive the matching outbound webhook. The proof at the end is a single HTTPS request you can replay.
+
+# 101 — Your first API integration
+
+## What you'll build
+
+In about ten minutes you'll end with a temporary
+HTTPS endpoint (RequestBin or equivalent) holding a
+real `job.transition` webhook delivery from your
+tenant. The body is what every later integration will
+receive.
+
+Final proof — a single POST you can replay:
+
+```http
+POST https://your-bin.requestbin.example HTTP/1.1
+Content-Type: application/json
+X-FastYoke-Event: job.transition
+X-FastYoke-Delivery: wh_evt_01HXZ…
+X-FastYoke-Timestamp: 1750905600
+X-FastYoke-Signature: sha256=…
+
+{
+  "id": "wh_evt_01HXZ…",
+  "event": "job.transition",
+  "occurred_at": "2026-06-21T12:00:00Z",
+  "tenant_id": "tnt_01HW…",
+  "data": {
+    "job_id": "job_…",
+    "from_state": "Draft",
+    "to_state": "Active",
+    "event_name": "activate"
+  }
+}
+```
+
+## Before you begin
+
+- A FastYoke tenant you're an admin of. The free tier
+  is fine.
+- `curl` on your shell.
+- A way to receive an HTTPS request. This tutorial
+  uses [RequestBin](https://requestbin.com); ngrok and
+  `webhook.site` work identically.
+
+## Steps
+
+### 1. Mint a one-hour test token
+
+Open the admin shell at **Settings → Tokens → Generate test token**.
+See the [quick test token reference](/docs/auth/api-tokens#quick-test-token)
+for the full explanation of what gets minted.
+
+Copy the token. You now have a bearer that mirrors
+your admin session for one hour.
+
+**Checkpoint** — list the tenant's PATs (the list may
+be empty; the 200 status is the win):
+
+```bash
+curl -i \
+  -H "Authorization: Bearer $FY_TOKEN" \
+  https://www.fastyoke.io/api/v1/tenant/api-tokens
+```
+
+Expected: `HTTP/2 200` and a JSON array (possibly
+empty). Anything other than 200 means re-mint.
+
+### 2. Find a schema with a transition
+
+Your tenant has at least one FSM schema installed by
+default. `GET /api/v1/tenant/schemas` returns them.
+
+```bash
+curl -s -H "Authorization: Bearer $FY_TOKEN" \
+  https://www.fastyoke.io/api/v1/tenant/schemas \
+  | jq '.[0] | {name, entity, transitions: [.transitions[] | {event, from, to}]}'
+```
+
+**Checkpoint** — at least one transition is listed. If
+the array is empty, install a Yoke from the
+[Marketplace](/docs/marketplace) (Yoke Ledger is free)
+and re-run.
+
+Save the `entity` name and one `event` for the next
+steps.
+
+### 3. Create an entity record
+
+```bash
+curl -s -X POST \
+  -H "Authorization: Bearer $FY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"payload":{"display_name":"My first record"}}' \
+  https://www.fastyoke.io/api/v1/tenant/entities/<entity>
+```
+
+**Checkpoint** — response carries an `id`. Save it
+into `$FY_ID`. `GET .../<id>` returns the same body —
+that round-trip lets you verify the write landed.
+
+### 4. Wire a webhook subscription
+
+```bash
+curl -s -X POST \
+  -H "Authorization: Bearer $FY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://your-bin.requestbin.example",
+    "events": ["job.transition"],
+    "description": "101 tutorial"
+  }' \
+  https://www.fastyoke.io/api/v1/tenant/webhooks
+```
+
+Save the response `id` into `$FY_SUB`.
+
+**Checkpoint** — fire a synthetic delivery and confirm
+it lands on your bin:
+
+```bash
+curl -s -X POST \
+  -H "Authorization: Bearer $FY_TOKEN" \
+  https://www.fastyoke.io/api/v1/tenant/webhooks/$FY_SUB/test
+```
+
+Within a few seconds, your RequestBin shows a POST
+with `X-FastYoke-Event` set.
+
+### 5. Trigger a transition
+
+```bash
+curl -s -X POST \
+  -H "Authorization: Bearer $FY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"event":"<your-event-name>"}' \
+  https://www.fastyoke.io/api/v1/tenant/jobs/$FY_ID/transition
+```
+
+**Checkpoint** — within seconds, the bin shows a POST
+with `X-FastYoke-Event: job.transition` and a body
+whose `data.event_name` matches your event.
+
+## What you built
+
+- One new entity row in your tenant.
+- One `job.transition` row in `event_log`.
+- One webhook subscription rendered in
+  **Settings → Webhooks**.
+- One receipt at your RequestBin, ready to replay.
+
+## Next
+
+[201 — Sync data into FastYoke](/docs/tutorials/201-csv-importer) —
+production patterns wrapped around a CSV importer.
+
+---
+
+# 201 — Sync data into FastYoke
+
+> Build a 60-line Node script that imports a CSV of customers into your tenant's entity API. Idempotency keys keep re-runs safe, Retry-After respects rate limits, and a checkpoint file recovers from mid-batch failure.
+
+# 201 — Sync data into FastYoke
+
+## What you'll build
+
+A small Node script that reads
+`customers.csv`, POSTs each row to your tenant's
+entity API with a stable per-row idempotency key, and
+is safe to:
+
+- **Run twice** — duplicates collapse into one record.
+- **Be rate-limited mid-batch** — backoff respects
+  `Retry-After`.
+- **Be killed and restarted** — a `.checkpoint` file
+  resumes from the last successful row.
+
+## Before you begin
+
+- An `fy_pat_` PAT minted with `data:write` scope. The
+  one-hour test token isn't right here — this is a
+  non-interactive script. See
+  [API tokens](/docs/auth/api-tokens) for the mint
+  flow.
+- Node 20+.
+- A CSV file. Sample:
+
+```csv
+email,display_name
+alice@example.com,Alice
+bob@example.com,Bob
+carol@example.com,Carol
+```
+
+## Steps
+
+### 1. Script skeleton
+
+`importer.mjs`:
+
+```js
+import fs from 'node:fs';
+import { createHash } from 'node:crypto';
+
+const TOKEN = process.env.FY_TOKEN;
+const BASE = 'https://www.fastyoke.io';
+const ENTITY = 'customer';
+const CSV = './customers.csv';
+
+const rows = fs.readFileSync(CSV, 'utf8')
+  .trim().split('\n').slice(1)
+  .map(line => {
+    const [email, display_name] = line.split(',');
+    return { email, display_name };
+  });
+
+for (const row of rows) {
+  console.log('POST', row.email);
+  // TODO: POST + checkpoint
+}
+```
+
+**Checkpoint** — `node importer.mjs` prints one line
+per CSV row.
+
+### 2. Idempotency key per row
+
+The `Idempotency-Key` header makes a `POST` safe to
+retry. Re-running the same request with the same key
+returns the original response without creating a
+second record. See
+[Idempotency](/docs/developers/idempotency) for the
+contract.
+
+Compute a stable key per row — `sha256(email)`
+truncated is plenty:
+
+```js
+function key(row) {
+  return 'csv-' + createHash('sha256')
+    .update(row.email).digest('hex').slice(0, 32);
+}
+
+async function postRow(row) {
+  const res = await fetch(
+    `${BASE}/api/v1/tenant/entities/${ENTITY}`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+        'Content-Type': 'application/json',
+        'Idempotency-Key': key(row),
+      },
+      body: JSON.stringify({ payload: row }),
+    },
+  );
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+for (const row of rows) {
+  const out = await postRow(row);
+  console.log('OK', row.email, out.id);
+}
+```
+
+**Checkpoint** — run twice; the second run prints the
+same `id` per row. No duplicate records appear in your
+tenant.
+
+### 3. Backoff on `Retry-After`
+
+A burst of POSTs may hit the per-tenant rate limit and
+return `429`. The platform sends a `Retry-After`
+header naming the seconds to wait. See
+[Rate limits](/docs/developers/rate-limits).
+
+Wrap `postRow` in a retry loop:
+
+```js
+async function postWithRetry(row, attempts = 5) {
+  for (let i = 0; i < attempts; i++) {
+    const res = await fetch(
+      `${BASE}/api/v1/tenant/entities/${ENTITY}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+          'Content-Type': 'application/json',
+          'Idempotency-Key': key(row),
+        },
+        body: JSON.stringify({ payload: row }),
+      },
+    );
+    if (res.ok) return res.json();
+    if (res.status === 429) {
+      const wait = +(res.headers.get('Retry-After') ?? 1);
+      console.log(`429, sleeping ${wait}s`);
+      await new Promise(r => setTimeout(r, wait * 1000));
+      continue;
+    }
+    throw new Error(`HTTP ${res.status}`);
+  }
+  throw new Error('exceeded retries');
+}
+```
+
+**Checkpoint** — flood the script with a large CSV; on
+the first 429 it sleeps and resumes cleanly.
+
+### 4. Mid-batch recovery checkpoint
+
+Persist progress to `.checkpoint`. On rerun, skip rows
+up to the last successful index:
+
+```js
+const CHECKPOINT = './.checkpoint';
+let start = fs.existsSync(CHECKPOINT)
+  ? +fs.readFileSync(CHECKPOINT, 'utf8')
+  : 0;
+
+for (let i = start; i < rows.length; i++) {
+  const out = await postWithRetry(rows[i]);
+  console.log('OK', rows[i].email, out.id);
+  fs.writeFileSync(CHECKPOINT, String(i + 1));
+}
+fs.unlinkSync(CHECKPOINT);
+```
+
+**Checkpoint** — kill the script mid-batch with
+Ctrl-C, re-run; the final entity count in your tenant
+matches the CSV row count. No row is double-written
+and none is skipped.
+
+## What you built
+
+A re-runnable import script you can point at any
+CSV → entity mapping. The three patterns it
+demonstrates (idempotency key, backoff, checkpoint
+file) generalize to every long-running batch
+integration you'll write against FastYoke.
+
+## Next
+
+[301 — Author an extension](/docs/tutorials/301-author-extension) —
+build, sign, and install a React extension that runs
+inside the admin shell.
+
+---
+
+# 301 — Author an extension
+
+> Author, sign, install, and load a tiny React extension that reads the current user's tenant_id from the SDK, fetches an entity count from the tenant API, and renders the result inside the admin shell.
+
+# 301 — Author an extension
+
+## What you'll build
+
+A one-route React extension that mounts inside the
+admin shell. It calls `GET /entities/:slug?count=true`
+from the tenant API and renders the count in a card.
+End result: a new card appears for every tenant who
+installs the bundle.
+
+## Before you begin
+
+- SDK CLI installed. See [SDK](/docs/sdk) for install
+  options.
+- Node 20+.
+- An extension-author signing keypair. The CLI walks
+  the first-time generation in step 3.
+
+## Steps
+
+### 1. Scaffold
+
+```bash
+fy ext init my-counter
+cd my-counter
+npm install
+npm run dev
+```
+
+`fy ext init` produces a starter repo with a manifest,
+a one-file React component, and a Vite-based dev
+preview.
+
+**Checkpoint** — the dev preview opens in a browser
+and renders the starter component.
+
+### 2. Wire one route
+
+Open `src/CounterCard.tsx`. Replace the body with a
+single call to the tenant API. The SDK provides the
+`tenant_id` and a pre-baked fetch helper:
+
+```tsx
+import { useEffect, useState } from 'react';
+import { useTenant, callTenantApi } from '@fastyoke/sdk';
+
+export default function CounterCard() {
+  const tenant = useTenant();
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    callTenantApi('/entities/customer?count=true')
+      .then(r => r.json())
+      .then(j => setCount(j.count));
+  }, []);
+
+  return (
+    <div className="card">
+      <h2>Customers in {tenant.name}</h2>
+      <p>{count ?? '…'}</p>
+    </div>
+  );
+}
+```
+
+**Checkpoint** — the preview reads the count from
+your real tenant and renders the number. (The dev
+server proxies the tenant API for local preview.)
+
+### 3. Sign the bundle
+
+```bash
+fy ext sign --keypair ~/.fastyoke/ext-keys
+```
+
+`fy ext sign` builds the production bundle and emits
+a `bundle.tar.gz` plus a sibling `bundle.sig`. If the
+keypair doesn't exist yet, the CLI generates one and
+stores it at the path you named.
+
+**Checkpoint** — `fy ext verify ./bundle.tar.gz`
+returns `OK`. Anything else means re-sign.
+
+### 4. Install into your tenant
+
+Open **Settings → Extensions → Upload**. Drag
+`bundle.tar.gz` onto the dropzone. The platform
+verifies the signature and lights the install button
+on success.
+
+After install, the new card appears wherever the
+manifest declared its mount point (the starter
+manifest mounts under **Workspace → Custom**).
+
+**Checkpoint** — refresh the admin shell; the
+"Customers in ..." card shows your tenant's real
+count.
+
+## What you built
+
+A signed, verifiable extension bundle that any tenant
+on the same signer roster can install. The same
+shape applies to any extension you'll author —
+manifest + signed bundle + admin-shell mount point.
+
+## Cross-links
+
+- [SDK](/docs/sdk) for the full `@fastyoke/sdk`
+  surface.
+- [Extensions](/docs/extensions) for the
+  manifest format, signing roster, and security
+  model.
+- [Recipe: extension authoring](/docs/recipes/extension-authoring)
+  — the recipe is the narrower task-snippet; this
+  tutorial is the end-to-end ship walkthrough.
+
+## Next
+
+Publish-to-Marketplace authoring lands separately.
+When it does, the 401-level tutorial will pick up
+here and walk through the listing review process.
 
 ---
 

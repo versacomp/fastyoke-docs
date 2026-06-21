@@ -150,6 +150,13 @@ See [Reseller billing](/docs/reseller-billing) for rate
   invoices, and the Vendara settlement handoff.
 ::
 
+::callout{type="tip" title="Integrating against the API?"}
+Start with [Your first API integration](/docs/tutorials/101-first-integration)
+  — a ten-minute build that mints a token, POSTs an
+  entity, fires a transition, and watches the webhook
+  arrive on your receiver URL.
+::
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.
