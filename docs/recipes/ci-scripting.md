@@ -17,6 +17,8 @@ This recipe shows the three automations that come up most often:
 **minting a CI token**, **provisioning schemas from a checked-in
 JSON**, and **bulk-seeding entity records**.
 
+For the API-token lifecycle reference (format, scopes, hard refusals, rotation pattern), see [API tokens](/docs/auth/api-tokens). This recipe is the walkthrough; that page is the reference.
+
 ## Mint a tenant API token for CI
 
 Admin-minted API tokens are long-lived, scope-gated, and revocable

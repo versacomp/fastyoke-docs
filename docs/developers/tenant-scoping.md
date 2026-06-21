@@ -78,3 +78,5 @@ caller can take within that database.
 
 A client that gets a 404 should re-check the id; a client that
 gets a 403 should re-check the role assignment.
+
+For API-token authentication, see [API tokens](/docs/auth/api-tokens) — the long-lived `fy_pat_` credential CI pipelines use to authenticate against the tenant API.

@@ -3332,6 +3332,359 @@ your clinic's responsibility.
 
 ---
 
+# Sign-in flows
+
+> The three sign-in paths today — local email-and-password, OTP step-up (SMS or email), and the WorkOS AuthKit hosted flow. How the platform picks between them, how to enroll a phone, and what to check when a sign-in doesn't work.
+
+# Sign-in flows
+
+The platform supports three sign-in paths today. Most
+tenants land on one; the OTP path layers on top of the
+local path when 2FA is required.
+
+## The three paths
+
+### 1. Local email-and-password
+
+`POST /auth/login` accepts an email and password and
+returns a tenant JWT directly. This is the default for
+tenants that haven't enabled SSO and don't require OTP.
+The JWT shape and TTL are documented in
+[the index](/docs/auth#1-tenant-user-jwt).
+
+### 2. OTP step-up
+
+When OTP is required (tenant-level or org-level toggle),
+`POST /auth/login` does **not** return a JWT — it returns
+an `otp_challenge` branch with a challenge id. The client
+then:
+
+1. Calls `POST /auth/otp/send` with the challenge id and
+   a channel (`sms` or `email`).
+2. The platform dispatches the OTP code.
+3. Calls `POST /auth/otp/verify` with the challenge id
+   and the code. On success the tenant JWT is returned.
+
+### 3. WorkOS AuthKit hosted
+
+When AuthKit is enabled for the account (an operator
+action — see [SSO with WorkOS](/docs/auth/sso-with-workos)),
+the local-password path is bypassed entirely. The browser
+redirects to a WorkOS-hosted sign-in page; on success
+`GET /auth/authkit/callback` lands the user back on the
+platform with a tenant JWT minted.
+
+## How the platform picks
+
+The platform checks, in order:
+
+1. Is AuthKit enabled on the tenant's account? If yes, the
+   sign-in page redirects to WorkOS.
+2. Is OTP required at the tenant or org level? If yes, the
+   `/auth/login` response is an `otp_challenge` instead of
+   a JWT.
+3. Otherwise, `/auth/login` returns the tenant JWT
+   directly.
+
+## Enrolling a phone for SMS OTP
+
+Before a user can complete SMS OTP, the platform needs a
+verified phone number on their record. The enrollment
+flow is a two-step OTP against the candidate number:
+
+1. `POST /auth/otp/enroll-phone/send` with the candidate
+   phone number.
+2. The platform dispatches an OTP code by SMS.
+3. `POST /auth/otp/enroll-phone/verify` with the
+   submitted code. On success the phone is stored on the
+   user record and is usable as an SMS OTP channel
+   thereafter.
+
+Tenant admins typically walk a user through this on first
+sign-in after OTP is required.
+
+## Troubleshooting
+
+Three documented failure modes when sign-in doesn't work:
+
+- **Email OTP landed in Spam (especially Yahoo).** The
+  platform sends from `send.fastyoke.io`. Tell the user
+  to mark a previous OTP email as Not Spam and allowlist
+  the domain. Yahoo specifically is the most aggressive
+  filterer.
+- **Transient 503 on `/auth/login`, `/auth/otp/send`, or
+  `/auth/otp/verify`.** This is a backplane issue, not a
+  credentials problem. Retry once — the 503 typically
+  clears in seconds. If it persists for more than a
+  minute, check the platform status page.
+- **"AuthKit is disabled for your account."** The
+  operator hasn't enabled SSO for the account. The local
+  + OTP paths still work in the meantime — for the
+  enablement timeline, see
+  [SSO with WorkOS](/docs/auth/sso-with-workos).
+
+## What's not in sign-in today
+
+- **Authenticator-app TOTP** as a replacement or
+  alternative to email OTP.
+- **WebAuthn passkeys.**
+- **Social sign-in** (Google / Apple / GitHub) via
+  WorkOS without a full AuthKit Organization mirror.
+
+## See also
+
+- [Authentication & Scopes](/docs/auth) — the token
+  shapes a successful sign-in produces.
+- [API tokens](/docs/auth/api-tokens) — the
+  non-interactive credential shape for CI.
+- [SSO with WorkOS](/docs/auth/sso-with-workos) — the
+  AuthKit hosted flow in detail.
+
+---
+
+# API tokens
+
+> Long-lived fy_pat_ bearer tokens for CI pipelines and external integrations — minting, format, scopes, hard refusals, revocation, and the rotation pattern.
+
+# API tokens
+
+An API token is a long-lived bearer credential a server-side
+caller uses to authenticate against the tenant API. Every
+token starts with the prefix `fy_pat_` and is bound to
+exactly one tenant.
+
+## When to use one
+
+- **CI pipelines** that run schema syncs, seed entity
+  records, or fire workflow events as part of a deploy.
+- **Server-side integrations** that call the tenant API
+  on behalf of the tenant without a human present.
+- **One-off scripts** for bulk operations a human admin
+  would normally do interactively.
+
+**Don't use one for human sign-in.** Humans go through the
+[sign-in flows](/docs/auth/signin-flows) and get a
+short-lived tenant JWT. API tokens are the long-lived
+shape — appropriate only for non-interactive callers.
+
+## Minting
+
+From the admin shell, open **Settings → Tokens** and click
+**New token**. You'll pick:
+
+- A **name** (free-form; what shows on the token list).
+- A **scope set** from the catalogue. Scope vocabulary is
+  documented in [the index](/docs/auth#scopes); tokens
+  draw from the same vocabulary as extension JWTs.
+
+Click **Create**. The token value is shown once at create
+time and the platform never reveals it again. Copy it
+into your CI secret manager immediately.
+
+## Format & display
+
+- Every token starts with `fy_pat_`.
+- After creation, the portal shows a prefix-and-suffix
+  preview only (e.g., `fy_pat_AbCd…XyZ9`). The full
+  token value is not retrievable.
+- Under the hood the platform stores a peppered hash, not
+  the token itself. There is no "show token" button.
+
+## Hard refusals
+
+API tokens are deliberately weaker than a human admin
+session. The four refusals (also stated in the
+[authentication index](/docs/auth)):
+
+- A token **cannot install** an extension.
+- A token **cannot mint** another API token.
+- A token **cannot revoke other** API tokens.
+- A token **cannot uninstall** an extension.
+
+A leaked token therefore cannot permanently graft itself
+into the tenant. The refusals are enforced at the API
+layer; a token-authenticated request to a refusal path
+returns 403 immediately.
+
+## Revocation
+
+Revoke a token from **Settings → Tokens → Revoke**, or
+hit `DELETE /api/v1/tenant/api-tokens/:id` from a human
+admin session. Revocation is immediate — the next request
+authenticating with the revoked token returns 401.
+
+## Rotation pattern
+
+Scheduled rotation isn't supported today. The pattern
+that works:
+
+1. From a human admin session, mint a new token with the
+   same scope set.
+2. Deploy the new token to your CI secret store.
+3. Confirm CI jobs are passing with the new token.
+4. Revoke the old token.
+
+Plan a maintenance window if your CI is single-track —
+between step 2 and step 4 either token authenticates.
+
+## REST surface
+
+- `GET /api/v1/tenant/api-tokens` — List active and revoked tokens (prefix-and-suffix preview only).
+- `POST /api/v1/tenant/api-tokens` — Mint a new token. The response body contains the full token value **once**.
+- `DELETE /api/v1/tenant/api-tokens/:id` — Revoke a token. Effect is immediate.
+
+The mint and revoke endpoints require a human admin
+session — calling them with another API token returns 403
+(the "cannot mint, cannot revoke other" refusals above).
+
+## Walk-through
+
+For an end-to-end "mint → curl → revoke" walkthrough in a
+real CI shell, see
+[CI scripting](/docs/recipes/ci-scripting). This page is
+the reference; the recipe is the walkthrough.
+
+## What's not in API tokens today
+
+- **Scheduled rotation** — the platform auto-rotates on a
+  cadence and emails you the new value.
+- **Token expiry windows** — set a hard expiry at mint
+  time.
+- **Scope-narrowing without revocation** — edit an
+  existing token's scopes in place.
+
+## See also
+
+- [Authentication & Scopes](/docs/auth) — the token-layer
+  reference.
+- [Sign-in flows](/docs/auth/signin-flows) — the
+  short-lived human-session shape.
+- [CI scripting](/docs/recipes/ci-scripting) — the
+  walkthrough.
+
+---
+
+# SSO with WorkOS
+
+> When AuthKit is enabled on your account, sign-in goes through WorkOS. The tenant ↔ WorkOS Organization mirror, the sign-in path, invite acceptance, and the failure modes a tenant admin can hit.
+
+# SSO with WorkOS
+
+When AuthKit is enabled for your account, sign-in goes
+through a WorkOS-hosted page. This page is for the
+**tenant admin** — when AuthKit is on, what your team
+sees and how the FastYoke side mirrors the WorkOS side.
+
+If AuthKit is not enabled, your team uses the local +
+OTP paths in [Sign-in flows](/docs/auth/signin-flows)
+instead. Enabling AuthKit is an operator action — see
+the operator runbook at the bottom of this page.
+
+## The tenant ↔ WorkOS Organization mirror
+
+Every FastYoke tenant with AuthKit enabled maps **1:1**
+to a **WorkOS Organization**. The platform sets up the
+mirror on first sign-in; tenant admins don't manage the
+WorkOS side directly.
+
+A consequence: changes that affect membership
+(invites, removals) take effect on both sides. The
+platform writes through to WorkOS on accept/remove so
+the two never drift.
+
+## The sign-in path
+
+1. A user opens the FastYoke sign-in page.
+2. The page calls `GET /auth/authkit/signin`, which
+   redirects to a WorkOS-hosted page.
+3. WorkOS authenticates the user against whatever
+   identity provider is wired to the Organization
+   (Okta, Google, Microsoft, etc.).
+4. WorkOS redirects back to
+   `GET /auth/authkit/callback` with a code.
+5. The platform exchanges the code, mints a tenant JWT
+   with the user's `tenant_id` and `role`, and lands
+   the user on the admin shell.
+
+The local-password path is bypassed entirely when
+AuthKit is on. Users who only had a password before
+should expect their old credentials to stop working at
+cutover.
+
+## Inviting a user when SSO is on
+
+Invites work the same way they always have, with one
+addition: when the invitee accepts, they're added to
+both the FastYoke tenant **and** the WorkOS
+Organization. Removing a member from the FastYoke
+tenant removes them from the WorkOS Organization too.
+
+The platform never asks you to add a user on the WorkOS
+side separately. Your only management surface is the
+FastYoke tenant — the mirror keeps WorkOS in sync.
+
+## Failure modes a tenant admin can hit
+
+- **"no active tenant for your WorkOS organization."**
+  The WorkOS Organization exists but its FastYoke
+  tenant binding is broken. The most common cause is a
+  tenant that was archived after enablement. Contact
+  platform support; the fix is operator-side, not
+  self-serve.
+- **First sign-in from a brand-new domain returns an
+  error.** Enablement isn't complete — the operator
+  may have flipped the feature flag without finishing
+  the WorkOS Organization setup. See the operator
+  runbook.
+- **An invited user accepts but doesn't see the
+  tenant.** The WorkOS mirror lagged. Sign out, sign
+  back in; the mirror finalizes on the next
+  authenticated request.
+
+## Operator enablement
+
+Enabling AuthKit for an account is an **operator
+action**, not a self-serve toggle. The full enablement
+sequence — feature flag, sandbox bake, prod flip,
+rollback — is documented in the internal operator
+runbook at
+`docs/operations/workos-rollout-runbook.md`. The runbook
+is the authoritative sequence; this customer-facing page
+deliberately doesn't republish it so the runbook and the
+docs can't drift out of sync.
+
+## REST surface (read-only for tenant admins)
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/auth/authkit/signin` | Sign-in entry. Sets the WorkOS state envelope and redirects to WorkOS. |
+| GET | `/auth/authkit/callback` | WorkOS redirect target. Mints a tenant JWT and lands the user on the admin shell. |
+
+Both endpoints are driven by the browser sign-in flow;
+tenant admins don't call them directly.
+
+## What's not in WorkOS SSO today
+
+- **SCIM provisioning** — push user/group updates from
+  the identity provider directly into the WorkOS
+  Organization.
+- **Per-tenant identity-provider configuration** from
+  inside the FastYoke admin shell (today the provider
+  is wired in WorkOS).
+- **AuthKit disablement self-serve** — turning AuthKit
+  off is also an operator action.
+
+## See also
+
+- [Sign-in flows](/docs/auth/signin-flows) — the
+  local + OTP paths when AuthKit is off.
+- [Authentication & Scopes](/docs/auth) — the JWT
+  shape AuthKit produces.
+- [Permissions](/docs/permissions) — the role assigned
+  at callback time.
+
+---
+
 # Authentication & Scopes
 
 > JWT shapes, platform vs tenant context, extension tokens, SSO.
@@ -5428,6 +5781,8 @@ caller can take within that database.
 
 A client that gets a 404 should re-check the id; a client that
 gets a 403 should re-check the role assignment.
+
+For API-token authentication, see [API tokens](/docs/auth/api-tokens) — the long-lived `fy_pat_` credential CI pipelines use to authenticate against the tenant API.
 
 ---
 
@@ -12805,6 +13160,8 @@ Yoke engagement. It is scoped to read engagement evidence,
 pull samples, and download the OSCAL and ZIP exports — nothing
 else. See [Auditor Room](/docs/compliance-yoke/auditor-room).
 
+Users are assigned roles at sign-in — see [Sign-in flows](/docs/auth/signin-flows) for the local, OTP, and AuthKit paths and what role each one establishes.
+
 ## Custom roles
 
 An admin opens **Users → Roles**, creates a new role, names it, checks
@@ -14223,6 +14580,8 @@ a FastYoke API token is a single-line bearer credential, and
 This recipe shows the three automations that come up most often:
 **minting a CI token**, **provisioning schemas from a checked-in
 JSON**, and **bulk-seeding entity records**.
+
+For the API-token lifecycle reference (format, scopes, hard refusals, rotation pattern), see [API tokens](/docs/auth/api-tokens). This recipe is the walkthrough; that page is the reference.
 
 ## Mint a tenant API token for CI
 

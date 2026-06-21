@@ -35,6 +35,8 @@ Yoke engagement. It is scoped to read engagement evidence,
 pull samples, and download the OSCAL and ZIP exports — nothing
 else. See [Auditor Room](/docs/compliance-yoke/auditor-room).
 
+Users are assigned roles at sign-in — see [Sign-in flows](/docs/auth/signin-flows) for the local, OTP, and AuthKit paths and what role each one establishes.
+
 ## Custom roles
 
 An admin opens **Users → Roles**, creates a new role, names it, checks

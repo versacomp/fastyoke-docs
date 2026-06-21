@@ -48,6 +48,9 @@
 
 ## Authentication
 
+- [Sign-in flows](https://www.fastyoke.io/docs/auth/signin-flows): The three sign-in paths today — local email-and-password, OTP step-up (SMS or email), and the WorkOS AuthKit hosted flow. How the platform picks between them, how to enroll a phone, and what to check when a sign-in doesn't work.
+- [API tokens](https://www.fastyoke.io/docs/auth/api-tokens): Long-lived fy_pat_ bearer tokens for CI pipelines and external integrations — minting, format, scopes, hard refusals, revocation, and the rotation pattern.
+- [SSO with WorkOS](https://www.fastyoke.io/docs/auth/sso-with-workos): When AuthKit is enabled on your account, sign-in goes through WorkOS. The tenant ↔ WorkOS Organization mirror, the sign-in path, invite acceptance, and the failure modes a tenant admin can hit.
 - [Authentication & Scopes](https://www.fastyoke.io/docs/auth): JWT shapes, platform vs tenant context, extension tokens, SSO.
 
 ## Billing
