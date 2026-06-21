@@ -3289,6 +3289,18 @@ creates the theme and installs the app/Yoke into your workspace; the draft is
 then marked **activated** and kept as a record. Activating does not delete the
 draft.
 
+## Archiving drafts
+
+To keep your Studio list focused, **archive** drafts you're done with — they
+move out of the **Active** list into an **Archived** view, but nothing is
+deleted. Archived drafts (and their version history) are kept and can be
+**restored** at any time.
+
+Activating a draft archives it automatically: once it's installed into your
+workspace its work is done, so it moves to **Archived** as a record. Switch to
+the **Archived** tab to restore a draft or, if you really don't need it,
+permanently delete it (which also removes its version history).
+
 ## Version history
 
 Studio keeps a history of your draft so you can checkpoint and roll back.
