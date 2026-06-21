@@ -111,6 +111,17 @@ the reference; the recipe is the walkthrough.
 - **Scope-narrowing without revocation** — edit an
   existing token's scopes in place.
 
+## Quick test token
+
+Need to try an API call right now? On the API tokens page, choose **Generate
+test token**. You'll get a ready-to-use bearer token (and a copy-paste `curl`
+example) valid for **one hour**.
+
+A test token acts as you — it can do whatever your account can — so treat it
+like a password and don't share it. It isn't stored anywhere: copy it when the
+dialog appears, and generate a new one whenever you need it. For long-lived
+credentials used by CI or an integration, create a named API token instead.
+
 ## See also
 
 - [Authentication & Scopes](/docs/auth) — the token-layer
