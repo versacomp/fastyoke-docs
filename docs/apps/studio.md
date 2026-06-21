@@ -34,6 +34,25 @@ creates the theme and installs the app/Yoke into your workspace; the draft is
 then marked **activated** and kept as a record. Activating does not delete the
 draft.
 
+## Version history
+
+Studio keeps a history of your draft so you can checkpoint and roll back.
+
+- **Save a snapshot** at any time from the **Version history** panel — give it a
+  name (for example, "before the pricing rework") and it captures the draft
+  exactly as it is right then.
+- Studio also snapshots **automatically when you activate** a draft, so every
+  activation has a matching record of what shipped.
+- **Restore** any snapshot to roll the working draft back to that point. Restore
+  is safe: before it replaces your current draft, Studio saves a backup snapshot
+  of the current state, so you can always undo a restore.
+- **Diff vs current** shows exactly which fields changed between a snapshot and
+  the draft you're editing now.
+- **Delete** snapshots you no longer need. Deleting a draft removes its history
+  along with it.
+
+Snapshots are visible to every admin in your workspace, the same as drafts.
+
 ## Who can use Studio
 
 Studio is available to workspace admins with app-install permission.
