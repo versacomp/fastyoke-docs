@@ -76,7 +76,4 @@ See [Lab M2 — Solution](/docs/training/labs/M2-token-walkthrough-solution).
 
 ## Next
 
-You've completed Week 1. The remaining labs (M3–M16) ship
-in subsequent PRs. Return to the
-[syllabus](/docs/training/syllabus) for the Week 2 reading
-list.
+[Lab M3 — Author a vehicle entity](/docs/training/labs/M3-entities).

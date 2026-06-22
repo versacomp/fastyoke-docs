@@ -105,8 +105,8 @@ endpoints with three different token types.
 **Assigned reading**
 - [/docs/entities](/docs/entities)
 
-**Lab** — Author a `vehicle` entity with annotations
-and exercise the full REST surface.
+**Lab** — [Author a `vehicle` entity with annotations
+and exercise the full REST surface.](/docs/training/labs/M3-entities)
 
 **Project deliverable** — A two-entity domain (e.g.,
 `patient` and `appointment`) with cross-referenced
@@ -132,8 +132,8 @@ fields.
 - [/docs/forms](/docs/forms)
 - [/docs/forms/tutorials/301-anti-abuse](/docs/forms/tutorials/301-anti-abuse)
 
-**Lab** — Build a public-link patient intake form with
-file-upload validation and rate-limit protection.
+**Lab** — [Build a public-link patient intake form with
+file-upload validation and rate-limit protection.](/docs/training/labs/M4-forms)
 
 **Project deliverable** — A submitted form that feeds
 into an FSM job created at submit time.

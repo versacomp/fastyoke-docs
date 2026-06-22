@@ -18491,8 +18491,8 @@ endpoints with three different token types.
 **Assigned reading**
 - [/docs/entities](/docs/entities)
 
-**Lab** — Author a `vehicle` entity with annotations
-and exercise the full REST surface.
+**Lab** — [Author a `vehicle` entity with annotations
+and exercise the full REST surface.](/docs/training/labs/M3-entities)
 
 **Project deliverable** — A two-entity domain (e.g.,
 `patient` and `appointment`) with cross-referenced
@@ -18518,8 +18518,8 @@ fields.
 - [/docs/forms](/docs/forms)
 - [/docs/forms/tutorials/301-anti-abuse](/docs/forms/tutorials/301-anti-abuse)
 
-**Lab** — Build a public-link patient intake form with
-file-upload validation and rate-limit protection.
+**Lab** — [Build a public-link patient intake form with
+file-upload validation and rate-limit protection.](/docs/training/labs/M4-forms)
 
 **Project deliverable** — A submitted form that feeds
 into an FSM job created at submit time.
@@ -19175,10 +19175,7 @@ See [Lab M2 — Solution](/docs/training/labs/M2-token-walkthrough-solution).
 
 ## Next
 
-You've completed Week 1. The remaining labs (M3–M16) ship
-in subsequent PRs. Return to the
-[syllabus](/docs/training/syllabus) for the Week 2 reading
-list.
+[Lab M3 — Author a vehicle entity](/docs/training/labs/M3-entities).
 
 ---
 
@@ -19299,6 +19296,444 @@ If yours looks meaningfully like this, you've done the lab.
 ## Back to the lab
 
 [Lab M2 — Token walkthrough](/docs/training/labs/M2-token-walkthrough).
+
+---
+
+# Lab M3 — Author a vehicle entity
+
+> Mint a fy_pat_ token, POST a vehicle schema with three annotated fields, exercise the full REST surface (POST, GET, PATCH, LIST, DELETE), and observe what happens to referencing FSM job rows on delete. End with a vehicle-crud.sh script that re-runs cleanly.
+
+# Lab M3 — Author a vehicle entity
+
+This lab pairs with **Module M3 — Entities** in the
+[syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Mint a `fy_pat_` token with `data:write` scope. POST a
+schema for the `vehicle` entity with three field-level
+annotations (a label, a single-select options list, and a
+numeric constraint). Exercise the full REST surface — POST
+a record, GET by id, GET list, PATCH a field, DELETE —
+then inspect what happens to FSM job rows that referenced
+the deleted record.
+
+## Before you begin
+
+- A FastYoke tenant you're an admin of.
+- A `fy_pat_` PAT with `data:write` scope. The
+  [M2 lab](/docs/training/labs/M2-token-walkthrough) shows
+  how to mint one.
+- `curl` on your shell.
+- About 30 minutes.
+
+## Steps
+
+1. **Author the `vehicle` schema** with three annotated
+   fields:
+   - `make` — label "Make", required string.
+   - `class` — label "Vehicle class", single-select with
+     options `Compact`, `Mid-size`, `Truck`.
+   - `mileage` — label "Mileage (km)", non-negative
+     integer.
+
+   POST it to `/api/v1/tenant/schemas`.
+
+   **Checkpoint:** `curl -i -H "Authorization: Bearer $FY_PAT" .../api/v1/tenant/schemas/vehicle` returns 200 with all three fields and their annotations.
+2. **Create a vehicle record** with one valid payload.
+   POST to `/api/v1/tenant/entities/vehicle` with an
+   `Idempotency-Key` header so a re-run is safe.
+
+   **Checkpoint:** response carries an `id`; `GET
+   /entities/vehicle/{id}` round-trips the payload.
+3. **PATCH the record.** Change `mileage` to a new value.
+
+   **Checkpoint:** PATCH returns 200; subsequent GET
+   shows the new value.
+4. **List the entity.** `GET /entities/vehicle?limit=10`.
+
+   **Checkpoint:** the list contains at least one entry
+   whose `id` matches what step 2 returned.
+5. **Trigger a workflow against the record.** Use the
+   `vehicle_lifecycle` schema (if pre-installed) or a
+   custom FSM you author here. Fire one transition.
+
+   **Checkpoint:** `event_log` for the resulting job
+   names the record id.
+6. **DELETE the record.**
+
+   **Checkpoint:** subsequent `GET /entities/vehicle/{id}`
+   returns 404; the FSM job row from step 5 retains the
+   record id as a historical reference (that's the
+   "what happens on delete" learning — the job log is
+   append-only).
+
+## What you'll have at the end
+
+A `vehicle-crud.sh` script demonstrating the five
+operations (schema POST + record POST + PATCH + LIST +
+DELETE) plus a one-line note documenting how delete
+interacts with referencing FSM job rows.
+
+## Stuck?
+
+See [Lab M3 — Solution](/docs/training/labs/M3-entities-solution).
+
+## Next
+
+[Lab M4 — Public-link form](/docs/training/labs/M4-forms).
+
+---
+
+# Lab M3 — Solution
+
+> Reference solution for Lab M3 — exact schema body, curl commands, expected JSON shapes per step, and a sample vehicle-crud.sh script.
+
+# Lab M3 — Solution
+
+This page is the **answer key** for
+[Lab M3](/docs/training/labs/M3-entities). Work the lab
+first — the friction of clicking through is intentional.
+
+## Answer per step
+
+### Step 1 — Author the schema
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "slug": "vehicle",
+    "fields": [
+      {"name": "make",    "type": "string",  "required": true,  "label": "Make"},
+      {"name": "class",   "type": "select",  "options": ["Compact","Mid-size","Truck"], "label": "Vehicle class"},
+      {"name": "mileage", "type": "integer", "min": 0,          "label": "Mileage (km)"}
+    ]
+  }' \
+  https://www.fastyoke.io/api/v1/tenant/schemas
+```
+
+Expected: `HTTP/2 200` and a body echoing the schema with
+the three annotated fields.
+
+### Step 2 — Create a record (idempotent)
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: csv-acme-001" \
+  -d '{"payload":{"make":"Acme","class":"Truck","mileage":12000}}' \
+  https://www.fastyoke.io/api/v1/tenant/entities/vehicle
+```
+
+Expected: `HTTP/2 200` with `{"id":"...","payload":{...}}`.
+Re-running the same request with the same `Idempotency-Key`
+returns the same `id`.
+
+### Step 3 — PATCH
+
+```bash
+curl -i -X PATCH \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"payload":{"mileage":13500}}' \
+  https://www.fastyoke.io/api/v1/tenant/entities/vehicle/$ID
+```
+
+Expected: `HTTP/2 200` with the new mileage in the
+response.
+
+### Step 4 — LIST
+
+```bash
+curl -i -H "Authorization: Bearer $FY_PAT" \
+  "https://www.fastyoke.io/api/v1/tenant/entities/vehicle?limit=10"
+```
+
+Expected: `HTTP/2 200` with a paginated body containing
+at least one record whose `id` matches step 2's response.
+
+### Step 5 — Transition
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"event":"<your-event-name>"}' \
+  https://www.fastyoke.io/api/v1/tenant/jobs/$ID/transition
+```
+
+Expected: `HTTP/2 200`. The `event_log` row for the
+resulting job carries the record id as its source.
+
+### Step 6 — DELETE + the FSM-job retention contract
+
+```bash
+curl -i -X DELETE \
+  -H "Authorization: Bearer $FY_PAT" \
+  https://www.fastyoke.io/api/v1/tenant/entities/vehicle/$ID
+```
+
+Expected: `HTTP/2 204`. A subsequent GET returns `HTTP/2
+404`. **However**, the FSM job row from step 5 still
+references the deleted entity id in `event_log`. The job
+log is append-only by design — deleting an entity does
+not erase its history. This is the load-bearing learning
+of step 6.
+
+## A sample `vehicle-crud.sh`
+
+```bash
+#!/usr/bin/env bash
+set -e
+
+# 1) Author the schema (idempotent at the slug level)
+curl -fsS -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d @schemas/vehicle.json \
+  https://www.fastyoke.io/api/v1/tenant/schemas
+
+# 2) Create a record (idempotent at the Idempotency-Key)
+ID=$(curl -fsS -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: csv-acme-001" \
+  -d '{"payload":{"make":"Acme","class":"Truck","mileage":12000}}' \
+  https://www.fastyoke.io/api/v1/tenant/entities/vehicle \
+  | jq -r .id)
+
+# 3) PATCH
+curl -fsS -X PATCH \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"payload":{"mileage":13500}}' \
+  https://www.fastyoke.io/api/v1/tenant/entities/vehicle/$ID
+
+# 4) LIST
+curl -fsS -H "Authorization: Bearer $FY_PAT" \
+  "https://www.fastyoke.io/api/v1/tenant/entities/vehicle?limit=10"
+
+# 5) DELETE
+curl -fsS -X DELETE \
+  -H "Authorization: Bearer $FY_PAT" \
+  https://www.fastyoke.io/api/v1/tenant/entities/vehicle/$ID
+```
+
+If yours looks meaningfully like this, you've done the lab.
+
+## Back to the lab
+
+[Lab M3 — Author a vehicle entity](/docs/training/labs/M3-entities).
+
+---
+
+# Lab M4 — Public-link form
+
+> Compose a 4-field public form, publish a tokenized public link, submit anonymously, observe the FSM job the platform creates at submit time, then trigger anti-abuse and observe the 429 + Retry-After response.
+
+# Lab M4 — Public-link form
+
+This lab pairs with **Module M4 — Forms** in the
+[syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Compose a 4-field public form (a text field, a
+single-select, a file upload, and a checkbox). Wire
+validation against a zod-mirrored schema. Publish a
+**public link**. Submit the form anonymously from a fresh
+browser session or `curl`. Observe the resulting FSM job
+created at submit time. Then trigger anti-abuse — submit
+too fast — and observe the rate-limit response.
+
+## Before you begin
+
+- A FastYoke tenant you're an admin of.
+- An admin session (forms are authored in the admin
+  shell, not via API token).
+- `curl` to exercise the public link and the anti-abuse
+  trigger.
+- About 45 minutes.
+
+## Steps
+
+1. **Compose the form** in the admin shell at
+   **Settings → Forms → New form**. Add four fields:
+   - A required text field (e.g., `name`).
+   - A single-select with two or three options
+     (e.g., `urgency`: low / medium / high).
+   - A file-upload field (allow common image types).
+   - A required checkbox (e.g., `consent`).
+
+   **Checkpoint:** the form preview in the admin shell
+   renders all four fields. The file-upload accepts a
+   sample image.
+2. **Publish the public link.** Use the **Publish**
+   action to mint a tokenized public URL of the shape
+   `https://www.fastyoke.io/myform/<token>`.
+
+   **Checkpoint:** opening the URL in a fresh incognito
+   window renders the form without an auth prompt.
+3. **Submit the form anonymously.** Either fill it in
+   the browser, or `curl` against
+   `/api/v1/public/forms/<token>/submit` with a
+   multipart body (see the solution page for the exact
+   shape).
+
+   **Checkpoint:** the submission returns `200` with a
+   `submission_id`. The form's submission view in the
+   admin shell shows the new row.
+4. **Inspect the FSM job created at submit time.** Many
+   forms wire a workflow trigger; if your form does,
+   the platform creates a job at submission.
+
+   **Checkpoint:** `GET /api/v1/tenant/jobs` (with an
+   admin session JWT — the test-token route works for
+   convenience) lists a new job whose source names
+   your form submission.
+5. **Trigger anti-abuse.** From a shell, run a
+   10-iteration loop hitting the public submit endpoint
+   in under 30 seconds.
+
+   **Checkpoint:** at some point in the burst, the
+   submit response returns `429` with a `Retry-After`
+   header naming a seconds-to-wait value. The platform
+   rate-limited the public link.
+
+## What you'll have at the end
+
+A live public-link form URL, a verified submission, a
+created FSM job, and a captured `429` response
+demonstrating the anti-abuse trigger.
+
+## Stuck?
+
+See [Lab M4 — Solution](/docs/training/labs/M4-forms-solution).
+
+## Next
+
+You've completed Week 2. Lab M5 ships in the Week 3 lab
+pack PR. Return to the
+[syllabus](/docs/training/syllabus) for the Week 3
+reading list.
+
+---
+
+# Lab M4 — Solution
+
+> Reference solution for Lab M4 — sample form schema, exact public-submit curl with multipart body, FSM job inspection, and the 10-iteration anti-abuse loop with expected 429 + Retry-After.
+
+# Lab M4 — Solution
+
+This page is the **answer key** for
+[Lab M4](/docs/training/labs/M4-forms). Work the lab
+first — the friction of clicking through is intentional.
+
+## Answer per step
+
+### Step 1 — Form schema shape
+
+In the admin shell at **Settings → Forms → New form**,
+the field definitions for a sample patient-intake form:
+
+```json
+{
+  "title": "Patient intake",
+  "fields": [
+    {"name": "name",    "type": "text",     "required": true},
+    {"name": "urgency", "type": "select",   "options": ["low","medium","high"]},
+    {"name": "scan",    "type": "file",     "accept": ["image/png","image/jpeg"]},
+    {"name": "consent", "type": "checkbox", "required": true}
+  ]
+}
+```
+
+Forms validate submissions against a **zod-mirrored**
+schema — the same shape the admin-shell frontend uses
+client-side becomes the server-side validator on
+submit. One source of truth across both sides.
+
+### Step 2 — Publish + the public URL
+
+After saving the form draft, the **Publish** action
+returns a tokenized URL of the shape
+`https://www.fastyoke.io/myform/<token>`. Opening it in
+incognito loads the form without an auth prompt.
+
+### Step 3 — Submit anonymously via curl
+
+```bash
+curl -i -X POST \
+  -F 'name=Jane Doe' \
+  -F 'urgency=medium' \
+  -F 'scan=@./sample.png' \
+  -F 'consent=true' \
+  https://www.fastyoke.io/api/v1/public/forms/<token>/submit
+```
+
+Expected: `HTTP/2 200` with a JSON body containing
+`submission_id`. The admin shell's submission view shows
+the new row immediately.
+
+### Step 4 — Inspect the FSM job
+
+```bash
+curl -i -H "Authorization: Bearer $FY_TEST_TOKEN" \
+  "https://www.fastyoke.io/api/v1/tenant/jobs?limit=5"
+```
+
+Expected: `HTTP/2 200`. The most recent job entry in the
+response has a `source` field (or equivalent) that names
+your form submission's id.
+
+The form-to-FSM wiring lives in the form definition;
+forms can either land a submission as data only or
+trigger a workflow at submit. The trigger fires
+synchronously inside the submit handler, so the job
+exists by the time the 200 returns.
+
+### Step 5 — Anti-abuse trigger
+
+```bash
+for i in {1..10}; do
+  curl -fsS -i -X POST \
+    -F 'name=spam' -F 'urgency=high' -F 'consent=true' \
+    https://www.fastyoke.io/api/v1/public/forms/<token>/submit \
+    | head -n 3
+  echo
+done
+```
+
+After a few iterations the platform's rate limiter trips:
+
+```
+HTTP/2 429
+Retry-After: 30
+content-type: application/json
+
+{"error":"rate_limited"}
+```
+
+The `Retry-After` value is in seconds. The exact
+threshold may vary by tenant; this is intentionally not
+pinned by invariant — what's pinned is the
+`429 + Retry-After` contract.
+
+## A note on the public-link auth model
+
+Public-link forms are authenticated by the **token in
+the URL**, not by a session or a PAT. The token is
+tenant-scoped, form-scoped, and revocable from the
+admin shell. The platform never trusts a `tenant_id`
+the submitter supplies; it derives the tenant from the
+token's lookup row.
+
+## Back to the lab
+
+[Lab M4 — Public-link form](/docs/training/labs/M4-forms).
 
 ---
 
