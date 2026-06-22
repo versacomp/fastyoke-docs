@@ -163,8 +163,8 @@ into an FSM job created at submit time.
 **Assigned reading**
 - [/docs/workflows](/docs/workflows)
 
-**Lab** — Author a 5-state lifecycle for a service
-ticket with JSONLogic guards on each transition.
+**Lab** — [Author a 5-state lifecycle for a service
+ticket with JSONLogic guards on each transition.](/docs/training/labs/M5-fsm-authoring)
 
 **Project deliverable** — An FSM schema with three
 guard expressions and a hand-traced sample run.
@@ -189,9 +189,9 @@ guard expressions and a hand-traced sample run.
 **Assigned reading**
 - [/docs/jobs](/docs/jobs)
 
-**Lab** — Override one job to a terminal state using
+**Lab** — [Override one job to a terminal state using
 the admin endpoint, then inspect the resulting event_log
-row.
+row.](/docs/training/labs/M6-jobs)
 
 **Project deliverable** — A job lifecycle screenshot
 including a self-loop transition and a successful

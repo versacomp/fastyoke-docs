@@ -266,6 +266,10 @@
 - [Lab M3 — Solution](https://www.fastyoke.io/docs/training/labs/M3-entities-solution): Reference solution for Lab M3 — exact schema body, curl commands, expected JSON shapes per step, and a sample vehicle-crud.sh script.
 - [Lab M4 — Public-link form](https://www.fastyoke.io/docs/training/labs/M4-forms): Compose a 4-field public form, publish a tokenized public link, submit anonymously, observe the FSM job the platform creates at submit time, then trigger anti-abuse and observe the 429 + Retry-After response.
 - [Lab M4 — Solution](https://www.fastyoke.io/docs/training/labs/M4-forms-solution): Reference solution for Lab M4 — sample form schema, exact public-submit curl with multipart body, FSM job inspection, and the 10-iteration anti-abuse loop with expected 429 + Retry-After.
+- [Lab M5 — FSM authoring](https://www.fastyoke.io/docs/training/labs/M5-fsm-authoring): Author a 5-state service-ticket FSM with three JSONLogic guards. POST it. Attempt a transition the guard should refuse and observe the 422. Hand-trace one full run from submitted through resolved.
+- [Lab M5 — Solution](https://www.fastyoke.io/docs/training/labs/M5-fsm-authoring-solution): Reference solution for Lab M5 — exact schema body with three JSONLogic guards, sample 422 + 200 transition responses, and a sample hand-trace.
+- [Lab M6 — Jobs](https://www.fastyoke.io/docs/training/labs/M6-jobs): Drive a job through the M5 schema, add a self-loop transition for an audit event, fire the admin cancel override, inspect both event_log rows (self-loop + override).
+- [Lab M6 — Solution](https://www.fastyoke.io/docs/training/labs/M6-jobs-solution): Reference solution for Lab M6 — exact PATCH that adds the self-loop, exact admin-cancel curl, sample event_log row JSON, and a sample job-lifecycle.sh script.
 
 ## Tutorials
 

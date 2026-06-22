@@ -108,7 +108,4 @@ See [Lab M4 — Solution](/docs/training/labs/M4-forms-solution).
 
 ## Next
 
-You've completed Week 2. Lab M5 ships in the Week 3 lab
-pack PR. Return to the
-[syllabus](/docs/training/syllabus) for the Week 3
-reading list.
+[Lab M5 — FSM authoring](/docs/training/labs/M5-fsm-authoring).

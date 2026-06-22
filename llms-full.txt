@@ -18582,8 +18582,8 @@ into an FSM job created at submit time.
 **Assigned reading**
 - [/docs/workflows](/docs/workflows)
 
-**Lab** — Author a 5-state lifecycle for a service
-ticket with JSONLogic guards on each transition.
+**Lab** — [Author a 5-state lifecycle for a service
+ticket with JSONLogic guards on each transition.](/docs/training/labs/M5-fsm-authoring)
 
 **Project deliverable** — An FSM schema with three
 guard expressions and a hand-traced sample run.
@@ -18608,9 +18608,9 @@ guard expressions and a hand-traced sample run.
 **Assigned reading**
 - [/docs/jobs](/docs/jobs)
 
-**Lab** — Override one job to a terminal state using
+**Lab** — [Override one job to a terminal state using
 the admin endpoint, then inspect the resulting event_log
-row.
+row.](/docs/training/labs/M6-jobs)
 
 **Project deliverable** — A job lifecycle screenshot
 including a self-loop transition and a successful
@@ -19712,10 +19712,7 @@ See [Lab M4 — Solution](/docs/training/labs/M4-forms-solution).
 
 ## Next
 
-You've completed Week 2. Lab M5 ships in the Week 3 lab
-pack PR. Return to the
-[syllabus](/docs/training/syllabus) for the Week 3
-reading list.
+[Lab M5 — FSM authoring](/docs/training/labs/M5-fsm-authoring).
 
 ---
 
@@ -19831,6 +19828,487 @@ token's lookup row.
 ## Back to the lab
 
 [Lab M4 — Public-link form](/docs/training/labs/M4-forms).
+
+---
+
+# Lab M5 — FSM authoring
+
+> Author a 5-state service-ticket FSM with three JSONLogic guards. POST it. Attempt a transition the guard should refuse and observe the 422. Hand-trace one full run from submitted through resolved.
+
+# Lab M5 — FSM authoring
+
+This lab pairs with **Module M5 — FSM authoring** in the
+[syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Author a 5-state service-ticket lifecycle with three
+JSONLogic guards on transitions. POST the schema. Attempt
+a transition the first guard should refuse and observe the
+422. PATCH the record so the guard passes, fire the
+transition. Repeat for the other two guards. Hand-trace
+the full run.
+
+## Before you begin
+
+- A FastYoke tenant you're an admin of.
+- A `fy_pat_` PAT with `workflow:admin` scope, OR the
+  one-hour test token from the M2 lab, OR an admin session.
+- `curl`.
+- About 45 minutes.
+
+## Or use Postman
+
+If you prefer a GUI, run the lab steps from Postman instead
+of `curl`. Each request has a **Tests** tab with the same
+checkpoint assertions the `curl` lab pins.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 3 — Core primitives II → M5
+— FSM authoring** folder, set the `FY_TOKEN` and `FY_ID`
+environment variables, then run each request in order. The
+422 refusal in Step 2 is **expected** — the Tests tab
+asserts a 422 status. Green checks mean the lab is working.
+
+The `curl` steps below remain the source of truth.
+
+## Steps
+
+1. **Author the schema** with five states and four
+   transitions:
+   - States: `submitted`, `triaged`, `in_progress`,
+     `awaiting_customer`, `resolved`.
+   - `submit_review`: `submitted → triaged`. No guard.
+   - `start_work`: `triaged → in_progress`. **Guard:**
+     `{ ">=": [{ "var": "priority" }, 2] }` — only fires
+     when `priority` is at least 2.
+   - `await_customer`: `in_progress → awaiting_customer`.
+     **Guard:** `{ "!=": [{ "var": "assignee" }, null] }`
+     — only fires when `assignee` is set.
+   - `resolve`: `awaiting_customer → resolved`. **Guard:**
+     `{ "==": [{ "var": "resolution" }, "fixed"] }` —
+     only fires when the payload's `resolution` is the
+     literal `"fixed"`.
+
+   POST it to `/api/v1/tenant/schemas`.
+
+   **Checkpoint:** `GET /schemas/service_ticket` returns
+   200 with all five states and three guards.
+2. **Create a record + job** with `priority: 1` (low).
+   Fire `submit_review`, then try `start_work`.
+
+   **Checkpoint:** `start_work` returns **422
+   Unprocessable Entity** with a guard-refusal body — the
+   priority is below the threshold.
+3. **PATCH the record to `priority: 2`** and re-fire
+   `start_work`.
+
+   **Checkpoint:** the transition now returns 200; the
+   job state advances to `in_progress`.
+4. **Attempt `await_customer` without setting
+   `assignee`.**
+
+   **Checkpoint:** 422 from the second guard.
+5. **PATCH `assignee`, fire `await_customer`.**
+
+   **Checkpoint:** 200; state advances to
+   `awaiting_customer`.
+6. **PATCH `resolution: "fixed"`, fire `resolve`.**
+
+   **Checkpoint:** 200; state is now `resolved`.
+7. **Hand-trace the run.** Write a one-page outline:
+   payload values at each step, which guard each
+   transition evaluated, which one refused first and why.
+
+   **Checkpoint:** your trace names all three guards by
+   purpose and identifies the first 422.
+
+## What you'll have at the end
+
+A `service-ticket.json` schema file and a one-page
+hand-traced sample run showing the three guard
+evaluations and the first 422.
+
+## Stuck?
+
+See [Lab M5 — Solution](/docs/training/labs/M5-fsm-authoring-solution).
+
+## Next
+
+[Lab M6 — Jobs](/docs/training/labs/M6-jobs).
+
+---
+
+# Lab M5 — Solution
+
+> Reference solution for Lab M5 — exact schema body with three JSONLogic guards, sample 422 + 200 transition responses, and a sample hand-trace.
+
+# Lab M5 — Solution
+
+This page is the **answer key** for
+[Lab M5](/docs/training/labs/M5-fsm-authoring). Work the
+lab first — the friction of clicking through is
+intentional.
+
+## Answer per step
+
+### Step 1 — Author the schema
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "slug": "service_ticket",
+    "initial_state": "submitted",
+    "states": ["submitted","triaged","in_progress","awaiting_customer","resolved"],
+    "transitions": [
+      {"event":"submit_review",  "from":"submitted",         "to":"triaged"},
+      {"event":"start_work",     "from":"triaged",           "to":"in_progress",
+       "guard": {">=": [{"var": "priority"}, 2]}},
+      {"event":"await_customer", "from":"in_progress",       "to":"awaiting_customer",
+       "guard": {"!=": [{"var": "assignee"}, null]}},
+      {"event":"resolve",        "from":"awaiting_customer", "to":"resolved",
+       "guard": {"==": [{"var": "resolution"}, "fixed"]}}
+    ]
+  }' \
+  https://www.fastyoke.io/api/v1/tenant/schemas
+```
+
+Expected: `HTTP/2 200` with the full schema echoed back.
+
+### Step 2 — Refused first guard
+
+With a record at `priority: 1`:
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"event":"start_work"}' \
+  https://www.fastyoke.io/api/v1/tenant/jobs/$ID/transition
+```
+
+Expected:
+
+```
+HTTP/2 422
+content-type: application/json
+
+{"error":"guard_refused","event":"start_work","reason":"guard evaluated to false"}
+```
+
+### Steps 3–6 — Successful transitions
+
+PATCH the relevant payload field, re-fire. Each `200`
+response carries the new job state in the body. The
+sequence:
+
+| Step | PATCH | Event | Expected new state |
+|------|-------|-------|--------------------|
+| 3 | `priority: 2` | `start_work` | `in_progress` |
+| 5 | `assignee: "you@example.com"` | `await_customer` | `awaiting_customer` |
+| 6 | `resolution: "fixed"` | `resolve` | `resolved` |
+
+### Step 7 — Sample hand-trace
+
+> A new service ticket arrives at `priority: 1`. The
+> `submit_review` transition fires unconditionally (no
+> guard) — state advances to `triaged`. An attempt to fire
+> `start_work` next is refused with 422 because the
+> priority guard `priority >= 2` evaluates to false. We
+> PATCH `priority` to 2 and re-fire; the guard now passes
+> and the state advances to `in_progress`. We attempt
+> `await_customer` without an assignee — refused. We
+> PATCH `assignee` and fire — state advances to
+> `awaiting_customer`. We PATCH `resolution: "fixed"` and
+> fire `resolve`; the third guard passes and the state
+> advances to `resolved`. End-state reached after three
+> guard evaluations, one initial refusal each on guards 1
+> and 2, and a one-shot pass on guard 3.
+
+If your trace names all three guards by purpose and
+identifies the first 422, you've done the lab.
+
+## Why JSONLogic and not a host function?
+
+Guards are evaluated in a **sandbox**. No host syscalls,
+no time, no random, no I/O. The same payload + the same
+guard expression always produces the same result.
+That's the load-bearing property — replays during
+recovery, audits, or migrations all evaluate guards
+deterministically. A host function couldn't make that
+guarantee.
+
+## Back to the lab
+
+[Lab M5 — FSM authoring](/docs/training/labs/M5-fsm-authoring).
+
+---
+
+# Lab M6 — Jobs
+
+> Drive a job through the M5 schema, add a self-loop transition for an audit event, fire the admin cancel override, inspect both event_log rows (self-loop + override).
+
+# Lab M6 — Jobs
+
+This lab pairs with **Module M6 — Jobs** in the
+[syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Take the `service_ticket` schema from M5. Drive one job
+through two transitions. Add a **self-loop** transition
+for an audit event (`check_in` on `in_progress`). Fire it.
+Then use the admin cancel override endpoint to force the
+job to a terminal state, bypassing the remaining guards.
+Inspect both `event_log` rows.
+
+## Before you begin
+
+- A FastYoke tenant you're an admin of (admin role
+  required for the override).
+- An admin session JWT (or the M2 test token).
+- The `service_ticket` schema from M5 — or any FSM with at
+  least one state.
+- `curl` + `jq`.
+- About 30 minutes.
+
+## Or use Postman
+
+If you prefer a GUI, run the lab steps from Postman instead
+of `curl`. Each request has a **Tests** tab with the same
+checkpoint assertions the `curl` lab pins.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 3 — Core primitives II → M6
+— Jobs** folder, set the `FY_TOKEN` and `FY_ID` environment
+variables, then run each request in order. Step 6's Tests
+tab asserts the `event_log` response contains the
+`__admin_cancel__` event type — that confirms the override
+landed correctly.
+
+The `curl` steps below remain the source of truth.
+
+## Steps
+
+1. **Create a service-ticket record + job.** Fire
+   `submit_review`.
+
+   **Checkpoint:** `GET /jobs/$ID` shows the job in
+   `triaged`.
+2. **Add a self-loop transition to the schema.** PATCH
+   the schema to append a `check_in` transition where
+   `from == to == "in_progress"`. No guard.
+
+   **Checkpoint:** the updated schema lists the
+   self-loop.
+3. **Advance to `in_progress`.** PATCH the record's
+   `priority` to 2 and fire `start_work`.
+
+   **Checkpoint:** state is `in_progress`.
+4. **Fire the self-loop.** `POST /jobs/$ID/transition`
+   with `event: "check_in"`.
+
+   **Checkpoint:** 200; `GET /jobs/$ID` still shows
+   `in_progress` (state unchanged); a new `event_log`
+   row exists for the firing.
+5. **Use the admin cancel override.** `POST
+   /api/v1/tenant/jobs/$ID/cancel` with body
+   `{"target_state":"resolved","reason":"learner override
+   for the M6 lab"}`.
+
+   **Checkpoint:** 200; `GET /jobs/$ID` shows `resolved`;
+   the override bypassed both remaining guards.
+6. **Inspect the event_log.** Fetch `GET /jobs/$ID/events`.
+   Find the self-loop row and the override row.
+
+   **Checkpoint:** the self-loop row carries the
+   transition's event name (`check_in`); the override
+   row carries `event_type: "__admin_cancel__"`, your
+   `reason`, and the operator email as `actor`.
+
+## What you'll have at the end
+
+A `job-lifecycle.sh` script plus a JSON paste of the two
+key `event_log` rows showing the self-loop firing and
+the admin override.
+
+## Stuck?
+
+See [Lab M6 — Solution](/docs/training/labs/M6-jobs-solution).
+
+## Next
+
+You've completed Week 3. Lab M7 ships in the Week 4 lab
+pack PR. Return to the
+[syllabus](/docs/training/syllabus) for the Week 4
+reading list.
+
+---
+
+# Lab M6 — Solution
+
+> Reference solution for Lab M6 — exact PATCH that adds the self-loop, exact admin-cancel curl, sample event_log row JSON, and a sample job-lifecycle.sh script.
+
+# Lab M6 — Solution
+
+This page is the **answer key** for
+[Lab M6](/docs/training/labs/M6-jobs). Work the lab
+first — the friction of clicking through is intentional.
+
+## Answer per step
+
+### Step 2 — Add the self-loop transition
+
+PATCH the schema to append the `check_in` transition:
+
+```bash
+curl -i -X PATCH \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transitions": [
+      {"event":"submit_review",  "from":"submitted",         "to":"triaged"},
+      {"event":"start_work",     "from":"triaged",           "to":"in_progress",
+       "guard": {">=": [{"var": "priority"}, 2]}},
+      {"event":"await_customer", "from":"in_progress",       "to":"awaiting_customer",
+       "guard": {"!=": [{"var": "assignee"}, null]}},
+      {"event":"resolve",        "from":"awaiting_customer", "to":"resolved",
+       "guard": {"==": [{"var": "resolution"}, "fixed"]}},
+      {"event":"check_in",       "from":"in_progress",       "to":"in_progress"}
+    ]
+  }' \
+  https://www.fastyoke.io/api/v1/tenant/schemas/service_ticket
+```
+
+Expected `HTTP/2 200` with the updated schema.
+
+### Step 4 — Self-loop firing + event_log row
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"event":"check_in"}' \
+  https://www.fastyoke.io/api/v1/tenant/jobs/$ID/transition
+```
+
+Expected `HTTP/2 200`. The job's state remains
+`in_progress`. The resulting `event_log` row:
+
+```json
+{
+  "id": "evt_…",
+  "job_id": "job_…",
+  "event_type": "check_in",
+  "from_state": "in_progress",
+  "to_state": "in_progress",
+  "occurred_at": "2026-06-22T…"
+}
+```
+
+### Step 5 — Admin cancel override
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"target_state":"resolved","reason":"learner override for the M6 lab"}' \
+  https://www.fastyoke.io/api/v1/tenant/jobs/$ID/cancel
+```
+
+Expected `HTTP/2 200`. The job's state is now `resolved`.
+
+### Step 6 — Override event_log row
+
+```json
+{
+  "id": "evt_…",
+  "job_id": "job_…",
+  "event_type": "__admin_cancel__",
+  "from_state": "in_progress",
+  "to_state": "resolved",
+  "actor": "you@example.com",
+  "reason": "learner override for the M6 lab",
+  "occurred_at": "2026-06-22T…"
+}
+```
+
+## The override contract
+
+The admin cancel endpoint is an **out-of-band**
+administrative escape hatch. It:
+
+- Bypasses every guard on the transition graph.
+- Requires a non-empty `reason` (the audit-trail
+  contract).
+- Records `actor` (the operator email) on the event_log
+  row.
+- Is **never** used to model a normal lifecycle path —
+  that's what FSM transitions are for.
+
+See `/docs/jobs` for the platform-side override
+contract.
+
+## Sample `job-lifecycle.sh`
+
+```bash
+#!/usr/bin/env bash
+set -e
+
+# 1) submit_review (no guard)
+curl -fsS -X POST -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"event":"submit_review"}' \
+  https://www.fastyoke.io/api/v1/tenant/jobs/$ID/transition
+
+# 2) start_work (priority guard, after PATCHing priority to 2)
+curl -fsS -X PATCH -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"payload":{"priority":2}}' \
+  https://www.fastyoke.io/api/v1/tenant/entities/service_ticket/$REC_ID
+
+curl -fsS -X POST -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"event":"start_work"}' \
+  https://www.fastyoke.io/api/v1/tenant/jobs/$ID/transition
+
+# 3) check_in self-loop
+curl -fsS -X POST -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"event":"check_in"}' \
+  https://www.fastyoke.io/api/v1/tenant/jobs/$ID/transition
+
+# 4) admin override to resolved (bypasses the two remaining guards)
+curl -fsS -X POST -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"target_state":"resolved","reason":"learner override for the M6 lab"}' \
+  https://www.fastyoke.io/api/v1/tenant/jobs/$ID/cancel
+
+# 5) inspect the event_log
+curl -fsS -H "Authorization: Bearer $FY_PAT" \
+  https://www.fastyoke.io/api/v1/tenant/jobs/$ID/events | jq .
+```
+
+If yours looks meaningfully like this, you've done the
+lab.
+
+## Back to the lab
+
+[Lab M6 — Jobs](/docs/training/labs/M6-jobs).
 
 ---
 
