@@ -40,9 +40,9 @@ Every module follows the same five-section shape:
 - [/docs/](/docs/)
 - [/docs/developers/tenant-scoping](/docs/developers/tenant-scoping)
 
-**Lab** — Trace a tenant-scoped query through the
+**Lab** — [Trace a tenant-scoped query through the
 backend handler stack and identify each tenant_id
-checkpoint.
+checkpoint.](/docs/training/labs/M1-architecture-trace)
 
 **Project deliverable** — A one-page diagram of your
 target tenant's data-flow path, annotated with the
@@ -72,8 +72,8 @@ tenant_id checkpoints.
 - [/docs/auth/api-tokens](/docs/auth/api-tokens)
 - [/docs/auth/sso-with-workos](/docs/auth/sso-with-workos)
 
-**Lab** — Mint a one-hour test token, hit `/auth/me`,
-then mint a `fy_pat_` token and compare behavior.
+**Lab** — [Mint a one-hour test token, hit `/auth/me`,
+then mint a `fy_pat_` token and compare behavior.](/docs/training/labs/M2-token-walkthrough)
 
 **Project deliverable** — A `curl`-only authentication
 walkthrough script that hits three tenant-API

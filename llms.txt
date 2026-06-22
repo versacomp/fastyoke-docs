@@ -255,8 +255,13 @@
 ## Training
 
 - [Training](https://www.fastyoke.io/docs/training): A self-paced 8-week intensive curriculum that condenses a full college-semester sweep of the FastYoke platform into ~160 hours. Sixteen modules, one capstone, every platform pillar.
+- [About the labs](https://www.fastyoke.io/docs/training/labs): Hands-on lab exercises pinned to syllabus modules. Two labs per week through M16. This page documents the uniform six-section lab scaffold and the three-section solution scaffold every lab follows.
+- [Lab M1 — Trace a tenant-scoped query](https://www.fastyoke.io/docs/training/labs/M1-architecture-trace): Open the FastYoke backend source. Pick one tenant-scoped GET handler and trace tenant_id from JWT extraction through SqlitePool selection to the SQL statement. End with a one-page write-up of the full path.
 - [Syllabus](https://www.fastyoke.io/docs/training/syllabus): Sixteen modules across eight weeks. Each module has learning objectives, an assigned reading list cross-linked into the reference docs, a lab title, a project deliverable title, and three quiz topics. The capstone in Week 8 ships an end-to-end Tenant Yoke.
 - [Capstone](https://www.fastyoke.io/docs/training/capstone): The final integration project. Ship a working artifact that exercises ≥4 platform pillars and meets a five-category rubric. Default shape is an end-to-end Tenant Yoke; alternatives accepted by approval.
+- [Lab M1 — Solution](https://www.fastyoke.io/docs/training/labs/M1-architecture-trace-solution): Reference solution for Lab M1 — answers per step keyed to the lab's checkpoints.
+- [Lab M2 — Token walkthrough](https://www.fastyoke.io/docs/training/labs/M2-token-walkthrough): Mint a one-hour test token and a long-lived fy_pat_ token. Call the tenant API with each. Observe two hard-refusal cases. Capture the three working request shapes in a shell script.
+- [Lab M2 — Solution](https://www.fastyoke.io/docs/training/labs/M2-token-walkthrough-solution): Reference solution for Lab M2 — exact curl commands, expected response shapes, and the full auth-walkthrough.sh script.
 
 ## Tutorials
 

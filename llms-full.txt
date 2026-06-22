@@ -18237,6 +18237,155 @@ ship. Each item below is a deliberate follow-on PR:
 
 ---
 
+# About the labs
+
+> Hands-on lab exercises pinned to syllabus modules. Two labs per week through M16. This page documents the uniform six-section lab scaffold and the three-section solution scaffold every lab follows.
+
+# About the labs
+
+Labs are the hands-on companion to the
+[syllabus](/docs/training/syllabus). Each syllabus module has
+one lab; this PR ships Labs M1 and M2 for Week 1. The remaining
+labs (M3–M16) ship in subsequent PRs.
+
+## The uniform six-section lab scaffold
+
+Every lab page follows the same six sections. The
+content-invariant test pins these headings so future labs that
+drift fail CI.
+
+1. **What you'll do** — two or three sentences naming the
+   outcome.
+2. **Before you begin** — prerequisites the learner needs
+   before starting (a tenant they're an admin of, `curl`, a
+   local checkout of the FastYoke repo, Node 20+, etc.).
+3. **Steps** — numbered. Each step ends with a **verifiable checkpoint** — a single command the learner can run, with
+   the expected output shape stated explicitly. If the step
+   worked, the checkpoint says so.
+4. **What you'll have at the end** — the deliverable, named
+   concretely (a script file, a one-page diagram, a successful
+   `curl` round-trip).
+5. **Stuck?** — a one-line cross-link to the reference
+   solution page.
+6. **Next** — pointer to the next lab in syllabus order.
+
+## The three-section solution scaffold
+
+Reference solutions live on **separate pages**. The friction
+of clicking through is deliberate — the lab page does not
+inline answers.
+
+1. **Reveal warning** — "This page is the answer key. Work
+   the lab first; the friction of clicking through is
+   intentional."
+2. **Answer per step** — keyed by the lab's step numbers,
+   with the actual file paths, `curl` outputs, or expected
+   response shapes.
+3. **Back to the lab** — cross-link back so the learner can
+   resume.
+
+## Self-paced verifiability
+
+Same discipline as the [tutorials](/docs/tutorials): every step
+ends with a single command + expected output. A learner who
+worked the step can verify it at the moment, not at the very
+end. If the platform's contract ever changes, the
+content-invariant test catches the drift before the lab rots
+silently.
+
+## What's not in labs today
+
+- **Labs M3 through M16** — each week ships as its own PR
+  using this PR's pattern as the template.
+- **Capstone walkthrough** — a reference-solution example for
+  the capstone project. Separate PR.
+- **Per-lab sandbox environments** — learners work in their
+  own tenant; no platform-side sandbox provisioning.
+- **Auto-grading** — verification is by the learner running
+  documented checkpoints, not by a central grader.
+
+## See also
+
+- [Syllabus](/docs/training/syllabus) — the 16 modules these
+  labs are pinned to.
+- [Capstone](/docs/training/capstone) — the final integration
+  project.
+- [Tutorials](/docs/tutorials) — the 101/201/301 on-ramp
+  if you haven't worked it yet.
+
+---
+
+# Lab M1 — Trace a tenant-scoped query
+
+> Open the FastYoke backend source. Pick one tenant-scoped GET handler and trace tenant_id from JWT extraction through SqlitePool selection to the SQL statement. End with a one-page write-up of the full path.
+
+# Lab M1 — Trace a tenant-scoped query
+
+This lab pairs with **Module M1 — Platform architecture &
+multi-tenancy** in the [syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Open the FastYoke backend source. Pick one tenant-scoped REST
+handler (entities-list is the canonical example). Trace where
+`tenant_id` enters the request, where the per-tenant
+`SqlitePool` is selected, and whether the SQL statement
+filters by `tenant_id` explicitly or relies on the per-tenant
+DB shape alone. End with a one-paragraph or one-diagram
+write-up explaining the path.
+
+## Before you begin
+
+- A local checkout of the FastYoke backend, or comfort
+  reading source on GitHub.
+- `ripgrep` (`rg`) or `grep` for code search.
+- About 30 minutes of focused reading time.
+
+## Steps
+
+1. **Find a tenant-scoped REST handler.** Open
+   `backend/src/api/entities.rs` (or use
+   `rg "tenant_id" backend/src/api/`).
+   **Checkpoint:** name one handler that takes a
+   `CurrentUser` extractor and returns tenant data.
+2. **Identify where `tenant_id` enters.** The handler takes
+   `user: CurrentUser`. Trace the extractor in
+   `backend/src/auth.rs`.
+   **Checkpoint:** state where the `tenant_id` claim is read
+   from the JWT and how the extractor refuses if it's
+   missing.
+3. **Identify per-tenant `SqlitePool` selection.** The
+   handler calls `state.tenant_pool_manager.get_pool(...)`
+   (or similar) to acquire the per-tenant database.
+   **Checkpoint:** point at the line where the per-tenant
+   pool is selected by `tenant_id`.
+4. **Inspect the SQL.** Read the actual query the handler
+   issues.
+   **Checkpoint:** state whether the SQL `WHERE` clause
+   includes `tenant_id = ?` explicitly, or whether the
+   per-tenant DB makes that filter implicit. (Both can be
+   true depending on the table — that's the learning.)
+5. **Write up the trace.** One paragraph or a sketched
+   diagram describing the four checkpoints above for the
+   handler you chose.
+   **Checkpoint:** the write-up names all four points
+   (extractor, pool selection, SQL filter, schema scope).
+
+## What you'll have at the end
+
+A one-page write-up (text or diagram) of one tenant-scoped
+query's full path from JWT to SQL result.
+
+## Stuck?
+
+See [Lab M1 — Solution](/docs/training/labs/M1-architecture-trace-solution).
+
+## Next
+
+[Lab M2 — Token walkthrough](/docs/training/labs/M2-token-walkthrough).
+
+---
+
 # Syllabus
 
 > Sixteen modules across eight weeks. Each module has learning objectives, an assigned reading list cross-linked into the reference docs, a lab title, a project deliverable title, and three quiz topics. The capstone in Week 8 ships an end-to-end Tenant Yoke.
@@ -18277,9 +18426,9 @@ Every module follows the same five-section shape:
 - [/docs/](/docs/)
 - [/docs/developers/tenant-scoping](/docs/developers/tenant-scoping)
 
-**Lab** — Trace a tenant-scoped query through the
+**Lab** — [Trace a tenant-scoped query through the
 backend handler stack and identify each tenant_id
-checkpoint.
+checkpoint.](/docs/training/labs/M1-architecture-trace)
 
 **Project deliverable** — A one-page diagram of your
 target tenant's data-flow path, annotated with the
@@ -18309,8 +18458,8 @@ tenant_id checkpoints.
 - [/docs/auth/api-tokens](/docs/auth/api-tokens)
 - [/docs/auth/sso-with-workos](/docs/auth/sso-with-workos)
 
-**Lab** — Mint a one-hour test token, hit `/auth/me`,
-then mint a `fy_pat_` token and compare behavior.
+**Lab** — [Mint a one-hour test token, hit `/auth/me`,
+then mint a `fy_pat_` token and compare behavior.](/docs/training/labs/M2-token-walkthrough)
 
 **Project deliverable** — A `curl`-only authentication
 walkthrough script that hits three tenant-API
@@ -18859,6 +19008,297 @@ grader. Submit by:
   modules feeding into this.
 - [Training overview](/docs/training) — the framing
   of the program.
+
+---
+
+# Lab M1 — Solution
+
+> Reference solution for Lab M1 — answers per step keyed to the lab's checkpoints.
+
+# Lab M1 — Solution
+
+This page is the **answer key** for
+[Lab M1](/docs/training/labs/M1-architecture-trace). Work the
+lab first — the friction of clicking through is intentional.
+
+## Answer per step
+
+### Step 1 — A tenant-scoped REST handler
+
+The canonical entities-list handler lives in
+`backend/src/api/entities.rs`. The function signature
+(approximate) takes a `CurrentUser` extractor and returns a
+list of entity records for one schema. Other tenant-scoped
+handlers worth tracing: jobs (`backend/src/api/jobs.rs`),
+forms (`backend/src/api/forms.rs`), files
+(`backend/src/api/files.rs`).
+
+### Step 2 — Where `tenant_id` enters
+
+The `CurrentUser` extractor lives in
+`backend/src/auth.rs`. It reads the `Authorization: Bearer
+<jwt>` header, validates the JWT signature with the
+platform's secret, and parses the `tenant_id` claim out of
+the JWT body. If the JWT is missing, invalid, expired, or
+lacks a `tenant_id` claim, the extractor returns `401
+Unauthorized` and the handler never runs.
+
+A handler that wants to refuse any non-human session also
+calls `user.require_admin()` or `user.require_scope(...)` —
+those refusals fire `403 Forbidden`.
+
+### Step 3 — Per-tenant `SqlitePool` selection
+
+The handler reaches into `AppState` (the Axum-shared
+application state) and calls
+`state.tenant_pool_manager.get_pool(&user.tenant_id)` (or a
+similar accessor). The pool manager owns a map of
+`tenant_id → SqlitePool` and lazy-opens per-tenant DBs on
+first request. Every handler that touches tenant data
+acquires its pool by this path.
+
+### Step 4 — The SQL filter
+
+For tables in the **per-tenant database** (entities,
+jobs, forms, files): the per-tenant DB shape isolates rows
+by construction. The SQL filter often does NOT include
+`tenant_id = ?` because the DB itself is per-tenant.
+
+For tables in the **platform database** (audit log,
+marketplace entitlements, platform admins): every row
+carries an explicit `tenant_id` column AND every SQL
+statement filters on it. This is the documented exception
+to the prime directive — see
+[/docs/developers/tenant-scoping](/docs/developers/tenant-scoping).
+
+Both patterns enforce isolation. The platform-DB pattern is
+the more general one; the per-tenant-DB pattern is the
+optimization that keeps tenant data physically apart.
+
+### Step 5 — A sample write-up
+
+> A request to `GET /api/v1/tenant/entities/customer`
+> arrives at the entities-list handler. The `CurrentUser`
+> extractor reads the JWT, validates it, and parses the
+> `tenant_id` claim. The handler then calls
+> `state.tenant_pool_manager.get_pool(&user.tenant_id)` to
+> acquire the per-tenant SQLite pool. Because the `entity`
+> table lives in the per-tenant DB, the SQL statement
+> `SELECT * FROM entity WHERE schema_slug = ?` does not
+> name `tenant_id` — but isolation is guaranteed by the
+> per-tenant pool. The platform's prime directive holds
+> across both patterns.
+
+Compare to your own write-up. If your write-up named all
+four checkpoints (extractor, pool selection, SQL filter,
+schema scope), you've done the lab.
+
+## Back to the lab
+
+[Lab M1 — Trace a tenant-scoped query](/docs/training/labs/M1-architecture-trace).
+
+---
+
+# Lab M2 — Token walkthrough
+
+> Mint a one-hour test token and a long-lived fy_pat_ token. Call the tenant API with each. Observe two hard-refusal cases. Capture the three working request shapes in a shell script.
+
+# Lab M2 — Token walkthrough
+
+This lab pairs with **Module M2 — Auth & token layers** in
+the [syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Mint a one-hour test token and a long-lived `fy_pat_` token
+in your tenant. Call the tenant API with each. Then attempt
+the "hard refusal" cases (mint a new PAT from a PAT; mint a
+test token from a PAT). End with a shell script capturing
+the three working request shapes plus the two refusal
+observations as comments.
+
+## Before you begin
+
+- A FastYoke tenant you're an admin of.
+- `curl` on your shell.
+- About 20 minutes.
+
+## Steps
+
+1. **Mint a one-hour test token.** Open Settings →
+   Tokens → Generate test token. Copy the value into
+   `FY_TEST_TOKEN`.
+   **Checkpoint:** `curl -i -H "Authorization: Bearer
+   $FY_TEST_TOKEN" https://www.fastyoke.io/api/v1/tenant/api-tokens`
+   returns `HTTP/2 200` with a JSON list (may be empty).
+2. **Mint a `fy_pat_` token with `data:read` and
+   `data:write` scopes** from Settings → Tokens → New token.
+   Copy into `FY_PAT`.
+   **Checkpoint:** repeat the previous `curl` with
+   `$FY_PAT` — returns 200 with the same list.
+3. **Compare the two responses.** Both worked. But the
+   underlying authority is different.
+   **Checkpoint:** state which token mirrors a session and
+   which is an opaque scope-gated credential. (Answer:
+   the test token mirrors session; `fy_pat_` is
+   scope-gated.)
+4. **Attempt to mint a NEW `fy_pat_` from the existing
+   PAT.**
+   `curl -i -X POST -H "Authorization: Bearer $FY_PAT" -H
+   "Content-Type: application/json" -d
+   '{"name":"nope","scopes":["data:read"]}'
+   https://www.fastyoke.io/api/v1/tenant/api-tokens`.
+   **Checkpoint:** `HTTP/2 403` — one of the four
+   hard-refusal codes from
+   [/docs/auth/api-tokens#hard-refusals](/docs/auth/api-tokens#hard-refusals).
+5. **Attempt to mint a test token from the PAT.**
+   `curl -i -X POST -H "Authorization: Bearer $FY_PAT"
+   https://www.fastyoke.io/api/v1/tenant/api-tokens/test-token`.
+   **Checkpoint:** `HTTP/2 403` with
+   `delegated_credential_refused` in the body.
+6. **Capture working shapes in a script.** Write a
+   three-section `auth-walkthrough.sh` containing the
+   three working request shapes (test-token list, PAT
+   list, two refusal observations as comments).
+   **Checkpoint:** running the script end-to-end prints
+   the three results in order.
+
+## What you'll have at the end
+
+An `auth-walkthrough.sh` script you can re-run to
+demonstrate the three authentication paths and the two
+hard refusals.
+
+## Stuck?
+
+See [Lab M2 — Solution](/docs/training/labs/M2-token-walkthrough-solution).
+
+## Next
+
+You've completed Week 1. The remaining labs (M3–M16) ship
+in subsequent PRs. Return to the
+[syllabus](/docs/training/syllabus) for the Week 2 reading
+list.
+
+---
+
+# Lab M2 — Solution
+
+> Reference solution for Lab M2 — exact curl commands, expected response shapes, and the full auth-walkthrough.sh script.
+
+# Lab M2 — Solution
+
+This page is the **answer key** for
+[Lab M2](/docs/training/labs/M2-token-walkthrough). Work the
+lab first — the friction of clicking through is intentional.
+
+## Answer per step
+
+### Step 1 — Test-token list
+
+```bash
+curl -i \
+  -H "Authorization: Bearer $FY_TEST_TOKEN" \
+  https://www.fastyoke.io/api/v1/tenant/api-tokens
+```
+
+Expected:
+
+```
+HTTP/2 200
+content-type: application/json
+
+[]
+```
+
+(or a populated list if your tenant has previously-minted
+`fy_pat_` tokens).
+
+### Step 2 — PAT list
+
+Same request shape with `$FY_PAT` in place of `$FY_TEST_TOKEN`.
+Expected: `HTTP/2 200` and the same body.
+
+### Step 3 — Session vs. scope-gated
+
+The test token mirrors the admin session — it carries the
+same authority your interactive browser session does, time-
+boxed to one hour. The four "hard refusals" that bind
+`fy_pat_` tokens do NOT apply to test tokens.
+
+The `fy_pat_` token is scope-gated. It carries the explicit
+scope set you picked at mint time. It is subject to the
+four hard refusals (cannot install / uninstall extensions,
+cannot mint or revoke other PATs).
+
+### Step 4 — Refused PAT mint from a PAT
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"nope","scopes":["data:read"]}' \
+  https://www.fastyoke.io/api/v1/tenant/api-tokens
+```
+
+Expected:
+
+```
+HTTP/2 403
+content-type: application/json
+
+{"error":"cannot_mint_pat_from_pat"}
+```
+
+(Error code may vary slightly across versions; the 403 + a
+refusal code from the hard-refusal set is the contract.)
+
+### Step 5 — Refused test-token mint from a PAT
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  https://www.fastyoke.io/api/v1/tenant/api-tokens/test-token
+```
+
+Expected:
+
+```
+HTTP/2 403
+content-type: application/json
+
+{"error":"delegated_credential_refused"}
+```
+
+This is the anti-delegation refusal — a non-human session
+(another PAT, or even a test token) cannot mint a fresh
+test token. The minted JWT always traces back to a human
+admin sign-in.
+
+### Step 6 — A sample `auth-walkthrough.sh`
+
+```bash
+#!/usr/bin/env bash
+set -e
+
+# 1) Test-token list — short-lived session-mirroring JWT
+curl -fsS -H "Authorization: Bearer $FY_TEST_TOKEN" \
+  https://www.fastyoke.io/api/v1/tenant/api-tokens
+
+# 2) PAT list — long-lived scope-gated bearer
+curl -fsS -H "Authorization: Bearer $FY_PAT" \
+  https://www.fastyoke.io/api/v1/tenant/api-tokens
+
+# 3) Refusals (these run with `|| true` because they exit non-zero):
+# - Minting a PAT from a PAT returns 403 hard-refusal.
+# - Minting a test token from a PAT returns 403 delegated_credential_refused.
+```
+
+If yours looks meaningfully like this, you've done the lab.
+
+## Back to the lab
+
+[Lab M2 — Token walkthrough](/docs/training/labs/M2-token-walkthrough).
 
 ---
 
