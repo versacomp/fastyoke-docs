@@ -278,6 +278,7 @@
 - [Lab M3 — Solution](https://www.fastyoke.io/docs/training/labs/M3-entities-solution): Reference solution for Lab M3 — exact schema body, curl commands, expected JSON shapes per step, and a sample vehicle-crud.sh script.
 - [Lecture M6 — Jobs](https://www.fastyoke.io/docs/training/lectures/M6-jobs): Why the event log is append-only, what the admin cancel override actually bypasses, and when a self-loop transition is the right shape.
 - [Quiz M6 — Jobs](https://www.fastyoke.io/docs/training/quizzes/M6-quiz): 10 multiple-choice questions on the append-only event log, the admin cancel override, self-loops, and optimistic UI.
+- [Starter code](https://www.fastyoke.io/docs/training/starter-code): Skeleton scripts and JSON templates the labs reference — clone, set two env vars, run.
 - [Lab M4 — Public-link form](https://www.fastyoke.io/docs/training/labs/M4-forms): Compose a 4-field public form, publish a tokenized public link, submit anonymously, observe the FSM job the platform creates at submit time, then trigger anti-abuse and observe the 429 + Retry-After response.
 - [Lecture M7 — Pages & App Builder](https://www.fastyoke.io/docs/training/lectures/M7-pages-apps): What separates a Page from an App, the block-based composition model, and where the Advanced Builder adds LLM assistance.
 - [Quiz M7 — Pages & App Builder](https://www.fastyoke.io/docs/training/quizzes/M7-quiz): 10 multiple-choice questions on Pages vs Apps, the block catalog, theme inheritance, and the Advanced App Builder.

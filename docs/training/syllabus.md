@@ -14,6 +14,11 @@ Read the lecture before the lab; consult after.
 [/docs/training/quizzes](/docs/training/quizzes). Take the
 quiz the same day you finish the lab.
 
+**Starter code.** A small set of working scripts and JSON
+templates lives at [/docs/training/starter-code](/docs/training/starter-code).
+Parachute, not template — clone only when a step
+genuinely blocks you.
+
 Every module follows the same five-section shape:
 
 - **Learning objectives** — 3–5 verbs you'll be able to
