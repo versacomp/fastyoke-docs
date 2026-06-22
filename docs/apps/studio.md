@@ -46,6 +46,16 @@ workspace its work is done, so it moves to **Archived** as a record. Switch to
 the **Archived** tab to restore a draft or, if you really don't need it,
 permanently delete it (which also removes its version history).
 
+## Editing a published Yoke
+
+A Yoke you authored and activated can be re-opened and edited. From the
+**Logic Cores / Marketplace** detail panel of a Yoke you authored, choose
+**Edit** — Studio opens a fresh draft seeded with the Yoke's current design.
+When you save, the published Yoke is **updated in place** (a new version is
+recorded in its history, and the installed app refreshes to match). The
+edit draft stays in your **Active** list so you can keep refining and save
+again; archive it yourself once you're done.
+
 ## Version history
 
 Studio keeps a history of your draft so you can checkpoint and roll back.
