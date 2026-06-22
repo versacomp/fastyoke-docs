@@ -18758,9 +18758,7 @@ tenant.
 - [/docs/notifications](/docs/notifications)
 - [/docs/messaging](/docs/messaging)
 
-**Lab** — Subscribe to `job.transition`, fire one, and
-verify the HMAC end-to-end with three language
-samples.
+**Lab** — [Subscribe to `job.transition`, fire one, and verify the HMAC end-to-end with three language samples](/docs/training/labs/M11-webhooks).
 
 **Project deliverable** — A webhook receiver that
 verifies signature, deduplicates by delivery ID, and
@@ -18787,9 +18785,7 @@ handles a DLQ replay correctly.
 - [/docs/bulk-operations](/docs/bulk-operations)
 - [/docs/reports](/docs/reports)
 
-**Lab** — Bulk-edit 50 customer records, preview the
-diff, then commit; then bulk-delete and recover from
-the cascade.
+**Lab** — [Bulk-edit 50 customer records, preview the diff, then commit; then bulk-delete and recover from the cascade](/docs/training/labs/M12-bulk-ops-reports).
 
 **Project deliverable** — A dashboard for your domain
 with at least one bar and one line widget, and a
@@ -20978,10 +20974,7 @@ See [Lab M10 — Solution](/docs/training/labs/M10-marketplace-solution).
 
 ## Next
 
-You've completed Week 5. Lab M11 ships in the Week 6 lab
-pack PR. Return to the
-[syllabus](/docs/training/syllabus) for the Week 6
-reading list.
+[Lab M11 — Webhooks](/docs/training/labs/M11-webhooks).
 
 ---
 
@@ -21101,6 +21094,448 @@ contract details.
 ## Back to the lab
 
 [Lab M10 — Marketplace](/docs/training/labs/M10-marketplace).
+
+---
+
+# Lab M11 — Webhooks
+
+> Subscribe to job.transition, verify HMAC end-to-end on a receiver, force failures into the DLQ, then replay deliveries and observe dedup by delivery id.
+
+# Lab M11 — Webhooks
+
+This lab pairs with **Module M11 — Webhooks + Notifications +
+Messaging** in the [syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Subscribe to `job.transition` via `POST /webhooks`. Stand up a
+small HMAC-verifying receiver. Fire a transition on a job
+(reuse the `service_ticket` from M5/M6). Verify the HMAC on
+the receiver. Force a 500 to push deliveries into the DLQ.
+Hit `POST /webhooks/:id/replay-dlq` and observe that the
+platform redelivers with the same `X-FastYoke-Delivery` id —
+so your receiver can deduplicate cleanly.
+
+## Before you begin
+
+- A FastYoke tenant you're an admin of.
+- A `fy_pat_` PAT with `webhooks:admin` scope (or an admin
+  session JWT).
+- `curl` and `jq`.
+- A way to receive HTTPS — RequestBin, ngrok + a tiny Node
+  server, or `webhook.site`.
+- A job to drive — the `service_ticket` FSM from M5/M6 works,
+  or any FSM with at least one transition.
+- About 45 minutes.
+
+## Or use Postman
+
+If you prefer a GUI, run the lab steps from Postman instead
+of `curl`. Each request has a **Tests** tab with the same
+checkpoint assertions the `curl` lab pins.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 6 — Events, messaging, data ops → M11 — Webhooks** folder, set the `FY_TOKEN` and
+`FY_ID` environment variables, then run each request in order.
+Step 5's Tests tab asserts the replay-dlq response — that
+confirms the platform redrove the failed deliveries.
+
+The `curl` steps below remain the source of truth.
+
+## Steps
+
+1. **Subscribe to `job.transition`.**
+
+   ```bash
+   curl -i -X POST \
+     -H "Authorization: Bearer $FY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{"url":"https://your-receiver.example","events":["job.transition"],"description":"M11 lab"}' \
+     https://www.fastyoke.io/api/v1/tenant/webhooks
+   ```
+
+   **Checkpoint:** 200 with an `id` (the subscription id)
+   and a one-time-shown `signing_secret` — copy that into
+   `FY_SECRET` for HMAC verification.
+2. **Fire a transition on a job.**
+
+   ```bash
+   curl -i -X POST \
+     -H "Authorization: Bearer $FY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{"event":"submit_review"}' \
+     https://www.fastyoke.io/api/v1/tenant/jobs/$JOB_ID/transition
+   ```
+
+   **Checkpoint:** the receiver sees an HTTPS POST with an
+   `X-FastYoke-Signature` header and an `X-FastYoke-Delivery`
+   header. The JSON body's top-level `event` is
+   `job.transition`.
+3. **Verify the HMAC on the receiver.** Compute
+   `HMAC-SHA256(FY_SECRET, raw_body)` and compare to the
+   `sha256=…` value in `X-FastYoke-Signature`.
+
+   **Checkpoint:** the constant-time comparison matches.
+4. **Force a 500 into the DLQ.** Have your receiver return
+   `HTTP 500` for the next two transitions. Fire two more
+   transitions.
+
+   **Checkpoint:** `GET /webhooks/$SUB_ID/deliveries` shows
+   the two failed deliveries with attempt counters above 1.
+5. **Replay the DLQ.**
+
+   ```bash
+   curl -i -X POST -H "Authorization: Bearer $FY_PAT" \
+     https://www.fastyoke.io/api/v1/tenant/webhooks/$SUB_ID/replay-dlq
+   ```
+
+   **Checkpoint:** the receiver gets the two replayed
+   deliveries with the same `X-FastYoke-Delivery` ids they
+   carried originally — your receiver should treat the
+   second arrival as a no-op (dedup by delivery id).
+
+## What you'll have at the end
+
+A working receiver that verifies HMAC, deduplicates by
+`X-FastYoke-Delivery`, and survived a DLQ replay.
+
+## Stuck?
+
+See [Lab M11 — Solution](/docs/training/labs/M11-webhooks-solution).
+
+## Next
+
+[Lab M12 — Bulk ops & Reports](/docs/training/labs/M12-bulk-ops-reports).
+
+---
+
+# Lab M11 — Solution
+
+> Answer key for the M11 webhooks lab — exact curls, a Node HMAC verifier, the delivery-id dedup pattern, and notes on rotate-secret and the SSRF guard.
+
+# Lab M11 — Solution
+
+> **Reveal warning.** This page is the **answer key** for
+> [Lab M11 — Webhooks](/docs/training/labs/M11-webhooks).
+> Try each step on your own first; the friction is where the
+> learning lives.
+
+## Step 1 — Subscribe
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://your-receiver.example",
+    "events": ["job.transition"],
+    "description": "M11 lab"
+  }' \
+  https://www.fastyoke.io/api/v1/tenant/webhooks
+```
+
+Response:
+
+```json
+{
+  "id": "wh_abc123",
+  "url": "https://your-receiver.example",
+  "events": ["job.transition"],
+  "signing_secret": "whsec_...",
+  "status": "active",
+  "created_at": "2026-06-22T14:00:00Z"
+}
+```
+
+The `signing_secret` is shown **only once** — capture it
+into `FY_SECRET` immediately.
+
+## Step 3 — Verify the HMAC (Node)
+
+```js
+import crypto from "node:crypto";
+
+export function verify(rawBody, headerSig, secret) {
+  const expected =
+    "sha256=" +
+    crypto.createHmac("sha256", secret).update(rawBody).digest("hex");
+  // Always use timingSafeEqual to defeat trivial timing attacks.
+  return crypto.timingSafeEqual(
+    Buffer.from(expected),
+    Buffer.from(headerSig),
+  );
+}
+```
+
+The `rawBody` must be the **exact bytes** the platform sent
+— if your framework re-serializes the JSON, the
+`X-FastYoke-Signature` hash won't match.
+
+## Step 5 — Dedup by delivery id
+
+```js
+const seen = new Set();
+
+app.post("/webhook", (req, res) => {
+  const id = req.header("X-FastYoke-Delivery");
+  if (seen.has(id)) return res.status(200).send("dup"); // no-op
+  seen.add(id);
+  // process …
+  res.status(200).send("ok");
+});
+```
+
+In production, replace the in-memory `Set` with a TTL'd
+cache (Redis with an expiry of a few hours is the common
+shape).
+
+## Two operational notes
+
+- **Rotate-secret dual window.** When you call
+  `POST /webhooks/:id/rotate-secret`, both the previous
+  and new secrets verify during a configurable grace
+  window. Roll your receiver to the new secret before the
+  window closes.
+- **SSRF guard.** The platform refuses to dispatch to
+  non-HTTPS targets, RFC-1918 ranges, link-local, and IPv6
+  ULA. Refusals are counted separately and do **not** push
+  a subscription toward the 10-consecutive-failure
+  auto-pause threshold.
+
+## Back to the lab
+
+Return to [Lab M11 — Webhooks](/docs/training/labs/M11-webhooks).
+
+---
+
+# Lab M12 — Bulk ops & Reports
+
+> Bulk-edit then bulk-delete with cascade via REST preview/commit, then compose a dashboard with bar and line widgets and schedule a weekly digest.
+
+# Lab M12 — Bulk ops & Reports
+
+This lab pairs with **Module M12 — Bulk operations + Reports
+& dashboards** in the [syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Use the bulk-edit `preview` + `commit` REST endpoints to tag
+10+ vehicles. Use bulk-delete with `cascade` and inspect the
+cascade report. Then open the admin shell and compose a
+dashboard with one bar widget + one line widget. Schedule a
+weekly digest to your own email.
+
+## Before you begin
+
+- A FastYoke tenant you're an admin of.
+- A `fy_pat_` PAT with `data:write` scope (or an admin
+  session JWT).
+- At least 10+ `vehicle` records — if you don't have them,
+  loop M3's CRUD curls.
+- `curl` and `jq`.
+- About 30 minutes.
+
+## Or use Postman
+
+If you prefer a GUI, run the REST portion (Steps 1–2) from
+Postman instead of `curl`. Steps 3–5 are GUI work in the
+admin shell — they stay in this lab page.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 6 — Events, messaging, data
+ops → M12 — Bulk ops & Reports** folder, set the `FY_TOKEN`
+environment variable, then run **Step 1 — Preview** followed
+by **Step 2 — Commit**. The Step 1 Tests tab captures the
+`session_id` into the env so Step 2 can reference it.
+
+The `curl` steps below remain the source of truth.
+
+## Steps
+
+1. **Preview a bulk edit.**
+
+   ```bash
+   curl -i -X POST \
+     -H "Authorization: Bearer $FY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{"entity":"vehicle","filter":{"class":"Truck"},"patch":{"payload":{"audit_tag":"M12"}}}' \
+     https://www.fastyoke.io/api/v1/tenant/bulk/preview
+   ```
+
+   **Checkpoint:** 200 with a diff body listing each row's
+   id and the before/after value for the patched field.
+   **Nothing has been written yet** — preview is read-only.
+2. **Commit the bulk edit.**
+
+   ```bash
+   curl -i -X POST \
+     -H "Authorization: Bearer $FY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{"session_id":"<from preview response>"}' \
+     https://www.fastyoke.io/api/v1/tenant/bulk/commit
+   ```
+
+   **Checkpoint:** 200 with row-by-row outcomes.
+   `GET /entities/vehicle?class=Truck` returns the records
+   with `audit_tag: "M12"`.
+3. **Bulk-delete with cascade.** Pick a small set (e.g., 2
+   vehicles you don't need) and POST a bulk-delete with
+   `cascade: true`.
+
+   **Checkpoint:** the response carries a cascade report
+   listing which referencing rows were soft-deleted. FSM
+   job rows referencing the deleted vehicles retain their
+   historical id (the same retention contract M3
+   introduced).
+4. **Compose a dashboard.** Open **Admin → Reports → New
+   dashboard**. Add a **bar** widget showing vehicle count
+   grouped by `class`. Add a **line** widget showing
+   vehicle count grouped by week of `created_at`.
+
+   **Checkpoint:** both widgets render with your data.
+5. **Schedule a weekly digest.** Open **Reports → Digests
+   → New digest**. Select the dashboard, set `weekday: 0`
+   (Monday in the platform's convention), `hour_utc: 14`,
+   recipients = your own email.
+
+   **Checkpoint:** the digests list shows the new entry.
+   The next Monday at 14:00 UTC the platform emails you a
+   rendered snapshot.
+
+## What you'll have at the end
+
+A demonstrated bulk preview-then-commit cycle, a bulk-delete
+whose cascade you observed, a dashboard with one bar + one
+line widget, and a weekly digest scheduled to your inbox.
+
+## Stuck?
+
+See [Lab M12 — Solution](/docs/training/labs/M12-bulk-ops-reports-solution).
+
+## Next
+
+You've completed Week 6. Lab M13 ships in the Week 7 lab
+pack PR. Return to the [syllabus](/docs/training/syllabus)
+for the Week 7 reading list.
+
+---
+
+# Lab M12 — Solution
+
+> Answer key for the M12 bulk ops & reports lab — exact preview/commit/cascade curls, dashboard composer menu paths, digest scheduling fields, and the common gotchas.
+
+# Lab M12 — Solution
+
+> **Reveal warning.** This page is the **answer key** for
+> [Lab M12 — Bulk ops & Reports](/docs/training/labs/M12-bulk-ops-reports).
+> Try each step on your own first; the friction is where the
+> learning lives.
+
+## Step 1 — Preview response shape
+
+```json
+{
+  "session_id": "blk_abc123",
+  "entity": "vehicle",
+  "matched": 12,
+  "diff": [
+    { "id": "veh_001", "payload.audit_tag": [null, "M12"] },
+    { "id": "veh_002", "payload.audit_tag": [null, "M12"] }
+  ],
+  "expires_at": "2026-06-22T15:00:00Z"
+}
+```
+
+The diff arrays are `[before, after]`. `session_id` is your
+handle for the commit — it expires after about 15 minutes.
+
+## Step 2 — Commit
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"session_id":"blk_abc123"}' \
+  https://www.fastyoke.io/api/v1/tenant/bulk/commit
+```
+
+Response:
+
+```json
+{
+  "session_id": "blk_abc123",
+  "written": 12,
+  "failed": 0,
+  "rows": [ { "id": "veh_001", "status": "written" } ]
+}
+```
+
+## Step 3 — Cascade
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"entity":"vehicle","ids":["veh_001","veh_002"],"cascade":true}' \
+  https://www.fastyoke.io/api/v1/tenant/bulk/delete
+```
+
+Response:
+
+```json
+{
+  "deleted": 2,
+  "cascade": [
+    { "table": "service_job", "rows_affected": 5, "mode": "soft-delete" }
+  ]
+}
+```
+
+`cascade: true` opts in per-call — leave it off and the
+platform returns 409 if anything references the rows.
+
+## Step 4 — Dashboard composer menu paths
+
+- **Admin → Reports → New dashboard.**
+- **Add widget → Bar.** Source: entity `vehicle`. Group by:
+  `class`. Aggregate: count.
+- **Add widget → Line.** Source: entity `vehicle`. Time
+  bucket: week. X: `created_at`. Aggregate: count.
+
+## Step 5 — Digest scheduling fields
+
+| Field        | Value           | Note                                          |
+| ------------ | --------------- | --------------------------------------------- |
+| `weekday`    | `0`             | Monday in the platform's convention (Mon=0, not Sun=0). |
+| `hour_utc`   | `14`            | UTC, **not** your local time.                 |
+| `recipients` | `[your_email]`  | Comma-list supported.                         |
+
+## Three common gotchas
+
+- **Preview is read-only.** Re-running it shows the same
+  diff — the write is the `commit`.
+- **Cascade is per-call.** Off by default; bulk-delete
+  returns 409 if anything references the rows and you
+  forgot to opt in.
+- **Dashboard aggregates compute on demand.** If a widget
+  looks stale right after a bulk edit, refresh it — there's
+  no async invalidation in v1.
+
+## Back to the lab
+
+Return to [Lab M12 — Bulk ops & Reports](/docs/training/labs/M12-bulk-ops-reports).
 
 ---
 

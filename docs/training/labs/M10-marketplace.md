@@ -123,7 +123,4 @@ See [Lab M10 — Solution](/docs/training/labs/M10-marketplace-solution).
 
 ## Next
 
-You've completed Week 5. Lab M11 ships in the Week 6 lab
-pack PR. Return to the
-[syllabus](/docs/training/syllabus) for the Week 6
-reading list.
+[Lab M11 — Webhooks](/docs/training/labs/M11-webhooks).

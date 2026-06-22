@@ -278,6 +278,10 @@
 - [Lab M9 — Solution](https://www.fastyoke.io/docs/training/labs/M9-extensions-solution): Reference solution for Lab M9 — exact CLI output, manifest walkthrough, SDK call shape, and four common gotchas around signing, JWT TTL, and hard refusals.
 - [Lab M10 — Marketplace](https://www.fastyoke.io/docs/training/labs/M10-marketplace): Install Yoke Ledger via REST, inspect what it seeds (owned_schemas + default Chart of Accounts), uninstall, verify the retention contract (rows survive), then author a Tenant Yoke via clone-from-source.
 - [Lab M10 — Solution](https://www.fastyoke.io/docs/training/labs/M10-marketplace-solution): Reference solution for Lab M10 — exact REST commands per step, the retention-contract explanation, and gotchas around clone-from-source semantics and owned_schemas uniqueness.
+- [Lab M11 — Webhooks](https://www.fastyoke.io/docs/training/labs/M11-webhooks): Subscribe to job.transition, verify HMAC end-to-end on a receiver, force failures into the DLQ, then replay deliveries and observe dedup by delivery id.
+- [Lab M11 — Solution](https://www.fastyoke.io/docs/training/labs/M11-webhooks-solution): Answer key for the M11 webhooks lab — exact curls, a Node HMAC verifier, the delivery-id dedup pattern, and notes on rotate-secret and the SSRF guard.
+- [Lab M12 — Bulk ops & Reports](https://www.fastyoke.io/docs/training/labs/M12-bulk-ops-reports): Bulk-edit then bulk-delete with cascade via REST preview/commit, then compose a dashboard with bar and line widgets and schedule a weekly digest.
+- [Lab M12 — Solution](https://www.fastyoke.io/docs/training/labs/M12-bulk-ops-reports-solution): Answer key for the M12 bulk ops & reports lab — exact preview/commit/cascade curls, dashboard composer menu paths, digest scheduling fields, and the common gotchas.
 
 ## Tutorials
 

@@ -339,9 +339,7 @@ tenant.
 - [/docs/notifications](/docs/notifications)
 - [/docs/messaging](/docs/messaging)
 
-**Lab** — Subscribe to `job.transition`, fire one, and
-verify the HMAC end-to-end with three language
-samples.
+**Lab** — [Subscribe to `job.transition`, fire one, and verify the HMAC end-to-end with three language samples](/docs/training/labs/M11-webhooks).
 
 **Project deliverable** — A webhook receiver that
 verifies signature, deduplicates by delivery ID, and
@@ -368,9 +366,7 @@ handles a DLQ replay correctly.
 - [/docs/bulk-operations](/docs/bulk-operations)
 - [/docs/reports](/docs/reports)
 
-**Lab** — Bulk-edit 50 customer records, preview the
-diff, then commit; then bulk-delete and recover from
-the cascade.
+**Lab** — [Bulk-edit 50 customer records, preview the diff, then commit; then bulk-delete and recover from the cascade](/docs/training/labs/M12-bulk-ops-reports).
 
 **Project deliverable** — A dashboard for your domain
 with at least one bar and one line widget, and a
