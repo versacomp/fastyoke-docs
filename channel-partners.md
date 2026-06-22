@@ -19,6 +19,8 @@ We're opening an early-access track for two audiences:
 If either of those is you, we'd love to talk.
 
 [partners@fastyoke.io](mailto:partners@fastyoke.io)
+
+Looking for hands-on implementation, not a reseller relationship? See [iNetko](/partners/inetko) — our first named Strategic Partner — for frontline support, sales engineering, implementation, and consulting.
 ::
 
 ::marketing-section{band="gray" maxWidth="3xl"}
