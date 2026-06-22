@@ -71,3 +71,5 @@ pages liberally — every mysterious word is a click.
 - [301 — Author an extension](/docs/tutorials/301-author-extension)
 - [Recipes](/docs/recipes) — single-task snippets.
 - [Developers](/docs/developers) — day-1 API invariants.
+- [Training](/docs/training) — the self-paced 8-week structured
+  curriculum (16 modules + capstone) for the full sweep.

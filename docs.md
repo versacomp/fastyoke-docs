@@ -157,6 +157,12 @@ Start with [Your first API integration](/docs/tutorials/101-first-integration)
   arrive on your receiver URL.
 ::
 
+::callout{type="tip" title="Ramping a developer end-to-end?"}
+See [Training](/docs/training) for the self-paced 8-week
+  intensive — 16 modules + capstone — covering every platform
+  pillar.
+::
+
 ## Versioning
 
 Docs follow the deployed platform — there is no multi-version sidebar.

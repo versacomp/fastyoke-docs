@@ -252,6 +252,12 @@
 - [Trust Center](https://www.fastyoke.io/docs/security/trust-center): How FastYoke protects your data — isolation, encryption, access control, auditability, availability, and our path to SOC 2.
 - [PII / SPI Field Encryption](https://www.fastyoke.io/docs/security/encryption): Tag entity-field annotations or form-field schemas with `is_pii` to encrypt their values at rest under a per-tenant key. Available as a $19/mo add-on at every tier.
 
+## Training
+
+- [Training](https://www.fastyoke.io/docs/training): A self-paced 8-week intensive curriculum that condenses a full college-semester sweep of the FastYoke platform into ~160 hours. Sixteen modules, one capstone, every platform pillar.
+- [Syllabus](https://www.fastyoke.io/docs/training/syllabus): Sixteen modules across eight weeks. Each module has learning objectives, an assigned reading list cross-linked into the reference docs, a lab title, a project deliverable title, and three quiz topics. The capstone in Week 8 ships an end-to-end Tenant Yoke.
+- [Capstone](https://www.fastyoke.io/docs/training/capstone): The final integration project. Ship a working artifact that exercises ≥4 platform pillars and meets a five-category rubric. Default shape is an end-to-end Tenant Yoke; alternatives accepted by approval.
+
 ## Tutorials
 
 - [Tutorials](https://www.fastyoke.io/docs/tutorials): End-to-end developer build flows. Mint a token, ship something live, with verifiable checkpoints at every step. Three tiers — 101 first contact, 201 production patterns, 301 extending the platform.

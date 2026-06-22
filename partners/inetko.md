@@ -27,6 +27,8 @@ operating your FastYoke deployment, this is the team to
 engage. Drop a note to
 [partners@fastyoke.io](mailto:partners@fastyoke.io) and
 we'll route you to the iNetko team.
+
+The [training syllabus](/docs/training/syllabus) is our recommended onboarding curriculum for Strategic Partner engineers — an 8-week self-paced sweep of every FastYoke platform pillar.
 ::
 
 ::marketing-section{band="gray" maxWidth="3xl"}
