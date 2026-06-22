@@ -73,7 +73,4 @@ See [Lab M8 — Solution](/docs/training/labs/M8-yoke-studio-solution).
 
 ## Next
 
-You've completed Week 4. Lab M9 ships in the Week 5 lab
-pack PR. Return to the
-[syllabus](/docs/training/syllabus) for the Week 5
-reading list.
+[Lab M9 — Extensions](/docs/training/labs/M9-extensions).

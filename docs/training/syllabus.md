@@ -278,8 +278,8 @@ from snapshot, deployed to your tenant.
 - [/docs/sdk](/docs/sdk)
 - [/docs/recipes/extension-authoring](/docs/recipes/extension-authoring)
 
-**Lab** — Sign and install the starter extension; verify
-it against the platform's signing roster.
+**Lab** — [Sign and install the starter extension; verify
+it against the platform's signing roster.](/docs/training/labs/M9-extensions)
 
 **Project deliverable** — A signed extension that
 fetches an entity count and renders it as a card in
@@ -306,9 +306,9 @@ the admin shell.
 - [/docs/marketplace/install-and-uninstall](/docs/marketplace/install-and-uninstall)
 - [/docs/marketplace/tenant-yokes](/docs/marketplace/tenant-yokes)
 
-**Lab** — Install Yoke Ledger, inspect the seeded
+**Lab** — [Install Yoke Ledger, inspect the seeded
 schemas and accounts, then uninstall and verify the
-data is retained.
+data is retained.](/docs/training/labs/M10-marketplace)
 
 **Project deliverable** — A Tenant Yoke you authored
 (cloned from any seed) installed into a sibling

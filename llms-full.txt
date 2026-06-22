@@ -18697,8 +18697,8 @@ from snapshot, deployed to your tenant.
 - [/docs/sdk](/docs/sdk)
 - [/docs/recipes/extension-authoring](/docs/recipes/extension-authoring)
 
-**Lab** — Sign and install the starter extension; verify
-it against the platform's signing roster.
+**Lab** — [Sign and install the starter extension; verify
+it against the platform's signing roster.](/docs/training/labs/M9-extensions)
 
 **Project deliverable** — A signed extension that
 fetches an entity count and renders it as a card in
@@ -18725,9 +18725,9 @@ the admin shell.
 - [/docs/marketplace/install-and-uninstall](/docs/marketplace/install-and-uninstall)
 - [/docs/marketplace/tenant-yokes](/docs/marketplace/tenant-yokes)
 
-**Lab** — Install Yoke Ledger, inspect the seeded
+**Lab** — [Install Yoke Ledger, inspect the seeded
 schemas and accounts, then uninstall and verify the
-data is retained.
+data is retained.](/docs/training/labs/M10-marketplace)
 
 **Project deliverable** — A Tenant Yoke you authored
 (cloned from any seed) installed into a sibling
@@ -20537,10 +20537,7 @@ See [Lab M8 — Solution](/docs/training/labs/M8-yoke-studio-solution).
 
 ## Next
 
-You've completed Week 4. Lab M9 ships in the Week 5 lab
-pack PR. Return to the
-[syllabus](/docs/training/syllabus) for the Week 5
-reading list.
+[Lab M9 — Extensions](/docs/training/labs/M9-extensions).
 
 ---
 
@@ -20608,6 +20605,502 @@ edit. Click through, and the draft reverts.
 ## Back to the lab
 
 [Lab M8 — Yoke Studio](/docs/training/labs/M8-yoke-studio).
+
+---
+
+# Lab M9 — Extensions
+
+> Scaffold a starter extension with fy ext init, wire one SDK route fetching the vehicle entity count, sign with fy ext sign, verify with fy ext verify, install via the admin shell, observe the card render in the tenant.
+
+# Lab M9 — Extensions
+
+This lab pairs with **Module M9 — Extensions** in the
+[syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Scaffold a starter extension with the SDK CLI. Wire one
+route that uses the SDK to fetch an entity count from the
+tenant API. Sign the bundle. Verify the signature against
+the platform's signing roster. Install into your tenant.
+Observe the card render in the admin shell.
+
+## Before you begin
+
+- SDK CLI installed. See [/docs/cli](/docs/cli) for install
+  options.
+- Node 20+.
+- A FastYoke tenant you're an admin of.
+- The `vehicle` entity from M3 (any entity works; this lab
+  uses `vehicle` as the demo target).
+- An extension-author signing keypair. The CLI generates
+  one on first `fy ext sign` if you don't have one.
+- About 45 minutes.
+
+## Or use Postman
+
+The extension JWT is minted by the platform at extension
+load time — there's no developer-side mint endpoint to
+call. Postman doesn't apply here. Run the CLI commands
+below and install through the admin shell.
+
+## Steps
+
+1. **Scaffold the starter project.**
+
+   ```bash
+   fy ext init my-counter
+   cd my-counter
+   npm install
+   ```
+
+   **Checkpoint:** the project builds and `npm run dev`
+   opens the local preview without errors.
+2. **Read the manifest.** Open `manifest.json`. Identify
+   the `required_scopes` field.
+
+   **Checkpoint:** name the scopes the starter manifest
+   requests. (Default: `data:read`.)
+3. **Wire one route to fetch entity count.** Edit
+   `src/CounterCard.tsx`. Use the SDK to call the entity
+   API:
+
+   ```tsx
+   import { useEffect, useState } from 'react';
+   import { useTenant, callTenantApi } from '@fastyoke/sdk';
+
+   export default function CounterCard() {
+     const tenant = useTenant();
+     const [count, setCount] = useState<number | null>(null);
+     useEffect(() => {
+       callTenantApi('/entities/vehicle?count=true')
+         .then(r => r.json())
+         .then(j => setCount(j.count));
+     }, []);
+     return (
+       <div className="card">
+         <h2>Vehicles in {tenant.name}</h2>
+         <p>{count ?? '…'}</p>
+       </div>
+     );
+   }
+   ```
+
+   **Checkpoint:** `npm run dev` shows the count rendering
+   in the local preview (the SDK dev server proxies the
+   tenant API).
+4. **Sign the bundle.**
+
+   ```bash
+   fy ext sign --keypair ~/.fastyoke/ext-keys
+   ```
+
+   **Checkpoint:** `bundle.tar.gz` and `bundle.sig` exist
+   side by side in the project root.
+5. **Verify the signature.**
+
+   ```bash
+   fy ext verify ./bundle.tar.gz
+   ```
+
+   **Checkpoint:** the verify command prints `OK`. If it
+   fails, re-sign — the platform's signing roster won't
+   accept a bundle whose signature can't be verified
+   locally.
+6. **Install into your tenant.** Open Settings →
+   Extensions → Upload. Drag `bundle.tar.gz` onto the
+   dropzone.
+
+   **Checkpoint:** the platform verifies the signature
+   against the platform roster and lights the install
+   button. Click it.
+7. **Observe the card render.** Refresh the admin shell.
+   Navigate to the page the starter manifest declared as
+   the mount point.
+
+   **Checkpoint:** the "Vehicles in {tenant name}" card
+   appears with a number — your real tenant's vehicle
+   count. Note the extension JWT is short-lived (15
+   minutes) and auto-refreshed by the platform; you
+   don't manage that timer.
+
+## What you'll have at the end
+
+A signed extension installed in your tenant rendering a
+real entity count.
+
+## Stuck?
+
+See [Lab M9 — Solution](/docs/training/labs/M9-extensions-solution).
+
+## Next
+
+[Lab M10 — Marketplace](/docs/training/labs/M10-marketplace).
+
+---
+
+# Lab M9 — Solution
+
+> Reference solution for Lab M9 — exact CLI output, manifest walkthrough, SDK call shape, and four common gotchas around signing, JWT TTL, and hard refusals.
+
+# Lab M9 — Solution
+
+This page is the **answer key** for
+[Lab M9](/docs/training/labs/M9-extensions). Work the lab
+first — the friction of clicking through is intentional.
+
+## Answer per step
+
+### Step 1 — Scaffold output
+
+`fy ext init my-counter` creates a Vite + React project
+with the following shape:
+
+```
+my-counter/
+  manifest.json
+  package.json
+  src/
+    CounterCard.tsx     # the starter route
+    main.tsx
+  index.html
+```
+
+The starter `package.json` includes `dev` and `build`
+scripts. `npm run dev` boots a local preview at
+`http://localhost:5173`.
+
+### Step 2 — Manifest fields
+
+`manifest.json` carries:
+
+- `name` — display name in the admin shell.
+- `version` — semver string.
+- `required_scopes` — array. The starter requests
+  `["data:read"]`. The platform mints a 15-minute
+  extension JWT carrying exactly these scopes when the
+  extension loads.
+- `mount` — where in the admin shell the extension's
+  primary route renders.
+
+### Step 3 — The SDK call
+
+`@fastyoke/sdk`'s `callTenantApi(path)` wraps fetch with
+the extension JWT already attached. The dev server
+proxies tenant-API calls during `npm run dev` so the
+local preview works without a tunnel.
+
+### Step 4 — Sign output
+
+`fy ext sign --keypair ~/.fastyoke/ext-keys` produces:
+
+```
+bundle.tar.gz   # gzipped tarball of the built extension
+bundle.sig      # ed25519 detached signature
+```
+
+If `~/.fastyoke/ext-keys` doesn't exist, the CLI
+generates a new keypair there. Back the keypair up — the
+platform's signing roster ties your identity to the
+public key, and losing the private key means re-issuing
+the public key on the roster.
+
+### Step 5 — Verify output
+
+`fy ext verify ./bundle.tar.gz` reads the signature and
+checks it against the keypair's public key. Output:
+
+```
+OK
+```
+
+Verify failure usually means the keypair isn't on the
+platform's signing roster. The operator-side process to
+add a roster entry is internal — not something the
+developer runs.
+
+### Step 6 — Install
+
+The admin shell's upload dropzone parses the bundle,
+fetches the signature, and re-verifies it server-side
+against the roster. A roster-mismatched bundle is
+refused with a clear error and never installs.
+
+### Step 7 — Card render
+
+The card renders the tenant's vehicle count. The
+extension JWT carries the `data:read` scope from the
+manifest; if you added a write call without updating
+`required_scopes`, the platform would 403 the call.
+
+## Common gotchas
+
+- **Signing keypair generation on first sign.** The
+  keypair lands at the path you passed; back it up. Losing
+  it means re-issuing your roster entry.
+- **Extension JWT TTL is 15 minutes.** The platform
+  re-mints automatically on the next request after
+  expiry; the developer doesn't manage this timer.
+- **Required scopes are a contract.** Adding an API call
+  that needs a scope your manifest didn't request → 403.
+  Update the manifest, re-sign, re-install.
+- **The four hard refusals.** An extension cannot install
+  another extension, mint API tokens, revoke API tokens,
+  or uninstall extensions. These refuse at the platform
+  layer regardless of scopes.
+
+## Back to the lab
+
+[Lab M9 — Extensions](/docs/training/labs/M9-extensions).
+
+---
+
+# Lab M10 — Marketplace
+
+> Install Yoke Ledger via REST, inspect what it seeds (owned_schemas + default Chart of Accounts), uninstall, verify the retention contract (rows survive), then author a Tenant Yoke via clone-from-source.
+
+# Lab M10 — Marketplace
+
+This lab pairs with **Module M10 — Marketplace & Tenant
+Yokes** in the [syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Install the Yoke Ledger Marketplace listing via the REST
+endpoint. Inspect what it seeds (FSM schemas + default
+Chart of Accounts). Uninstall. Confirm the seeded data is
+**retained** — that's the marketplace retention contract.
+Then author a Tenant Yoke by cloning from a seed.
+
+## Before you begin
+
+- A FastYoke tenant you're an admin of.
+- A `fy_pat_` PAT with `marketplace:admin` (or any scope
+  that lets you call the marketplace endpoints — admin
+  session works too).
+- `curl`.
+- About 30 minutes.
+
+## Or use Postman
+
+If you prefer a GUI, run the lab steps from Postman
+instead of `curl`. Each request has a **Tests** tab with
+the same checkpoint assertions the `curl` lab pins.
+
+**Import once:** in Postman, choose **File → Import →
+Link** and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 5 — Extending the
+platform → M10 — Marketplace** folder, set the
+`FY_TOKEN` environment variable, then run each request in
+order. Step 4 asserts the seeded `gl_account` rows
+survive uninstall — that's the retention-contract check.
+
+The `curl` steps below remain the source of truth.
+
+## Steps
+
+1. **List available listings.**
+
+   ```bash
+   curl -i -H "Authorization: Bearer $FY_PAT" \
+     https://www.fastyoke.io/api/v1/tenant/marketplace/listings
+   ```
+
+   **Checkpoint:** 200; JSON array contains an entry with
+   `slug: "yoke-ledger"`.
+2. **Install Yoke Ledger.**
+
+   ```bash
+   curl -i -X POST -H "Authorization: Bearer $FY_PAT" \
+     https://www.fastyoke.io/api/v1/tenant/marketplace/listings/yoke-ledger/install
+   ```
+
+   **Checkpoint:** 200. A subsequent
+   `GET /entities/gl_account` returns the seeded default
+   Chart of Accounts (Cash, AR, AP, Revenue, etc.).
+3. **Inspect `owned_schemas`.** Pull the listing's
+   metadata:
+
+   ```bash
+   curl -i -H "Authorization: Bearer $FY_PAT" \
+     https://www.fastyoke.io/api/v1/tenant/marketplace/listings/yoke-ledger
+   ```
+
+   **Checkpoint:** the response names `owned_schemas`
+   including `gl_journal_entry`. These are the FSM
+   schemas the listing seeded; the platform enforces that
+   no other listing can own them.
+4. **Uninstall.**
+
+   ```bash
+   curl -i -X POST -H "Authorization: Bearer $FY_PAT" \
+     https://www.fastyoke.io/api/v1/tenant/marketplace/listings/yoke-ledger/uninstall
+   ```
+
+   **Checkpoint:** 200. The listing is gone from the
+   active list.
+5. **Verify retention.**
+
+   ```bash
+   curl -i -H "Authorization: Bearer $FY_PAT" \
+     "https://www.fastyoke.io/api/v1/tenant/entities/gl_account?limit=10"
+   ```
+
+   **Checkpoint:** 200 and the seeded `gl_account` rows
+   are **still there**. This is the **retention contract**
+   — uninstall removes the listing but never deletes the
+   data it seeded. Your books survive a misclick.
+6. **Author a Tenant Yoke by clone.**
+
+   ```bash
+   curl -i -X POST -H "Authorization: Bearer $FY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{"slug":"my-yoke","source_slug":"yoke-ledger"}' \
+     https://www.fastyoke.io/api/v1/tenant/marketplace/clone/yoke-ledger
+   ```
+
+   **Checkpoint:** 200 with the new Tenant Yoke metadata.
+
+## What you'll have at the end
+
+A demonstrated install → inspect → uninstall →
+retention-survived loop, plus a Tenant Yoke authored by
+cloning the Yoke Ledger seed.
+
+## Stuck?
+
+See [Lab M10 — Solution](/docs/training/labs/M10-marketplace-solution).
+
+## Next
+
+You've completed Week 5. Lab M11 ships in the Week 6 lab
+pack PR. Return to the
+[syllabus](/docs/training/syllabus) for the Week 6
+reading list.
+
+---
+
+# Lab M10 — Solution
+
+> Reference solution for Lab M10 — exact REST commands per step, the retention-contract explanation, and gotchas around clone-from-source semantics and owned_schemas uniqueness.
+
+# Lab M10 — Solution
+
+This page is the **answer key** for
+[Lab M10](/docs/training/labs/M10-marketplace). Work the
+lab first — the friction of clicking through is
+intentional.
+
+## Answer per step
+
+### Step 1 — List listings
+
+```bash
+curl -i -H "Authorization: Bearer $FY_PAT" \
+  https://www.fastyoke.io/api/v1/tenant/marketplace/listings
+```
+
+Expected `HTTP/2 200`. JSON array; one entry has
+`{"slug":"yoke-ledger", ...}`.
+
+### Step 2 — Install
+
+```bash
+curl -i -X POST -H "Authorization: Bearer $FY_PAT" \
+  https://www.fastyoke.io/api/v1/tenant/marketplace/listings/yoke-ledger/install
+```
+
+Expected `HTTP/2 200`. Side effects:
+- FSM schema `gl_journal_entry` registered.
+- `gl_account` entity rows seeded with the default Chart
+  of Accounts (Cash, AR, AP, Revenue, COGS, Equity).
+- Default invoice→AR/Revenue posting rule registered.
+
+### Step 3 — `owned_schemas`
+
+```bash
+curl -i -H "Authorization: Bearer $FY_PAT" \
+  https://www.fastyoke.io/api/v1/tenant/marketplace/listings/yoke-ledger
+```
+
+The response body includes:
+
+```json
+"owned_schemas": ["gl_journal_entry"]
+```
+
+The platform refuses (at listing registration time) any
+second listing that tries to claim a schema another
+listing already owns. This is the uniqueness invariant
+that keeps two Yokes from fighting over the same FSM
+table.
+
+### Step 4 — Uninstall
+
+```bash
+curl -i -X POST -H "Authorization: Bearer $FY_PAT" \
+  https://www.fastyoke.io/api/v1/tenant/marketplace/listings/yoke-ledger/uninstall
+```
+
+Expected `HTTP/2 200`. The listing's entitlement row is
+removed; the FSM schemas and seeded `gl_account` rows
+remain.
+
+### Step 5 — Retention
+
+```bash
+curl -i -H "Authorization: Bearer $FY_PAT" \
+  "https://www.fastyoke.io/api/v1/tenant/entities/gl_account?limit=10"
+```
+
+Expected `HTTP/2 200` with a non-empty array (Cash, AR,
+etc.). **This is the retention contract** — every Yoke's
+seeded data outlives uninstall. Reinstalling restores
+the entitlement without re-seeding (it would conflict
+with the existing rows otherwise).
+
+### Step 6 — Clone
+
+```bash
+curl -i -X POST -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"slug":"my-yoke","source_slug":"yoke-ledger"}' \
+  https://www.fastyoke.io/api/v1/tenant/marketplace/clone/yoke-ledger
+```
+
+Expected `HTTP/2 200` with a new Tenant Yoke metadata
+object. **The clone copies the listing's *structure*, not
+its *data*.** The new Yoke starts with empty entity
+tables; the source's posting rules and schemas are
+duplicated under your new slug.
+
+## The retention contract — in one line
+
+Uninstall revokes the entitlement. Uninstall **never**
+deletes the data. Reinstall restores access without
+re-seeding.
+
+## Pricing models (for context)
+
+The Marketplace ships three pricing models:
+
+- **Free** — no charge (Yoke Ledger is this).
+- **Fixed monthly** — flat subscription per the listing's
+  base price.
+- **Metered** — billed per usage event from the tenant's
+  utility ledger.
+
+See [/docs/marketplace](/docs/marketplace) for the
+contract details.
+
+## Back to the lab
+
+[Lab M10 — Marketplace](/docs/training/labs/M10-marketplace).
 
 ---
 

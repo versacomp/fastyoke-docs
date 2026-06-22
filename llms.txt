@@ -274,6 +274,10 @@
 - [Lab M7 — Solution](https://www.fastyoke.io/docs/training/labs/M7-pages-and-apps-solution): Reference solution for Lab M7 — menu paths per step plus three common gotchas around theme cascade, dashboard widget refresh, and draft-form embeds.
 - [Lab M8 — Yoke Studio](https://www.fastyoke.io/docs/training/labs/M8-yoke-studio): Build a 2-board Yoke in Yoke Studio at /admin/studio, capture a named snapshot, edit, restore. Confirm the restore reverts your edit.
 - [Lab M8 — Solution](https://www.fastyoke.io/docs/training/labs/M8-yoke-studio-solution): Reference solution for Lab M8 — Studio menu paths plus three common gotchas around explicit-snapshot semantics, destructive restore, and per-tenant draft ownership.
+- [Lab M9 — Extensions](https://www.fastyoke.io/docs/training/labs/M9-extensions): Scaffold a starter extension with fy ext init, wire one SDK route fetching the vehicle entity count, sign with fy ext sign, verify with fy ext verify, install via the admin shell, observe the card render in the tenant.
+- [Lab M9 — Solution](https://www.fastyoke.io/docs/training/labs/M9-extensions-solution): Reference solution for Lab M9 — exact CLI output, manifest walkthrough, SDK call shape, and four common gotchas around signing, JWT TTL, and hard refusals.
+- [Lab M10 — Marketplace](https://www.fastyoke.io/docs/training/labs/M10-marketplace): Install Yoke Ledger via REST, inspect what it seeds (owned_schemas + default Chart of Accounts), uninstall, verify the retention contract (rows survive), then author a Tenant Yoke via clone-from-source.
+- [Lab M10 — Solution](https://www.fastyoke.io/docs/training/labs/M10-marketplace-solution): Reference solution for Lab M10 — exact REST commands per step, the retention-contract explanation, and gotchas around clone-from-source semantics and owned_schemas uniqueness.
 
 ## Tutorials
 
