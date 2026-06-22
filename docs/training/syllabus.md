@@ -10,6 +10,10 @@ order: 2
 module live at [/docs/training/lectures](/docs/training/lectures).
 Read the lecture before the lab; consult after.
 
+**Quizzes.** 10-question self-check banks per module at
+[/docs/training/quizzes](/docs/training/quizzes). Take the
+quiz the same day you finish the lab.
+
 Every module follows the same five-section shape:
 
 - **Learning objectives** — 3–5 verbs you'll be able to

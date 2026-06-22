@@ -18386,6 +18386,49 @@ Every lecture follows the same shape:
 
 ---
 
+# About the quizzes
+
+> Self-check question banks, one per syllabus module. Multiple choice with revealed answers. Not graded — the test is whether you can answer cold.
+
+# About the quizzes
+
+Sixteen self-check question banks, one per syllabus
+module. **10 multiple-choice questions per module** with
+revealed answers. They're a self-check, not an exam —
+nothing is graded, nothing is tracked. The signal is
+whether you can answer cold without peeking.
+
+## How to use them
+
+- **After the lab.** Take the quiz the same day you
+  finish the matching lab. Recall is freshest, and the
+  gaps you discover are still cheap to fix.
+- **Click the reveal.** Each question has an `Answer +
+  why` reveal. Read your explanation before clicking
+  — the value is in *predicting* the explanation, not
+  reading it.
+- **Mark gaps for re-read.** A wrong answer is a
+  pointer back to the lecture or the reference docs.
+
+## Why no auto-grading
+
+Two reasons. First, the questions test understanding,
+not pattern matching — an LLM-graded quiz drifts toward
+the answers an LLM-graded quiz can produce. Second, the
+training is self-paced; there's no roster to grade
+against. The honor system fits the audience.
+
+## See also
+
+- [Syllabus](/docs/training/syllabus) — the canonical
+  module list.
+- [Lectures](/docs/training/lectures) — narrative
+  companions; review when a quiz answer surprises you.
+- [Labs](/docs/training/labs) — the hands-on exercises
+  these questions test against.
+
+---
+
 # Lab M1 — Trace a tenant-scoped query
 
 > Open the FastYoke backend source. Pick one tenant-scoped GET handler and trace tenant_id from JWT extraction through SqlitePool selection to the SQL statement. End with a one-page write-up of the full path.
@@ -18520,6 +18563,171 @@ not just a `WHERE` clause.
 
 ---
 
+# Quiz M1 — Platform architecture & multi-tenancy
+
+> 10 multiple-choice questions on the single-binary monolith, the fleet-of-files model, and the tenant_id prime directive.
+
+# Quiz M1 — Platform architecture & multi-tenancy
+
+Pairs with [Lecture M1](/docs/training/lectures/M1-architecture)
+and [Lab M1](/docs/training/labs/M1-architecture-trace).
+
+**Q1.** Why does every tenant get its own SQLite database file?
+
+a) SQLite can't handle multiple tenants in one file
+b) Per-tenant files make cross-tenant queries mechanically impossible
+c) It's a legacy constraint from before LiteFS
+d) Each tenant's data uses a different schema
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** A cross-tenant query would have to open the wrong file
+— the OS enforces the isolation, not a `WHERE` clause.
+
+</details>
+
+**Q2.** What does the prime directive require?
+
+a) Every API endpoint authenticates the caller
+b) Every tenant-scoped query filters by `tenant_id`
+c) Every write runs in a transaction
+d) Every read goes through the replica
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Even inside a per-tenant DB, admin sessions can span
+tenants, so every query enforces it as defense in depth.
+
+</details>
+
+**Q3.** Which is **not** a platform-scoped table exception?
+
+a) audit
+b) platform_admins
+c) marketplace_entitlements
+d) service_jobs
+
+<details>
+<summary>Answer + why</summary>
+
+**d)** `service_jobs` is tenant-scoped. The platform DB
+holds genuinely cross-tenant state only.
+
+</details>
+
+**Q4.** What does `/health/ready` report?
+
+a) Whether the binary started
+b) Whether LiteFS replication lag is within bounds
+c) Whether the SPA bundle loaded
+d) Whether disk space is below a threshold
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Readiness is gated on replication lag — a replica
+behind by too much can't serve consistent reads.
+
+</details>
+
+**Q5.** Which storage mode does the platform use for SQLite?
+
+a) Rollback journal
+b) WAL (Write-Ahead Logging)
+c) Memory
+d) Truncate
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** WAL with foreign keys ON is what makes SQLite
+survive multi-tenant load — readers don't block writers.
+
+</details>
+
+**Q6.** What happens if a handler forgets to scope by `tenant_id`?
+
+a) Returns 500 immediately
+b) Linter catches it at build time
+c) Silent data leak across tenants
+d) Returns 401
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** Nothing automatic catches it. That's why the directive
+is treated as a security-critical convention enforced by
+review.
+
+</details>
+
+**Q7.** What's the relationship between LiteFS primary and replicas?
+
+a) Active-active multi-master
+b) Single writer, many replicas follow
+c) Sharded by tenant
+d) Read-replica with eventual consistency
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Exactly one primary writes; replicas stream the
+write log. The wedged-primary watchdog reboots a stuck
+primary.
+
+</details>
+
+**Q8.** Why is the per-tenant database file shape preferred over a `tenant_id` column?
+
+a) SQLite is faster with smaller files
+b) OS-level file isolation removes a class of cross-tenant bugs
+c) Migrations are easier
+d) It scales horizontally
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** The threat model gains a layer the application can't
+bypass even if a handler is wrong.
+
+</details>
+
+**Q9.** Where does tenant-scoped entity data live?
+
+a) Platform DB
+b) The tenant's own SQLite file
+c) Redis
+d) S3
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Entity data is tenant-scoped by definition. Putting
+it in the platform DB would defeat the fleet-of-files
+model.
+
+</details>
+
+**Q10.** What's the right way to add tenant-shaped data to the platform DB?
+
+a) Add a `tenant_id` column
+b) Use a partitioned table
+c) Don't — put it in the tenant DB
+d) Use a separate platform-scoped table per tenant
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** If the data belongs to a tenant, it goes in the
+tenant DB. Adding tenant-shaped tables to the platform DB
+is technical debt with a security incident as the payback.
+
+</details>
+
+---
+
 # Syllabus
 
 > Sixteen modules across eight weeks. Each module has learning objectives, an assigned reading list cross-linked into the reference docs, a lab title, a project deliverable title, and three quiz topics. The capstone in Week 8 ships an end-to-end Tenant Yoke.
@@ -18529,6 +18737,10 @@ not just a `WHERE` clause.
 **Companion lectures.** Short narrative explainers per
 module live at [/docs/training/lectures](/docs/training/lectures).
 Read the lecture before the lab; consult after.
+
+**Quizzes.** 10-question self-check banks per module at
+[/docs/training/quizzes](/docs/training/quizzes). Take the
+quiz the same day you finish the lab.
 
 Every module follows the same five-section shape:
 
@@ -19290,6 +19502,170 @@ deliberately resists.
 
 ---
 
+# Quiz M2 — Auth & token layers
+
+> 10 multiple-choice questions on session JWTs, fy_pat_ PATs, the one-hour test token, scopes vs roles, and the anti-delegation refusal.
+
+# Quiz M2 — Auth & token layers
+
+Pairs with [Lecture M2](/docs/training/lectures/M2-auth)
+and [Lab M2](/docs/training/labs/M2-token-walkthrough).
+
+**Q1.** What's the prefix for personal access tokens?
+
+a) `fy_jwt_`
+b) `fy_pat_`
+c) `pat_fy_`
+d) `tok_`
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Personal Access Token, prefixed `fy_pat_` for
+easy grepping in logs and secret scanners.
+
+</details>
+
+**Q2.** What scope vocabulary do extensions and PATs share?
+
+a) Each has its own catalog
+b) Both draw from the same 72-permission catalog
+c) Extensions are scopeless; PATs aren't
+d) Both inherit from the user role
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Authoring once means granting `data:write` to a PAT
+means exactly the same thing as granting it to an
+extension.
+
+</details>
+
+**Q3.** What does the WorkOS SSO callback resolve a user's tenant by?
+
+a) Email domain matching
+b) A claim in the OIDC token
+c) A workspace assignment configured in WorkOS
+d) The Referer header
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** Tenant is determined by the WorkOS workspace
+assignment, not the email.
+
+</details>
+
+**Q4.** Why is the one-hour test JWT *not* subject to PAT hard refusals?
+
+a) Bug — it should be
+b) It mirrors the caller's authority instead of delegating
+c) It's shorter-lived
+d) It's a different signing key
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** A test JWT acts as the issuing admin themselves, so
+"refuse to delegate" doesn't apply.
+
+</details>
+
+**Q5.** What does `delegated_credential_refused` mean?
+
+a) Token expired
+b) PAT cannot impersonate other users
+c) WorkOS callback failed
+d) Wrong scope
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** PATs act as the issuing user; trying to act as
+someone else returns this refusal rather than silently
+acting.
+
+</details>
+
+**Q6.** Role vs scope — which is which?
+
+a) Role gates the API; scope gates the UI
+b) Role gates the UI; scope gates the API
+c) They're aliases
+d) Only role is enforced
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** UI surfaces gate by role; API endpoints gate by
+scope. A PAT with `data:read` can't call a `data:write`
+endpoint even if the underlying user is admin.
+
+</details>
+
+**Q7.** Why are PATs not stored hashed if they're shown only once?
+
+a) They are stored hashed
+b) Backwards compatibility
+c) For revocation lookups
+d) SQLite can't hash
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** They are. The token surface returns the cleartext
+once at creation; storage is a hash.
+
+</details>
+
+**Q8.** When does the session JWT expire?
+
+a) Never
+b) After a short window — re-issued on activity
+c) After 24h fixed
+d) On logout only
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Sessions are short-lived JWTs refreshed on activity.
+This bounds the blast radius if a session cookie leaks.
+
+</details>
+
+**Q9.** Which is **not** a token shape FastYoke ships?
+
+a) Session JWT
+b) `fy_pat_` PAT
+c) WorkOS AuthKit session
+d) Long-lived password cookie
+
+<details>
+<summary>Answer + why</summary>
+
+**d)** Cookies hold the session JWT, not a password. The
+platform never ships a "remember me" password token.
+
+</details>
+
+**Q10.** What's the right response if a PAT leaks to source control?
+
+a) Rotate it immediately, then audit usage logs
+b) Wait for it to expire
+c) Add a `.gitignore` entry
+d) Reduce its scope
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** PATs are long-lived; one leaked PAT can drain a
+billing wallet. Rotate first, investigate second.
+
+</details>
+
+---
+
 # Lab M2 — Token walkthrough
 
 > Mint a one-hour test token and a long-lived fy_pat_ token. Call the tenant API with each. Observe two hard-refusal cases. Capture the three working request shapes in a shell script.
@@ -19445,6 +19821,167 @@ database.
 
 - Lab: [M3 — Author a vehicle entity](/docs/training/labs/M3-entities).
 - Reference: [/docs/entities](/docs/entities).
+
+---
+
+# Quiz M3 — Entities
+
+> 10 multiple-choice questions on JSON-payload schemas, annotations, the retention contract on delete, and idempotency.
+
+# Quiz M3 — Entities
+
+Pairs with [Lecture M3](/docs/training/lectures/M3-entities)
+and [Lab M3](/docs/training/labs/M3-entities).
+
+**Q1.** How does the platform validate entity payloads without per-tenant column schemas?
+
+a) It doesn't — payloads are accepted as-is
+b) Against the tenant's JSON-payload schema at write time
+c) Through a separate validator service
+d) Via foreign key constraints
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** The schema is the contract. The platform validates
+every write against it and returns 422 for unknown fields.
+
+</details>
+
+**Q2.** Difference between a label annotation and an option annotation?
+
+a) Labels are required, options aren't
+b) Label = display name; option = enum value
+c) They're aliases
+d) Options apply only to forms
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Labels rename for the UI; options enumerate the
+legal values.
+
+</details>
+
+**Q3.** What does deleting an entity row do to historical FSM job rows that referenced it?
+
+a) Cascades and deletes them
+b) Returns 409 unless cascade is opt-in
+c) Keeps the historical id so the event log stays readable
+d) Marks them as orphaned
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** Retention contract — the deleted id is preserved so
+event-log rows still resolve.
+
+</details>
+
+**Q4.** What's the `Idempotency-Key` header for?
+
+a) Required on every write
+b) Same key produces the same outcome on retry
+c) Caches reads
+d) Cross-tenant deduplication
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Useful when the network is unreliable and you can't
+tell if your POST succeeded.
+
+</details>
+
+**Q5.** What's the storage shape for entity payloads?
+
+a) One column per field
+b) One row per field
+c) One JSON blob column per row
+d) Object store with row metadata
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** Schemaless storage — `payload` is JSON; the platform
+validates against the schema at write time but never
+adds columns.
+
+</details>
+
+**Q6.** Can you migrate entity payloads by renaming a field in the schema?
+
+a) Yes — the platform auto-migrates
+b) No — existing payloads keep the old shape until rewritten
+c) Only with admin override
+d) Only on Enterprise
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Schemaless = no auto-migration. Readers must handle
+both shapes for a window.
+
+</details>
+
+**Q7.** What's a constraint annotation used for?
+
+a) Foreign keys
+b) Required / min / max validation
+c) Cascade rules
+d) Indexing hints
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Validation rules the platform enforces at write
+time.
+
+</details>
+
+**Q8.** What's the right way to add a new entity field that 80% of existing rows already implicitly have?
+
+a) Add it as required with a backfill
+b) Add it optional, infer/backfill in a follow-on pass
+c) Block until every row is backfilled
+d) Add it required with no backfill
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Schema changes don't migrate existing rows.
+Add optional, backfill in a job, then tighten if desired.
+
+</details>
+
+**Q9.** What does writing a field not in the schema return?
+
+a) 200 with the field dropped
+b) 422 (unprocessable entity)
+c) 404
+d) 500
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** The platform refuses; it doesn't silently strip.
+
+</details>
+
+**Q10.** Where does annotation-driven prefill pull from?
+
+a) Only payload defaults
+b) Only URL query params
+c) Payload defaults, query params, or the signed-in user
+d) Only the signed-in user
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** All three sources, wired through annotations rather
+than per-form code.
+
+</details>
 
 ---
 
@@ -19622,6 +20159,168 @@ the client validates is what the Rust server deserializes.
 
 ---
 
+# Quiz M4 — Forms
+
+> 10 multiple-choice questions on zod-mirrored schemas, anti-abuse defenses, public-link submissions, and form-to-job wiring.
+
+# Quiz M4 — Forms
+
+Pairs with [Lecture M4](/docs/training/lectures/M4-forms)
+and [Lab M4](/docs/training/labs/M4-forms).
+
+**Q1.** Why are form schemas zod-mirrored rather than raw JSON Schema?
+
+a) JSON Schema is slower
+b) zod gives TypeScript inference + matches the Rust serde shape
+c) Legacy reasons
+d) Smaller bundle size
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** zod gives client-side validation + inferred types;
+the discipline is that both sides validate the same shape.
+
+</details>
+
+**Q2.** What does a public-link form use to defeat abuse?
+
+a) Captcha only
+b) Layered: per-IP rate limit → captcha → soft block
+c) Auth header
+d) IP whitelist
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Anti-abuse is layered — each layer kicks in at a
+higher abuse threshold.
+
+</details>
+
+**Q3.** How does a public-link form authenticate the submitter?
+
+a) Anonymous session
+b) WorkOS guest
+c) It doesn't — public means public
+d) A short-lived JWT
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** If the submitter needs auth, the form lives behind
+a session. Adding a token query param to a "public" link
+defeats the model.
+
+</details>
+
+**Q4.** What happens if a frontend field is added but not the Rust struct?
+
+a) The field is silently dropped
+b) The submission rejects with 400
+c) The platform auto-adds it to the struct
+d) It validates but is never readable
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Mirrored schemas. Drift on either side rejects on
+the next round trip.
+
+</details>
+
+**Q5.** What types of file-upload validation does the platform run?
+
+a) Extension only
+b) Extension, size, and MIME
+c) MIME only
+d) None — by design
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Three layers, because each catches a different
+spoofing pattern.
+
+</details>
+
+**Q6.** Can submitting a form start an FSM job in the same call?
+
+a) Yes — the form payload becomes the job's initial entity row
+b) Yes, but requires two API calls
+c) No — separate ceremony
+d) Only on Enterprise
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** Form-to-job wiring is first-class — one submission
+creates the entity and starts the job atomically.
+
+</details>
+
+**Q7.** What happens when a public link crosses its anti-abuse threshold?
+
+a) Returns 429
+b) Silently drops new submissions
+c) Issues a one-time captcha then a soft-block if abuse continues
+d) Bans the IP forever
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** Friction escalates progressively — captcha first,
+soft-block only after sustained abuse.
+
+</details>
+
+**Q8.** Where do uploaded files live?
+
+a) Cross-tenant blob store
+b) Tenant-scoped blob storage
+c) S3 with public ACL
+d) In the entity payload as base64
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Tenant-scoped — the file-storage prime directive
+mirrors the entity one.
+
+</details>
+
+**Q9.** What's the right response if your form's anti-abuse threshold trips on legitimate traffic?
+
+a) Disable anti-abuse
+b) Lower the threshold
+c) Rotate the link or add an auth gate
+d) Open a support ticket
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** Public means public. Legitimate high-volume traffic
+needs a different mechanism than a public link.
+
+</details>
+
+**Q10.** What does the platform do with anti-abuse refusals' counter?
+
+a) Counts them toward the per-form auto-pause
+b) Counts them separately so legitimate traffic isn't penalized
+c) Logs only
+d) Ignores them
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Refusals don't shut down a healthy form just because
+the public spotted it.
+
+</details>
+
+---
+
 # Lab M3 — Author a vehicle entity
 
 > Mint a fy_pat_ token, POST a vehicle schema with three annotated fields, exercise the full REST surface (POST, GET, PATCH, LIST, DELETE), and observe what happens to referencing FSM job rows on delete. End with a vehicle-crud.sh script that re-runs cleanly.
@@ -19781,6 +20480,167 @@ execution.
 
 - Lab: [M5 — FSM authoring](/docs/training/labs/M5-fsm-authoring).
 - Reference: [/docs/workflows](/docs/workflows).
+
+---
+
+# Quiz M5 — FSM authoring
+
+> 10 multiple-choice questions on JSONLogic guards, the sandbox, orphan states, and deterministic replay.
+
+# Quiz M5 — FSM authoring
+
+Pairs with [Lecture M5](/docs/training/lectures/M5-fsm)
+and [Lab M5](/docs/training/labs/M5-fsm-authoring).
+
+**Q1.** Why is JSONLogic the guard language?
+
+a) It's the fastest evaluator
+b) Declarative + sandbox-safe + no host syscalls
+c) Frontend uses it
+d) JSON is easier to author
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Guards must be safe to run on untrusted tenant
+input. JSONLogic has no I/O.
+
+</details>
+
+**Q2.** What's an orphan state?
+
+a) A state with no transitions out
+b) A state declared but unreachable from `initial_state`
+c) A state with conflicting guards
+d) A self-loop
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Unreachable → orphan. The validator catches it at
+save time.
+
+</details>
+
+**Q3.** What does the guard sandbox refuse?
+
+a) Math
+b) Arbitrary code execution + I/O + host syscalls
+c) Strings
+d) Booleans
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Math/strings/booleans are fine. I/O and arbitrary
+code are not.
+
+</details>
+
+**Q4.** A transition with `from == to` is…
+
+a) Invalid — the validator rejects it
+b) A self-loop — legitimate for audit events or counters
+c) Only allowed in admin override
+d) An idempotency marker
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Self-loops are first-class — same firing semantics
+as forward edges.
+
+</details>
+
+**Q5.** Multiple transitions share an event name. Which fires?
+
+a) All of them, in declaration order
+b) The first matching guard wins
+c) The platform refuses to compile the schema
+d) Random selection
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Order matters. Disambiguating by guard is the
+intended pattern.
+
+</details>
+
+**Q6.** Why is wall-clock time inside a guard a problem?
+
+a) It's slow
+b) It breaks deterministic replay
+c) Not implemented
+d) Returns null
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Replay must reproduce the same transitions. Pass
+timestamps in via payload.
+
+</details>
+
+**Q7.** When does the compute-heavy `wasmtime` evaluator kick in?
+
+a) Automatically when JSONLogic is slow
+b) Only when the schema explicitly declares a WASM guard module
+c) On Enterprise tenants
+d) Never — JSONLogic only
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Opt-in per guard. Fuel + memory caps preserve the
+no-syscall invariant.
+
+</details>
+
+**Q8.** What happens at save if you author a schema with an orphan state?
+
+a) The validator rejects it
+b) The platform warns but accepts
+c) The state is silently dropped
+d) Nothing — runtime catches it later
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** Save-time validation. Catches the bug before any
+job is created.
+
+</details>
+
+**Q9.** How does the FSM relate to the immutable event log?
+
+a) The event log records the schema, not transitions
+b) Each transition firing appends one event_log row
+c) The log buffers transitions for later commit
+d) Only failed transitions log
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Every firing appends — that's the audit chain.
+
+</details>
+
+**Q10.** What can a guard *not* read?
+
+a) The job's entity payload
+b) The triggering event's payload
+c) Arbitrary tenant rows
+d) Inline constants
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** Guards see only the job + event context they're
+given. Cross-row lookups happen upstream and pass values
+in.
+
+</details>
 
 ---
 
@@ -19985,6 +20845,168 @@ against it. That immutability is the audit chain.
 
 ---
 
+# Quiz M6 — Jobs
+
+> 10 multiple-choice questions on the append-only event log, the admin cancel override, self-loops, and optimistic UI.
+
+# Quiz M6 — Jobs
+
+Pairs with [Lecture M6](/docs/training/lectures/M6-jobs)
+and [Lab M6](/docs/training/labs/M6-jobs).
+
+**Q1.** What does the admin cancel override bypass?
+
+a) Just the guard on the current transition
+b) The entire FSM transition engine
+c) The event log
+d) Tenant scoping
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** It writes `current_state` directly and appends one
+`__admin_cancel__` event. Guards aren't consulted.
+
+</details>
+
+**Q2.** Why is the event log append-only?
+
+a) Performance
+b) Audit chain integrity
+c) SQLite limitation
+d) Backwards compat
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Immutability *is* the audit value. UPDATE would
+defeat it.
+
+</details>
+
+**Q3.** When is a self-loop the right shape?
+
+a) Always — they're equivalent to forward edges
+b) For audit-only events, retries, or counter increments
+c) When you can't author a forward edge
+d) Never — they're a code smell
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Specific use cases where state doesn't change but
+the event matters.
+
+</details>
+
+**Q4.** What is **not** a valid use of self-loops?
+
+a) Driver check-in audit event
+b) Retry counter increment
+c) Spinning to defeat the admin override
+d) Guard-multiplexed event fall-through
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** The override never reads transitions — it bypasses
+the engine. Self-loops can't outwit it.
+
+</details>
+
+**Q5.** What does optimistic UI show when a self-loop fires?
+
+a) The new state
+b) Nothing — the state column doesn't change
+c) The previous state
+d) An error
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Looks like a no-op. Surfaces that should reflect
+self-loops render `event_log`, not `current_state` alone.
+
+</details>
+
+**Q6.** How do you bound a self-loop that auto-fires?
+
+a) Set `max_fires` in the schema
+b) The platform caps it at 100
+c) Via the guard itself or upstream rate limiting
+d) Can't be bounded
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** No automatic cap. Author a guard like `retry_count
+< 3`.
+
+</details>
+
+**Q7.** What's the right way to record "operator says stop, no matter what"?
+
+a) Author a `Cancelled` state in the FSM
+b) Use the admin cancel override
+c) Patch `current_state` directly
+d) Delete the job
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** The override exists because cancellation doesn't
+cleanly fit into an FSM's guard model.
+
+</details>
+
+**Q8.** When the admin override fires, what does it leave behind?
+
+a) Nothing
+b) A row in event_log with `event_type:
+   "__admin_cancel__"` plus actor and reason
+c) An UPDATE on event_log
+d) A separate audit_log table row
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Append-only — the override's audit trail rides on
+the same event-log spine.
+
+</details>
+
+**Q9.** Can the override fire to any state in the schema?
+
+a) Yes — any state listed in the schema's known states
+b) Only terminal states
+c) Only `Cancelled`
+d) Only forward states
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** Target validated against the schema's known states;
+unknown states return 400 before touching the DB.
+
+</details>
+
+**Q10.** What's the right way to "fix history" if a job transitioned through a wrong state?
+
+a) UPDATE the event log
+b) DELETE the wrong row
+c) Author a forward transition that captures the correction
+d) Use the admin override to revert state
+
+<details>
+<summary>Answer + why</summary>
+
+**c)** History is immutable. The fix is a new event that
+*records* the correction.
+
+</details>
+
+---
+
 # Lab M4 — Public-link form
 
 > Compose a 4-field public form, publish a tokenized public link, submit anonymously, observe the FSM job the platform creates at submit time, then trigger anti-abuse and observe the 429 + Retry-After response.
@@ -20147,6 +21169,165 @@ runtime takes the JSON and renders it.
 
 - Lab: [M7 — Pages & App Builder](/docs/training/labs/M7-pages-and-apps).
 - Reference: [/docs/pages](/docs/pages), [/docs/apps](/docs/apps), [/docs/apps/advanced](/docs/apps/advanced).
+
+---
+
+# Quiz M7 — Pages & App Builder
+
+> 10 multiple-choice questions on Pages vs Apps, the block catalog, theme inheritance, and the Advanced App Builder.
+
+# Quiz M7 — Pages & App Builder
+
+Pairs with [Lecture M7](/docs/training/lectures/M7-pages-apps)
+and [Lab M7](/docs/training/labs/M7-pages-and-apps).
+
+**Q1.** Difference between a Page and an App?
+
+a) Apps are Pro+
+b) Page = single route; App = bundle of pages with nav + theme + route prefix
+c) Pages are static; Apps are dynamic
+d) They're aliases
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Apps install from the marketplace; pages compose
+the App.
+
+</details>
+
+**Q2.** What does the Advanced App Builder add over the standard one?
+
+a) A separate runtime
+b) LLM-assisted authoring that produces the same block JSON
+c) Custom HTML
+d) Server-side rendering
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** The LLM is a UX layer over the same block catalog.
+
+</details>
+
+**Q3.** How does theme inheritance work across nested pages?
+
+a) Each page is independent
+b) Theme is set per App and inherits across the App's pages
+c) Theme is per tenant only
+d) Theme is per route
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** App-scoped — so installing two apps doesn't make
+each override the other.
+
+</details>
+
+**Q4.** What's the right way to embed arbitrary HTML?
+
+a) Use the `Html` block
+b) There isn't one — write an extension (M9) if needed
+c) PATCH the page JSON
+d) Drop into a `Markdown` block
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Composition stays in the typed catalog. Custom HTML
+goes through extensions for safety.
+
+</details>
+
+**Q5.** Block configs are…
+
+a) Code
+b) JSON validated against per-block schemas
+c) YAML
+d) Free-form
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Each block declares a schema; the runtime
+validates configs at render time.
+
+</details>
+
+**Q6.** The list-page renderer and `EntityDetailRenderer` use…
+
+a) The same block vocabulary
+b) Different block vocabularies — the detail renderer's is richer
+c) The same blocks but different layouts
+d) A shared vocabulary that's expanded for detail
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Two vocabularies. Check the detail one before
+assuming you need a new block.
+
+</details>
+
+**Q7.** What's an App's route prefix?
+
+a) Configurable per-App slug under the admin shell
+b) Always `/app/`
+c) The App name
+d) Configured at install
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** Each App lives at its own slug — multiple Apps
+co-exist without route collisions.
+
+</details>
+
+**Q8.** What happens if a block's config doesn't validate?
+
+a) Renders silently broken
+b) Page rejects render with a structured error
+c) Falls back to defaults
+d) Returns 500
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Surfaces the bug early; doesn't silently hide it.
+
+</details>
+
+**Q9.** Themed at the tenant level by accident?
+
+a) Affects only the App you intended to theme
+b) Bleeds across every App in that tenant
+c) Reset on next deploy
+d) Refused at save time
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Tenant-level overrides apply globally — usually
+not what you want. Theme inside the App.
+
+</details>
+
+**Q10.** Should you reach for a new custom block before exhausting the catalog?
+
+a) Yes — extensibility first
+b) No — most "new blocks" exist in the detail renderer
+c) Always start with custom; the catalog is legacy
+d) Only on Enterprise
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Read the marketplace apps guide before authoring.
+Many "new blocks" already exist.
+
+</details>
 
 ---
 
@@ -20316,6 +21497,166 @@ the draft into the tenant's runtime.
 
 - Lab: [M8 — Yoke Studio](/docs/training/labs/M8-yoke-studio).
 - Reference: [/docs/apps/studio](/docs/apps/studio).
+
+---
+
+# Quiz M8 — Yoke Studio
+
+> 10 multiple-choice questions on persistent drafts, snapshots, the archive lifecycle, and edit-in-place re-versioning.
+
+# Quiz M8 — Yoke Studio
+
+Pairs with [Lecture M8](/docs/training/lectures/M8-studio)
+and [Lab M8](/docs/training/labs/M8-yoke-studio).
+
+**Q1.** What's a Studio draft?
+
+a) A staging area that auto-promotes after timeout
+b) A tenant-scoped, autosaved JSON payload (up to 512KB)
+c) An immutable snapshot
+d) A branch of the live Yoke
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Resumable across sessions, opaque JSON, capped at
+512KB.
+
+</details>
+
+**Q2.** What does activating a draft trigger automatically?
+
+a) A snapshot of the previous state
+b) A factory reset of the App
+c) A migration of historical entity rows
+d) Nothing — pure activate
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** Auto-snapshot before activate gives you a rollback
+point even if you've been ignoring snapshots.
+
+</details>
+
+**Q3.** What's a Studio snapshot's restore semantics?
+
+a) Eventual consistency
+b) Transactional — all or nothing
+c) Snapshot-then-merge
+d) Replaces just the schema
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Restore is transactional so a failed restore leaves
+the draft untouched.
+
+</details>
+
+**Q4.** Editing the same draft from two browser tabs results in…
+
+a) A conflict prompt
+b) Last-writer-wins; the slower tab loses changes silently
+c) A merged result
+d) The second tab gets a read-only lock
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Optimistic concurrency. Use snapshots if you need
+to fork.
+
+</details>
+
+**Q5.** What does "edit a published Yoke in place" do?
+
+a) Edits the live runtime directly
+b) Loads the Yoke into Studio, preserves the slug, re-versions on save
+c) Clones to a new slug
+d) Pauses the runtime
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** In-place re-versioning — no clone-and-promote
+round trip.
+
+</details>
+
+**Q6.** Archived drafts are…
+
+a) Auto-deleted after 30 days
+b) Hidden from the active list; can be unarchived
+c) Read-only
+d) Cross-tenant shareable
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** No auto-delete. Pruning is the operator's call.
+
+</details>
+
+**Q7.** What happens when you activate a draft?
+
+a) It auto-archives
+b) It stays in the active list as the "live" entry
+c) It is deleted
+d) It's marked read-only
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** Auto-archive on activate is the canonical
+lifecycle.
+
+</details>
+
+**Q8.** Where's the right place to think about "version history"?
+
+a) The active draft list
+b) Named snapshots
+c) Git
+d) The event log
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Snapshots are the history; the active list is the
+workbench.
+
+</details>
+
+**Q9.** Studio drafts are…
+
+a) Live in the runtime
+b) Author-time only until activated
+c) Visible to end customers immediately
+d) Shared across tenants
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Until activate, the runtime serves the previous
+version.
+
+</details>
+
+**Q10.** Can you have multiple active drafts per learner?
+
+a) Yes — unlimited
+b) One active draft per learner; archive an old one before starting a new one
+c) Two — current + previous
+d) Only on Enterprise
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** One slot. Forks live as snapshots, not as parallel
+active drafts.
+
+</details>
 
 ---
 
@@ -20489,6 +21830,166 @@ beyond the documented WIT host imports.
 
 ---
 
+# Quiz M9 — Extensions
+
+> 10 multiple-choice questions on signed WASM bundles, the manifest scope vocabulary, WIT host imports, and fuel/memory caps.
+
+# Quiz M9 — Extensions
+
+Pairs with [Lecture M9](/docs/training/lectures/M9-extensions)
+and [Lab M9](/docs/training/labs/M9-extensions).
+
+**Q1.** Why must extensions be signed?
+
+a) For licensing
+b) To prevent loading unauthorized code
+c) For performance
+d) Backwards compat
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** The platform refuses unsigned bundles — the
+authoring key is tenant-scoped.
+
+</details>
+
+**Q2.** What's the scope vocabulary an extension manifest draws from?
+
+a) A separate catalog
+b) The same 72-permission catalog as PATs
+c) Free-form strings
+d) Inherited from the installing user role
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Unified vocabulary — granting a scope means the
+same thing across PATs and extensions.
+
+</details>
+
+**Q3.** How does an extension talk to the host?
+
+a) Direct file I/O
+b) WIT host imports — storage reads, entity reads/writes, SSRF-guarded HTTP
+c) Shared memory
+d) gRPC over a unix socket
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** The WIT imports are the only door out of the
+sandbox.
+
+</details>
+
+**Q4.** What stops a runaway extension call?
+
+a) Wall-clock timeout
+b) Fuel budget + memory ceiling per invocation
+c) The OS oom-killer
+d) Nothing — caveat emptor
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Fuel + memory caps. Exceeding either kills the call
+cleanly.
+
+</details>
+
+**Q5.** Can an extension perform arbitrary file I/O?
+
+a) Yes — wasmtime supports it
+b) No — there's no host import for raw file I/O
+c) Only via the entity payload
+d) Only on Enterprise
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Persistence happens via entity reads/writes, not
+files.
+
+</details>
+
+**Q6.** Which language is the smoothest for authoring extensions?
+
+a) Python
+b) Rust (the smallest + fastest path)
+c) Go
+d) JavaScript
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** JS is supported via QuickJS-on-WASM but Rust is
+smaller, faster, and easier to debug.
+
+</details>
+
+**Q7.** What's the cloud sandbox for?
+
+a) Production runtime
+b) The authoritative dev environment
+c) A throwaway preview
+d) Documentation only
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Never assume local behavior generalizes — the
+cloud sandbox is the truth.
+
+</details>
+
+**Q8.** What happens at install time if the manifest asks for more scopes than the installing admin can grant?
+
+a) Install succeeds with reduced scopes
+b) Install fails — the admin can't grant more than they hold
+c) Platform admin is notified
+d) The extension gets all requested scopes regardless
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** No privilege escalation through extensions.
+
+</details>
+
+**Q9.** Can extensions skip signing during local dev?
+
+a) Yes — the platform allows unsigned in dev
+b) No — the CLI signs with your dev key automatically
+c) Only by setting an env var
+d) Only with admin override
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Always signed; the dev key just gets used
+automatically.
+
+</details>
+
+**Q10.** What's the SSRF guard's role for extension HTTP?
+
+a) Caches responses
+b) Refuses non-HTTPS, private ranges, link-local, IPv6 ULA
+c) Rate-limits
+d) Adds auth headers
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Same guard as outbound webhooks. Refusals are a
+separate counter, not toward auto-pause.
+
+</details>
+
+---
+
 # Lab M5 — Solution
 
 > Reference solution for Lab M5 — exact schema body with three JSONLogic guards, sample 422 + 200 transition responses, and a sample hand-trace.
@@ -20649,6 +22150,164 @@ removes the listing but preserves the data it seeded.
 
 ---
 
+# Quiz M10 — Marketplace
+
+> 10 multiple-choice questions on the install/uninstall loop, the retention contract, Tenant Yokes vs Marketplace listings, and clone semantics.
+
+# Quiz M10 — Marketplace
+
+Pairs with [Lecture M10](/docs/training/lectures/M10-marketplace)
+and [Lab M10](/docs/training/labs/M10-marketplace).
+
+**Q1.** What does uninstalling a Marketplace listing do?
+
+a) Deletes the listing and all seeded data
+b) Deletes the listing; preserves seeded data (retention contract)
+c) Marks it as inactive but keeps everything
+d) Returns the tenant to factory state
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Data outlives the listing. Misclicks don't lose
+your books.
+
+</details>
+
+**Q2.** Updating a Marketplace listing does what to existing Tenant Yoke clones?
+
+a) Auto-migrates them
+b) Nothing — clones are independent
+c) Prompts the admin to opt in
+d) Marks them as outdated
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** A clone is yours. Upstream updates don't reach it.
+
+</details>
+
+**Q3.** Marketplace gating is enforced via…
+
+a) Route-level scope checks
+b) `marketplace_entitlements` rows checked at install/runtime
+c) Customer billing tier alone
+d) Honor system
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Entitlement rows gate whether routes are reachable.
+
+</details>
+
+**Q4.** What four things does a Marketplace install include?
+
+a) Just apps
+b) Apps + UI pages + FSM schemas + optionally seeded rows
+c) Apps + a download script
+d) Apps + extensions
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Seeded rows make the install useful from minute
+one.
+
+</details>
+
+**Q5.** A Tenant Yoke is…
+
+a) A copy of a Marketplace listing the tenant can customize
+b) An install instance of a Marketplace listing (no customization)
+c) A subscription tier
+d) A backup of a Marketplace listing
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** The customization path. Authoring a Tenant Yoke is
+the on-ramp to publishing your own listing.
+
+</details>
+
+**Q6.** Owned-schemas separation means…
+
+a) Schemas are immutable once cloned
+b) A clone copies the schemas; the originals remain owned by the source
+c) Cloning is read-only
+d) Only Enterprise can clone
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Source updates don't migrate clones — by design.
+
+</details>
+
+**Q7.** What's the right way to truly purge data an app seeded?
+
+a) Uninstall
+b) Delete the rows explicitly first, then uninstall
+c) Drop the tenant DB
+d) Open a support ticket
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Retention is deliberate. Explicit deletes for
+explicit purges.
+
+</details>
+
+**Q8.** What's a deterministic seed prefix used for?
+
+a) Random salt
+b) Ensuring the same install seeds the same rows across tenants without primary-key collisions
+c) Anti-spam
+d) Bandwidth optimization
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Per-tenant + per-listing prefix makes seeds
+idempotent and collision-free.
+
+</details>
+
+**Q9.** Forgetting the entitlement check in extension code does what?
+
+a) Returns 401
+b) Ships a paid feature for free
+c) Refuses the request
+d) Logs a warning
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Exactly the failure mode the gating exists to
+prevent.
+
+</details>
+
+**Q10.** A "factory reset" via uninstall…
+
+a) Works as expected
+b) Does NOT work — that's not what uninstall does
+c) Requires admin override
+d) Costs $100
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Uninstall removes the listing only. The retention
+contract is deliberate.
+
+</details>
+
+---
+
 # Lab M6 — Jobs
 
 > Drive a job through the M5 schema, add a self-loop transition for an audit event, fire the admin cancel override, inspect both event_log rows (self-loop + override).
@@ -20806,6 +22465,166 @@ the same event spine — the difference is who consumes them.
 - Reference: [/docs/integrations/webhooks](/docs/integrations/webhooks),
   [/docs/notifications](/docs/notifications),
   [/docs/messaging](/docs/messaging).
+
+---
+
+# Quiz M11 — Webhooks, notifications & messaging
+
+> 10 multiple-choice questions on HMAC verification, delivery-id dedup, the DLQ, rotate-secret dual window, and the SSRF guard.
+
+# Quiz M11 — Webhooks, notifications & messaging
+
+Pairs with [Lecture M11](/docs/training/lectures/M11-webhooks)
+and [Lab M11](/docs/training/labs/M11-webhooks).
+
+**Q1.** Why is the SSRF guard "non-counting" toward auto-pause?
+
+a) It refuses traffic that isn't a real failure of the receiver
+b) For performance
+c) Legacy
+d) It does count, actually
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** Refusals are a separate counter so legitimate
+receivers aren't penalized for the platform's own
+refusals.
+
+</details>
+
+**Q2.** What's the rotate-secret dual window for?
+
+a) Performance
+b) Both previous and new secrets verify during a grace period
+c) Backwards compat
+d) Cross-region replication
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Lets you roll the receiver to the new secret
+before the old one stops working.
+
+</details>
+
+**Q3.** What event sources emit outbound webhooks?
+
+a) Only job transitions
+b) Job transitions, form submissions, billing events
+c) Only billing
+d) Anything in the event log
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Multiple sources flow through the same outbound
+dispatcher.
+
+</details>
+
+**Q4.** What's `X-FastYoke-Delivery` for?
+
+a) Routing
+b) Receiver-side deduplication
+c) Rate-limit metadata
+d) Auth
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Same id reappears on DLQ replay; receiver dedups.
+
+</details>
+
+**Q5.** Why hash the raw bytes for HMAC verification?
+
+a) Faster
+b) Re-serializing reorders keys or whitespace and breaks the hash
+c) Required by RFC
+d) For cross-platform support
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Different serializers produce different bytes — the
+hash is over what the platform sent.
+
+</details>
+
+**Q6.** What's the SSRF guard's refusal list?
+
+a) Non-HTTPS, RFC-1918, link-local, IPv6 ULA
+b) Only non-HTTPS
+c) Only private IPs
+d) Anything outside an allowlist
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** Layered — protocol + private ranges +
+unroutable.
+
+</details>
+
+**Q7.** What does `replay-dlq` redeliver?
+
+a) New events generated since the failure
+b) The original failed deliveries, with the same delivery ids
+c) A merged batch
+d) Compressed event diffs
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Original deliveries, original ids — your receiver
+dedups.
+
+</details>
+
+**Q8.** Notifications vs messaging — which is which?
+
+a) Notifications = conversational; messaging = one-way
+b) Notifications = one-way bell-style; messaging = conversational
+c) Aliases
+d) Notifications are paid; messaging is free
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Different consumption models; both ride the same
+event spine.
+
+</details>
+
+**Q9.** A webhook subscription pauses automatically after…
+
+a) 1 consecutive failure
+b) 10 consecutive failures (excluding SSRF refusals)
+c) The first 4xx
+d) 100 failures of any kind
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Real failures count toward auto-pause; refusals
+don't.
+
+</details>
+
+**Q10.** Can a receiver target a private (RFC-1918) IP for "internal" use?
+
+a) Yes — internal IPs are fine
+b) No — the SSRF guard refuses dispatch
+c) Only via a special endpoint
+d) Only on Enterprise
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Private IPs are always refused, no override.
+
+</details>
 
 ---
 
@@ -21012,6 +22831,165 @@ invalidation in v1.
 
 ---
 
+# Quiz M12 — Bulk operations + Reports & dashboards
+
+> 10 multiple-choice questions on preview-and-commit, cascade, dashboard aggregates, and digest scheduling.
+
+# Quiz M12 — Bulk operations + Reports & dashboards
+
+Pairs with [Lecture M12](/docs/training/lectures/M12-bulk-reports)
+and [Lab M12](/docs/training/labs/M12-bulk-ops-reports).
+
+**Q1.** What does the preview-and-commit contract guarantee?
+
+a) Preview writes; commit confirms
+b) Preview is read-only; commit is the only write
+c) Both write; commit is faster
+d) Preview is a dry-run for cost estimation only
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Re-running preview shows the same diff. Auditors
+verify by diffing two previews.
+
+</details>
+
+**Q2.** How are aggregates evaluated?
+
+a) Precomputed nightly
+b) On demand from posted rows
+c) Cached in Redis
+d) Estimated via sampling
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** No async invalidation in v1 — refresh the widget
+if it looks stale.
+
+</details>
+
+**Q3.** Why does a digest carry a UTC hour and not a timezone?
+
+a) Simpler implementation
+b) Avoids DST ambiguity and tenant-mixing edge cases
+c) Email delivery is UTC anyway
+d) Bug — it should carry a timezone
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** UTC removes ambiguity. Convert at the recipient if
+you want local time.
+
+</details>
+
+**Q4.** Cascade is…
+
+a) On by default
+b) Opt-in per call (`cascade: true`)
+c) Configured per tenant
+d) Configured per entity
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Default-off catches mistakes; opt in when you
+mean it.
+
+</details>
+
+**Q5.** What does a `session_id` from preview expire after?
+
+a) 1 minute
+b) ~15 minutes
+c) 24h
+d) Never
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Short window. Past expiry, re-preview.
+
+</details>
+
+**Q6.** What happens to FSM job rows referencing a bulk-deleted entity row (with cascade)?
+
+a) Hard-deleted
+b) Soft-deleted; the cascade report lists them
+c) Unchanged
+d) Returns 409
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Soft-delete preserves the audit chain; the report
+shows what cascaded.
+
+</details>
+
+**Q7.** What's `weekday: 0` in the digest scheduler?
+
+a) Sunday
+b) Monday
+c) Configurable per tenant
+d) Saturday
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Mon=0 in the platform's convention — not cron's
+Sun=0.
+
+</details>
+
+**Q8.** Committing past `session_id` expiry returns…
+
+a) 200 with idempotency
+b) 410 (gone)
+c) 200 but no-op
+d) 500
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Session has expired. Re-preview to get a fresh
+session.
+
+</details>
+
+**Q9.** Bulk-delete without `cascade: true` against rows that have referencers returns…
+
+a) 200 with cascade
+b) 409 (conflict)
+c) Deletes and orphans the referencers
+d) Soft-deletes
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Default-off requires you to opt in.
+
+</details>
+
+**Q10.** Why does the platform refresh dashboard widgets on demand only?
+
+a) Bug
+b) Avoids the async invalidation surface in v1
+c) Faster
+d) Saves bandwidth
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** No background invalidator means no stale-cache bug
+class.
+
+</details>
+
+---
+
 # Lab M7 — Pages & App Builder
 
 > Author a 3-page App in the admin shell — Vehicles list (from M3), Intake form (from M4), Dashboard widget. Set a theme override and a navigation order. Open the App and confirm all three pages render.
@@ -21157,6 +23135,162 @@ questions like "which controls are in gap?"
 
 ---
 
+# Quiz M13 — Compliance Yoke + Yoker
+
+> 10 multiple-choice questions on deterministic sampling, the connector-vs-attestation distinction, OSCAL exports, and Yoker gating.
+
+# Quiz M13 — Compliance Yoke + Yoker
+
+Pairs with [Lecture M13](/docs/training/lectures/M13-compliance-yoker)
+and [Lab M13](/docs/training/labs/M13-compliance-yoker).
+
+**Q1.** What does deterministic sampling guarantee about the Auditor Room?
+
+a) Random sampling each engagement
+b) Re-running at the same point-in-time produces the same sample
+c) Always samples 100%
+d) Samples by date only
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Seed = `(tenant_id, control_id)`. Auditors verify
+the determinism out-of-band.
+
+</details>
+
+**Q2.** What corpus does Yoker index?
+
+a) Cross-tenant data
+b) Tenant-scoped entity records, attachments (text/CSV/MD), and optionally docs
+c) Public docs only
+d) Just the entity schemas
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Tenant-private vector index. Cross-tenant queries
+hit empty context.
+
+</details>
+
+**Q3.** What's the gating tier for Yoker?
+
+a) Free
+b) Enterprise+ OR the paid `yoker` add-on
+c) Solo
+d) Pro
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Two paths: tier or add-on.
+
+</details>
+
+**Q4.** Connector vs attestation?
+
+a) Aliases
+b) Connector pulls evidence automatically; attestation is a human-signed claim
+c) Connector is paid; attestation is free
+d) Connector is for code; attestation is for policy
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Different sources for the same readiness sweep.
+
+</details>
+
+**Q5.** What does "unknown" control state mean?
+
+a) Not yet evaluated
+b) A connector reported evidence but no rule mapped it to a definitive state
+c) Refused by the auditor
+d) Out of scope for the framework
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Investigate before assuming partial credit.
+
+</details>
+
+**Q6.** What format is the OSCAL export?
+
+a) PDF
+b) JSON + per-control evidence manifests, in a ZIP
+c) Markdown
+d) XML
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** OSCAL JSON is what auditors expect; evidence
+manifests reference the rows.
+
+</details>
+
+**Q7.** How long is the OSCAL download URL valid?
+
+a) Forever
+b) Time-bound — re-fetch if it expires
+c) 24h
+d) Until next sweep
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Signed + tenant-scoped + time-bound.
+
+</details>
+
+**Q8.** Asking Yoker about another tenant returns…
+
+a) Cross-tenant context
+b) Empty context (tenant-scoped)
+c) Refusal
+d) An error
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** The corpus is scoped — the query just sees no
+relevant context.
+
+</details>
+
+**Q9.** What does the framework-readiness sweep score mean?
+
+a) Percentage of evidence collected
+b) Fraction of `met` controls over the framework's control surface
+c) Time since last sweep
+d) Auditor's grade
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** A control with no evidence pulls the score down.
+
+</details>
+
+**Q10.** Should you trust a Yoker answer without checking citations?
+
+a) Yes — it's tenant-scoped
+b) No — verify citations before quoting
+c) Only if Enterprise tier
+d) Only for read-only questions
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** RAG generates from the corpus; citations are your
+audit trail.
+
+</details>
+
+---
+
 # Lab M7 — Solution
 
 > Reference solution for Lab M7 — menu paths per step plus three common gotchas around theme cascade, dashboard widget refresh, and draft-form embeds.
@@ -21284,6 +23418,164 @@ once published**.
 - Lab: [M14 — Ledger & E-sign](/docs/training/labs/M14-ledger-esign).
 - Reference: [/docs/yoke-ledger](/docs/yoke-ledger),
   [/docs/esign](/docs/esign).
+
+---
+
+# Quiz M14 — Yoke Ledger + E-signatures
+
+> 10 multiple-choice questions on journal-entry immutability, the reversal contract, the seal's trust model, and posting-rule self-loops.
+
+# Quiz M14 — Yoke Ledger + E-signatures
+
+Pairs with [Lecture M14](/docs/training/lectures/M14-ledger-esign)
+and [Lab M14](/docs/training/labs/M14-ledger-esign).
+
+**Q1.** Why are journal entries immutable once posted?
+
+a) SQLite limitation
+b) Audit trail integrity — same reason as the event log
+c) Performance
+d) Backwards compat
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Mutation defeats the audit. Reversal appends a new
+entry instead.
+
+</details>
+
+**Q2.** What does the platform's seal prove without a Certificate Authority?
+
+a) Nothing — you need a CA for trust
+b) The platform serialized this exact PDF at this exact time
+c) Identity of the signer
+d) Legal admissibility
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Hash-chained ed25519 over the PDF + audit log.
+Verifiable without a CA.
+
+</details>
+
+**Q3.** What's a self-loop in posting-rule terms?
+
+a) Two rules with the same `rule_key`
+b) A rule with `from == to` that fires without changing GL position (counter/retry pattern)
+c) An infinite loop bug
+d) A circular dependency between rules
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Same FSM pattern from M6 applied to posting rules.
+
+</details>
+
+**Q4.** What does reversing a posted entry do?
+
+a) Edits the original
+b) Appends a new entry with mirrored sides
+c) Deletes the original
+d) Marks it inactive
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** History is never edited. The trial balance nets to
+zero across the pair.
+
+</details>
+
+**Q5.** What does the public verify endpoint require?
+
+a) An auth token
+b) Nothing — no auth required (that's the trust model)
+c) Tenant id
+d) An invitation
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** The seal is meaningful precisely *because* anyone
+can verify.
+
+</details>
+
+**Q6.** What happens if you re-export a sealed PDF from a different viewer?
+
+a) Same seal verifies
+b) Whitespace can reflow and break the seal
+c) Auto-resigns
+d) The seal is preserved by metadata
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Always serve the sealed copy the platform stores.
+
+</details>
+
+**Q7.** What's a Posting Rule's `amount_path`?
+
+a) An SQL expression
+b) A JSON Pointer into the triggering event's payload
+c) A constant cents value
+d) A reference to another rule
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** JSON Pointer like `$.total` extracts the amount
+from the event payload.
+
+</details>
+
+**Q8.** What happens if you try to PATCH a posted entry?
+
+a) 200 with the patch applied
+b) 409 — entry is immutable
+c) 401
+d) Auto-reverses
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Immutable. Reverse and re-post is the contract.
+
+</details>
+
+**Q9.** What's hidden behind auth on the public verify endpoint?
+
+a) Nothing — it's public
+b) The full evidence chain
+c) Verification result
+d) The PDF download
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** Public means public. Hiding it defeats the trust
+model.
+
+</details>
+
+**Q10.** Why does the e-sign subsystem mirror the GL subsystem's invariants?
+
+a) Code reuse
+b) Both prize immutability once published — and that's the audit value
+c) Coincidence
+d) Same author
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Same architectural principle applied to different
+domains.
+
+</details>
 
 ---
 
@@ -21427,6 +23719,165 @@ delegation.
 
 ---
 
+# Quiz M15 — Billing, reseller billing & Strategic Partner
+
+> 10 multiple-choice questions on the prepaid wallet's dual threshold, the __default__ sentinel, Strategic Partner consent, and metered-only mode.
+
+# Quiz M15 — Billing, reseller billing & Strategic Partner
+
+Pairs with [Lecture M15](/docs/training/lectures/M15-billing-reseller)
+and [Lab M15](/docs/training/labs/M15-billing-reseller).
+
+**Q1.** What's the $10 low-balance threshold for, vs the $0 suspend threshold?
+
+a) $10 emails an alert; $0 suspends the tenant (read-only)
+b) $10 suspends; $0 alerts
+c) Aliases of the same threshold
+d) Both trigger emails only
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** Alert-then-suspend gives the admin a window to top
+up.
+
+</details>
+
+**Q2.** Why is the `__default__` sentinel in rate cards important?
+
+a) Cosmetic name
+b) Fallback rate when a customer has no explicit override
+c) Marks the wholesale rate
+d) Reserved keyword for refunds
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Without it, new customers have no card and the
+resolver refuses.
+
+</details>
+
+**Q3.** Why is Strategic Partner consent per-request, not per-session?
+
+a) Performance
+b) The audit value is the per-request record; "always allow" defeats it
+c) Session expiry can drift
+d) Bug
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Each partner-initiated action records a consent row
+at the moment it runs.
+
+</details>
+
+**Q4.** What does metered-only mode opt out of?
+
+a) Wallet auto-suspend (tier base = 0; invoiced at month-end)
+b) The tier base only
+c) Both
+d) Neither — metered-only still suspends
+
+<details>
+<summary>Answer + why</summary>
+
+**a)** Metered-only orgs are exempt from auto-suspend and
+invoiced at month-end.
+
+</details>
+
+**Q5.** Crediting prod via the sandbox `wallet/credit` endpoint…
+
+a) Works in both envs
+b) Only works in sandbox — prod tops up through Stripe
+c) Requires admin override
+d) Returns a free trial
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Test-credit is sandbox-only. Stripe is the prod
+top-up path.
+
+</details>
+
+**Q6.** What does a white-label billing profile control?
+
+a) The Stripe key used
+b) What org name appears on the invoice
+c) The currency
+d) Tax id
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Per-period configurable. Resellers' end customers
+never see "FastYoke."
+
+</details>
+
+**Q7.** Can you cache Strategic Partner consent for performance?
+
+a) Yes
+b) No — caching defeats the per-request audit value
+c) Yes, with a 5-min TTL
+d) Only on Enterprise
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** The audit value is the per-request record.
+
+</details>
+
+**Q8.** What does the low-balance alert's idempotency window look like?
+
+a) Per call
+b) Per UTC day — no re-send the same day
+c) Per hour
+d) Forever (sent once only)
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Date-keyed idempotency. The sweep stamps
+`low_balance_alerted_at`.
+
+</details>
+
+**Q9.** What restores a suspended tenant?
+
+a) Manual admin action only
+b) Crediting the wallet triggers `unsuspend_on_credit`
+c) The next sweep
+d) A support ticket
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Self-healing — the unsuspend hook fires on credit.
+
+</details>
+
+**Q10.** What is egress metering charging for?
+
+a) Inbound API calls
+b) Email ($0.001/msg), outbound webhooks (flat), extension-bundle bytes (bucketed)
+c) Disk usage
+d) Compute time
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Egress is what costs FastYoke money to deliver, so
+it's metered separately.
+
+</details>
+
+---
+
 # Lab M8 — Solution
 
 > Reference solution for Lab M8 — Studio menu paths plus three common gotchas around explicit-snapshot semantics, destructive restore, and per-tenant draft ownership.
@@ -21541,6 +23992,161 @@ in solving any single primitive in isolation.
 
 - Lab: [M16 — Capstone](/docs/training/labs/M16-capstone).
 - Capstone doc: [/docs/training/capstone](/docs/training/capstone).
+
+---
+
+# Quiz M16 — Capstone framing
+
+> 10 multiple-choice questions on the capstone's integration-over-isolation principle, the rubric categories, and what "done" looks like.
+
+# Quiz M16 — Capstone framing
+
+Pairs with [Lecture M16](/docs/training/lectures/M16-capstone)
+and [Lab M16](/docs/training/labs/M16-capstone).
+
+**Q1.** What does the capstone reward most?
+
+a) Feature count
+b) Integration across primitives — the seams
+c) Surface polish
+d) Documentation length
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** A small Yoke that connects every primitive beats a
+sprawling one with seams that don't connect.
+
+</details>
+
+**Q2.** What's the real exit criterion?
+
+a) Self-attestation
+b) A second learner can install + walk through your Yoke end-to-end
+c) Passing an LLM grader
+d) A maintainer's review
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Reviewability by a second learner is the
+load-bearing test.
+
+</details>
+
+**Q3.** What's the project deliverable?
+
+a) A reference implementation of the FastYoke engine
+b) One Tenant Yoke that exercises every primitive across Weeks 1–7
+c) A capstone exam
+d) A blog post
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** A Tenant Yoke that integrates the primitives you've
+touched.
+
+</details>
+
+**Q4.** Why is there no starter code?
+
+a) Budget reasons
+b) Reaching for a template short-circuits the integration work
+c) Coming soon
+d) Available only on Enterprise
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** The rubric reads the integration, not the surface
+polish. Templates anchor learners.
+
+</details>
+
+**Q5.** Where do the rubric categories come from?
+
+a) Random
+b) The primitives covered across Weeks 1–7 (schema, authoring, runtime, distribution, ops)
+c) Cohort-specific
+d) The instructor
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Each rubric category maps to a week.
+
+</details>
+
+**Q6.** Scoping the capstone — better to ship…
+
+a) A large project with many features
+b) A small, well-integrated project with tight wiring
+c) A demo only
+d) A PowerPoint deck
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Integration wins. Feature count doesn't.
+
+</details>
+
+**Q7.** Should you skip the documentation pass?
+
+a) Yes — code speaks for itself
+b) No — "a second learner can install it" is a real test
+c) Only if you have time
+d) Documentation is auto-generated
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Without docs, the exit criterion fails.
+
+</details>
+
+**Q8.** What's the right way to use the capstone walkthrough (if shipped later)?
+
+a) Copy directly
+b) Read after submission to compare approaches
+c) Skip — irrelevant
+d) Required reading before starting
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Anchoring early defeats the integration practice.
+
+</details>
+
+**Q9.** Capstone reviewers score…
+
+a) Polish and aesthetics
+b) Integration across primitives
+c) Feature count
+d) Documentation length
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Wiring quality is what the rubric reads.
+
+</details>
+
+**Q10.** When are you done with the training?
+
+a) When the syllabus is read
+b) When every rubric category meets or exceeds and a second learner can install your Yoke cold
+c) After 8 weeks regardless
+d) When the labs pass
+
+<details>
+<summary>Answer + why</summary>
+
+**b)** Two-part exit: rubric scores + reviewable install.
+
+</details>
 
 ---
 
