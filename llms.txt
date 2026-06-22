@@ -286,6 +286,9 @@
 - [Lab M13 — Solution](https://www.fastyoke.io/docs/training/labs/M13-compliance-yoker-solution): Answer key for the M13 compliance & Yoker lab — exact sweep/evidence/OSCAL curls, Auditor Room menu paths, deterministic-sampling and gating notes.
 - [Lab M14 — Ledger & E-sign](https://www.fastyoke.io/docs/training/labs/M14-ledger-esign): Author a Revenue CoA account and a Posting Rule via REST, post a journal entry, reverse it, then upload a PDF envelope and verify the Certificate of Completion out-of-band.
 - [Lab M14 — Solution](https://www.fastyoke.io/docs/training/labs/M14-ledger-esign-solution): Answer key for the M14 ledger & e-sign lab — exact GL curls, the reversal contract, the public verify endpoint shape, and three sealed-PDF gotchas.
+- [Lab M15 — Billing, reseller & Strategic Partner](https://www.fastyoke.io/docs/training/labs/M15-billing-reseller): Top up a sandbox tenant's prepaid wallet, inspect the metered usage rollup, then simulate usage and trip the low-balance alert.
+- [Lab M15 — Solution](https://www.fastyoke.io/docs/training/labs/M15-billing-reseller-solution): Answer key for the M15 billing lab — exact wallet/usage curls, the dual-threshold contract, reseller rate-card note, Strategic Partner consent semantics.
+- [Lab M16 — Capstone](https://www.fastyoke.io/docs/training/labs/M16-capstone): The capstone is the final integration project. This page is the bridge from Week 8 to the canonical capstone doc.
 
 ## Tutorials
 

@@ -18873,8 +18873,7 @@ the Certificate of Completion verified out-of-band.
 - [/docs/reseller-billing](/docs/reseller-billing)
 - [/partners/inetko](/partners/inetko)
 
-**Lab** — Top up a sandbox tenant's wallet, simulate
-metered usage, and trip the low-balance alert.
+**Lab** — [Top up a sandbox tenant's wallet, simulate metered usage, and trip the low-balance alert.](/docs/training/labs/M15-billing-reseller)
 
 **Project deliverable** — A reseller rate card and
 white-label invoice, plus a Strategic Partner consent
@@ -18894,6 +18893,8 @@ No new reading this module. The capstone shape lives in
 [Capstone](/docs/training/capstone). Submit when you
 believe every rubric category meets or exceeds. You're
 done.
+
+**Lab** — [Capstone — bridge from Week 8 to the integration project.](/docs/training/labs/M16-capstone)
 
 ---
 
@@ -21860,9 +21861,7 @@ See [Lab M14 — Solution](/docs/training/labs/M14-ledger-esign-solution).
 
 ## Next
 
-You've completed Week 7. Lab M15 ships in the Week 8 lab
-pack PR. Return to the [syllabus](/docs/training/syllabus)
-for the Week 8 reading list.
+[Lab M15 — Billing, reseller & Strategic Partner](/docs/training/labs/M15-billing-reseller).
 
 ---
 
@@ -21947,6 +21946,237 @@ Anyone with the hash can verify the seal.
 ## Back to the lab
 
 Return to [Lab M14 — Ledger & E-sign](/docs/training/labs/M14-ledger-esign).
+
+---
+
+# Lab M15 — Billing, reseller & Strategic Partner
+
+> Top up a sandbox tenant's prepaid wallet, inspect the metered usage rollup, then simulate usage and trip the low-balance alert.
+
+# Lab M15 — Billing, reseller & Strategic Partner
+
+This lab pairs with **Module M15 — Billing & metering +
+Reseller billing + Strategic Partner** in the
+[syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Top up your sandbox tenant's prepaid wallet to a small
+balance (just above the $10 low-balance threshold). Inspect
+the metered-usage rollup via REST. Simulate metered usage
+by firing a few FSM transitions, watch the wallet drain,
+and observe the low-balance alert email when the balance
+crosses $10.
+
+## Before you begin
+
+- A FastYoke **sandbox** tenant you're an admin of. (The
+  test-credit endpoint only works in sandbox; in prod the
+  wallet only credits via Stripe top-up.)
+- A `fy_pat_` PAT with `billing:admin` scope (or admin
+  session JWT).
+- A job-bearing FSM you can drive transitions on (the
+  `service_ticket` from M5/M6 works).
+- `curl` and `jq`.
+- About 40 minutes.
+
+## Or use Postman
+
+If you prefer a GUI, run the lab steps from Postman instead
+of `curl`. Each request has a **Tests** tab with the same
+checkpoint assertions the `curl` lab pins.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 8 — Operations and capstone → M15 — Billing & wallet** folder, set the `FY_TOKEN` environment variable, then run each request in order.
+
+The `curl` steps below remain the source of truth.
+
+## Steps
+
+1. **Credit the wallet (sandbox-only).**
+
+   ```bash
+   curl -i -X POST \
+     -H "Authorization: Bearer $FY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{"amount_cents":1500}' \
+     https://www.fastyoke.io/api/v1/tenant/billing/wallet/credit
+   ```
+
+   **Checkpoint:** 200. The wallet balance is now $15.00,
+   just above the $10 low-balance threshold.
+2. **Inspect the metered usage rollup.**
+
+   ```bash
+   curl -i -H "Authorization: Bearer $FY_PAT" \
+     https://www.fastyoke.io/api/v1/tenant/billing/usage
+   ```
+
+   **Checkpoint:** 200 with a body that lists every
+   metered resource (transitions, storage bytes, etc.) and
+   the period-to-date totals.
+3. **Get the wallet balance.**
+
+   ```bash
+   curl -i -H "Authorization: Bearer $FY_PAT" \
+     https://www.fastyoke.io/api/v1/tenant/billing/wallet
+   ```
+
+   **Checkpoint:** 200 with `{ "balance_cents": 1500 }`.
+4. **Simulate metered usage.** Fire 5–10 FSM transitions
+   on a job (each transition is a metered event). Use the
+   M6 lab's transition curl in a `for` loop.
+
+   **Checkpoint:** the wallet balance in Step 3 has
+   dropped. Each transition costs a fraction of a cent;
+   for the lab, the magnitude matters less than the
+   direction.
+5. **Trip the low-balance alert.** Either drive enough
+   transitions to drop below $10, or re-credit the wallet
+   with a smaller amount (e.g., `amount_cents=500`) and
+   then drain. When the balance crosses $10, the platform
+   sends a `LowBalance` email to the org admin.
+
+   **Checkpoint:** the alert email arrives. The wallet's
+   `low_balance_alerted_at` timestamp is set, so a second
+   sweep on the same day won't re-send (idempotent).
+
+## What you'll have at the end
+
+A credited sandbox wallet, the metered-usage rollup, and
+a tripped low-balance alert email.
+
+## Stuck?
+
+See [Lab M15 — Solution](/docs/training/labs/M15-billing-reseller-solution).
+
+## Next
+
+[Lab M16 — Capstone](/docs/training/labs/M16-capstone).
+
+---
+
+# Lab M15 — Solution
+
+> Answer key for the M15 billing lab — exact wallet/usage curls, the dual-threshold contract, reseller rate-card note, Strategic Partner consent semantics.
+
+# Lab M15 — Solution
+
+> **Reveal warning.** This page is the **answer key** for
+> [Lab M15 — Billing, reseller & Strategic Partner](/docs/training/labs/M15-billing-reseller).
+> Try each step on your own first; the friction is where the
+> learning lives.
+
+## Step 2 — Usage rollup response shape
+
+```json
+{
+  "period": "2026-06",
+  "tier_base_cents": 0,
+  "metered": [
+    { "resource": "transitions", "count": 1247, "cost_cents": 124 },
+    { "resource": "storage_bytes", "count": 8420000000, "cost_cents": 42 },
+    { "resource": "outbound_email", "count": 18, "cost_cents": 18 }
+  ],
+  "total_cents": 184
+}
+```
+
+## Step 3 — Wallet response
+
+```json
+{
+  "balance_cents": 1500,
+  "low_balance_alerted_at": null,
+  "suspended_at": null
+}
+```
+
+After Step 5 trips the alert, `low_balance_alerted_at` carries
+a UTC timestamp.
+
+## The dual-threshold contract
+
+- **$10 low-balance alert.** The platform emails the org
+  admin when the wallet drops below $10. Idempotent per UTC
+  day — a second sweep on the same day won't re-send.
+- **$0 auto-suspend.** When the wallet reaches $0, the
+  tenant is suspended (read-only). Crediting the wallet
+  triggers `unsuspend_on_credit`.
+- **Metered-only mode.** Org admins can opt into
+  metered-only billing (no tier base), which exempts the
+  org from wallet auto-suspend — the org pays metered costs
+  invoiced at month-end.
+
+## Reseller note
+
+Resellers configure a **rate card** with a `__default__`
+sentinel rate plus per-customer overrides. Their end
+customers never see the wholesale cost. The white-label
+billing profile controls what name appears on the invoice.
+
+## Strategic Partner consent
+
+Strategic Partner consent is **per-request**, not
+per-session. Every partner-initiated action on behalf of an
+end customer records a consent row at the moment the
+action runs. There is no "always allow" — that would
+defeat the audit chain.
+
+## Back to the lab
+
+Return to [Lab M15 — Billing, reseller & Strategic Partner](/docs/training/labs/M15-billing-reseller).
+
+---
+
+# Lab M16 — Capstone
+
+> The capstone is the final integration project. This page is the bridge from Week 8 to the canonical capstone doc.
+
+# Lab M16 — Capstone
+
+This lab pairs with **Module M16 — Capstone** in the
+[syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+There is no new lab content this week. The capstone is the
+final integration project — an end-to-end Tenant Yoke that
+exercises every primitive you've touched across Weeks 1–7.
+
+The full project shape, rubric, and submission criteria
+live on the canonical capstone doc:
+
+**→ [Capstone — Integration project](/docs/training/capstone)**
+
+## What "done" looks like
+
+You're done with the training when:
+
+- Every rubric category on the capstone meets or exceeds.
+- Your Tenant Yoke installs cleanly on a fresh sandbox
+  tenant.
+- A second learner can run through your project end-to-end
+  using only what your Yoke provides.
+
+## Stuck?
+
+The capstone is intentionally open-ended — there's no
+solution page. Re-read the [capstone rubric](/docs/training/capstone) and lean on
+the labs you've already completed. Every primitive in the
+rubric maps back to a lab in Weeks 1–7.
+
+## Next
+
+You've completed the training. Return to the
+[syllabus](/docs/training/syllabus) for the post-training
+reference list.
 
 ---
 

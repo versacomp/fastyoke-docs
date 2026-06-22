@@ -134,6 +134,4 @@ See [Lab M14 — Solution](/docs/training/labs/M14-ledger-esign-solution).
 
 ## Next
 
-You've completed Week 7. Lab M15 ships in the Week 8 lab
-pack PR. Return to the [syllabus](/docs/training/syllabus)
-for the Week 8 reading list.
+[Lab M15 — Billing, reseller & Strategic Partner](/docs/training/labs/M15-billing-reseller).

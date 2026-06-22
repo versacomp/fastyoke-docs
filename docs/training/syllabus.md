@@ -454,8 +454,7 @@ the Certificate of Completion verified out-of-band.
 - [/docs/reseller-billing](/docs/reseller-billing)
 - [/partners/inetko](/partners/inetko)
 
-**Lab** — Top up a sandbox tenant's wallet, simulate
-metered usage, and trip the low-balance alert.
+**Lab** — [Top up a sandbox tenant's wallet, simulate metered usage, and trip the low-balance alert.](/docs/training/labs/M15-billing-reseller)
 
 **Project deliverable** — A reseller rate card and
 white-label invoice, plus a Strategic Partner consent
@@ -475,6 +474,8 @@ No new reading this module. The capstone shape lives in
 [Capstone](/docs/training/capstone). Submit when you
 believe every rubric category meets or exceeds. You're
 done.
+
+**Lab** — [Capstone — bridge from Week 8 to the integration project.](/docs/training/labs/M16-capstone)
 
 ---
 
