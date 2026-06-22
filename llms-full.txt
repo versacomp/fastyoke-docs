@@ -18640,8 +18640,8 @@ shown.
 - [/docs/apps](/docs/apps)
 - [/docs/apps/advanced](/docs/apps/advanced)
 
-**Lab** — Build a 3-page App that surfaces a custom
-entity list, a form, and a dashboard widget.
+**Lab** — [Build a 3-page App that surfaces a custom
+entity list, a form, and a dashboard widget.](/docs/training/labs/M7-pages-and-apps)
 
 **Project deliverable** — Your App rendered in the
 admin shell with a theme override.
@@ -18665,8 +18665,8 @@ admin shell with a theme override.
 - [/docs/apps/studio](/docs/apps/studio)
 - [/docs/apps/studio-wizard](/docs/apps/studio-wizard)
 
-**Lab** — Build a 2-board Yoke in Studio, capture a
-named snapshot, edit, restore.
+**Lab** — [Build a 2-board Yoke in Studio, capture a
+named snapshot, edit, restore.](/docs/training/labs/M8-yoke-studio)
 
 **Project deliverable** — A Studio draft restored
 from snapshot, deployed to your tenant.
@@ -20152,10 +20152,7 @@ See [Lab M6 — Solution](/docs/training/labs/M6-jobs-solution).
 
 ## Next
 
-You've completed Week 3. Lab M7 ships in the Week 4 lab
-pack PR. Return to the
-[syllabus](/docs/training/syllabus) for the Week 4
-reading list.
+[Lab M7 — Pages & App Builder](/docs/training/labs/M7-pages-and-apps).
 
 ---
 
@@ -20309,6 +20306,308 @@ lab.
 ## Back to the lab
 
 [Lab M6 — Jobs](/docs/training/labs/M6-jobs).
+
+---
+
+# Lab M7 — Pages & App Builder
+
+> Author a 3-page App in the admin shell — Vehicles list (from M3), Intake form (from M4), Dashboard widget. Set a theme override and a navigation order. Open the App and confirm all three pages render.
+
+# Lab M7 — Pages & App Builder
+
+This lab pairs with **Module M7 — Pages & App Builder** in
+the [syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Author an App with three pages and a theme override.
+Page 1 surfaces the `vehicle` entity list you authored in
+M3. Page 2 embeds the form you composed in M4. Page 3
+renders a simple dashboard widget showing a record count.
+Set navigation order. Open the App and confirm all three
+pages render under the overridden theme.
+
+## Before you begin
+
+- An admin session on a tenant you're an admin of.
+- The `vehicle` entity from M3 (if M3 wasn't completed,
+  any custom entity schema works).
+- The public form from M4 (or any form on the tenant).
+- About 40 minutes.
+
+## Or use Postman
+
+This lab is GUI work in the admin shell. Postman doesn't apply here — open the admin shell and follow the steps
+below.
+
+## Steps
+
+1. **Create a new App.** Settings → Apps → **New App**.
+   Name it `Service-Ticket Console`.
+
+   **Checkpoint:** the new App appears in the Apps list.
+2. **Set a theme override.** Open the App's theme
+   settings and override one color token (e.g., the
+   primary accent color).
+
+   **Checkpoint:** the App's edit shell renders in the
+   overridden color.
+3. **Add Page 1 — Vehicles list.** Add a Page that
+   surfaces the `vehicle` entity list as its main block.
+
+   **Checkpoint:** the Page preview shows your `vehicle`
+   records.
+4. **Add Page 2 — Intake form.** Add a Page that embeds
+   the M4 form.
+
+   **Checkpoint:** opening Page 2 in the preview shows
+   the form fields.
+5. **Add Page 3 — Dashboard.** Add a Page with a single
+   widget showing the entity count for `vehicle`.
+
+   **Checkpoint:** the widget displays an integer
+   matching `GET /entities/vehicle?count=true` if you
+   want to double-check.
+6. **Set navigation order.** Order: Vehicles list →
+   Intake form → Dashboard.
+
+   **Checkpoint:** the App's nav bar lists the three
+   pages in that order.
+7. **Open the App from the admin shell.** Navigate to
+   the App URL.
+
+   **Checkpoint:** all three pages render under the
+   overridden theme; nav order is correct; embedded form
+   submits successfully.
+
+## What you'll have at the end
+
+A 3-page App live in your tenant's admin shell with a
+theme override visible across all three pages.
+
+## Stuck?
+
+See [Lab M7 — Solution](/docs/training/labs/M7-pages-and-apps-solution).
+
+## Next
+
+[Lab M8 — Yoke Studio](/docs/training/labs/M8-yoke-studio).
+
+---
+
+# Lab M7 — Solution
+
+> Reference solution for Lab M7 — menu paths per step plus three common gotchas around theme cascade, dashboard widget refresh, and draft-form embeds.
+
+# Lab M7 — Solution
+
+This page is the **answer key** for
+[Lab M7](/docs/training/labs/M7-pages-and-apps). Work the
+lab first — the friction of clicking through is
+intentional.
+
+## Answer per step
+
+### Step 1 — Create the App
+
+**Settings → Apps → New App**. Name field accepts free
+text. The App appears in the Apps list with a default
+icon.
+
+### Step 2 — Theme override
+
+**App Settings → Theme → Override**. The override surface
+exposes the brand color tokens; flipping one of them
+re-renders the App's edit shell immediately.
+
+### Step 3 — Vehicles list page
+
+**App → Pages → Add Page → Entity list block**. Pick
+`vehicle` as the entity. The preview pulls live data.
+
+### Step 4 — Intake form page
+
+**App → Pages → Add Page → Form block**. Pick the form
+you composed in M4.
+
+### Step 5 — Dashboard widget
+
+**App → Pages → Add Page → Dashboard widget**. The
+count-of-`vehicle` widget surfaces the same data as
+`GET /entities/vehicle?count=true`.
+
+### Step 6 — Navigation order
+
+**App → Navigation → Drag to reorder**. Saves on drop;
+no explicit "save" button.
+
+### Step 7 — Open the App
+
+The App's URL is rendered in the admin shell sidebar
+under the App name.
+
+## Common gotchas
+
+- **Theme overrides cascade.** Child pages inherit the
+  override; sibling Apps do not. Each App owns its theme.
+- **The dashboard widget reads the entity-count endpoint
+  at render time.** If the count looks wrong after you
+  add a record, refresh the page — there's no live
+  invalidation.
+- **If the form embed renders empty,** the form may still
+  be in draft state. Open Forms, publish it, and refresh
+  the App.
+
+## Back to the lab
+
+[Lab M7 — Pages & App Builder](/docs/training/labs/M7-pages-and-apps).
+
+---
+
+# Lab M8 — Yoke Studio
+
+> Build a 2-board Yoke in Yoke Studio at /admin/studio, capture a named snapshot, edit, restore. Confirm the restore reverts your edit.
+
+# Lab M8 — Yoke Studio
+
+This lab pairs with **Module M8 — Yoke Studio** in the
+[syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Build a 2-board Yoke in Studio. Capture a named snapshot.
+Edit one board (rename or add a block). Restore the
+snapshot. Confirm the edit reverts.
+
+## Before you begin
+
+- An admin session on a tenant you're an admin of.
+- About 30 minutes.
+
+## Or use Postman
+
+This lab is GUI work in the admin shell. Postman doesn't apply here — open Yoke Studio at `/admin/studio` and
+follow the steps below.
+
+## Steps
+
+1. **Open Yoke Studio.** Navigate to `/admin/studio`.
+
+   **Checkpoint:** the Studio surface loads with a
+   "New Yoke" affordance.
+2. **Create a new Yoke draft.** Name it
+   `Maintenance Tracker`.
+
+   **Checkpoint:** the draft appears in the Studio
+   drafts list.
+3. **Add Board 1 — Entities.** Add a board surfacing an
+   entity (use `vehicle` from M3 or any tenant entity).
+
+   **Checkpoint:** Board 1 renders the entity list.
+4. **Add Board 2 — Workflow.** Add a board surfacing a
+   workflow schema (use the `service_ticket` from M5 or
+   any tenant FSM).
+
+   **Checkpoint:** Board 2 renders the workflow's state
+   list.
+5. **Capture a named snapshot.** From the Studio menu →
+   **Snapshots → New snapshot**. Name it `v1-baseline`.
+
+   **Checkpoint:** the snapshot appears in the snapshot
+   list with the name and a timestamp.
+6. **Edit the Yoke.** Rename Board 1 (or add a third
+   block — anything observable).
+
+   **Checkpoint:** the edit shows in the draft.
+7. **Restore the snapshot.** From the snapshot list →
+   **Restore `v1-baseline`**.
+
+   **Checkpoint:** the edit reverts; the draft is back
+   to what `v1-baseline` captured. Studio prompts before
+   destroying current changes — confirm.
+
+## What you'll have at the end
+
+A Studio draft with a named snapshot, one round-trip of
+edit + restore proving the snapshot model works.
+
+## Stuck?
+
+See [Lab M8 — Solution](/docs/training/labs/M8-yoke-studio-solution).
+
+## Next
+
+You've completed Week 4. Lab M9 ships in the Week 5 lab
+pack PR. Return to the
+[syllabus](/docs/training/syllabus) for the Week 5
+reading list.
+
+---
+
+# Lab M8 — Solution
+
+> Reference solution for Lab M8 — Studio menu paths plus three common gotchas around explicit-snapshot semantics, destructive restore, and per-tenant draft ownership.
+
+# Lab M8 — Solution
+
+This page is the **answer key** for
+[Lab M8](/docs/training/labs/M8-yoke-studio). Work the lab
+first — the friction of clicking through is intentional.
+
+## Answer per step
+
+### Step 1 — Open Studio
+
+The full URL is `/admin/studio`. The surface loads inside
+the admin shell.
+
+### Step 2 — Create a draft
+
+**`/admin/studio` → "New Yoke"**. Name accepts free text.
+Draft is autosaved from the first keystroke; you can leave
+and return without losing progress.
+
+### Step 3 — Add Board 1
+
+**Studio → Add Board → Entity**. Pick the entity slug.
+The board renders against live tenant data.
+
+### Step 4 — Add Board 2
+
+**Studio → Add Board → Workflow**. Pick the schema slug.
+The board lists the workflow's states.
+
+### Step 5 — Capture snapshot
+
+**Studio → Snapshots → New snapshot**. Name it
+`v1-baseline`. The snapshot list shows it immediately.
+
+### Step 6 — Edit
+
+Rename a board or add a block. The edit is autosaved.
+
+### Step 7 — Restore
+
+**Studio → Snapshots → Restore**. Studio prompts to
+confirm — restore overwrites the current in-progress
+edit. Click through, and the draft reverts.
+
+## Common gotchas
+
+- **Studio autosaves the draft, but snapshot creation is
+  explicit.** Until you click "New snapshot" there's no
+  restore point. The autosaved draft is "current state",
+  not "captured state".
+- **Restore is destructive.** It overwrites your current
+  in-progress edit. If the edit is worth keeping,
+  capture a fresh snapshot before restoring.
+- **The draft is per-tenant; multiple admins editing the
+  same draft last-writer-wins.** No collaborative
+  multi-user editing in Studio today.
+
+## Back to the lab
+
+[Lab M8 — Yoke Studio](/docs/training/labs/M8-yoke-studio).
 
 ---
 

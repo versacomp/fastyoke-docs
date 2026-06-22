@@ -270,6 +270,10 @@
 - [Lab M5 — Solution](https://www.fastyoke.io/docs/training/labs/M5-fsm-authoring-solution): Reference solution for Lab M5 — exact schema body with three JSONLogic guards, sample 422 + 200 transition responses, and a sample hand-trace.
 - [Lab M6 — Jobs](https://www.fastyoke.io/docs/training/labs/M6-jobs): Drive a job through the M5 schema, add a self-loop transition for an audit event, fire the admin cancel override, inspect both event_log rows (self-loop + override).
 - [Lab M6 — Solution](https://www.fastyoke.io/docs/training/labs/M6-jobs-solution): Reference solution for Lab M6 — exact PATCH that adds the self-loop, exact admin-cancel curl, sample event_log row JSON, and a sample job-lifecycle.sh script.
+- [Lab M7 — Pages & App Builder](https://www.fastyoke.io/docs/training/labs/M7-pages-and-apps): Author a 3-page App in the admin shell — Vehicles list (from M3), Intake form (from M4), Dashboard widget. Set a theme override and a navigation order. Open the App and confirm all three pages render.
+- [Lab M7 — Solution](https://www.fastyoke.io/docs/training/labs/M7-pages-and-apps-solution): Reference solution for Lab M7 — menu paths per step plus three common gotchas around theme cascade, dashboard widget refresh, and draft-form embeds.
+- [Lab M8 — Yoke Studio](https://www.fastyoke.io/docs/training/labs/M8-yoke-studio): Build a 2-board Yoke in Yoke Studio at /admin/studio, capture a named snapshot, edit, restore. Confirm the restore reverts your edit.
+- [Lab M8 — Solution](https://www.fastyoke.io/docs/training/labs/M8-yoke-studio-solution): Reference solution for Lab M8 — Studio menu paths plus three common gotchas around explicit-snapshot semantics, destructive restore, and per-tenant draft ownership.
 
 ## Tutorials
 

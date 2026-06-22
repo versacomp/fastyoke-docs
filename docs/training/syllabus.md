@@ -221,8 +221,8 @@ shown.
 - [/docs/apps](/docs/apps)
 - [/docs/apps/advanced](/docs/apps/advanced)
 
-**Lab** — Build a 3-page App that surfaces a custom
-entity list, a form, and a dashboard widget.
+**Lab** — [Build a 3-page App that surfaces a custom
+entity list, a form, and a dashboard widget.](/docs/training/labs/M7-pages-and-apps)
 
 **Project deliverable** — Your App rendered in the
 admin shell with a theme override.
@@ -246,8 +246,8 @@ admin shell with a theme override.
 - [/docs/apps/studio](/docs/apps/studio)
 - [/docs/apps/studio-wizard](/docs/apps/studio-wizard)
 
-**Lab** — Build a 2-board Yoke in Studio, capture a
-named snapshot, edit, restore.
+**Lab** — [Build a 2-board Yoke in Studio, capture a
+named snapshot, edit, restore.](/docs/training/labs/M8-yoke-studio)
 
 **Project deliverable** — A Studio draft restored
 from snapshot, deployed to your tenant.

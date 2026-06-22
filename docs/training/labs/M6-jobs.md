@@ -100,7 +100,4 @@ See [Lab M6 — Solution](/docs/training/labs/M6-jobs-solution).
 
 ## Next
 
-You've completed Week 3. Lab M7 ships in the Week 4 lab
-pack PR. Return to the
-[syllabus](/docs/training/syllabus) for the Week 4
-reading list.
+[Lab M7 — Pages & App Builder](/docs/training/labs/M7-pages-and-apps).
