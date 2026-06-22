@@ -28,6 +28,27 @@ the deleted record.
 - `curl` on your shell.
 - About 30 minutes.
 
+## Or use Postman
+
+If you prefer a GUI, run the lab steps from Postman instead
+of `curl`. Each request has a **Tests** tab with the same
+checkpoint assertions the `curl` lab pins.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 2 — Core primitives I → M3
+— Author a vehicle entity** folder, set the `FY_TOKEN`
+environment variable, then run each request in order. The
+pre-request scripts capture the record id into `FY_ID` so
+later steps find it automatically.
+
+The `curl` steps below remain the source of truth.
+
 ## Steps
 
 1. **Author the `vehicle` schema** with three annotated

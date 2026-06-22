@@ -26,6 +26,14 @@ write-up explaining the path.
 - `ripgrep` (`rg`) or `grep` for code search.
 - About 30 minutes of focused reading time.
 
+## Or use Postman
+
+This lab reads source code rather than calling the API.
+Postman doesn't apply here — open `backend/src/api/entities.rs`
+in your editor and follow the steps below. The
+[Postman collection](https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json)
+covers Labs M2 onward.
+
 ## Steps
 
 1. **Find a tenant-scoped REST handler.** Open

@@ -24,6 +24,26 @@ observations as comments.
 - `curl` on your shell.
 - About 20 minutes.
 
+## Or use Postman
+
+If you prefer a GUI, run the lab steps from Postman instead
+of `curl`. Each request has a **Tests** tab with the same
+checkpoint assertions the `curl` lab pins.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 1 — Foundations → M2 —
+Token walkthrough** folder, set the `FY_TOKEN` environment
+variable, then run each request in order. Green checks in
+the Tests tab mean the step worked.
+
+The `curl` steps below remain the source of truth.
+
 ## Steps
 
 1. **Mint a one-hour test token.** Open Settings →

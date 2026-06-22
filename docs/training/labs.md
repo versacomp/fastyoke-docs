@@ -56,6 +56,31 @@ end. If the platform's contract ever changes, the
 content-invariant test catches the drift before the lab rots
 silently.
 
+## Or use Postman
+
+Each lab from M2 onward ships with a matching Postman
+request set. Import the master collection once:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+In Postman: **File → Import → Link**, paste the URL, click
+**Import**. The collection's per-request **Tests** tab uses
+`pm.test(...)` to enforce the same checkpoint contract the
+`curl` labs pin. A green check in the Tests tab is the same
+signal as a successful `curl` checkpoint.
+
+Run each lab's folder top-to-bottom; the pre-request scripts
+chain IDs between steps so you don't have to copy-paste.
+
+The `curl` steps in each lab page remain the source of
+truth. Postman is the alternate path — same labs, same
+checkpoints, GUI instead of shell.
+
+**M1 is a code-reading lab.** Postman doesn't apply there;
+M2 onward all have request folders.
+
 ## What's not in labs today
 
 - **Labs M3 through M16** — each week ships as its own PR

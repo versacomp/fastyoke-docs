@@ -18293,6 +18293,31 @@ end. If the platform's contract ever changes, the
 content-invariant test catches the drift before the lab rots
 silently.
 
+## Or use Postman
+
+Each lab from M2 onward ships with a matching Postman
+request set. Import the master collection once:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+In Postman: **File → Import → Link**, paste the URL, click
+**Import**. The collection's per-request **Tests** tab uses
+`pm.test(...)` to enforce the same checkpoint contract the
+`curl` labs pin. A green check in the Tests tab is the same
+signal as a successful `curl` checkpoint.
+
+Run each lab's folder top-to-bottom; the pre-request scripts
+chain IDs between steps so you don't have to copy-paste.
+
+The `curl` steps in each lab page remain the source of
+truth. Postman is the alternate path — same labs, same
+checkpoints, GUI instead of shell.
+
+**M1 is a code-reading lab.** Postman doesn't apply there;
+M2 onward all have request folders.
+
 ## What's not in labs today
 
 - **Labs M3 through M16** — each week ships as its own PR
@@ -18340,6 +18365,14 @@ write-up explaining the path.
   reading source on GitHub.
 - `ripgrep` (`rg`) or `grep` for code search.
 - About 30 minutes of focused reading time.
+
+## Or use Postman
+
+This lab reads source code rather than calling the API.
+Postman doesn't apply here — open `backend/src/api/entities.rs`
+in your editor and follow the steps below. The
+[Postman collection](https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json)
+covers Labs M2 onward.
 
 ## Steps
 
@@ -19123,6 +19156,26 @@ observations as comments.
 - `curl` on your shell.
 - About 20 minutes.
 
+## Or use Postman
+
+If you prefer a GUI, run the lab steps from Postman instead
+of `curl`. Each request has a **Tests** tab with the same
+checkpoint assertions the `curl` lab pins.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 1 — Foundations → M2 —
+Token walkthrough** folder, set the `FY_TOKEN` environment
+variable, then run each request in order. Green checks in
+the Tests tab mean the step worked.
+
+The `curl` steps below remain the source of truth.
+
 ## Steps
 
 1. **Mint a one-hour test token.** Open Settings →
@@ -19326,6 +19379,27 @@ the deleted record.
   how to mint one.
 - `curl` on your shell.
 - About 30 minutes.
+
+## Or use Postman
+
+If you prefer a GUI, run the lab steps from Postman instead
+of `curl`. Each request has a **Tests** tab with the same
+checkpoint assertions the `curl` lab pins.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 2 — Core primitives I → M3
+— Author a vehicle entity** folder, set the `FY_TOKEN`
+environment variable, then run each request in order. The
+pre-request scripts capture the record id into `FY_ID` so
+later steps find it automatically.
+
+The `curl` steps below remain the source of truth.
 
 ## Steps
 
@@ -19557,6 +19631,29 @@ too fast — and observe the rate-limit response.
 - `curl` to exercise the public link and the anti-abuse
   trigger.
 - About 45 minutes.
+
+## Or use Postman
+
+If you prefer a GUI, run the lab steps from Postman instead
+of `curl`. Each request has a **Tests** tab with the same
+checkpoint assertions the `curl` lab pins.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 2 — Core primitives I → M4
+— Public-link form** folder, set the `FY_TOKEN` and the
+public-link token (replace `REPLACE_WITH_TOKEN` in the
+request URLs) before sending. Step 1 (composing the form)
+still happens in the admin shell — Postman can't author
+forms — but submission and inspection both work from the
+collection.
+
+The `curl` steps below remain the source of truth.
 
 ## Steps
 

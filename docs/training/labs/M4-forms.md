@@ -28,6 +28,29 @@ too fast — and observe the rate-limit response.
   trigger.
 - About 45 minutes.
 
+## Or use Postman
+
+If you prefer a GUI, run the lab steps from Postman instead
+of `curl`. Each request has a **Tests** tab with the same
+checkpoint assertions the `curl` lab pins.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 2 — Core primitives I → M4
+— Public-link form** folder, set the `FY_TOKEN` and the
+public-link token (replace `REPLACE_WITH_TOKEN` in the
+request URLs) before sending. Step 1 (composing the form)
+still happens in the admin shell — Postman can't author
+forms — but submission and inspection both work from the
+collection.
+
+The `curl` steps below remain the source of truth.
+
 ## Steps
 
 1. **Compose the form** in the admin shell at
