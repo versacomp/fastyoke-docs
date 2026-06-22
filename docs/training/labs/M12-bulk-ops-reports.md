@@ -112,6 +112,4 @@ See [Lab M12 — Solution](/docs/training/labs/M12-bulk-ops-reports-solution).
 
 ## Next
 
-You've completed Week 6. Lab M13 ships in the Week 7 lab
-pack PR. Return to the [syllabus](/docs/training/syllabus)
-for the Week 7 reading list.
+[Lab M13 — Compliance & Yoker](/docs/training/labs/M13-compliance-yoker).

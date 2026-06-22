@@ -395,8 +395,7 @@ weekly digest scheduled to your own email.
 - [/docs/compliance-yoke](/docs/compliance-yoke)
 - [/docs/yoker](/docs/yoker)
 
-**Lab** — Connect the GitHub evidence connector and
-generate a Trust Center posture page.
+**Lab** — [Connect the GitHub evidence connector and generate a Trust Center posture page.](/docs/training/labs/M13-compliance-yoker)
 
 **Project deliverable** — An Auditor Room engagement
 on a sandbox tenant, with an OSCAL export and ZIP
@@ -423,9 +422,7 @@ package downloaded.
 - [/docs/yoke-ledger](/docs/yoke-ledger)
 - [/docs/esign](/docs/esign)
 
-**Lab** — Author a Posting Rule that books an invoice
-to AR/Revenue, then trigger a sample invoice and
-verify the rolled-up journal entry.
+**Lab** — [Author a Posting Rule that books an invoice to AR/Revenue, then trigger a sample invoice and verify the rolled-up journal entry.](/docs/training/labs/M14-ledger-esign)
 
 **Project deliverable** — A signed invoice PDF, with
 the Certificate of Completion verified out-of-band.

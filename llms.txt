@@ -282,6 +282,10 @@
 - [Lab M11 — Solution](https://www.fastyoke.io/docs/training/labs/M11-webhooks-solution): Answer key for the M11 webhooks lab — exact curls, a Node HMAC verifier, the delivery-id dedup pattern, and notes on rotate-secret and the SSRF guard.
 - [Lab M12 — Bulk ops & Reports](https://www.fastyoke.io/docs/training/labs/M12-bulk-ops-reports): Bulk-edit then bulk-delete with cascade via REST preview/commit, then compose a dashboard with bar and line widgets and schedule a weekly digest.
 - [Lab M12 — Solution](https://www.fastyoke.io/docs/training/labs/M12-bulk-ops-reports-solution): Answer key for the M12 bulk ops & reports lab — exact preview/commit/cascade curls, dashboard composer menu paths, digest scheduling fields, and the common gotchas.
+- [Lab M13 — Compliance & Yoker](https://www.fastyoke.io/docs/training/labs/M13-compliance-yoker): Run a framework-readiness sweep, list collected evidence, generate an OSCAL export, open the Auditor Room, and optionally ask Yoker a tenant-scoped question.
+- [Lab M13 — Solution](https://www.fastyoke.io/docs/training/labs/M13-compliance-yoker-solution): Answer key for the M13 compliance & Yoker lab — exact sweep/evidence/OSCAL curls, Auditor Room menu paths, deterministic-sampling and gating notes.
+- [Lab M14 — Ledger & E-sign](https://www.fastyoke.io/docs/training/labs/M14-ledger-esign): Author a Revenue CoA account and a Posting Rule via REST, post a journal entry, reverse it, then upload a PDF envelope and verify the Certificate of Completion out-of-band.
+- [Lab M14 — Solution](https://www.fastyoke.io/docs/training/labs/M14-ledger-esign-solution): Answer key for the M14 ledger & e-sign lab — exact GL curls, the reversal contract, the public verify endpoint shape, and three sealed-PDF gotchas.
 
 ## Tutorials
 

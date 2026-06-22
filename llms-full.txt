@@ -18814,8 +18814,7 @@ weekly digest scheduled to your own email.
 - [/docs/compliance-yoke](/docs/compliance-yoke)
 - [/docs/yoker](/docs/yoker)
 
-**Lab** — Connect the GitHub evidence connector and
-generate a Trust Center posture page.
+**Lab** — [Connect the GitHub evidence connector and generate a Trust Center posture page.](/docs/training/labs/M13-compliance-yoker)
 
 **Project deliverable** — An Auditor Room engagement
 on a sandbox tenant, with an OSCAL export and ZIP
@@ -18842,9 +18841,7 @@ package downloaded.
 - [/docs/yoke-ledger](/docs/yoke-ledger)
 - [/docs/esign](/docs/esign)
 
-**Lab** — Author a Posting Rule that books an invoice
-to AR/Revenue, then trigger a sample invoice and
-verify the rolled-up journal entry.
+**Lab** — [Author a Posting Rule that books an invoice to AR/Revenue, then trigger a sample invoice and verify the rolled-up journal entry.](/docs/training/labs/M14-ledger-esign)
 
 **Project deliverable** — A signed invoice PDF, with
 the Certificate of Completion verified out-of-band.
@@ -21426,9 +21423,7 @@ See [Lab M12 — Solution](/docs/training/labs/M12-bulk-ops-reports-solution).
 
 ## Next
 
-You've completed Week 6. Lab M13 ships in the Week 7 lab
-pack PR. Return to the [syllabus](/docs/training/syllabus)
-for the Week 7 reading list.
+[Lab M13 — Compliance & Yoker](/docs/training/labs/M13-compliance-yoker).
 
 ---
 
@@ -21536,6 +21531,422 @@ platform returns 409 if anything references the rows.
 ## Back to the lab
 
 Return to [Lab M12 — Bulk ops & Reports](/docs/training/labs/M12-bulk-ops-reports).
+
+---
+
+# Lab M13 — Compliance & Yoker
+
+> Run a framework-readiness sweep, list collected evidence, generate an OSCAL export, open the Auditor Room, and optionally ask Yoker a tenant-scoped question.
+
+# Lab M13 — Compliance & Yoker
+
+This lab pairs with **Module M13 — Compliance Yoke + Yoker**
+in the [syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Run a framework-readiness sweep against your tenant via REST.
+List the evidence the connectors have already collected.
+Generate an OSCAL export for the auditor. Then open the
+Auditor Room in the admin shell and download the export ZIP.
+If you have access to Yoker, ask one tenant-scoped question
+and observe the retrieval citations.
+
+## Before you begin
+
+- A FastYoke tenant you're an admin of.
+- A `fy_pat_` PAT with `compliance:read` scope (or admin
+  session JWT).
+- At least one evidence connector configured (GitHub is the
+  easiest — wire it up in **Admin → Compliance →
+  Connectors**).
+- `curl` and `jq`.
+- About 45 minutes.
+
+## Or use Postman
+
+If you prefer a GUI, run the REST steps (Steps 1–3) from
+Postman instead of `curl`. Steps 4–5 are GUI work in the
+admin shell — they stay on this lab page.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 7 — Specialized Yokes → M13 — Compliance & Yoker** folder, set the `FY_TOKEN` environment variable, then run each request in order.
+
+The `curl` steps below remain the source of truth.
+
+## Steps
+
+1. **Run a framework-readiness sweep.**
+
+   ```bash
+   curl -i -X POST \
+     -H "Authorization: Bearer $FY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{"framework":"soc2"}' \
+     https://www.fastyoke.io/api/v1/tenant/framework-readiness/sweep
+   ```
+
+   **Checkpoint:** 200 with a posture score and a list of
+   controls with their state (`met`, `gap`, `unknown`).
+2. **List collected evidence.**
+
+   ```bash
+   curl -i -H "Authorization: Bearer $FY_PAT" \
+     https://www.fastyoke.io/api/v1/tenant/framework-readiness/evidence
+   ```
+
+   **Checkpoint:** 200 with an array of evidence items —
+   each has a `connector`, a `control_id`, and a
+   `collected_at` timestamp.
+3. **Generate an OSCAL export.**
+
+   ```bash
+   curl -i -X POST \
+     -H "Authorization: Bearer $FY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{"framework":"soc2"}' \
+     https://www.fastyoke.io/api/v1/tenant/framework-readiness/oscal-export
+   ```
+
+   **Checkpoint:** 200 with a signed `download_url` and an
+   `expires_at`. The URL serves a ZIP containing the OSCAL
+   JSON + evidence references.
+4. **Open the Auditor Room (GUI).** **Admin → Compliance →
+   Auditor Room → Open engagement**. Click **Download
+   OSCAL package**.
+
+   **Checkpoint:** the ZIP downloads. Open it — there's
+   one OSCAL JSON file and one per-control evidence
+   manifest.
+5. **(Bonus) Ask Yoker a question.** If your tenant has the
+   `yoker` add-on or Enterprise+ tier, open **Admin →
+   Yoker** and ask: *"Which SOC 2 controls are currently
+   in `gap` state?"*
+
+   **Checkpoint:** Yoker answers with citations pointing at
+   the same control rows the sweep returned in Step 1.
+
+## What you'll have at the end
+
+A scored framework-readiness sweep, an evidence list, a
+downloaded OSCAL ZIP, and (optionally) a Yoker answer with
+citations.
+
+## Stuck?
+
+See [Lab M13 — Solution](/docs/training/labs/M13-compliance-yoker-solution).
+
+## Next
+
+[Lab M14 — Ledger & E-sign](/docs/training/labs/M14-ledger-esign).
+
+---
+
+# Lab M13 — Solution
+
+> Answer key for the M13 compliance & Yoker lab — exact sweep/evidence/OSCAL curls, Auditor Room menu paths, deterministic-sampling and gating notes.
+
+# Lab M13 — Solution
+
+> **Reveal warning.** This page is the **answer key** for
+> [Lab M13 — Compliance & Yoker](/docs/training/labs/M13-compliance-yoker).
+> Try each step on your own first; the friction is where the
+> learning lives.
+
+## Step 1 — Sweep response shape
+
+```json
+{
+  "framework": "soc2",
+  "score": 0.78,
+  "swept_at": "2026-06-22T18:00:00Z",
+  "controls": [
+    { "id": "CC1.1", "state": "met", "evidence_count": 4 },
+    { "id": "CC1.2", "state": "gap", "evidence_count": 0 },
+    { "id": "CC2.1", "state": "unknown", "evidence_count": 1 }
+  ]
+}
+```
+
+The score is the fraction of `met` controls over the framework's
+control surface. `unknown` means the connector reported evidence
+but no rule mapped it to a definitive state.
+
+## Step 3 — OSCAL export
+
+```bash
+curl -i -X POST \
+  -H "Authorization: Bearer $FY_PAT" \
+  -H "Content-Type: application/json" \
+  -d '{"framework":"soc2"}' \
+  https://www.fastyoke.io/api/v1/tenant/framework-readiness/oscal-export
+```
+
+Response:
+
+```json
+{
+  "download_url": "https://exports.fastyoke.io/oscal/...",
+  "expires_at": "2026-06-22T20:00:00Z",
+  "size_bytes": 84210
+}
+```
+
+The signed URL is tenant-scoped and time-bound — re-fetch the
+endpoint if it expires.
+
+## Step 4 — Auditor Room menu path
+
+- **Admin → Compliance → Auditor Room → Open engagement.**
+- Pick the framework + engagement window.
+- Click **Download OSCAL package**.
+
+## Three operational notes
+
+- **Deterministic sampling.** The Auditor Room samples
+  controls by `(tenant_id, control_id)` seed — re-running an
+  engagement at the same point-in-time produces the same
+  sample. Auditors verify the determinism out-of-band.
+- **Yoker gating.** Available on Enterprise+ OR via the
+  paid `yoker` add-on ($299/mo Pro+).
+- **Connector vs. attestation.** A connector pulls evidence
+  automatically (GitHub commits, AWS IAM policies). An
+  attestation is a human-signed claim ("we ran the penetration
+  test on 2026-04-12"). Both feed the same sweep.
+
+## Back to the lab
+
+Return to [Lab M13 — Compliance & Yoker](/docs/training/labs/M13-compliance-yoker).
+
+---
+
+# Lab M14 — Ledger & E-sign
+
+> Author a Revenue CoA account and a Posting Rule via REST, post a journal entry, reverse it, then upload a PDF envelope and verify the Certificate of Completion out-of-band.
+
+# Lab M14 — Ledger & E-sign
+
+This lab pairs with **Module M14 — Yoke Ledger + E-signatures**
+in the [syllabus](/docs/training/syllabus).
+
+## What you'll do
+
+Author a Revenue Chart-of-Accounts entry and a Posting Rule
+that books invoices to it. Create a journal entry, post it,
+then reverse it. Then switch to the e-sign side: upload a
+PDF envelope, route it to a signer, sign as that signer,
+and verify the sealed PDF's Certificate of Completion via
+the platform's public verify endpoint.
+
+## Before you begin
+
+- A FastYoke tenant with the Yoke Ledger app installed and
+  entitled (covered in M10).
+- A `fy_pat_` PAT with `gl:write` and `esign:admin` scopes
+  (or admin session JWT).
+- A small PDF to use as an envelope (a one-page invoice
+  works).
+- `curl` and `jq`.
+- About 50 minutes.
+
+## Or use Postman
+
+If you prefer a GUI, run the GL portion (Steps 1–4) from
+Postman instead of `curl`. The e-sign Steps 5–7 are
+GUI / out-of-band — they stay on this lab page.
+
+**Import once:** in Postman, choose **File → Import → Link**
+and paste this URL:
+
+```
+https://www.fastyoke.io/training/postman/fastyoke-training.postman_collection.json
+```
+
+Click **Import**. Open the **Week 7 — Specialized Yokes → M14 — Ledger & E-sign** folder, set the `FY_TOKEN` environment variable, then run each request in order. Step 4 (Post entry) references the `FY_GL_ENTRY` captured by Step 3.
+
+The `curl` steps below remain the source of truth.
+
+## Steps
+
+1. **Author a Revenue CoA account.**
+
+   ```bash
+   curl -i -X POST \
+     -H "Authorization: Bearer $FY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{"code":"4000","name":"Service Revenue","type":"revenue"}' \
+     https://www.fastyoke.io/api/v1/tenant/gl/accounts
+   ```
+
+   **Checkpoint:** 200 with the new account id.
+2. **Author a Posting Rule.**
+
+   ```bash
+   curl -i -X POST \
+     -H "Authorization: Bearer $FY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{"rule_key":"invoice_posted","entries":[{"account":"4000","side":"credit","amount_path":"$.total"}]}' \
+     https://www.fastyoke.io/api/v1/tenant/gl/posting-rules
+   ```
+
+   **Checkpoint:** 200. The rule will fire whenever an
+   `invoice_posted` event lands and credit `4000` with the
+   invoice total.
+3. **Create a draft journal entry.**
+
+   ```bash
+   curl -i -X POST \
+     -H "Authorization: Bearer $FY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{"memo":"M14 lab — sample invoice","lines":[{"account":"4000","side":"credit","amount_cents":10000}]}' \
+     https://www.fastyoke.io/api/v1/tenant/gl/journal-entries
+   ```
+
+   **Checkpoint:** 200 with the entry id and `state:
+   "draft"`.
+4. **Post the entry.**
+
+   ```bash
+   curl -i -X POST \
+     -H "Authorization: Bearer $FY_PAT" \
+     https://www.fastyoke.io/api/v1/tenant/gl/journal-entries/$ID/post
+   ```
+
+   **Checkpoint:** 200 with `state: "posted"`. The entry is
+   now **immutable** — no further `PATCH` will be accepted.
+5. **Reverse the entry.**
+
+   ```bash
+   curl -i -X POST \
+     -H "Authorization: Bearer $FY_PAT" \
+     https://www.fastyoke.io/api/v1/tenant/gl/journal-entries/$ID/reverse
+   ```
+
+   **Checkpoint:** 200 with a new reversal entry id; the
+   original stays `posted` and a new entry with the
+   mirrored sides is appended. History is never edited.
+6. **Upload a PDF envelope (GUI).** **Admin → E-Sign → New
+   envelope.** Upload your one-page invoice. Add a signer
+   (your own email is fine for the lab). Click **Send**.
+7. **Sign as the signer.** Open the signer email; click
+   the link; sign in the portal.
+
+   **Checkpoint:** the envelope status flips to
+   `completed`. The platform serves a sealed PDF with the
+   **Certificate of Completion** as the last page.
+8. **Verify the sealed PDF.** The Certificate of Completion
+   carries a verification URL of the form
+   `https://www.fastyoke.io/api/v1/public/esign/verify?hash=…`.
+   Hit it.
+
+   **Checkpoint:** 200 with the hash, signer chain, and
+   UTC timestamps — no auth required.
+
+## What you'll have at the end
+
+A Revenue account, a Posting Rule, a posted journal entry,
+a reversal entry, a sealed PDF, and a public-verify response
+proving the seal.
+
+## Stuck?
+
+See [Lab M14 — Solution](/docs/training/labs/M14-ledger-esign-solution).
+
+## Next
+
+You've completed Week 7. Lab M15 ships in the Week 8 lab
+pack PR. Return to the [syllabus](/docs/training/syllabus)
+for the Week 8 reading list.
+
+---
+
+# Lab M14 — Solution
+
+> Answer key for the M14 ledger & e-sign lab — exact GL curls, the reversal contract, the public verify endpoint shape, and three sealed-PDF gotchas.
+
+# Lab M14 — Solution
+
+> **Reveal warning.** This page is the **answer key** for
+> [Lab M14 — Ledger & E-sign](/docs/training/labs/M14-ledger-esign).
+> Try each step on your own first; the friction is where the
+> learning lives.
+
+## Step 4 — Post response shape
+
+```json
+{
+  "id": "je_abc123",
+  "state": "posted",
+  "posted_at": "2026-06-22T18:30:00Z",
+  "memo": "M14 lab — sample invoice",
+  "lines": [
+    { "account": "4000", "side": "credit", "amount_cents": 10000 }
+  ]
+}
+```
+
+## Step 5 — Reversal contract
+
+A reversal **never edits the original**. The platform:
+
+1. Leaves the original `posted` entry untouched.
+2. Appends a new entry with the same lines, sides
+   mirrored.
+3. Links them via a `reversed_by` / `reverses` pair so the
+   trial balance nets to zero.
+
+Audit log retains both rows — auditors verify the chain.
+
+## Step 8 — Public verify endpoint
+
+```bash
+curl -i "https://www.fastyoke.io/api/v1/public/esign/verify?hash=$HASH"
+```
+
+Response:
+
+```json
+{
+  "envelope_id": "env_abc",
+  "hash": "sha256:...",
+  "sealed_at": "2026-06-22T18:45:00Z",
+  "signers": [
+    {
+      "email": "you@example.com",
+      "signed_at": "2026-06-22T18:42:00Z",
+      "ip": "203.0.113.1"
+    }
+  ],
+  "certificate_url": "https://www.fastyoke.io/api/v1/public/esign/certificate/..."
+}
+```
+
+No auth required — the public endpoint IS the trust model.
+Anyone with the hash can verify the seal.
+
+## Three gotchas
+
+- **Self-loop in posting-rule terms.** A rule with
+  `from == to` increments a counter or re-fires a side
+  effect without changing the GL position — same FSM
+  self-loop pattern from M6. Useful for retry counters.
+- **Sealed-PDF re-hash.** If you re-export the PDF from a
+  different viewer (preview, ghostscript), whitespace may
+  reflow and break the seal. Always serve the sealed copy
+  the platform stores; never re-render.
+- **Verify endpoint is public.** That is the entire trust
+  model. The seal is meaningful precisely because anyone
+  can verify it without a session.
+
+## Back to the lab
+
+Return to [Lab M14 — Ledger & E-sign](/docs/training/labs/M14-ledger-esign).
 
 ---
 
