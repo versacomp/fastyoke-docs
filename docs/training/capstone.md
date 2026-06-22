@@ -115,3 +115,5 @@ grader. Submit by:
   modules feeding into this.
 - [Training overview](/docs/training) — the framing
   of the program.
+- [Certification](/docs/training/certification) — how
+  capstone acceptance issues a sealed-PDF completion cert.

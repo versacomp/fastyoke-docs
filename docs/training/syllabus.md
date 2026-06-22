@@ -19,6 +19,10 @@ templates lives at [/docs/training/starter-code](/docs/training/starter-code).
 Parachute, not template — clone only when a step
 genuinely blocks you.
 
+**Certification.** Capstone acceptance issues a sealed-PDF
+completion cert via the M14 e-sign trust model. Details at
+[/docs/training/certification](/docs/training/certification).
+
 Every module follows the same five-section shape:
 
 - **Learning objectives** — 3–5 verbs you'll be able to
