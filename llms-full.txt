@@ -18340,6 +18340,52 @@ M2 onward all have request folders.
 
 ---
 
+# About the lectures
+
+> Short, opinionated narratives that explain the why behind each module. Read before the lab; consult after.
+
+# About the lectures
+
+Sixteen short lecture notes, one per syllabus module.
+They explain the **why** that the reference docs assume
+you already understand — what problem each primitive
+solves, the mental model that makes it click, and the
+pitfalls a fast reader runs into first.
+
+## How to use them
+
+- **Before the lab.** Read the lecture before starting the
+  matching lab. It sets context the lab assumes.
+- **After the lab.** If a checkpoint surprised you, return
+  to the lecture — the surprise is usually one of the
+  listed pitfalls.
+- **Independent of order.** Each lecture stands alone.
+  Skip to a topic when something on the job pushes you
+  there.
+
+## Structure
+
+Every lecture follows the same shape:
+
+- **The mental model** — one paragraph framing the
+  primitive.
+- **Key concepts** — 3–5 named ideas with one paragraph
+  each.
+- **Common pitfalls** — what fast readers get wrong.
+- **Where to go next** — links to the matching lab and
+  the reference docs.
+
+## What this is not
+
+- Not a tutorial — the [tutorials](/docs/tutorials) ship
+  101/201/301 progressions for the on-ramp.
+- Not the reference docs — those live under their
+  primitive (`/docs/entities`, `/docs/workflows`, etc.).
+- Not a lab — the [labs](/docs/training/labs) are the
+  hands-on counterpart.
+
+---
+
 # Lab M1 — Trace a tenant-scoped query
 
 > Open the FastYoke backend source. Pick one tenant-scoped GET handler and trace tenant_id from JWT extraction through SqlitePool selection to the SQL statement. End with a one-page write-up of the full path.
@@ -18419,11 +18465,70 @@ See [Lab M1 — Solution](/docs/training/labs/M1-architecture-trace-solution).
 
 ---
 
+# Lecture M1 — Platform architecture & multi-tenancy
+
+> Why FastYoke is a single Rust binary with one SQLite database per tenant, and why every query must scope by tenant_id.
+
+# Lecture M1 — Platform architecture & multi-tenancy
+
+## The mental model
+
+FastYoke is one Rust binary that serves an HTTP API and a
+static SPA admin shell. Each tenant gets its **own** SQLite
+database file, replicated via LiteFS. The single-binary
+shape keeps deploys boring; the per-tenant database shape
+makes data isolation a property the operating system enforces,
+not just a `WHERE` clause.
+
+## Key concepts
+
+- **Fleet of files.** Every tenant lives in its own
+  `<tenant>.db` file under a persistent volume. A
+  cross-tenant query is mechanically impossible because
+  it would have to open the wrong file.
+- **Platform database.** One platform-scoped SQLite stores
+  the global state that genuinely doesn't belong to a
+  tenant: the user registry, audit log, platform admins,
+  marketplace entitlements, billing ledgers.
+- **Prime directive.** Every query touching a tenant table
+  scopes by `tenant_id`. The directive applies even
+  *inside* a per-tenant DB — because admin sessions can
+  span tenants and the wrong session reaching the wrong
+  query is a security bug.
+- **LiteFS replication.** A single primary writes; replicas
+  follow. The `/health/ready` endpoint reports replication
+  lag; the wedged-primary watchdog reboots a stuck primary.
+
+## Common pitfalls
+
+- **Treating SQLite like a single-user library.** It's the
+  production datastore. WAL mode + foreign keys ON
+  + per-tenant files is what makes it survive multi-tenant
+  load.
+- **Skipping the `tenant_id` clause because "the resolver
+  already filtered."** Don't. The directive is defense in
+  depth — every layer enforces it.
+- **Treating the platform DB as a shortcut.** If the data
+  belongs to a tenant, it goes in the tenant DB. Adding
+  tenant-shaped tables to the platform DB is technical
+  debt that gets paid back with a security incident.
+
+## Where to go next
+
+- Lab: [M1 — Trace a tenant-scoped query](/docs/training/labs/M1-architecture-trace).
+- Reference: [/docs/developers/tenant-scoping](/docs/developers/tenant-scoping).
+
+---
+
 # Syllabus
 
 > Sixteen modules across eight weeks. Each module has learning objectives, an assigned reading list cross-linked into the reference docs, a lab title, a project deliverable title, and three quiz topics. The capstone in Week 8 ships an end-to-end Tenant Yoke.
 
 # Syllabus
+
+**Companion lectures.** Short narrative explainers per
+module live at [/docs/training/lectures](/docs/training/lectures).
+Read the lecture before the lab; consult after.
 
 Every module follows the same five-section shape:
 
@@ -19126,6 +19231,65 @@ schema scope), you've done the lab.
 
 ---
 
+# Lecture M2 — Auth & token layers
+
+> Why the platform ships seven distinct auth-token shapes, and how the one-hour admin test JWT differs from a fy_pat_ PAT.
+
+# Lecture M2 — Auth & token layers
+
+## The mental model
+
+The auth surface has many token shapes because the same
+identity expresses itself differently across browsers,
+servers, CI, and partner integrations. Each token shape is
+designed for one realistic use; mixing them produces the
+kind of confusion that motivates "just put it all in a
+single bearer token" — a temptation the platform
+deliberately resists.
+
+## Key concepts
+
+- **Session JWT.** Issued at login (cookies for the SPA).
+  Carries the user, current tenant, role, and a short
+  expiry.
+- **`fy_pat_` PAT.** Long-lived tokens minted by an admin
+  for machine-to-machine use. Each PAT has scopes —
+  hard-refused if it tries to perform an action outside
+  its scopes, even if the user could.
+- **One-hour test JWT.** A convenience token an admin
+  mints via the tenant settings to run ad-hoc API calls
+  from `curl` or Postman. Mirrors the caller's authority,
+  not delegated.
+- **WorkOS AuthKit session.** SSO flow; the callback
+  resolves which tenant the federated identity belongs to.
+- **Extension scopes vs PAT scopes.** Drawn from the
+  **same** 72-permission catalog. Authoring once means
+  the permission you grant a PAT means exactly the same
+  thing if you ever ship an extension.
+- **Anti-delegation refusal.** A `fy_pat_` token cannot
+  impersonate other users — the platform returns
+  `delegated_credential_refused` rather than silently
+  acting as someone else.
+
+## Common pitfalls
+
+- **Sharing a PAT in source control.** PATs are
+  long-lived; one leaked PAT can drain a billing wallet.
+  Rotate aggressively; revoke on departure.
+- **Assuming SSO replaces the rest.** WorkOS replaces the
+  password flow, not PATs and not the test JWT.
+- **Confusing role with scope.** Role gates the UI
+  surfaces; scope gates the API. A PAT-bearing client
+  with `data:read` scope can't call a `data:write`
+  endpoint even if the underlying user is admin.
+
+## Where to go next
+
+- Lab: [M2 — Token walkthrough](/docs/training/labs/M2-token-walkthrough).
+- Reference: [/docs/auth](/docs/auth) and [/docs/auth/api-tokens](/docs/auth/api-tokens).
+
+---
+
 # Lab M2 — Token walkthrough
 
 > Mint a one-hour test token and a long-lived fy_pat_ token. Call the tenant API with each. Observe two hard-refusal cases. Capture the three working request shapes in a shell script.
@@ -19223,6 +19387,64 @@ See [Lab M2 — Solution](/docs/training/labs/M2-token-walkthrough-solution).
 ## Next
 
 [Lab M3 — Author a vehicle entity](/docs/training/labs/M3-entities).
+
+---
+
+# Lecture M3 — Entities
+
+> Why entity payloads are stored schemaless, what the JSON-payload schema actually gates, and how deletes interact with FSM history.
+
+# Lecture M3 — Entities
+
+## The mental model
+
+A tenant authors **entities** — `vehicle`, `patient`,
+`shipment` — without writing migrations. The schema is a
+JSON document describing the payload; the storage is one
+SQLite table per tenant with an `id`, a `created_at`, and
+a `payload` JSON blob. The schema is the contract the
+platform validates against at write time. The platform
+never grows a column per tenant — that would explode the
+database.
+
+## Key concepts
+
+- **JSON-payload schema.** Lists fields, types, labels,
+  options, and constraints. The platform validates writes
+  and the SPA renders forms straight from it.
+- **Annotations.** Labels (display name), options (enum
+  values), constraints (required, min/max). Annotations
+  power UI generation without code.
+- **Idempotency-Key header.** Optional on writes; same key
+  produces the same outcome twice. Useful when the network
+  is unreliable and you can't tell if your `POST`
+  succeeded.
+- **Retention contract on delete.** Deleting an entity row
+  doesn't break referencing FSM job rows — the historical
+  id is preserved so the event log stays readable. Cascade
+  is opt-in per call.
+- **Annotation-driven prefill.** Forms can prefill from
+  payload defaults, from URL query params, or from the
+  signed-in user — all wired through annotations, not
+  custom code.
+
+## Common pitfalls
+
+- **Treating the payload as schemaless at the application
+  layer too.** It isn't — the platform validates every
+  write against the schema. Trying to write an
+  unrecognized field returns 422, not silent acceptance.
+- **Forgetting historical FSM rows on schema change.**
+  Renaming a field doesn't migrate existing payloads. Plan
+  for the readers to handle both shapes for a window.
+- **Reaching for migrations.** There are no per-tenant
+  migrations for entity payloads. If you need one, you're
+  fighting the model.
+
+## Where to go next
+
+- Lab: [M3 — Author a vehicle entity](/docs/training/labs/M3-entities).
+- Reference: [/docs/entities](/docs/entities).
 
 ---
 
@@ -19346,6 +19568,60 @@ If yours looks meaningfully like this, you've done the lab.
 
 ---
 
+# Lecture M4 — Forms
+
+> Why forms are zod-mirrored end-to-end, how anti-abuse works on public links, and the form-to-job submission pattern.
+
+# Lecture M4 — Forms
+
+## The mental model
+
+Forms are the boundary between the public web and your
+tenant data. They run client-side in the browser, validate
+the same shape the server validates, and (often) write
+straight to an entity table or start an FSM job. The
+discipline is **identical schemas on both sides** — what
+the client validates is what the Rust server deserializes.
+
+## Key concepts
+
+- **Zod-mirrored schemas.** The frontend uses `zod`; the
+  backend uses `serde`. The shapes must mirror each other
+  — that's the whole game. A field renamed on one side
+  but not the other is the bug class this discipline
+  prevents.
+- **Public-link submissions.** A form can be exposed at
+  a stable URL with no auth. The platform issues a
+  one-shot anti-abuse token + rate-limits the URL.
+- **File uploads.** Validated by extension, size, and
+  MIME. Stored as tenant-scoped blobs.
+- **Form-to-job wiring.** Submitting a form can also
+  start an FSM job — the form payload becomes the job's
+  initial entity row.
+- **Rate-limit + CAPTCHA.** Anti-abuse is layered:
+  per-IP rate limit, then a CAPTCHA when the rate climbs,
+  then a soft-block.
+
+## Common pitfalls
+
+- **Diverging schemas.** A field added on the frontend
+  but not on the Rust struct → submission rejects with a
+  400. Easy to debug — but easy to ship if you don't
+  enforce the convention.
+- **Re-using the same public link past its anti-abuse
+  threshold.** The platform stops accepting; you'd
+  rotate the link.
+- **Authenticating a public link by adding a token
+  query param.** Don't. Public means public. If you need
+  auth, the form lives behind a session.
+
+## Where to go next
+
+- Lab: [M4 — Public-link form](/docs/training/labs/M4-forms).
+- Reference: [/docs/forms](/docs/forms).
+
+---
+
 # Lab M3 — Author a vehicle entity
 
 > Mint a fy_pat_ token, POST a vehicle schema with three annotated fields, exercise the full REST surface (POST, GET, PATCH, LIST, DELETE), and observe what happens to referencing FSM job rows on delete. End with a vehicle-crud.sh script that re-runs cleanly.
@@ -19450,6 +19726,61 @@ See [Lab M3 — Solution](/docs/training/labs/M3-entities-solution).
 ## Next
 
 [Lab M4 — Public-link form](/docs/training/labs/M4-forms).
+
+---
+
+# Lecture M5 — FSM authoring
+
+> Why guards are JSONLogic and never raw strings, what an orphan state is, and how deterministic replay works.
+
+# Lecture M5 — FSM authoring
+
+## The mental model
+
+An FSM schema describes a lifecycle: a set of named
+**states**, named **transitions** between them, and a
+**guard** on each transition that decides whether the
+transition can fire. The guard is a JSON document
+(JSONLogic) evaluated in a sandbox. Side-effect-free,
+deterministic, and impossible to use for arbitrary code
+execution.
+
+## Key concepts
+
+- **States and transitions.** A transition is a tuple
+  `(from, to, event, guard)`. Multiple transitions can
+  share an event name — the guards disambiguate.
+- **JSONLogic guards.** A small, declarative language
+  with arithmetic, comparison, and a few collection
+  operators. No host functions. No I/O.
+- **The sandbox.** Default evaluator is `jsonlogic-rs`.
+  Compute-heavy logic can drop down to a `wasmtime`-hosted
+  module with fuel + memory caps — same no-host-syscall
+  invariant.
+- **Orphan states.** A state declared in the states map
+  but unreachable from `initial_state`. The validator
+  catches these at save time.
+- **Deterministic replay.** Given the same FSM schema, the
+  same job rows, and the same `event_log`, replaying
+  produces the exact same transitions. Auditors verify it.
+
+## Common pitfalls
+
+- **Reaching for a host function in a guard.** You'll
+  immediately discover the sandbox doesn't let you. The
+  fix is upstream — compute the value in the payload
+  before transition.
+- **Authoring a guard that depends on wall-clock time.**
+  Replay won't be deterministic. Pass timestamps in as
+  payload fields.
+- **Authoring transitions with overlapping guards.** The
+  evaluator fires the **first matching** transition — order
+  in the schema matters.
+
+## Where to go next
+
+- Lab: [M5 — FSM authoring](/docs/training/labs/M5-fsm-authoring).
+- Reference: [/docs/workflows](/docs/workflows).
 
 ---
 
@@ -19598,6 +19929,62 @@ If yours looks meaningfully like this, you've done the lab.
 
 ---
 
+# Lecture M6 — Jobs
+
+> Why the event log is append-only, what the admin cancel override actually bypasses, and when a self-loop transition is the right shape.
+
+# Lecture M6 — Jobs
+
+## The mental model
+
+A **job** is an entity row driving through an FSM schema.
+Every transition firing writes a row to `event_log`. The
+event log is **append-only** — no `UPDATE` is ever issued
+against it. That immutability is the audit chain.
+
+## Key concepts
+
+- **Append-only event log.** The historical record. Pruning
+  is impossible; correct authoring is bounded by the guard
+  ("retry at most three times") not by post-hoc deletion.
+- **Admin cancel override.** A separate endpoint (`POST
+  /jobs/:id/cancel`) that writes the `current_state`
+  column directly and appends one `__admin_cancel__` event
+  to the log. **Bypasses the FSM entirely.** It exists
+  because there's no clean way to encode "operator says
+  stop, no matter what" inside an FSM.
+- **Self-loop transitions.** A transition with
+  `from == to`. Useful for audit-only events (driver
+  check-in), retry counters, or guard-multiplexed
+  fall-through. Same firing semantics as a forward edge.
+- **Three rules for self-loops.** Every firing appends to
+  the event log — bound it via the guard. The admin
+  override never reads transitions, so you can't spin to
+  defeat it. Optimistic UI looks like a no-op because the
+  state column doesn't change — render `event_log`, not
+  `current_state` alone.
+
+## Common pitfalls
+
+- **Trying to "fix history" by UPDATE-ing the event log.**
+  The migrations don't let you, the application doesn't
+  let you, and even if it did, the immutability is the
+  whole point.
+- **Using the admin override as a normal lifecycle exit.**
+  Don't. Author a real terminal state with a real guard.
+  The override is for genuine operator interventions.
+- **Self-looping a payload counter without a guard
+  bound.** You'll fill the event log with retry rows.
+  Bound the self-loop by the guard or by upstream rate
+  limiting.
+
+## Where to go next
+
+- Lab: [M6 — Jobs](/docs/training/labs/M6-jobs).
+- Reference: [/docs/jobs](/docs/jobs).
+
+---
+
 # Lab M4 — Public-link form
 
 > Compose a 4-field public form, publish a tokenized public link, submit anonymously, observe the FSM job the platform creates at submit time, then trigger anti-abuse and observe the 429 + Retry-After response.
@@ -19707,6 +20094,59 @@ See [Lab M4 — Solution](/docs/training/labs/M4-forms-solution).
 ## Next
 
 [Lab M5 — FSM authoring](/docs/training/labs/M5-fsm-authoring).
+
+---
+
+# Lecture M7 — Pages & App Builder
+
+> What separates a Page from an App, the block-based composition model, and where the Advanced Builder adds LLM assistance.
+
+# Lecture M7 — Pages & App Builder
+
+## The mental model
+
+The admin shell renders **Apps** — collections of **Pages**
+— composed from a catalog of typed **blocks**. Each block
+declares its inputs (the entity it lists, the schema it
+forms against). The composition is data, not code; the
+runtime takes the JSON and renders it.
+
+## Key concepts
+
+- **Page.** A single rendered route — list view, detail
+  view, form, dashboard. Composed of blocks.
+- **App.** A bundle of pages with shared navigation, theme,
+  and route prefix. Apps are what installs from the
+  marketplace.
+- **Block catalog.** A typed catalog: `EntityList`,
+  `EntityDetail`, `Form`, `Chart`, etc. Each block has a
+  JSON schema for its config.
+- **Theme & CSS.** Apps can override the default theme.
+  Overrides are scoped to the app, not the tenant.
+- **Advanced App Builder.** LLM-assisted; produces the
+  same block-JSON the standard builder produces. The LLM
+  is a UX layer, not a separate runtime.
+- **Two block vocabularies.** The list-page renderer and
+  the `EntityDetailRenderer` use different block
+  vocabularies. The detail renderer's vocabulary is
+  richer; check it before assuming a "new block" is needed.
+
+## Common pitfalls
+
+- **Trying to embed arbitrary HTML in a page.** There's no
+  generic `Html` block. Compose with what's in the catalog,
+  or write an extension (M9) if you need to.
+- **Theming at the tenant level by accident.** Overrides
+  go in the App, not the tenant defaults — otherwise
+  every app a tenant installs inherits the override.
+- **Inventing a block.** Read [the marketplace apps
+  guide](https://github.com/anthropics) — many "new
+  blocks" are already in the detail renderer.
+
+## Where to go next
+
+- Lab: [M7 — Pages & App Builder](/docs/training/labs/M7-pages-and-apps).
+- Reference: [/docs/pages](/docs/pages), [/docs/apps](/docs/apps), [/docs/apps/advanced](/docs/apps/advanced).
 
 ---
 
@@ -19825,6 +20265,60 @@ token's lookup row.
 
 ---
 
+# Lecture M8 — Yoke Studio
+
+> Why Studio uses persistent drafts with snapshots, the draft-archive lifecycle, and what "edit a published Yoke in place" does behind the scenes.
+
+# Lecture M8 — Yoke Studio
+
+## The mental model
+
+Yoke Studio is the authoring environment for **Yokes** —
+publishable bundles of entities, schemas, FSMs, pages, and
+apps. Studio holds your work as a **persistent draft**:
+autosaved, resumable across sessions, snapshot-able for
+checkpoint/restore. When you're ready, you **activate**
+the draft into the tenant's runtime.
+
+## Key concepts
+
+- **Studio draft.** Tenant-scoped, opaque JSON payload up
+  to 512KB. Autosaves with last-writer-wins semantics. One
+  active draft per learner.
+- **Snapshots.** Named checkpoints of a draft. Restore is
+  transactional. Activating a draft auto-snapshots first.
+- **Archive lifecycle.** Drafts can be archived (hidden
+  from the active list) and unarchived. Activating
+  auto-archives — there's no auto-delete. Pruning is the
+  operator's call.
+- **Edit-in-place via in-place re-version.** Editing a
+  published Yoke loads its state into Studio,
+  preserves the slug, and re-versions on save. No
+  clone-and-promote round trip.
+- **Studio drafts are *not* the runtime.** Until you
+  activate, your changes are author-time only. The runtime
+  keeps serving the previous version.
+
+## Common pitfalls
+
+- **Treating the active list as version history.**
+  Snapshots are the history. The active list is the
+  workbench.
+- **Editing the same draft from two browser tabs.**
+  Last-writer-wins; the slower tab loses its changes
+  silently. Use snapshots if you need a fork.
+- **Activating without a snapshot.** Studio auto-snapshots
+  on activate — but if you've been ignoring snapshots,
+  you have only the auto-snapshot to roll back to. Take
+  named ones at meaningful milestones.
+
+## Where to go next
+
+- Lab: [M8 — Yoke Studio](/docs/training/labs/M8-yoke-studio).
+- Reference: [/docs/apps/studio](/docs/apps/studio).
+
+---
+
 # Lab M5 — FSM authoring
 
 > Author a 5-state service-ticket FSM with three JSONLogic guards. POST it. Attempt a transition the guard should refuse and observe the 422. Hand-trace one full run from submitted through resolved.
@@ -19939,6 +20433,62 @@ See [Lab M5 — Solution](/docs/training/labs/M5-fsm-authoring-solution).
 
 ---
 
+# Lecture M9 — Extensions
+
+> Why extensions are signed WASM modules with no host syscalls, what the manifest scope vocabulary controls, and the dev-loop tradeoffs.
+
+# Lecture M9 — Extensions
+
+## The mental model
+
+When the block catalog can't express what you need,
+**extensions** let you ship custom logic — a guard
+function, a side effect on transition, a custom block.
+Extensions are WASM modules. They run inside a `wasmtime`
+sandbox with fuel + memory caps and no host syscalls
+beyond the documented WIT host imports.
+
+## Key concepts
+
+- **Signed bundles.** Extensions are signed before install.
+  The platform refuses to load an unsigned or
+  wrong-signed bundle. Authoring keys are tenant-scoped.
+- **Manifest scopes.** The manifest declares which
+  permissions the extension wants — drawn from the same
+  72-permission catalog as PATs. Install fails if the
+  manifest asks for more than the installing admin can
+  grant.
+- **WIT host imports.** The only way the sandbox talks to
+  the host. Storage reads, entity reads/writes,
+  outbound HTTP through the SSRF-guarded fetcher — never
+  raw I/O.
+- **Fuel + memory caps.** Every invocation has a fuel
+  budget and a memory ceiling. Exceeding either kills the
+  call cleanly.
+- **Dev loop.** The CLI scaffolds, builds, signs, and
+  installs locally. The cloud sandbox is the
+  authoritative environment — never assume your local
+  shape generalizes.
+
+## Common pitfalls
+
+- **Asking for "just file I/O."** There isn't any. Use
+  the WIT host imports or rethink whether you actually
+  need persistence outside an entity payload.
+- **Writing extensions in JS first.** The SDK supports
+  it via the QuickJS-on-WASM bridge, but Rust extensions
+  are smaller, faster, and easier to debug.
+- **Skipping signing in dev.** You can't — the platform
+  refuses unsigned bundles. The CLI signs with your dev
+  key automatically.
+
+## Where to go next
+
+- Lab: [M9 — Extensions](/docs/training/labs/M9-extensions).
+- Reference: [/docs/extensions](/docs/extensions).
+
+---
+
 # Lab M5 — Solution
 
 > Reference solution for Lab M5 — exact schema body with three JSONLogic guards, sample 422 + 200 transition responses, and a sample hand-trace.
@@ -20046,6 +20596,59 @@ guarantee.
 
 ---
 
+# Lecture M10 — Marketplace
+
+> The install / inspect / uninstall / clone loop, the retention contract on uninstall, and the difference between a Marketplace app and a Tenant Yoke.
+
+# Lecture M10 — Marketplace
+
+## The mental model
+
+The Marketplace is the distribution channel for **Yokes**
+— FastYoke-vetted apps that install into a tenant. Each
+listing carries its entity schemas, FSMs, pages, and
+seeded rows. Installing is a transaction; uninstalling
+removes the listing but preserves the data it seeded.
+
+## Key concepts
+
+- **Apps + UI pages + FSM schemas + seeded rows.** Every
+  install is the four together. The seed rows show up
+  immediately so the app is useful on day one.
+- **Marketplace install.** Recorded in
+  `marketplace_installs`, scoped to the tenant. Gates
+  whether the app's routes are reachable.
+- **Retention contract.** Uninstalling deletes the
+  listing only. Data the app seeded stays. This survives
+  misclicks and operator turnover.
+- **Tenant Yokes.** A tenant can clone a Marketplace
+  listing into a **Tenant Yoke** — their own customizable
+  copy. Customizing a Tenant Yoke is the on-ramp to
+  publishing your own marketplace listing eventually.
+- **Owned-schemas separation.** A clone copies the
+  schemas; the originals remain owned by the source
+  Yoke. Updating the source doesn't migrate the clone —
+  that's a feature, not a bug.
+
+## Common pitfalls
+
+- **Expecting uninstall to be a "factory reset."** It
+  isn't — the retention contract is deliberate. To
+  actually purge data, delete the rows explicitly first.
+- **Treating a clone like a fork that auto-merges
+  upstream.** It doesn't. Once cloned, the Tenant Yoke
+  is yours; upstream updates don't reach it.
+- **Skipping marketplace gating in extension code.**
+  Forgetting the entitlement check is how you ship a
+  paid feature for free.
+
+## Where to go next
+
+- Lab: [M10 — Marketplace](/docs/training/labs/M10-marketplace).
+- Reference: [/docs/marketplace](/docs/marketplace).
+
+---
+
 # Lab M6 — Jobs
 
 > Drive a job through the M5 schema, add a self-loop transition for an audit event, fire the admin cancel override, inspect both event_log rows (self-loop + override).
@@ -20147,6 +20750,62 @@ See [Lab M6 — Solution](/docs/training/labs/M6-jobs-solution).
 ## Next
 
 [Lab M7 — Pages & App Builder](/docs/training/labs/M7-pages-and-apps).
+
+---
+
+# Lecture M11 — Webhooks, notifications & messaging
+
+> Why outbound webhooks ship with HMAC + delivery-id dedup, what the DLQ replay actually replays, and how notifications and messaging share the event spine.
+
+# Lecture M11 — Webhooks, notifications & messaging
+
+## The mental model
+
+Events the platform raises (job transitions, form
+submissions, billing events) reach external systems three
+ways: outbound **webhooks**, in-platform **notifications**,
+and conversational **messaging**. All three flow through
+the same event spine — the difference is who consumes them.
+
+## Key concepts
+
+- **Outbound webhooks.** HMAC-SHA256 signed; the receiver
+  verifies with a one-time-shown `signing_secret`. Every
+  delivery carries `X-FastYoke-Delivery` so the receiver
+  can dedup.
+- **Rotate-secret dual window.** When you rotate, the
+  platform validates with **both** secrets during a grace
+  window. Roll the receiver before the window closes.
+- **DLQ.** Failed deliveries (5xx, timeout) accumulate in
+  the dead-letter queue with attempt counters. The
+  `replay-dlq` endpoint redrives the queue with the
+  original delivery ids — the receiver dedups.
+- **SSRF guard.** The dispatcher refuses non-HTTPS,
+  RFC-1918, link-local, and IPv6 ULA targets. Refusals
+  don't count toward the consecutive-failure auto-pause
+  threshold — they're a separate counter.
+- **Notifications vs. messaging.** Notifications are
+  one-way bell-style; messaging is conversational
+  (channels, DMs, record-linked threads). Both reuse the
+  notification subsystem for routing.
+
+## Common pitfalls
+
+- **Re-serializing the body before HMAC verification.**
+  Different JSON serializers reorder keys or change
+  whitespace; the hash won't match. Hash the **raw
+  bytes** the platform sent.
+- **Ignoring the delivery-id.** Without dedup, a DLQ
+  replay double-processes every event that recovers.
+- **Using a private IP as the webhook target in a
+  pinch.** The SSRF guard refuses it. There's no override.
+
+## Where to go next
+
+- Lab: [M11 — Webhooks](/docs/training/labs/M11-webhooks).
+- Reference: [/docs/integrations/webhooks](/docs/integrations/webhooks),
+  [/docs/notifications](/docs/notifications),
+  [/docs/messaging](/docs/messaging).
 
 ---
 
@@ -20303,6 +20962,56 @@ lab.
 
 ---
 
+# Lecture M12 — Bulk operations + Reports & dashboards
+
+> The preview-and-commit contract, why cascade is opt-in per call, and how aggregates compute on demand.
+
+# Lecture M12 — Bulk operations + Reports & dashboards
+
+## The mental model
+
+Bulk operations are the escape hatch from "click-by-click."
+They follow a strict **preview-then-commit** contract:
+preview is read-only and returns a diff; commit is the
+write. The two steps are linked by a short-lived
+`session_id`. Dashboards aggregate the same data the
+entity surface stores — no precomputed cache, no async
+invalidation in v1.
+
+## Key concepts
+
+- **Preview is read-only.** Re-running it shows the same
+  diff. Auditors verify by running preview twice and
+  diffing the outputs.
+- **Commit consumes the session.** `session_id` expires
+  after ~15 minutes. Past expiry you re-preview.
+- **Cascade is per-call.** Bulk-delete defaults to refusing
+  if anything references the rows (409). Opt in with
+  `cascade: true`; the response carries which referencing
+  rows were affected.
+- **Dashboards.** Composable widgets — bar, line, table —
+  over an aggregate vocabulary (count, sum, avg, time
+  bucket).
+- **Digests.** A dashboard rendered + emailed on a
+  schedule. Fields: `weekday` (Mon=0), `hour_utc` (UTC,
+  not local), `recipients`.
+
+## Common pitfalls
+
+- **Committing past expiry.** You'll see a 410. Re-preview.
+- **Cascade thinking.** Default-off catches mistakes; the
+  reflex "always pass cascade: true" defeats the guard.
+- **Local-time digest scheduling.** Everything is UTC.
+  Schedule by your offset, not by your wall clock.
+
+## Where to go next
+
+- Lab: [M12 — Bulk ops & Reports](/docs/training/labs/M12-bulk-ops-reports).
+- Reference: [/docs/bulk-operations](/docs/bulk-operations),
+  [/docs/reports](/docs/reports).
+
+---
+
 # Lab M7 — Pages & App Builder
 
 > Author a 3-page App in the admin shell — Vehicles list (from M3), Intake form (from M4), Dashboard widget. Set a theme override and a navigation order. Open the App and confirm all three pages render.
@@ -20389,6 +21098,65 @@ See [Lab M7 — Solution](/docs/training/labs/M7-pages-and-apps-solution).
 
 ---
 
+# Lecture M13 — Compliance Yoke + Yoker
+
+> Why the Auditor Room uses deterministic sampling, the connector-vs-attestation distinction, and what Yoker actually indexes.
+
+# Lecture M13 — Compliance Yoke + Yoker
+
+## The mental model
+
+Compliance Yoke turns the platform into a continuous
+readiness machine: connectors pull evidence, rules map
+evidence to controls, and an **Auditor Room** packages
+the result into an OSCAL export an auditor can verify.
+**Yoker** is the conversational AI layer that indexes
+tenant-scoped data via RAG so non-experts can ask
+questions like "which controls are in gap?"
+
+## Key concepts
+
+- **Framework-readiness sweep.** A scored evaluation
+  against a framework (SOC 2, ISO 27001). Returns
+  posture score and per-control state (met, gap, unknown).
+- **Connector.** Pulls evidence automatically — GitHub
+  commits, AWS IAM, Okta logs. One per source.
+- **Attestation.** A human-signed claim — "penetration
+  test ran 2026-04-12." Connectors can't generate these.
+- **Deterministic sampling.** The Auditor Room samples
+  by `(tenant_id, control_id)` seed. Re-running an
+  engagement at the same point in time produces the same
+  sample. Auditors verify the determinism out-of-band.
+- **OSCAL.** Open Security Controls Assessment Language —
+  the JSON format auditors expect. The export bundles
+  OSCAL JSON + per-control evidence manifests.
+- **Yoker RAG.** Indexes tenant-scoped entity records,
+  attachments (text/CSV/MD), and (optionally) docs. Brute-
+  force cosine over a tenant-private vector index.
+  Citations point at the source row.
+- **Gating tiers.** Yoker = Enterprise+ OR the paid
+  `yoker` add-on. Compliance Yoke = Enterprise.
+
+## Common pitfalls
+
+- **Trusting "unknown" controls.** Unknown means a
+  connector reported evidence but no rule mapped it.
+  Investigate before assuming partial credit.
+- **Treating Yoker as a search engine.** It's a RAG
+  layer — answers are generated from the corpus. Verify
+  citations before quoting.
+- **Asking Yoker about another tenant.** The corpus is
+  tenant-scoped. Cross-tenant questions hit empty
+  context.
+
+## Where to go next
+
+- Lab: [M13 — Compliance & Yoker](/docs/training/labs/M13-compliance-yoker).
+- Reference: [/docs/compliance-yoke](/docs/compliance-yoke),
+  [/docs/yoker](/docs/yoker).
+
+---
+
 # Lab M7 — Solution
 
 > Reference solution for Lab M7 — menu paths per step plus three common gotchas around theme cascade, dashboard widget refresh, and draft-form embeds.
@@ -20455,6 +21223,67 @@ under the App name.
 ## Back to the lab
 
 [Lab M7 — Pages & App Builder](/docs/training/labs/M7-pages-and-apps).
+
+---
+
+# Lecture M14 — Yoke Ledger + E-signatures
+
+> Why journal entries are immutable once posted, what the seal proves without a PKI, and how the public verify endpoint is the trust model.
+
+# Lecture M14 — Yoke Ledger + E-signatures
+
+## The mental model
+
+Yoke Ledger is a double-entry GL embedded in the
+platform: a Chart of Accounts, Posting Rules that book
+transactions, journal entries with a `draft → posted`
+lifecycle. E-signatures take a similar shape — a sealed
+PDF with a Certificate of Completion that anyone can
+verify out-of-band. Both subsystems prize **immutability
+once published**.
+
+## Key concepts
+
+- **Chart of Accounts.** A tree of accounts with types
+  (asset, liability, equity, revenue, expense). The
+  reporting surface aggregates over the tree.
+- **Posting Rules.** Map a domain event (e.g.,
+  `invoice_posted`) to the journal lines it should write.
+  `amount_path` is a JSON Pointer into the event payload.
+- **Journal entry lifecycle.** `draft` (editable) →
+  `posted` (immutable). Reversal **appends** a mirror
+  entry; it never edits history.
+- **E-sign seal.** Ed25519 hash-chained signature over
+  the PDF + audit log. No CA, no PKI — the seal proves
+  the platform serialized this exact PDF at this exact
+  time.
+- **Certificate of Completion.** The last page of the
+  sealed PDF. Carries the public verify URL.
+- **Public verify endpoint.** No auth. Anyone with the
+  hash can verify. **That's the trust model** — the seal
+  is meaningful precisely because the verify endpoint is
+  open.
+- **Self-loop in posting-rule terms.** A rule with
+  `from == to` increments a counter or re-fires a side
+  effect without changing the GL position. Same FSM
+  self-loop pattern from M6.
+
+## Common pitfalls
+
+- **Trying to edit a posted entry.** It returns 409.
+  Reverse and re-post — that's the contract.
+- **Re-exporting the sealed PDF.** Different viewers
+  reflow whitespace; the seal breaks. Serve the sealed
+  copy the platform stores.
+- **Hiding the verify endpoint behind auth "for safety."**
+  Don't — you destroy the trust model. The seal is
+  worthless if only insiders can verify.
+
+## Where to go next
+
+- Lab: [M14 — Ledger & E-sign](/docs/training/labs/M14-ledger-esign).
+- Reference: [/docs/yoke-ledger](/docs/yoke-ledger),
+  [/docs/esign](/docs/esign).
 
 ---
 
@@ -20535,6 +21364,69 @@ See [Lab M8 — Solution](/docs/training/labs/M8-yoke-studio-solution).
 
 ---
 
+# Lecture M15 — Billing, reseller billing & Strategic Partner
+
+> The prepaid wallet's dual-threshold contract, the __default__ sentinel in rate cards, and why Strategic Partner consent is per-request.
+
+# Lecture M15 — Billing, reseller billing & Strategic Partner
+
+## The mental model
+
+The platform meters everything it does and charges from a
+**prepaid wallet**. Resellers layer their own pricing on
+top via **rate cards** and **white-label billing
+profiles**. Strategic Partners (frontline support /
+implementation consultancies) act on tenants' behalf —
+gated by **per-request consent** rather than persistent
+delegation.
+
+## Key concepts
+
+- **Prepaid wallet.** Each org has one. Metered usage
+  draws down; top-up via Stripe (prod) or the sandbox
+  test-credit endpoint.
+- **Dual-threshold contract.** **$10 low-balance alert**
+  emails the org admin (idempotent per UTC day). **$0
+  auto-suspend** flips the tenant to read-only.
+- **Metered-only mode.** Org-level opt-in: no tier base,
+  metered costs invoiced at month-end. Exempt from
+  wallet auto-suspend.
+- **Reseller rate cards.** A card per reseller with a
+  `__default__` sentinel rate plus per-customer overrides.
+  End customers never see the wholesale cost.
+- **White-label billing profile.** Controls what
+  organization name appears on the invoice. Configurable
+  per-period.
+- **Strategic Partner consent.** Per-request, not
+  per-session. Every partner-initiated action on behalf
+  of an end customer writes a consent row at the moment
+  it runs. No "always allow" — that would defeat the
+  audit chain.
+- **Egress metering.** Email ($0.001/msg), webhook
+  notifier (flat), extension-bundle bytes (bucketed).
+  All bills to the wallet.
+
+## Common pitfalls
+
+- **Crediting prod via the sandbox endpoint.** It only
+  works in sandbox. Prod tops up through Stripe.
+- **Authoring per-customer overrides without the
+  `__default__` sentinel.** New customers won't have a
+  card and the resolver will refuse. The sentinel is the
+  fallback.
+- **Caching Strategic Partner consent.** Don't. The
+  audit value is the per-request record. Caching defeats
+  it.
+
+## Where to go next
+
+- Lab: [M15 — Billing & reseller](/docs/training/labs/M15-billing-reseller).
+- Reference: [/docs/billing](/docs/billing),
+  [/docs/reseller-billing](/docs/reseller-billing),
+  [/partners/inetko](/partners/inetko).
+
+---
+
 # Lab M8 — Solution
 
 > Reference solution for Lab M8 — Studio menu paths plus three common gotchas around explicit-snapshot semantics, destructive restore, and per-tenant draft ownership.
@@ -20599,6 +21491,56 @@ edit. Click through, and the draft reverts.
 ## Back to the lab
 
 [Lab M8 — Yoke Studio](/docs/training/labs/M8-yoke-studio).
+
+---
+
+# Lecture M16 — Capstone framing
+
+> How the capstone exercises every primitive across Weeks 1–7, the rubric's load-bearing categories, and what "done" looks like.
+
+# Lecture M16 — Capstone framing
+
+## The mental model
+
+The capstone is one **Tenant Yoke** that exercises every
+primitive you've touched. By design, the prompt is
+deliberately open — the value is in the integration, not
+in solving any single primitive in isolation.
+
+## Key concepts
+
+- **Integration over isolation.** A capstone Yoke that
+  uses every primitive in isolation but doesn't glue
+  them together fails the rubric. The point is the seams.
+- **Rubric categories.** Schema authoring (M3, M5),
+  authoring surfaces (M4, M7), runtime correctness (M6,
+  M11), distribution (M10), and operations (M15). The
+  rubric on [the capstone doc](/docs/training/capstone)
+  expands each.
+- **Reviewable by a second learner.** A capstone is done
+  when a second learner can install it on a fresh tenant
+  and follow the documented walkthrough end-to-end. This
+  is the real exit criterion.
+- **No starter code.** Intentional. Reaching for a
+  template short-circuits the integration work — the
+  rubric reads the integration, not the surface polish.
+
+## Common pitfalls
+
+- **Scoping too big.** The rubric doesn't reward feature
+  count. A small, well-integrated Yoke beats a sprawling
+  one with seams that don't connect.
+- **Skipping the documentation pass.** "A second learner
+  can install it" is a real test. Write the install
+  walkthrough; have someone read it cold.
+- **Treating the capstone as a portfolio piece.** It is
+  — but the rubric scores integration, not presentation.
+  Spend on the wiring, not the README.
+
+## Where to go next
+
+- Lab: [M16 — Capstone](/docs/training/labs/M16-capstone).
+- Capstone doc: [/docs/training/capstone](/docs/training/capstone).
 
 ---
 

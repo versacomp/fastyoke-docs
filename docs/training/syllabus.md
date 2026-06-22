@@ -6,6 +6,10 @@ order: 2
 
 # Syllabus
 
+**Companion lectures.** Short narrative explainers per
+module live at [/docs/training/lectures](/docs/training/lectures).
+Read the lecture before the lab; consult after.
+
 Every module follows the same five-section shape:
 
 - **Learning objectives** — 3–5 verbs you'll be able to
