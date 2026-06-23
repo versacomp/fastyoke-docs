@@ -83,6 +83,15 @@ A self-loop cannot prevent admin cancellation. The
   any other job.
 ::
 
+## SLA & escalation
+
+Give any workflow state a time limit. If a job sits in that state longer than
+the limit, FastYoke automatically runs the escalation actions you configure
+(for example, call a webhook or update a field) — and records the breach on the
+job's timeline. The job stays where it is; escalation only *alerts and acts*, it
+doesn't move the job. Each overstay escalates once; moving the job forward and
+back resets the timer.
+
 ## Cancel is an out-of-band override
 
 FastYoke deliberately does NOT wire "cancelled" into the FSM graph.

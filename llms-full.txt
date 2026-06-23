@@ -8081,6 +8081,62 @@ file probably isn't a true AcroForm — it's a scanned image or a
 flattened PDF. Re-export it from the original tool with form fields
 enabled and try again.
 
+### What the validator checks
+
+The upload runs through a server-side validator before it's
+accepted. It checks the whole file and reports **every** problem at
+once — so a single bad source can return one message per field plus
+a document-level message. A failed upload shows `PDF validation
+failed` followed by one or more of the codes below.
+
+Two requirements trip people up most often, and both come from the
+authoring tool rather than anything you did in FastYoke:
+
+- **No embedded JavaScript** — code `embedded_javascript`. Acrobat
+  silently adds format, calculate, and validate scripts to fields
+  (a date or currency field is the usual source). The fill engine
+  runs in a no-script sandbox, so any script action is rejected. To
+  clear it in Acrobat: **Tools → JavaScript → Document JavaScripts**
+  and delete every entry, then on each field set **Properties →
+  Format → Category = None**. Re-save and re-upload.
+- **Fonts must be standard or embedded** — code `font_not_embedded`,
+  reported once per field (`Text1`, `Text2`, …). A field's font is
+  accepted only if it's one of the 14 standard PDF fonts —
+  **Helvetica, Times-Roman, Courier, Symbol, ZapfDingbats** and
+  their bold/italic variants — **or** the font program is embedded
+  in the file. **Arial is not a standard PDF font** (Helvetica is
+  its standard equivalent), so an Arial form with no embedded font
+  fails on every field at once. The quickest fix is to switch the
+  field font: in Acrobat, **Prepare Form**, select all fields,
+  **Properties → Appearance → Font = Helvetica**. Helvetica needs no
+  embedding and renders identically. If you must keep a custom font,
+  embed it instead (**Preflight → Embed fonts**).
+
+Re-authoring the form with **Helvetica** fields and **no scripts**
+clears the two most common rejections together. To see what's
+inside a file before you re-upload, `mutool show file.pdf js` lists
+any JavaScript and Acrobat's Preflight **Fonts** profile flags
+non-embedded fonts.
+
+Other codes you may see, and what they mean:
+
+- `encrypted_pdf_unsupported` / `malformed_pdf` — the file is
+  password-protected or can't be parsed. Re-export an unencrypted,
+  well-formed PDF.
+- `xfa_form_unsupported` — an XFA (LiveCycle) form. Re-save as a
+  standard AcroForm.
+- `external_resource_reference` — a link, launch, or submit action
+  that reaches outside the document. Remove it.
+- `crypto_signature_widget` — a digital-signature field. Use
+  FastYoke's own signature token instead of a baked-in signature
+  widget.
+- `duplicate_field_name` — two fields share a name. Rename one so
+  every field is unique.
+- `unsupported_widget_type` — a widget that isn't text, button,
+  choice, or signature. Rebuild it as one of those.
+- `too_many_fields` / `template_too_large` — the form exceeds the
+  field-count or file-size limit. Split it or trim unused fields.
+
 ## 3. Map AcroForm fields to form values
 
 Each widget in the inventory needs a binding. The builder shows a
@@ -26664,6 +26720,15 @@ A self-loop cannot prevent admin cancellation. The
   <code>current_state</code> directly without consulting the FSM
   graph, so a job spinning in a self-loop is just as cancelable as
   any other job.
+
+## SLA & escalation
+
+Give any workflow state a time limit. If a job sits in that state longer than
+the limit, FastYoke automatically runs the escalation actions you configure
+(for example, call a webhook or update a field) — and records the breach on the
+job's timeline. The job stays where it is; escalation only *alerts and acts*, it
+doesn't move the job. Each overstay escalates once; moving the job forward and
+back resets the timer.
 
 ## Cancel is an out-of-band override
 
