@@ -1245,6 +1245,15 @@ This page is a placeholder while we shape the program. Specific terms, pricing, 
 > iNetko is FastYoke's first named Strategic Partner — frontline support, sales engineering, implementation, and consulting for teams that want hands-on help getting to production.
 
 #default
+<img
+  src="/partners/inetko-logo.jpg"
+  alt="iNetko Solutions"
+  width="380"
+  class="mx-auto"
+/>
+
+
+#default
 ## The Strategic Partner Program
 
 FastYoke's Strategic Partner Program lets a partner
