@@ -3,6 +3,8 @@
 ## About FastYoke
 
 - [FastYoke — The Open-Architecture aPaaS](https://www.fastyoke.io/): Build at the speed of low-code, perform at the speed of the edge, leave whenever you want. Multi-tenant FSM platform for ISVs who refuse vendor lock-in.
+- [Guides — FastYoke](https://www.fastyoke.io/guides): Opinionated guides on when FastYoke is the right move — graduation stories, migration shapes, and the platform decisions behind them.
+- [When you outgrow Make.com — FastYoke](https://www.fastyoke.io/guides/when-you-outgrow-make): Make.com is great at orchestrating SaaS calls. Three signals you've outgrown it, and what FastYoke gives you on the other side.
 - [Pricing — FastYoke](https://www.fastyoke.io/pricing): Simple pricing that scales from a side project to a regulated fleet. Free with every Vercel Marketplace install; paid tiers on request.
 - [Privacy Notice — FastYoke](https://www.fastyoke.io/privacy): How FastYoke handles personal data submitted through public forms, account info, and product telemetry. Plain-language summary plus the data subject's rights.
 - [Free Online Form Builder — FastYoke Solo Plan](https://www.fastyoke.io/free-forms): Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
