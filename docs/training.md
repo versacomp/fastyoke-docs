@@ -16,6 +16,11 @@ curriculum** — 16 modules, one capstone, every platform
 pillar — that condenses a full college-semester sweep of
 FastYoke into roughly 160 hours of work.
 
+## Jump to
+
+::section-cards{section="training"}
+::
+
 ## Who this is for
 
 - An industry developer ramping on FastYoke in 4–8 weeks
@@ -63,12 +68,28 @@ No prior FastYoke knowledge is required.
 ## What's in this section today
 
 - This **index** — the framing you're reading.
-- The **[syllabus](/docs/training/syllabus)** — 16 modules
-  with learning objectives, reading lists, and lab/project
+- **[Syllabus](/docs/training/syllabus)** — 16 modules with
+  learning objectives, reading lists, and lab/project
   titles per module.
-- The **[capstone](/docs/training/capstone)** — final
+- **[Lectures](/docs/training/lectures)** — short
+  narrative explainers per module: the *why* behind each
+  primitive, mental model, key concepts, common pitfalls.
+- **[Labs](/docs/training/labs)** — hands-on exercises per
+  module with verifiable checkpoints + answer-key
+  solutions. Most carry Postman + `curl` paths side by
+  side.
+- **[Quizzes](/docs/training/quizzes)** — 10-question
+  self-check banks per module (160 questions total) with
+  reveal-style answers and brief explanations.
+- **[Capstone](/docs/training/capstone)** — final
   integration project with a five-category self-grading
   rubric.
+- **[Starter code](/docs/training/starter-code)** —
+  skeleton scripts and JSON templates the labs reference.
+  Parachute, not template.
+- **[Certification](/docs/training/certification)** —
+  sealed-PDF completion certificate issued via the M14
+  e-sign trust model on capstone acceptance.
 
 ## How to use the syllabus self-paced
 
@@ -86,19 +107,19 @@ No prior FastYoke knowledge is required.
 
 ## What's not in training today
 
-The syllabus is the load-bearing artifact in this first
-ship. Each item below is a deliberate follow-on PR:
+Each item below is a deliberate follow-on:
 
-- **Lecture notes per week** — written lecture material
-  per module, ~30 pages each.
-- **Lab exercises** with starter repos and verification
-  scripts.
-- **Graded assignments** and rubrics.
-- **Quiz banks** for self-assessment.
+- **Capstone walkthrough** — a worked reference Tenant
+  Yoke that hits every rubric category. Deferred until
+  real submissions land so it doesn't anchor early
+  learners.
+- **Centrally-graded submissions / auto-grader** — the
+  rubric is self-graded; there is no platform-side
+  grader and no LLM-graded path. Reviewers are humans.
 - **Cohort delivery materials** — instructor guides,
-  slide decks, recorded lectures.
-- **Completion certification** — formal "you finished"
-  artifact.
+  slide decks, recorded lectures. Only relevant if you
+  run a live cohort. The existing content is the
+  source-of-truth syllabus either way.
 
 ## See also
 
