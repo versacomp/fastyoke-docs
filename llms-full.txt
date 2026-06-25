@@ -1,4 +1,129 @@
-# FastYoke — The Open-Architecture aPaaS
+# FastYoke — Run your business on ready-made apps
+
+> Install a CRM, inventory, accounting, or field-service app in minutes. Customize it without code. Own your data, always.
+
+#title
+Run your business on ready-made apps — and make them your own
+
+#tagline
+Install a CRM, inventory, accounting, or field-service app in minutes. Customize it without code. Own your data, always.
+
+#eyebrow
+Ready-made apps
+
+#title
+Apps you can install today
+
+#default
+<div id="apps"></div>
+
+  ::feature-card{title="CRM Suite" summary="Track every lead from first hello to closed deal. See your whole pipeline on one board and never let a follow-up slip."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+
+  ::feature-card{title="Inventory" summary="Know what's in stock, what's running low, and what to reorder — before you run out. Receipts, counts, and low-stock alerts built in."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+
+  ::feature-card{title="Accounting" summary="Send invoices, track the bills you owe, and keep your books balanced. Chart of accounts, AR/AP, and a clean ledger out of the box."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+
+  ::feature-card{title="Project Tracker" summary="Run projects on a simple board. Tasks move from to-do to done, and everyone can see exactly where things stand."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+
+  ::feature-card{title="Field Service" summary="Schedule jobs, dispatch your crew, and invoice the moment work is finished. Every job moves New → Dispatched → On-site → Invoiced."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+
+  ::feature-card{title="Forms — free" summary="Build a form, share a link, collect responses — and email a PDF copy automatically. Free forever, no credit card."}
+  ::cta-button{to="/free-forms" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+::
+
+#eyebrow
+Is this you?
+
+#title
+Built for operations-heavy businesses like…
+
+#default
+  ::feature-card{title="Field service / HVAC" summary="Dispatch crews, track jobs to completion, invoice on site."}
+  ::
+  ::feature-card{title="Logistics & dispatch" summary="Move work through clear states with a full audit trail."}
+  ::
+  ::feature-card{title="Auto & repair" summary="From intake to handoff, every job tracked on one board."}
+  ::
+  ::feature-card{title="Professional services" summary="Projects, tasks, and client work that never falls through the cracks."}
+  ::
+  ::feature-card{title="Retail / inventory" summary="Stock, receipts, and reorder alerts without the spreadsheet."}
+  ::
+::
+
+#eyebrow
+See it work
+
+#title
+Watch a job move through your workflow
+
+#lede
+Every job follows a clear path — New → Dispatched → On-site → Invoiced — so nothing gets lost and everyone knows what's next. No jargon, no setup required to look.
+
+#default
+::
+
+#title
+Make it your own — no code required
+
+#default
+Rename fields, add a form, or tweak the workflow with the visual builder. Start on a ready-made app today and shape it to how you actually work. **Outgrow it? You're not locked in — your data and your app are always yours to take with you.**
+
+See how builders extend FastYoke
+::
+
+#eyebrow
+Pricing
+
+#title
+Simple pricing · start free
+
+#lede
+Forms are free forever. Paid tiers scale from a single team to a regulated fleet — and you can compare FastYoke to what you're paying now.
+
+#default
+See pricing
+::
+
+::
+
+#eyebrow
+For developers & ISVs
+
+#title
+Own it. Extend it. Export it.
+
+#default
+Open architecture, a typed SDK, a visual app studio, and a clean exit: take your frontend, your compiled rules, and your databases with you whenever you want.
+
+Explore the platform
+::
+
+---
+
+# FastYoke for Developers & ISVs — The Open-Architecture aPaaS
 
 > Build at the speed of low-code, perform at the speed of the edge, leave whenever you want. Multi-tenant FSM platform for ISVs who refuse vendor lock-in.
 
