@@ -38,6 +38,7 @@
 - [Simple Project Tracker](https://www.fastyoke.io/docs/apps/simple-project-tracker): Free marketplace app — organize projects, tasks, and comments with a Kanban board.
 - [Studio wizard](https://www.fastyoke.io/docs/apps/studio-wizard): Wix-style 4-step builder — pick a layout, brand it, choose entities, ship a themed multi-page extension.
 - [Inventory Yoke](https://www.fastyoke.io/docs/apps/inventory-yoke)
+- [GL Pack](https://www.fastyoke.io/docs/apps/gl-pack)
 - [Vendara Payments](https://www.fastyoke.io/docs/apps/vendara-payments): Connect your Vendara account to invoice customers from your CRM orders and quotes.
 - [Apps](https://www.fastyoke.io/docs/apps): Group pages under a shared slug + theme; the user-facing face of your tenant.
 - [Dejavoo SPIn Payments](https://www.fastyoke.io/docs/apps/dejavoo-spin): Take card-present payments on your Dejavoo terminals from the parts counter and service cashier.
