@@ -1002,7 +1002,7 @@ FastYoke treats PII as **opt-in opaque-by-default** — every tenant's data live
 
 A printable version of this summary is available for security committees and procurement reviews:
 
-- **[Download the FastYoke PII security summary (PDF)](/security/fastyoke-pii-security-summary.pdf)** — same content as this page, formatted for review packets.
+- **[Download the FastYoke PII security summary (PDF)](/downloads/fastyoke-pii-security-summary.pdf)** — same content as this page, formatted for review packets.
 
 
 
