@@ -4157,6 +4157,54 @@ Uninstalling removes the app's pages and demo records. Records you created after
 
 ---
 
+# Project Tracker Pro — Timeline
+
+> Pro add-on for Simple Project Tracker — Waterfall/Gantt timeline with task bars, dependencies, critical path, milestones, and % complete.
+
+# Project Tracker Pro — Timeline
+
+**Project Tracker Pro** is a Pro-tier add-on that extends [Simple Project Tracker](/docs/apps/simple-project-tracker) with a Waterfall/Gantt timeline view. It gives project teams a date-oriented picture of every task alongside the Kanban board already in the base app.
+
+## What the Timeline adds
+
+The **Timeline** page renders each task as a horizontal bar spanning its start and due date. At a glance you can see:
+
+- **Task bars** — each bar is labeled with the task name and colored by project. Bar width reflects the calendar span between start date and due date.
+- **Dependencies** — arrows connect tasks that must finish before the next one can start, so you can see downstream knock-on effects immediately.
+- **Critical path** — the longest dependency chain is highlighted so you know which tasks, if delayed, push the overall project end date.
+- **Milestones** — tasks marked as milestones appear as diamond markers rather than bars, for clear delivery-point visibility.
+- **% complete** — a fill indicator inside each bar shows how far along the task is based on its completion percentage field.
+
+## Requirements
+
+- **Simple Project Tracker** must already be installed. Project Tracker Pro layers on top of it and reads the same projects and tasks.
+- A **Pro workspace subscription** is required. The listing is visible in Logic Cores on all plans, but installation requires Pro or above.
+
+## Installing
+
+1. Go to **Logic Cores** (sidebar).
+2. Find **Project Tracker Pro** under the Pro add-ons section.
+3. Click **Install**. The Timeline page is added to your Projects app immediately — no data migration required.
+4. Optionally load demo data: a set of sample tasks with start/due dates, dependencies, and milestones is seeded so you can explore the view right away.
+
+## Using the Timeline
+
+Open **Projects** → **Timeline** in your workspace sidebar. The view loads all tasks that have both a start date and a due date set. Tasks missing either date appear in a holding list at the bottom so you can fill in the dates and have them join the chart.
+
+Pan left/right to scroll through the calendar. Zoom controls adjust the scale between day-level and month-level granularity. Click any bar to open the task's detail page.
+
+## Extending it
+
+The Timeline block respects the same FSM lifecycle as the Kanban board — advancing a task to Done via either view updates the same underlying state. You can add custom fields (via **Admin** → **Annotation pages**) that appear in the task detail panel opened from the timeline.
+
+## What's not included
+
+- Resource leveling or workload views.
+- Baseline/actual tracking or earned-value metrics.
+- Export to MS Project or other Gantt formats.
+
+---
+
 # GL Pack
 
 # GL Pack
@@ -4954,6 +5002,90 @@ Reopening **reverses the closing entry** (restoring your revenue and expense bal
 ## How it fits with period close
 
 The year-end close builds on the same closing-date lock used for [closing periods](/docs/apps/yoke-ledger-period-close). A regular period close just sets the lock; a year-end close also posts the closing entry that carries your profit into Retained Earnings. Use a year-end close at the end of your fiscal year, and ordinary period closes for month- and quarter-ends in between.
+
+---
+
+# Bill payments in the Yoke Ledger
+
+# Bill payments in the Yoke Ledger
+
+The **Yoke Ledger** includes a first-class Accounts-Payable workspace for the money you owe your vendors — the payables mirror of invoicing. Enter vendor bills line by line, approve them so they post to your books automatically, receive inventory-backed lines straight into stock, record payments as you make them (including partial payments), and keep an eye on what you owe with a built-in aging report.
+
+You'll find it under **Bills** in the Ledger workspace.
+
+## Entering a bill
+
+1. Open the Ledger and go to the **Bills** tab.
+2. Click **New bill**.
+3. Pick a **vendor** (the list is drawn from your existing vendor records), or type in a name.
+4. Set the **receive date**, **due date**, and **payment terms** (for example, *Net 30*).
+5. Add **line items** — a description, quantity, and unit price for each. The line amount and the running **subtotal**, **tax**, and **total** update live as you type.
+6. Choose the **account** each line posts to. An expense line points at an expense account; an **inventory** line points at your Inventory asset account and also names the **item** and the **location** it's received into.
+7. Choose a **sales-tax rate** if the bill is taxable. Tax is calculated on the subtotal at a single rate and rounded to the cent.
+8. Click **Save draft**.
+
+A draft is fully editable — change lines, dates, the vendor, the per-line accounts, or the tax rate as many times as you like. Nothing posts to your books until you approve it.
+
+## Approving a bill
+
+When the bill is ready, click **Approve**. Approving:
+
+- Assigns the next **bill number** (using the prefix and starting number from your bill settings).
+- Locks the bill — approved bills can no longer be edited.
+- Posts a **tax-aware journal entry** to your books: it debits each line's account (expenses and inventory), debits Sales Tax Payable for any tax, and credits Accounts Payable for the total. Your trial balance stays in balance automatically.
+- For every **inventory-backed line**, receives the quantity into stock at the named location — so your on-hand counts reflect the goods as soon as the bill is approved.
+
+### Posting accounts
+
+Approving needs to know which ledger accounts to post to. Configure these once under **bill settings**:
+
+- **Accounts Payable** — where the amount owed is recorded.
+- **Expense** — the default account for non-inventory lines.
+- **Inventory** — the default account for inventory-backed lines.
+- **Sales Tax Payable** — where tax owed is held (only required when a bill has tax).
+- **Cash / bank** — where payments are drawn from.
+
+Each line can override its account, falling back to these defaults. An inventory line must name both an item and a location, so approving is blocked with a clear message if either is missing — your stock and your books never drift apart.
+
+## Recording payments
+
+As you pay your vendors, record each payment against the bill:
+
+1. Open the approved bill and click **Record payment**.
+2. Enter the **amount** (defaults to the full balance due), the **payment date**, the **method** (cash, check, bank transfer, card, or other), and an optional **reference**.
+3. Click **Save**.
+
+Each payment posts its own journal entry — debit Accounts Payable, credit Cash/bank — and the bill status updates from its balance:
+
+| Status | Meaning |
+|---|---|
+| **Approved** | No payments recorded yet. |
+| **Partially paid** | Some, but not all, of the balance has been paid. |
+| **Paid** | The balance is zero. |
+
+**Partial payments** are fully supported — record as many as you need until the balance reaches zero. You can't record a payment larger than the outstanding balance.
+
+Payments form an **append-only history** on the bill, so the record of what was paid, when, and how is always preserved.
+
+## Voiding a bill
+
+If a bill was approved in error, open it and click **Void**. Voiding posts a reversing journal entry that cleanly backs out the original posting, and backs the received quantity out of stock for any inventory lines. A bill with any recorded payments can't be voided — reverse the payments first.
+
+## The AP aging report
+
+The **Bill Aging** tab shows everything you still owe, grouped by vendor and bucketed by how overdue it is:
+
+- **Current** — not yet due.
+- **1–30**, **31–60**, **61–90** — days past due.
+- **90+** — over ninety days past due.
+
+Pick an **as-of date** to age the balances against, and the report recalculates. Fully-paid bills drop out automatically — only outstanding balances appear. You can **export to PDF** or **export to CSV** for sharing or follow-up.
+
+Exporting the aging report as a PDF requires the **Pro plan**. The on-screen report and CSV export are available on every plan.
+
+## Building on it
+
+Everything posts through the standard Yoke Ledger, so your bills, payments, and tax sit alongside the rest of your books — the trial balance, the Profit &amp; Loss statement, and the Balance Sheet all reflect Accounts-Payable and inventory activity with no extra steps.
 
 ---
 
