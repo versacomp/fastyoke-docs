@@ -63,6 +63,7 @@
 - [Compliance Yoke](https://www.fastyoke.io/docs/apps/compliance): Continuous control monitoring and audit readiness — SOC 2 first, framework-agnostic.
 - [Invoicing in the Yoke Ledger](https://www.fastyoke.io/docs/apps/yoke-ledger-invoicing)
 - [Closing periods in the Yoke Ledger](https://www.fastyoke.io/docs/apps/yoke-ledger-period-close)
+- [Closing the year in the Yoke Ledger](https://www.fastyoke.io/docs/apps/yoke-ledger-year-end-close)
 - [Cross-App Connections](https://www.fastyoke.io/docs/apps/cross-app-bridge)
 - [EHR / ADT Connector](https://www.fastyoke.io/docs/apps/ehr-connector)
 - [Patient Flow Yoke](https://www.fastyoke.io/docs/apps/patient-flow)
