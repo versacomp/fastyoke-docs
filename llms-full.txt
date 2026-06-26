@@ -2530,6 +2530,875 @@ records the burndown target.
 
 ---
 
+# Accounting
+
+> Two audiences, opposite vocabulary, same product. Per-question pages for business owners and accountants — outcomes first, mechanism second.
+
+# Accounting
+
+The [Yoke Ledger reference](/docs/yoke-ledger) tells you how
+the General Ledger mechanism works. This section answers a
+different question: **what does any of this mean for me?**
+
+Two audiences land on this surface. They want the same
+product framed differently:
+
+- A **business owner** wants outcomes — "did I make money?",
+  "where does this transaction go?", "what do I send my CPA?"
+- An **accountant** or **bookkeeper** wants conventions —
+  how to map an existing Chart of Accounts, what audit trail
+  is preserved, how to close the books, how to export
+  cleanly to QuickBooks.
+
+Pick the angle you'd rather read in.
+
+## Jump to
+
+
+## See also
+
+- [Yoke Ledger](/docs/yoke-ledger) — the technical reference
+  for the GL itself: Chart of Accounts, journal entries,
+  posting rules, reports, API.
+- [Marketplace — Yoke Ledger listing](/docs/marketplace) —
+  where the GL Yoke installs from.
+
+---
+
+# Map an existing Chart of Accounts
+
+> Three migration shapes for replacing the starter CoA with your client's books — replace, merge, or augment — and the deactivate-not-delete rule.
+
+# Map an existing Chart of Accounts
+
+When you install Yoke Ledger, the platform seeds a
+starter Chart of Accounts (AR / AP / Cash / Revenue /
+COGS / Owner's Equity / etc.). For a brand-new business,
+that's enough. For a client migrating from QuickBooks /
+Xero / a spreadsheet, you'll want to bring their existing
+CoA over.
+
+## The starter CoA
+
+The seeded accounts at install time:
+
+- 1000 Cash (Asset)
+- 1200 Accounts Receivable (Asset)
+- 1500 Fixed Assets (Asset)
+- 2000 Accounts Payable (Liability)
+- 2500 Loans Payable (Liability)
+- 3000 Owner's Equity (Equity)
+- 4000 Revenue (Revenue)
+- 5000 Cost of Goods Sold (Expense)
+- 6000 Operating Expenses (Expense)
+
+For the field-level reference (account types, code
+formats, validation rules), see [Yoke Ledger Chart of
+Accounts](/docs/yoke-ledger/chart-of-accounts).
+
+## Three migration shapes
+
+### Replace
+
+The cleanest shape when the client's CoA is well-
+maintained and the starter accounts don't match what
+they want.
+
+1. Open Chart of Accounts → bulk delete the starter
+   accounts (none have historical entries yet).
+2. Import the client's CoA via bulk-ops importer.
+3. Run a Trial Balance — it should be empty until you
+   start posting.
+
+### Merge
+
+The right shape when the client's CoA partially overlaps
+the starter set.
+
+1. Rename the starter accounts to match the client's
+   code/name (e.g., starter `1000 Cash` → `1010 Cash —
+   Operating`).
+2. Add the client's additional accounts that aren't
+   seeded.
+3. Run a Trial Balance — confirm structure.
+
+### Augment
+
+When the starter CoA is fine but the client has additional
+accounts they need (e.g., multiple revenue streams).
+
+1. Leave starter accounts in place.
+2. Add the client's additional accounts.
+
+## The CoA importer format
+
+A CSV with columns:
+
+| Column | Required | Notes |
+| --- | --- | --- |
+| `account_code` | yes | Numeric, 4-6 digits, unique. |
+| `account_name` | yes | Free text. |
+| `account_type` | yes | One of: `asset`, `liability`, `equity`, `revenue`, `expense`. |
+| `parent_code` | no | For sub-accounts. |
+| `is_active` | no | Default `true`. |
+
+## The deactivate-not-delete rule
+
+**Yoke Ledger refuses to delete an account that has
+historical journal entries.** Deactivate, do not delete.
+This is feature, not bug — the platform protects the
+audit trail by preventing referential integrity loss.
+
+For accounts the client doesn't use anymore:
+
+1. Set `is_active = false`.
+2. Deactivated accounts:
+   - Disappear from transaction pickers (no new entries
+     can post to them).
+   - Stay on historical reports (Trial Balance, GL
+     detail).
+
+Deactivation is reversible. Deletion (on accounts with no
+history) is final.
+
+## Confirming the migration
+
+1. Run the Trial Balance in the client's old system on
+   their cutover date.
+2. Import opening balances into Yoke Ledger as a single
+   journal entry dated the cutover date.
+3. Run the Trial Balance in Yoke Ledger.
+4. The two must match exactly. If they don't, find the
+   delta before posting any new transactions.
+
+---
+
+# For business owners
+
+> Outcome-driven accounting pages for non-accountants — did you make money, where transactions go, month-end, sending to your CPA, and a plain-English vocabulary.
+
+# Accounting for business owners
+
+You don't need to be an accountant to keep good books.
+You need answers to a few specific questions, fast.
+
+- **[Did I make money?](/docs/accounting/for-business-owners/did-i-make-money)**
+  — read your Profit & Loss in 30 seconds.
+- **[Which account does this go to?](/docs/accounting/for-business-owners/categorize-a-transaction)**
+  — the five buckets + decision flow + the 10 transactions
+  you see most.
+- **[Month-end checklist](/docs/accounting/for-business-owners/month-end-checklist)**
+  — a 30-minute routine that keeps your books current.
+- **[Send to my CPA](/docs/accounting/for-business-owners/send-to-my-cpa)**
+  — the three reports your accountant actually wants +
+  copy-pasteable email template.
+- **[Vocabulary](/docs/accounting/for-business-owners/vocabulary)**
+  — accounting words in plain English.
+
+If you'd rather read the accountant-pitched version,
+see [for accountants](/docs/accounting/for-accountants).
+
+---
+
+# For accountants
+
+> Practitioner-pitched pages for bookkeepers and CPAs — mapping a client's CoA, posting rules in accounting terms, close cycle, audit trail, exporting to QuickBooks.
+
+# Accounting for accountants
+
+For practitioners onboarding a new client to FastYoke,
+or running an existing client's books from inside Yoke
+Ledger.
+
+- **[Map an existing Chart of Accounts](/docs/accounting/for-accountants/map-an-existing-coa)**
+  — replace/merge/augment migration shapes; the
+  deactivate-not-delete rule.
+- **[Posting Rules explained](/docs/accounting/for-accountants/posting-rules-explained)**
+  — what they are in accounting terms; audit story;
+  reversal mechanic.
+- **[Close cycle](/docs/accounting/for-accountants/close-cycle)**
+  — month / quarter / year close on Yoke Ledger.
+- **[Audit trail](/docs/accounting/for-accountants/audit-trail)**
+  — the four immutability guarantees; sealed-PDF GL
+  export; auditor handoff.
+- **[Export to QuickBooks](/docs/accounting/for-accountants/export-to-quickbooks)**
+  — two-pass migration shape; generalizes to Xero,
+  Sage, Wave.
+
+For the business-owner-pitched version, see
+[for business owners](/docs/accounting/for-business-owners).
+
+---
+
+# Posting Rules explained
+
+> What Posting Rules are in accounting terms — recurring journal entry templates with an audit trail — and how they survive scrutiny.
+
+# Posting Rules explained
+
+## In your terms
+
+A **Posting Rule** is a recurring journal entry template
+that fires automatically when a business event happens
+(sale, invoice, payment received, refund issued). It is
+the structured-event automation accountants have wanted
+from their software for 30 years.
+
+For the technical reference (rule syntax, validation,
+event sources), see [Yoke Ledger Posting
+Rules](/docs/yoke-ledger/posting-rules).
+
+## The audit story
+
+Every rule firing writes an **immutable row** in the
+event log. For each posted journal entry, you can prove:
+
+- Which rule produced it.
+- When it fired (UTC timestamp).
+- What inputs the rule received.
+- Who (or what) triggered the event.
+
+This trail is what makes Posting Rules survive scrutiny.
+An auditor asking "where did this Revenue entry come
+from?" gets a chain back to the originating business
+event with no holes. See [the audit-trail page](/docs/accounting/for-accountants/audit-trail).
+
+## The default rule
+
+When you install Yoke Ledger, one rule is seeded:
+
+> **`invoice` event → debit AR, credit Revenue.**
+
+Standard accrual-basis treatment. When the rule is wrong:
+
+- **Cash-basis books** — disable the rule; create entries
+  manually when customer pays.
+- **Point-of-sale (customer pays immediately)** — change
+  the debit side from AR to Cash.
+- **Service vs goods split needed** — clone the rule per
+  revenue category.
+
+## Authoring a custom rule
+
+1. Open Yoke Ledger → Posting Rules → New rule.
+2. Pick the triggering event (e.g., `payment_received`,
+   `expense_recorded`).
+3. Define the debit + credit sides. The rule must
+   produce a **balanced entry** — Yoke Ledger refuses to
+   save an unbalanced rule.
+4. Save.
+5. **Test against historical events** before going live
+   — the rule editor shows a preview of the entries
+   that would have been produced over the last 90 days.
+
+## The reversal mechanic
+
+**Posted journal entries are immutable.** This is GAAP-
+aligned and an auditor will expect it.
+
+Yoke Ledger handles corrections through reversal:
+
+1. Original entry stays posted.
+2. The reversal is a **new entry** — same accounts,
+   sides flipped. Both entries appear in the GL.
+3. Optionally, the corrected entry posts after the
+   reversal.
+
+The audit chain shows the original, the reversal, and
+the correction. Nothing was edited.
+
+This is not a bug to work around. It's how
+defensible books are kept.
+
+---
+
+# Did I make money?
+
+> How to read your Profit & Loss in 30 seconds, what each line means, and the two traps that make the number lie.
+
+# Did I make money?
+
+## The 30-second answer
+
+Open **Reports → Profit & Loss**, set the date range to the
+period you care about (this month / this quarter / this
+year), and look at **Net Income** at the bottom.
+
+- Positive? Yes, you made money.
+- Negative? You spent more than you earned.
+
+If that's all you needed, you're done. The rest of this
+page explains what's behind that single number — useful
+when it surprises you.
+
+## What the line items mean
+
+| Line | Plain English |
+| --- | --- |
+| **Revenue** | Money your customers paid you (or owe you, on accrual). |
+| **Cost of Goods Sold (COGS)** | What it cost you to deliver the thing you sold. |
+| **Gross Profit** | Revenue minus COGS. The margin on what you sold. |
+| **Operating Expenses** | Everything else it takes to run the business — rent, software, salaries. |
+| **Operating Income** | Gross Profit minus Operating Expenses. |
+| **Net Income** | After interest + taxes + everything. The actual profit. |
+
+A worked example: you sell consulting for $10,000 in
+January. You pay a subcontractor $4,000 for part of it,
+$1,200 in software, and $300 in coffee meetings. Revenue
+$10,000, COGS $4,000, Gross Profit $6,000, Operating
+Expenses $1,500, Net Income $4,500. You made money.
+
+## The two big traps
+
+### Trap 1: "I have money in the bank" ≠ "I made money"
+
+The bank balance is **cash**. Net Income on accrual basis
+includes invoices you've sent that haven't been paid yet,
+and excludes deposits that aren't actually revenue (loans,
+owner contributions). If your P&L says you made money and
+your bank account is shrinking, the gap is usually
+unpaid invoices or money you took out of the business —
+not a bookkeeping error.
+
+### Trap 2: One month is not a trend
+
+Profitable in March, unprofitable in April? That's
+business — it doesn't mean anything went wrong. **Look
+at the trend over 3-6 months** before reading anything
+into a single month.
+
+## When the number is wrong
+
+If Net Income looks too good to be true or too bad:
+
+- **Suspiciously high** — common cause: expenses sitting
+  in the wrong account (e.g., owner draws miscategorized
+  as a revenue offset).
+- **Suspiciously low** — common cause: a big deposit got
+  booked as Revenue when it was actually a loan or
+  refund.
+- **Negative when you know you're profitable** — usually
+  uncategorized transactions. Run [the month-end
+  checklist](/docs/accounting/for-business-owners/month-end-checklist).
+
+For the column definitions and the SQL behind each line,
+see [Yoke Ledger Reports](/docs/yoke-ledger/reports).
+
+---
+
+# Close cycle
+
+> Month, quarter, and year close on Yoke Ledger — the steps, the lock mechanism, and what the platform handles automatically.
+
+# Close cycle
+
+## Month close — 5 steps
+
+1. **Confirm all transactions posted.** Open Journal
+   Entries → filter for "Draft" → review and post
+   anything pending. No drafts should remain for the
+   period being closed.
+2. **Reconcile external accounts.** Bank, credit card,
+   payment processor. Each external account's ending
+   balance must match Yoke Ledger's cash subaccount for
+   it.
+3. **Trial Balance.** Reports → Trial Balance → as of
+   month-end. Debits = Credits, to the cent. If not, find
+   the delta before locking.
+4. **P&L review.** Reports → Profit & Loss → period =
+   the month being closed. Scan revenue and the major
+   expense categories for unexpected items.
+5. **Lock the period.** Reports → Period Lock → select
+   the closed month. Yoke Ledger refuses new postings
+   to a locked period without the admin override.
+
+## Quarter close — additions
+
+- **Depreciation entries** — book the period's
+  depreciation expense + accumulated depreciation
+  liability/contra-asset.
+- **Accrual adjustments** — earned-but-unbilled revenue,
+  expenses incurred but not yet invoiced.
+- **Deferred revenue recognition** — recognize the
+  portion of prepaid revenue earned this quarter.
+
+These are journal entries you author manually (or via
+custom Posting Rules if recurring); the close cycle is
+the time to land them.
+
+## Year close — additions
+
+- **Closing income/expense accounts to Retained
+  Earnings.** Yoke Ledger does this automatically when
+  you mark the year as closed (Reports → Period Lock →
+  Year close). No manual journal entries required.
+- **Reset starts the new year clean.** Income and
+  expense accounts open the new year at zero;
+  Retained Earnings carries forward the cumulative
+  profit/loss.
+
+## What "locking" does
+
+Once locked:
+
+- New entries cannot post to a date in the locked
+  period.
+- The admin override can break the lock for late-
+  arriving corrections (e.g., a $5 vendor invoice that
+  arrived after close). The override leaves an audit
+  row identifying who broke the lock, when, and why
+  (mandatory free-text reason field).
+- All historical reports for locked periods are
+  read-only and reproducible.
+
+For the audit-trail story behind these guarantees, see
+[the audit trail](/docs/accounting/for-accountants/audit-trail).
+
+---
+
+# Which account does this go to?
+
+> The five buckets, a decision flow for picking the right account, and the 10 transactions a small business sees most.
+
+# Which account does this go to?
+
+## The five buckets
+
+Every transaction in your books touches one or more of
+**five account types**. Memorize these five and you'll
+make the right call most of the time.
+
+| Bucket | What's in it |
+| --- | --- |
+| **Asset** | Things you own that have value. Cash, AR, equipment. |
+| **Liability** | Things you owe. AP, credit card balance, loans. |
+| **Equity** | The owner's stake. Initial capital, retained earnings, owner draws. |
+| **Revenue** | Money you earned by selling your product / service. |
+| **Expense** | What it cost to run the business — rent, salaries, software. |
+
+## The decision flow
+
+Ask yourself, in order:
+
+1. **Did money come in from a customer?** → Revenue (and
+   the cash / AR side is an Asset).
+2. **Did money go out to run the business?** → Expense
+   (and the cash / AP side is a Liability or Asset).
+3. **Did the business receive a loan?** → Liability (and
+   the cash side is an Asset).
+4. **Did the owner put money in?** → Equity (and the cash
+   side is an Asset).
+5. **Did the owner take money out?** → Equity (specifically
+   Owner Draw) (and the cash side is an Asset).
+6. **Did you buy something that lasts (equipment,
+   property)?** → Asset (and the cash side is a different
+   Asset, or a Liability if financed).
+
+## The 10 transactions a small business sees most
+
+| What happened | Debit | Credit |
+| --- | --- | --- |
+| You made a sale (paid at point of sale) | Cash (Asset) | Revenue |
+| You sent an invoice (paid later) | AR (Asset) | Revenue |
+| Customer paid an invoice | Cash (Asset) | AR (Asset) |
+| You paid a bill in cash | Expense | Cash (Asset) |
+| You received a bill (not paid yet) | Expense | AP (Liability) |
+| You paid down a bill | AP (Liability) | Cash (Asset) |
+| Customer refund | Revenue (negative) | Cash (Asset) |
+| You took a loan | Cash (Asset) | Loan Payable (Liability) |
+| You took owner draw | Owner Draw (Equity) | Cash (Asset) |
+| You put money into the business | Cash (Asset) | Owner Contribution (Equity) |
+
+For the full account list your books seeded with, see
+[Yoke Ledger Chart of Accounts](/docs/yoke-ledger/chart-of-accounts).
+
+## When you're not sure
+
+Use the "ask my CPA" pattern: copy the transaction
+details into the email template on
+[Send to my CPA](/docs/accounting/for-business-owners/send-to-my-cpa)
+and ask. Getting it right matters more than getting it
+fast.
+
+---
+
+# Audit trail
+
+> The four immutability guarantees, what's signable, and the auditor handoff.
+
+# Audit trail
+
+## The four immutability guarantees
+
+Posted entries are **immutable**. Reversals are appended.
+The event log is append-only. Posting Rules don't rewrite
+history. Four rules, all reinforcing the same shape.
+
+1. **Posted journal entries cannot be edited.** Once an
+   entry is in `posted` state, no field on it can change.
+   The corrective mechanism is reversal, not edit.
+2. **Reversals are new entries.** A reversal is a separate
+   journal entry that mirrors the original (debits and
+   credits swapped). The original posted entry survives
+   in the GL alongside the reversal.
+3. **The event log is append-only.** Every state change
+   on every entry writes an event-log row. Rows cannot
+   be deleted or edited. The log is the platform's
+   audit chain.
+4. **Posting Rules cannot retroactively change posted
+   entries.** Editing a rule today does not re-run it
+   against historical events. A rule change applies to
+   future firings only.
+
+## What's signable
+
+The General Ledger detail report can be exported as a
+**sealed PDF** via the platform's e-sign trust model —
+the same ed25519 seal that the e-sign module uses for
+contracts. The seal proves the exact GL state at the
+moment of export. See [E-signatures](/docs/esign) for
+the trust model.
+
+A sealed GL export is what you hand to an external
+auditor when they ask for "the books as of [date]." The
+seal is verifiable by any third party with the public
+verify endpoint — no FastYoke involvement required.
+
+## The never-delete-the-books guarantee
+
+Uninstalling Yoke Ledger from the Marketplace does NOT
+delete:
+
+- Journal entries.
+- Chart of Accounts.
+- Posting Rules history.
+- Event log.
+
+The Yoke Ledger app surface goes away. The data
+underneath stays. (Cross-reference: [Yoke Ledger
+overview](/docs/yoke-ledger).)
+
+## Auditor handoff — three exports
+
+When an external auditor (or your firm's review partner)
+arrives:
+
+1. **Trial Balance** for the audit period.
+2. **General Ledger detail** for the audit period, as a
+   sealed PDF.
+3. **Chart of Accounts** snapshot — current state of
+   every account.
+
+Each is one click from the Reports surface. The sealed
+PDF is what makes the package defensible.
+
+## What's NOT preserved
+
+**Voided/deleted draft entries.** Drafts that were never
+posted leave no audit trail. This is intentional —
+drafts are working state, not records of business
+events. If you need a record of "the proposed entry we
+decided not to post," create the entry, post it, then
+immediately reverse it. Both posted entries survive in
+the GL.
+
+---
+
+# Month-end checklist
+
+> A 5-step, 30-minute routine at the end of every month that keeps your books current and your CPA happy.
+
+# Month-end checklist
+
+This is a 30-minute job once a month. If it ever takes
+longer than that, the categorization upstream needs work.
+
+## The 5 steps
+
+1. **Categorize uncategorized transactions.** Open
+   Transactions → filter for the last month → anything
+   without an account assigned. Use the
+   [categorize-a-transaction](/docs/accounting/for-business-owners/categorize-a-transaction)
+   decision flow. **Most months: under 10 minutes.**
+2. **Reconcile your bank balance.** Open Reconciliation →
+   pick your bank account → enter the ending balance from
+   your bank statement → mark off the cleared transactions.
+   The unreconciled amount should be zero or a small
+   timing difference (a check you wrote that hasn't
+   cleared yet). **Most months: under 10 minutes.**
+3. **Run the P&L for the month.** Open Reports → Profit
+   & Loss → date range = "Last Month." Eyeball Revenue
+   and the big expense categories for surprises. If
+   anything looks wrong, you probably have a
+   miscategorized transaction. **Under 5 minutes.**
+4. **Run the Balance Sheet.** Open Reports → Balance
+   Sheet → as of the last day of the month. Assets =
+   Liabilities + Equity. If they don't balance, you have
+   a data issue — see [Yoke Ledger journal entries](/docs/yoke-ledger/journal-entries)
+   for the correction-entry mechanism. **Under 5 minutes.**
+5. **Write one thing you'll do differently next month.**
+   Categorization mistake you keep making? Set up a
+   posting rule. Big expense surprise? Add it to your
+   budget. **Under 2 minutes.**
+
+## What "reconcile" means in plain English
+
+Your bank's records and your books should agree on the
+cash balance at the end of every month. **Reconciliation
+is the act of confirming they agree.** When they don't:
+
+- Bank says higher → you forgot to record an income.
+- Bank says lower → you forgot to record an expense.
+- Both have transactions the other doesn't → timing
+  difference; they'll catch up next month.
+
+If you can't reconcile to within a small timing
+difference, your books are wrong. Fix it now; it gets
+harder next month.
+
+## Why this matters
+
+The discipline of running this checklist every month is
+what separates "I have a bookkeeper" from "I have books."
+Tax-time gets quiet when every month was already closed.
+
+---
+
+# Export to QuickBooks
+
+> Two-pass migration shape (CoA then journal entries) for moving a client's books to QuickBooks Online — generalizes to Xero, Sage, and Wave.
+
+# Export to QuickBooks
+
+This page walks through QuickBooks Online (QBO)
+specifically. The same two-pass shape applies to **Xero,
+Sage, and Wave**; column names differ, link out at the
+bottom.
+
+## What QBO accepts
+
+QuickBooks Online imports:
+
+- **CoA** — CSV with the columns QBO's importer expects
+  (account name, type, detail type, sub-account flag).
+- **Journal Entries** — IIF format, or QBO's journal
+  entry CSV (date, account code, debit, credit, memo).
+
+QBO does not accept a single combined file. You need
+two passes.
+
+## The two-pass migration
+
+### Pass 1 — Chart of Accounts
+
+1. Yoke Ledger → Reports → Chart of Accounts → Export
+   CSV.
+2. Map the columns to QBO's importer format. Yoke
+   Ledger's `account_type` maps to QBO's "Account Type"
+   directly (asset/liability/equity/revenue/expense).
+   QBO's "Detail Type" requires a second pick — usually
+   inferable from the Yoke Ledger account name.
+3. Import the CSV into QBO.
+4. Confirm every account landed with the correct type
+   and parent.
+
+### Pass 2 — Journal entries
+
+1. Yoke Ledger → Reports → General Ledger detail →
+   period → Export CSV.
+2. Verify the CoA from Pass 1 is in place. **If an
+   account referenced in the JEs doesn't exist in QBO
+   yet, the import fails.**
+3. Map columns to QBO's journal entry CSV format.
+4. Import in QBO. Run a Trial Balance — it should match
+   Yoke Ledger's Trial Balance to the cent.
+
+## What gets lost in translation
+
+- **Posting Rules.** Yoke Ledger's automatic posting
+  rules don't carry over. QBO has "Memorized
+  Transactions" with different semantics. Recreate the
+  rules as Memorized Transactions post-cutover if you
+  want the automation.
+- **Sealed PDF audit trail.** QBO doesn't have an
+  equivalent. Keep the sealed PDF export of the
+  pre-cutover GL — it's the auditor's evidence that the
+  books were complete at the moment of migration.
+- **Custom Yoke Ledger reports.** Built-in reports are
+  available in QBO; custom report definitions don't
+  port.
+
+## Xero, Sage, Wave
+
+Same two-pass shape. Column-level differences:
+
+- **Xero** — uses "Account Code" (alphanumeric) instead
+  of QBO's numeric. Type vocabulary differs slightly.
+- **Sage** — "Nominal Code" instead of "Account Code".
+  CSV-only import.
+- **Wave** — minimal customization on import; usually
+  accepts the QBO format with column renames.
+
+For every target: validate the Trial Balance post-import
+matches Yoke Ledger's pre-cutover Trial Balance. That's
+the migration's exit criterion.
+
+---
+
+# Send to my CPA
+
+> The three exports your CPA actually wants, how to generate each, and a copy-pasteable email template.
+
+# Send to my CPA
+
+CPAs work in a small set of standard reports. Send them
+the three below and you'll save both of you a round trip.
+
+## The three exports
+
+| Report | Why your CPA wants it |
+| --- | --- |
+| **Trial Balance** | The definitive snapshot — every account, every balance, as of a date. Their first sanity check. |
+| **General Ledger detail** | Every transaction with debit/credit. The receipts for the Trial Balance. |
+| **P&L + Balance Sheet** | The two statements they'll hand to anyone else (lenders, IRS, investors). |
+
+To generate:
+
+- **Trial Balance** → Reports → Trial Balance → date
+  → Export PDF.
+- **General Ledger detail** → Reports → General Ledger
+  → period → Export CSV or PDF.
+- **P&L + Balance Sheet** → Reports → Financial Statements
+  → period → Export PDF.
+
+## Email template
+
+Copy this, edit the bracketed bits, send:
+
+> Subject: [Q1 2026] books for review
+>
+> Hi [CPA name],
+>
+> Attached are the three reports for [Q1 2026]:
+>
+> - Trial Balance as of 3/31/2026
+> - General Ledger detail for Q1
+> - P&L + Balance Sheet for Q1
+>
+> I'd like your eyes on [tax filing / cash flow / year-end planning / specific question]. Let me know if you want anything else.
+>
+> Thanks,
+> [Your name]
+
+## Before you send: the trial-balance check
+
+Open the Trial Balance. The Debits column total and the
+Credits column total **must match to the cent**. If they
+don't, you have a data problem your CPA can't fix from
+the export — fix it on your end first, then re-send.
+
+## What your CPA may also want to know
+
+If your CPA asks about the audit trail (what's preserved,
+what's signable, what an external auditor would accept),
+point them at [the audit-trail page](/docs/accounting/for-accountants/audit-trail).
+
+---
+
+# Vocabulary
+
+> The 12 accounting words a business owner trips over when they open Yoke Ledger, defined in plain English.
+
+# Vocabulary
+
+These are the words that show up in the GL surface that
+will confuse you if you're not an accountant. Each entry
+is one sentence of definition + one sentence on why it
+matters to you.
+
+## Debit / Credit
+
+A bookkeeping convention for which side of an entry money
+moves to. *Why it matters:* you don't need to remember
+which is which — Yoke Ledger handles the sides when you
+pick the right accounts. The terms come up when reading
+GL reports.
+
+## Accrual vs Cash
+
+Two ways of recognizing revenue and expenses. Cash basis:
+when money moves. Accrual basis: when the obligation
+exists (you sent the invoice; the customer hasn't paid
+yet). *Why it matters:* accrual gives you a clearer
+picture of profit; cash is simpler. Most small businesses
+use cash; growing businesses graduate to accrual.
+
+## Asset / Liability / Equity / Revenue / Expense
+
+The five account buckets. *Why it matters:* every
+transaction touches at least two of these. See
+[which account does this go to?](/docs/accounting/for-business-owners/categorize-a-transaction).
+
+## Trial Balance
+
+A snapshot listing every account and its balance as of a
+date. *Why it matters:* if the debits and credits don't
+match, the books are broken. First thing your CPA will
+check.
+
+## General Ledger
+
+The full record — every transaction, every debit, every
+credit. *Why it matters:* it's the receipts for the Trial
+Balance. Auditors and CPAs ask for it.
+
+## Journal Entry
+
+A single bookkeeping record — one transaction, debit one
+account, credit another (or several), totals match.
+*Why it matters:* this is the atomic unit of your books.
+
+## Posting Rule
+
+A template that creates journal entries automatically
+when a business event happens (sale, invoice, payment
+received). *Why it matters:* set them up once and your
+books update without you typing anything.
+
+## Chart of Accounts
+
+The list of every account your business uses. *Why it
+matters:* you customize this to match how you think about
+your business. Bad CoA = bad reports.
+
+## AR / AP
+
+Accounts Receivable (money customers owe you) and
+Accounts Payable (money you owe vendors). *Why it
+matters:* watching AR tells you who's slow to pay; AP
+tells you what's due.
+
+## COGS
+
+Cost of Goods Sold. *Why it matters:* on your P&L, this
+is what it cost you to deliver what you sold. Revenue
+minus COGS is your margin.
+
+## Net Income vs Cash Flow
+
+Profit is what you earned. Cash flow is what hit your
+bank account. *Why it matters:* you can be profitable and
+running out of cash (slow-paying customers), or
+unprofitable and cash-rich (loan came in). Watch both.
+
+## Reconciliation
+
+Confirming your books and your bank statement agree.
+*Why it matters:* if they don't agree, your books are
+wrong. See [month-end checklist](/docs/accounting/for-business-owners/month-end-checklist).
+
+---
+
 # Advanced App Builder
 
 > Enterprise / ISV SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
@@ -27210,6 +28079,10 @@ Builder access requires the `fsm.create` or `fsm.update` permission. See [Builde
 > A free double-entry General Ledger Yoke — Chart of Accounts, journal entries, declarative posting rules, and three financial statements your other Yokes can post into.
 
 # Yoke Ledger
+
+See [/docs/accounting/for-accountants](/docs/accounting/for-accountants)
+for the accountant-focused angle — close cycle, audit trail,
+CoA migration, GL export.
 
 Yoke Ledger is a double-entry General Ledger that other Yokes
 post into. Install it from the [Marketplace](/docs/marketplace) and your tenant gets

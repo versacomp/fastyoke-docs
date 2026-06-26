@@ -32,6 +32,22 @@
 
 - [Accessibility](https://www.fastyoke.io/docs/accessibility): WCAG 2.1 AA enforced in CI, theme contrast validated on save, focus-trap modal primitive — the architectural pieces that clear institutional procurement.
 
+## Accounting
+
+- [Accounting](https://www.fastyoke.io/docs/accounting): Two audiences, opposite vocabulary, same product. Per-question pages for business owners and accountants — outcomes first, mechanism second.
+- [Map an existing Chart of Accounts](https://www.fastyoke.io/docs/accounting/for-accountants/map-an-existing-coa): Three migration shapes for replacing the starter CoA with your client's books — replace, merge, or augment — and the deactivate-not-delete rule.
+- [For business owners](https://www.fastyoke.io/docs/accounting/for-business-owners): Outcome-driven accounting pages for non-accountants — did you make money, where transactions go, month-end, sending to your CPA, and a plain-English vocabulary.
+- [For accountants](https://www.fastyoke.io/docs/accounting/for-accountants): Practitioner-pitched pages for bookkeepers and CPAs — mapping a client's CoA, posting rules in accounting terms, close cycle, audit trail, exporting to QuickBooks.
+- [Posting Rules explained](https://www.fastyoke.io/docs/accounting/for-accountants/posting-rules-explained): What Posting Rules are in accounting terms — recurring journal entry templates with an audit trail — and how they survive scrutiny.
+- [Did I make money?](https://www.fastyoke.io/docs/accounting/for-business-owners/did-i-make-money): How to read your Profit & Loss in 30 seconds, what each line means, and the two traps that make the number lie.
+- [Close cycle](https://www.fastyoke.io/docs/accounting/for-accountants/close-cycle): Month, quarter, and year close on Yoke Ledger — the steps, the lock mechanism, and what the platform handles automatically.
+- [Which account does this go to?](https://www.fastyoke.io/docs/accounting/for-business-owners/categorize-a-transaction): The five buckets, a decision flow for picking the right account, and the 10 transactions a small business sees most.
+- [Audit trail](https://www.fastyoke.io/docs/accounting/for-accountants/audit-trail): The four immutability guarantees, what's signable, and the auditor handoff.
+- [Month-end checklist](https://www.fastyoke.io/docs/accounting/for-business-owners/month-end-checklist): A 5-step, 30-minute routine at the end of every month that keeps your books current and your CPA happy.
+- [Export to QuickBooks](https://www.fastyoke.io/docs/accounting/for-accountants/export-to-quickbooks): Two-pass migration shape (CoA then journal entries) for moving a client's books to QuickBooks Online — generalizes to Xero, Sage, and Wave.
+- [Send to my CPA](https://www.fastyoke.io/docs/accounting/for-business-owners/send-to-my-cpa): The three exports your CPA actually wants, how to generate each, and a copy-pasteable email template.
+- [Vocabulary](https://www.fastyoke.io/docs/accounting/for-business-owners/vocabulary): The 12 accounting words a business owner trips over when they open Yoke Ledger, defined in plain English.
+
 ## Apps
 
 - [Advanced App Builder](https://www.fastyoke.io/docs/apps/advanced): Enterprise / ISV SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.

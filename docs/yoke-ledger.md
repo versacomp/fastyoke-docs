@@ -6,6 +6,12 @@ order: 1
 
 # Yoke Ledger
 
+::callout{type="tip" title="Working with accountants?"}
+See [/docs/accounting/for-accountants](/docs/accounting/for-accountants)
+for the accountant-focused angle — close cycle, audit trail,
+CoA migration, GL export.
+::
+
 Yoke Ledger is a double-entry General Ledger that other Yokes
 post into. Install it from the [Marketplace](/docs/marketplace) and your tenant gets
 a working Chart of Accounts, an FSM-driven journal-entry
