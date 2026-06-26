@@ -9,6 +9,7 @@
 - [Pricing — FastYoke](https://www.fastyoke.io/pricing): Simple pricing that scales from a side project to a regulated fleet. Free with every Vercel Marketplace install; paid tiers on request.
 - [Privacy Notice — FastYoke](https://www.fastyoke.io/privacy): How FastYoke handles personal data submitted through public forms, account info, and product telemetry. Plain-language summary plus the data subject's rights.
 - [Free Online Form Builder — FastYoke Solo Plan](https://www.fastyoke.io/free-forms): Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
+- [Security — FastYoke](https://www.fastyoke.io/security): Executive summary of how FastYoke protects PII — tenant isolation, encryption, access control, auditability, and operational security.
 - [Terms of Service — FastYoke](https://www.fastyoke.io/terms): The terms governing your use of FastYoke — eligibility, accounts, acceptable use, SMS messaging consent, billing, and the standard disclaimers and liability limits.
 - [SMS Opt-In — FastYoke](https://www.fastyoke.io/sms-opt-in): How FastYoke users opt in to receive transactional SMS messages, with screenshots of the in-product consent screen and the seven required disclosures.
 - [Trademarks — FastYoke](https://www.fastyoke.io/trademarks): Acknowledgment of third-party trademarks referenced in the FastYoke product, and a statement that FastYoke uses them nominatively without implying endorsement or affiliation.
@@ -273,6 +274,7 @@
 ## Security
 
 - [Trust Center](https://www.fastyoke.io/docs/security/trust-center): How FastYoke protects your data — isolation, encryption, access control, auditability, availability, and our path to SOC 2.
+- [Subprocessor List](https://www.fastyoke.io/docs/security/subprocessors): The third parties FastYoke uses to operate the platform — what each processes, where, and our DPA / compliance posture for each.
 - [PII / SPI Field Encryption](https://www.fastyoke.io/docs/security/encryption): Tag entity-field annotations or form-field schemas with `is_pii` to encrypt their values at rest under a per-tenant key. Available as a $19/mo add-on at every tier.
 
 ## Training

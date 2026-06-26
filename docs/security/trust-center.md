@@ -71,8 +71,8 @@ expiry.
 ## Subprocessors
 
 FastYoke relies on a small set of vetted infrastructure and service providers.
-The current list — and what each one processes — is published in our
-[subprocessor register](https://github.com/versacomp/fastyoke2/blob/main/docs/compliance/subprocessors.md).
+The current list — and what each one processes — is published at
+[/docs/security/subprocessors](/docs/security/subprocessors).
 We update it before adding a new subprocessor and notify customers where our
 agreements require it.
 
