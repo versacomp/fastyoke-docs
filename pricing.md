@@ -100,19 +100,35 @@ order: 2
     <h3 class="font-semibold text-[var(--brand-text-primary)]">What's included in Solo?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
       Every runtime primitive that matters — the FSM engine, tenant
-      isolation, the full SDK, extensions, realtime. You can ship a
-      real product on Solo and upgrade only when you hit a
-      platform-scale feature gate.
+      isolation, the full SDK, extensions, realtime. Solo is the
+      evaluation tier, capped tight enough to stay free forever
+      (1K transitions / month, 100 entity rows, 100 MB storage,
+      50 CRM contacts view-only). Outgrow it and Starter at $15/mo
+      lifts the caps without giving up the platform.
+    </p>
+  </div>
+  <div id="starter">
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">What's the Starter tier for?</h3>
+    <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
+      A one-person business running real workloads — 10K
+      transitions, 10K entity rows, 5 GB storage, unlimited CRM
+      contacts, Yoke Ledger with Posting Rules. $15/mo
+      ($144/yr billed annually saves 20%). Cheaper than a single
+      QuickBooks Online Self-Employed subscription, with a
+      multi-tenant FSM-engine platform under the hood. Upgrade
+      to Pro when you need the full CRM analytics, automations,
+      or multi-entity GL.
     </p>
   </div>
   <div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">How do upgrades work?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
       Vercel handles the install; FastYoke&trade; handles the upgrade.
-      Pro, Team, and Enterprise / ISV route through our billing
-      surface — Solo and Pro are hard-capped on transition
-      volume, Team can opt in to metered overages, Enterprise / ISV
-      bills overages by default. Reach out to <a href="mailto:sales@fastyoke.io">sales@fastyoke.io</a> to provision.
+      Starter, Pro, Team, and Enterprise / ISV route through our
+      billing surface — Solo, Starter, and Pro are hard-capped on
+      transition volume, Team can opt in to metered overages,
+      Enterprise / ISV bills overages by default. Reach out to
+      <a href="mailto:sales@fastyoke.io">sales@fastyoke.io</a> to provision.
     </p>
   </div>
   <div>
@@ -154,9 +170,12 @@ order: 2
   <div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">Is there a trial on paid tiers?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
-      Every install starts on Solo for free. Paid-tier features
-      require an active subscription — there is no separate trial,
-      since Solo itself is the evaluation path.
+      Every install starts on Solo for free — that's the
+      evaluation path. Paid tiers require an active subscription
+      and there is no separate trial. The Solo caps are tight
+      enough that you'll feel the upgrade moment naturally;
+      Starter at $15/mo is the obvious next step for a real
+      one-person business.
     </p>
   </div>
   <div>
@@ -175,7 +194,7 @@ order: 2
 
 ::marketing-section{band="gray" maxWidth="3xl"}
 #default
-<h2 class="text-2xl font-semibold tracking-tight text-[var(--brand-text-primary)]">Start on Solo. Upgrade when you need it.</h2>
+<h2 class="text-2xl font-semibold tracking-tight text-[var(--brand-text-primary)]">Start on Solo. Step up to Starter when you outgrow it.</h2>
 <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
 
 ::signup-cta{size="lg" variant="primary" location="pricing-bottom"}
