@@ -61,6 +61,32 @@ Apps you can install today
 ::
 ::
 
+::marketing-section{band="white" maxWidth="6xl"}
+#eyebrow
+Newly shipped
+
+#title
+Warehouse Management — built on the free Logistics core
+
+#lede
+Run a real four-wall warehouse on FastYoke: receive against a PO, putaway to a bin, pick → pack → ship, and reconcile with cycle counts. Sits on top of the shared **Logistics core** (free) — install just the apps you need as you grow into TMS, 3PL, and freight.
+
+#default
+::feature-grid{columns="2"}
+  ::feature-card{title="Warehouse Management" summary="Receive, putaway, pick, pack, ship, and cycle count — all with a guided scan console. Soft-reservation availability so two pickers never grab the same unit."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+
+  ::feature-card{title="Logistics core (free)" summary="The shared substrate every logistics app builds on — facilities, bins, zones, movements, and the immutable event log. Free with every tenant; add WMS, TMS, or 3PL when you need them."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+::
+::
+
 ::marketing-section{band="gray" maxWidth="6xl"}
 #eyebrow
 Is this you?
@@ -72,7 +98,7 @@ Built for operations-heavy businesses like…
 ::feature-grid{columns="3"}
   ::feature-card{title="Field service / HVAC" summary="Dispatch crews, track jobs to completion, invoice on site."}
   ::
-  ::feature-card{title="Logistics & dispatch" summary="Move work through clear states with a full audit trail."}
+  ::feature-card{title="Warehousing & 3PL" summary="Receive, putaway, pick, pack, ship — with a guided scan console and an immutable event log."}
   ::
   ::feature-card{title="Auto & repair" summary="From intake to handoff, every job tracked on one board."}
   ::
