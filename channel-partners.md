@@ -20,6 +20,8 @@ If either of those is you, we'd love to talk.
 
 [partners@fastyoke.io](mailto:partners@fastyoke.io)
 
+Already in retail, point-of-sale, or food service? See [Pay n Go Systems](/partners/pay-n-go-systems) — our first named Channel Partner — for turnkey FastYoke rollouts across that vertical.
+
 Looking for hands-on implementation, not a reseller relationship? See [iNetko](/partners/inetko) — our first named Strategic Partner — for frontline support, sales engineering, implementation, and consulting.
 ::
 

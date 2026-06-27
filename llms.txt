@@ -13,11 +13,15 @@
 - [Free Online Form Builder — FastYoke Solo Plan](https://www.fastyoke.io/free-forms): Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
 - [Security — FastYoke](https://www.fastyoke.io/security): Executive summary of how FastYoke protects PII — tenant isolation, encryption, access control, auditability, and operational security.
 - [Terms of Service — FastYoke](https://www.fastyoke.io/terms): The terms governing your use of FastYoke — eligibility, accounts, acceptable use, SMS messaging consent, billing, and the standard disclaimers and liability limits.
+- [Why we built FastYoke](https://www.fastyoke.io/about): A note from the team on the problem we set out to solve — and the principles we refuse to compromise on.
 - [SMS Opt-In — FastYoke](https://www.fastyoke.io/sms-opt-in): How FastYoke users opt in to receive transactional SMS messages, with screenshots of the in-product consent screen and the seven required disclosures.
 - [Trademarks — FastYoke](https://www.fastyoke.io/trademarks): Acknowledgment of third-party trademarks referenced in the FastYoke product, and a statement that FastYoke uses them nominatively without implying endorsement or affiliation.
 - [Security Fixes — FastYoke](https://www.fastyoke.io/security-fixes): Known security findings and their fix status across FastYoke releases.
+- [Status & Reliability — FastYoke](https://www.fastyoke.io/status): How FastYoke stays up — current operating status, the controls that keep the platform running, and what happens when something breaks.
+- [Recently shipped — FastYoke](https://www.fastyoke.io/changelog): What we've been building. A running log of the features, fixes, and polish landing in FastYoke during early access.
 - [Channel Partners & ISVs — FastYoke](https://www.fastyoke.io/channel-partners): Early access program for systems integrators, channel partners, and independent software vendors building on the FastYoke aPaaS.
 - [iNetko — Strategic Partner | FastYoke](https://www.fastyoke.io/partners/inetko): iNetko is FastYoke's first named Strategic Partner — frontline support, sales engineering, implementation, and consulting for teams that want hands-on help getting to production.
+- [Pay n Go Systems — Channel Partner | FastYoke](https://www.fastyoke.io/partners/pay-n-go-systems): Pay n Go Systems is FastYoke's first named Channel Partner — focused on retail, point-of-sale, and food-service deployments for operators that want a turnkey portfolio motion.
 - [Compare — FastYoke](https://www.fastyoke.io/compare): Honest side-by-side comparisons against the platforms FastYoke is most often evaluated alongside.
 - [No cookies — FastYoke](https://www.fastyoke.io/no-cookies): Zero cookies on the marketing site, one strictly-necessary session cookie on the app, no third-party trackers anywhere.
 - [FastYoke vs Lovable — Compare](https://www.fastyoke.io/compare/lovable): Lovable generates custom apps from prompts. FastYoke runs multi-tenant operational platforms with built-in workflow, RBAC, and audit. Honest, side-by-side.

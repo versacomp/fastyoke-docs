@@ -6,12 +6,14 @@ order: 10
 
 ::marketing-section{band="white" maxWidth="3xl" align="center"}
 #default
+<a href="https://www.inetko.com/" target="_blank" rel="noopener noreferrer" class="block">
 <img
   src="/partners/inetko-logo.jpg"
   alt="iNetko Solutions"
   width="380"
   class="mx-auto"
 />
+</a>
 ::
 
 ::hero{eyebrow="Strategic Partner" title="iNetko" tagline="The implementation partner for teams that want hands-on help getting to production on FastYoke."}
@@ -34,9 +36,10 @@ revocation are auditable via the access-review export.
 **iNetko is our first named Strategic Partner.** If
 you'd like hands-on help building, supporting, and
 operating your FastYoke deployment, this is the team to
-engage. Drop a note to
-[partners@fastyoke.io](mailto:partners@fastyoke.io) and
-we'll route you to the iNetko team.
+engage. Learn more at
+[www.inetko.com](https://www.inetko.com/) or drop a note
+to [partners@fastyoke.io](mailto:partners@fastyoke.io)
+and we'll route you to the iNetko team.
 
 The [training syllabus](/docs/training/syllabus) is our recommended onboarding curriculum for Strategic Partner engineers — an 8-week self-paced sweep of every FastYoke platform pillar.
 ::
