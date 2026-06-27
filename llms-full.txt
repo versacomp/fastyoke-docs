@@ -17,32 +17,32 @@ Apps you can install today
 #default
 <div id="apps"></div>
 
-  ::feature-card{title="CRM Suite" summary="Track every lead from first hello to closed deal. See your whole pipeline on one board and never let a follow-up slip."}
+  ::feature-card{title="CRM Suite" icon="crm" accent="cyan" summary="Track every lead from first hello to closed deal. See your whole pipeline on one board and never let a follow-up slip."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
-  ::feature-card{title="Inventory" summary="Know what's in stock, what's running low, and what to reorder — before you run out. Receipts, counts, and low-stock alerts built in."}
+  ::feature-card{title="Inventory" icon="inventory" accent="amber" summary="Know what's in stock, what's running low, and what to reorder — before you run out. Receipts, counts, and low-stock alerts built in."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
-  ::feature-card{title="Project Tracker" summary="Run projects on a simple board. Tasks move from to-do to done, and everyone can see exactly where things stand."}
+  ::feature-card{title="Project Tracker" icon="project-tracker" accent="violet" summary="Run projects on a simple board. Tasks move from to-do to done, and everyone can see exactly where things stand."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
-  ::feature-card{title="Accounting" summary="Send invoices, track the bills you owe, and keep your books balanced. Chart of accounts, AR/AP, and a clean ledger out of the box."}
+  ::feature-card{title="Accounting" icon="accounting" accent="emerald" summary="Send invoices, track the bills you owe, and keep your books balanced. Chart of accounts, AR/AP, and a clean ledger out of the box."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
-  ::feature-card{title="Field Service" summary="Schedule jobs, dispatch your crew, and invoice the moment work is finished. Every job moves New → Dispatched → On-site → Invoiced."}
+  ::feature-card{title="Field Service" icon="field-service" accent="sky" summary="Schedule jobs, dispatch your crew, and invoice the moment work is finished. Every job moves New → Dispatched → On-site → Invoiced."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
-  ::feature-card{title="Forms — free" summary="Build a form, share a link, collect responses — and email a PDF copy automatically. Free forever, no credit card."}
+  ::feature-card{title="Forms — free" icon="forms" accent="rose" summary="Build a form, share a link, collect responses — and email a PDF copy automatically. Free forever, no credit card."}
   ::cta-button{to="/free-forms" variant="secondary" size="sm"}
   Learn more
   ::
@@ -61,17 +61,17 @@ Run a real four-wall warehouse on FastYoke: receive against a PO, putaway to a b
 #default
 <div id="newly-shipped"></div>
 
-  ::feature-card{title="Warehouse Management" summary="Receive, putaway, pick, pack, ship, and cycle count — all with a guided scan console. Soft-reservation availability so two pickers never grab the same unit."}
+  ::feature-card{title="Warehouse Management" icon="warehouse" accent="amber" summary="Receive, putaway, pick, pack, ship, and cycle count — all with a guided scan console. Soft-reservation availability so two pickers never grab the same unit."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
-  ::feature-card{title="Logistics core (free)" summary="The shared substrate every logistics app builds on — facilities, bins, zones, movements, and the immutable event log. Free with every tenant; add WMS, TMS, or 3PL when you need them."}
+  ::feature-card{title="Logistics core (free)" icon="logistics" accent="cyan" summary="The shared substrate every logistics app builds on — facilities, bins, zones, movements, and the immutable event log. Free with every tenant; add WMS, TMS, or 3PL when you need them."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
-  ::feature-card{title="Accounting" summary="Send invoices, track the bills you owe, and keep your books balanced. Chart of accounts, AR/AP, and a clean ledger out of the box — the GL underneath every app."}
+  ::feature-card{title="Accounting" icon="accounting" accent="emerald" summary="Send invoices, track the bills you owe, and keep your books balanced. Chart of accounts, AR/AP, and a clean ledger out of the box — the GL underneath every app."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
@@ -16328,6 +16328,12 @@ the endpoint returns the same data as JSON.
 |----|-------|-------------|
 | `yoke.read` | View Yoke briefs | View the Yoke inbox and brief details. |
 | `yoke.decide` | Decide on Yoke briefs | Apply, snooze, or dismiss Yoke briefs. Apply writes a schema_commit; dismiss-with-reason feeds template authoring. |
+
+## Messaging
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `messaging.use` | Use messaging | Send and read direct messages and channels. Granted by default to members, managers, and admins; revoke it on a role to disable messaging for those users. |
 
 ---
 

@@ -188,3 +188,9 @@ the endpoint returns the same data as JSON.
 |----|-------|-------------|
 | `yoke.read` | View Yoke briefs | View the Yoke inbox and brief details. |
 | `yoke.decide` | Decide on Yoke briefs | Apply, snooze, or dismiss Yoke briefs. Apply writes a schema_commit; dismiss-with-reason feeds template authoring. |
+
+## Messaging
+
+| Id | Label | Description |
+|----|-------|-------------|
+| `messaging.use` | Use messaging | Send and read direct messages and channels. Granted by default to members, managers, and admins; revoke it on a role to disable messaging for those users. |
