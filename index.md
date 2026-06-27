@@ -35,13 +35,13 @@ Apps you can install today
   ::
   ::
 
-  ::feature-card{title="Accounting" summary="Send invoices, track the bills you owe, and keep your books balanced. Chart of accounts, AR/AP, and a clean ledger out of the box."}
+  ::feature-card{title="Project Tracker" summary="Run projects on a simple board. Tasks move from to-do to done, and everyone can see exactly where things stand."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
 
-  ::feature-card{title="Project Tracker" summary="Run projects on a simple board. Tasks move from to-do to done, and everyone can see exactly where things stand."}
+  ::feature-card{title="Accounting" summary="Send invoices, track the bills you owe, and keep your books balanced. Chart of accounts, AR/AP, and a clean ledger out of the box."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
