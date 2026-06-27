@@ -72,7 +72,7 @@ Warehouse Management — built on the free Logistics core
 Run a real four-wall warehouse on FastYoke: receive against a PO, putaway to a bin, pick → pack → ship, and reconcile with cycle counts. Sits on top of the shared **Logistics core** (free) — install just the apps you need as you grow into TMS, 3PL, and freight.
 
 #default
-::feature-grid{columns="2"}
+::feature-grid{columns="3"}
   ::feature-card{title="Warehouse Management" summary="Receive, putaway, pick, pack, ship, and cycle count — all with a guided scan console. Soft-reservation availability so two pickers never grab the same unit."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
@@ -80,6 +80,12 @@ Run a real four-wall warehouse on FastYoke: receive against a PO, putaway to a b
   ::
 
   ::feature-card{title="Logistics core (free)" summary="The shared substrate every logistics app builds on — facilities, bins, zones, movements, and the immutable event log. Free with every tenant; add WMS, TMS, or 3PL when you need them."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+
+  ::feature-card{title="Accounting" summary="Send invoices, track the bills you owe, and keep your books balanced. Chart of accounts, AR/AP, and a clean ledger out of the box — the GL underneath every app."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
