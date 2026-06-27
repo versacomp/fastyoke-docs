@@ -595,13 +595,102 @@ to start a conversation.
 
 ---
 
+# Solutions — FastYoke
+
+> FastYoke solutions by vertical. Healthcare, warehousing, field service, retail / POS, professional services, and auto & repair — with a curated page for each.
+
+#eyebrow
+Pick a vertical
+
+#title
+What ships today, what extends, and what to do next
+
+#lede
+Each vertical page follows the same three-section structure: what's currently shipped (the apps + connectors), how to extend with low-code (the form builder, the FSM Designer, the scripting tier), and how to make major customizations (in-house engineering or a FastYoke Partner engagement).
+
+#default
+<div id="solutions-grid"></div>
+
+  ::feature-card{title="Healthcare" icon="crm" accent="rose" summary="Patient flow boards, urgent-care triage, HL7v2 EHR/ADT connector, on-VM biometrics, HIPAA add-on. Built for clinics and hospital units."}
+  ::cta-button{to="/solutions/healthcare" variant="secondary" size="sm"}
+  See healthcare
+  ::
+  ::
+  ::feature-card{title="Warehousing & 3PL" icon="warehouse" accent="amber" summary="WMS, TMS, 3PL apps on the free Logistics core. Four-wall ops plus rating, labels, and tracking. For warehouses and 3PL operators."}
+  ::cta-button{to="/solutions/warehousing" variant="secondary" size="sm"}
+  See warehousing
+  ::
+  ::
+  ::feature-card{title="Field service / HVAC" icon="field-service" accent="sky" summary="Dispatch boards, on-site state tracking, invoice on completion. Multi-location facilities or one-tenant-per-location. Paired with iNetko."}
+  ::cta-button{to="/solutions/field-service" variant="secondary" size="sm"}
+  See field service
+  ::
+  ::
+  ::feature-card{title="Retail / POS / food service" icon="forms" accent="cyan" summary="Storefront, counter, and kitchen ops. Multi-location inventory, order workflow, daily Z-out to the ledger. Paired with Pay n Go Systems."}
+  ::cta-button{to="/solutions/retail-pos" variant="secondary" size="sm"}
+  See retail / POS
+  ::
+  ::
+  ::feature-card{title="Professional services" icon="project-tracker" accent="violet" summary="Projects, tasks, client work, time-and-materials billing. Project-level P&L and AR aging. For consulting practices and agencies."}
+  ::cta-button{to="/solutions/professional-services" variant="secondary" size="sm"}
+  See professional services
+  ::
+  ::
+  ::feature-card{title="Auto & repair" icon="inventory" accent="emerald" summary="Intake through handoff on one board. Parts inventory, labor tracking, invoicing on customer approval. For repair shops and equipment service."}
+  ::cta-button{to="/solutions/auto-repair" variant="secondary" size="sm"}
+  See auto & repair
+  ::
+  ::
+::
+
+#default
+
+## Don't see your vertical
+
+The six verticals here are the ones we've shipped real
+customer outcomes against. If your operation doesn't fit
+neatly — or fits across multiple verticals — request
+[early access](/getting-started) and tell us the shape of
+the work. We'll route you to the right Strategic or
+Channel Partner and tell you honestly whether FastYoke is
+the right substrate for what you're building.
+
+Request early access
+::
+
+---
+
 # Healthcare on FastYoke — patient flow, triage, EHR/ADT, HIPAA
 
 > Patient throughput boards, urgent-care triage, an HL7v2 EHR/ADT connector, on-VM biometrics, and a BAA-backed HIPAA posture. Built for clinics and hospital units that want operational software without sending PHI to a third-party SaaS.
 
-## The one-sentence posture
+#default
 
-FastYoke is **operational scaffolding for healthcare** — not a certified EHR. We run the workflows around the chart (bed placement, transport, triage, throughput) on per-tenant databases with PHI encrypted at rest, and we ingest live ADT feeds so your boards stay current without a clinical-systems integration project.
+## Who this is for
+
+Clinical operations directors, charge nurses, urgent-care
+administrators, and the IT teams supporting them. You have
+an EHR for the chart of record; what you don't have is good
+software for the **operational layer around the chart** —
+which bed a patient is waiting on, who's transporting them,
+whether EVS has turned the room, who's on the discharge
+worklist this hour. That layer currently lives in a
+whiteboard, a shared spreadsheet, a Teams thread, or all
+three at once.
+
+## What FastYoke is — and isn't — for healthcare
+
+**FastYoke is operational scaffolding around the chart.**
+The Patient Flow Yoke ships four FSM boards out of the box
+running on a per-tenant SQLite database with an append-only
+event log. The EHR/ADT connector ingests HL7v2 admit /
+transfer / discharge messages so the boards stay current.
+
+**FastYoke is not a certified EHR.** It doesn't bill,
+doesn't write to the chart, and doesn't claim CEHRT or
+Meaningful Use status. The connector is read-only by
+construction. If you need a chart of record, FastYoke runs
+*around* yours, not in place of it.
 
 
 
@@ -609,76 +698,179 @@ FastYoke is **operational scaffolding for healthcare** — not a certified EHR. 
 What ships today
 
 #title
-Apps + connectors for healthcare operations
+1. What's currently shipped
+
+#lede
+Six surfaces ship now and pair cleanly: four operational FSM boards, one connector to your interface engine, plus the security posture that makes regulated workloads survivable.
 
 #default
-  ::feature-card{title="Patient Flow Yoke" summary="Four FSM boards out of the box — bed placement, patient transport, discharge planning, and bed turnover (EVS). Spine of every throughput conversation."}
+<div id="shipped"></div>
+
+  ::feature-card{title="Patient Flow Yoke" icon="crm" accent="rose" summary="Four FSM boards: bed placement, patient transport, discharge planning, and bed turnover (EVS). Spine of every throughput conversation."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
-
-  ::feature-card{title="Urgent Care Triage" summary="Visit FSM + a 3-rail checkout flow. Run a same-day clinic without sending patient identity to a third-party SaaS."}
+  ::feature-card{title="Urgent Care Triage" icon="forms" accent="rose" summary="Visit FSM + a 3-rail checkout flow. Run a same-day clinic without sending patient identity to a third-party SaaS."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
-
-  ::feature-card{title="EHR / ADT Connector" summary="HL7v2 admit / transfer / discharge over HTTPS keeps the patient-flow boards live without writing to the chart. Read-only, append-only, PHI-encrypted."}
+  ::feature-card{title="EHR / ADT Connector" icon="logistics" accent="rose" summary="HL7v2 admit / transfer / discharge over HTTPS keeps the patient-flow boards live without writing to the chart. Read-only, append-only, PHI-encrypted."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
-
-  ::feature-card{title="On-VM biometrics" summary="1:N face recognition runs inside your tenant — no SaaS face-API, no images leaving the box. Useful for staff sign-in and patient match-back."}
+  ::feature-card{title="On-VM biometrics" icon="warehouse" accent="emerald" summary="1:N face recognition runs inside your tenant — no SaaS face-API, no images leaving the box. Useful for staff sign-in and patient match-back."}
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
-
-  ::feature-card{title="HIPAA add-on + BAA" summary="Per-tenant AES-256-GCM field-level encryption for tagged PHI/SPI fields. BAA executed on Enterprise / ISV tier as part of HIPAA add-on enablement."}
+  ::feature-card{title="HIPAA add-on + BAA" icon="accounting" accent="emerald" summary="Per-tenant AES-256-GCM field-level encryption for tagged PHI/SPI fields. BAA executed on Enterprise / ISV tier as part of HIPAA add-on enablement."}
   ::cta-button{to="/security" variant="secondary" size="sm"}
   Security posture
   ::
   ::
-
-  ::feature-card{title="Region pinning" summary="Pin your tenant to a specific Fly.io region or region group for data-residency obligations (HIPAA-eligible US-only configs available)."}
+  ::feature-card{title="Region pinning" icon="warehouse" accent="emerald" summary="Pin your tenant to a specific Fly.io region or region group for data-residency obligations (HIPAA-eligible US-only configs available)."}
   ::cta-button{to="/security" variant="secondary" size="sm"}
   Security posture
   ::
   ::
 ::
 
+#eyebrow
+Extend without code
 
-## How healthcare data lives on FastYoke
+#title
+2. How to extend with low-code
 
-- **Per-tenant database file.** No `WHERE tenant_id = ?` falling back as the isolation layer. A bug cannot read the wrong tenant's data because the application never opens the wrong file.
-- **Per-tenant AES-256-GCM keys.** Tagged PHI / SPI fields are encrypted under per-tenant data keys wrapped by a platform key. Tagged values are opaque to filter / sort / search — they're decrypted only on authorized read.
-- **Append-only event ledger.** Every state change (bed assigned, encounter discharged, ADT message received) is recorded as an immutable row. No `UPDATE` or `DELETE` is ever issued against the ledger. That's the audit trail.
-- **PHI-bearing connector ledger.** The EHR/ADT connector keeps the raw HL7v2 messages in an append-only, encrypted-at-rest ledger so an audit can replay exactly what arrived from the interface engine, when, with what ACK.
-- **No third-party model training.** PHI never leaves the tenant boundary for ML training or analytics; the on-VM biometric runs inside your tenant.
+#default
+<div id="low-code"></div>
+
+The shipping apps handle the canonical operational layer.
+Real hospitals always have **one more thing** that needs to
+fit on top. Most extensions don't require an engineer:
+
+- **Custom intake forms (in 30 minutes).** Build a public
+  pre-registration form in the Form Designer with
+  conditional routing, file upload (insurance card
+  scans), and a PDF copy on submit. Wire it to the
+  Patient Flow board's intake transition.
+- **A new state on an existing board (in an hour).**
+  Add a "PendingLabResults" state between Occupied and
+  PendingDischarge. The FSM Designer adds the state,
+  the guard, and the audit row; no code changes
+  needed.
+- **A custom dashboard for the charge nurse (in
+  an afternoon).** The marketplace ships generic
+  list / detail / dashboard blocks. Drop in counts of
+  "Patients > 4 hours in Pending state," group by
+  unit, expose as a tile on the operator landing.
+- **A scheduled escalation when a stage stalls (in two
+  hours).** A self-loop transition with a JSONLogic
+  guard fires every hour against PendingDischarge
+  encounters that have been in state for more than 24
+  hours, appending an audit row and notifying case
+  management. No webhook, no third-party scheduler.
+
+The low-code work is bounded by the schema. When you need
+something the schema can't express, you're in
+customization territory — covered next.
 
 
+#eyebrow
+Customize deeply
 
-## What FastYoke is **not**
+#title
+3. How to make major customizations
 
-- **Not a certified EHR.** We do not bill, write to the chart, or claim CEHRT / Meaningful Use status. The connector is read-only.
-- **Not a clinical decision-support tool.** Boards display state — they do not recommend care.
-- **Not HIPAA-by-default.** The HIPAA add-on must be enabled, the BAA must be executed, and PHI tagging is the tenant's responsibility. Defaults are **opt-in opaque-by-default**, not silently compliant.
+#default
+<div id="customization"></div>
 
-If you need a certified EHR or a chart-of-record system, FastYoke runs around it, not in place of it.
+When the low-code surface isn't enough, two paths:
+
+### In-house engineering
+
+FastYoke ships a **typed SDK** (`@fastyoke/sdk-next`,
+`@fastyoke/sdk-vue`, plus a Rust crate for the kernel).
+Your engineering team can:
+
+- Build a custom React or Vue admin app against the
+  platform API.
+- Author custom marketplace apps (Cargo workspace
+  crates) for vertical-specific FSM shapes.
+- Embed FastYoke in a larger product via the **ejection
+  clause** — take your compiled rules and per-tenant
+  databases with you whenever you want. No lock-in is
+  contractual *and* technical.
+
+For organizations with the engineering bench to absorb
+operational software in-house, this is the cheapest
+long-term shape. The training [syllabus](/docs/training/syllabus)
+is the canonical onboarding curriculum.
+
+### FastYoke Partner engagement
+
+If you don't want to own the build, two partner shapes:
+
+- **[Strategic Partner](/partners/inetko)** — iNetko
+  delivers implementation, sales engineering, frontline
+  support, and ongoing advisory. Per-tenant consent +
+  audit-trail enforcement make their access auditable
+  by you, in your tenant.
+- **[Channel Partner](/partners)** — for healthcare
+  organizations with a specific vertical preference,
+  see the partner directory.
+
+Most early healthcare cohorts engage iNetko for the first
+30-60 days of implementation. The Strategic Partner
+Program's per-tenant consent infrastructure is
+specifically designed for regulated workloads — revocation
+stops access on the next request, no exception.
 
 
+#eyebrow
+Honest tradeoffs
 
-## Get started
+#title
+What FastYoke isn't for healthcare
 
-FastYoke's general release is scheduled for later this year. Healthcare workloads are evaluated cohort-by-cohort — request early access below and we'll set up a 20-minute scoping call with someone who's wired healthcare tenants before.
+#default
+
+- **Not a certified EHR.** You still need one. FastYoke
+  runs alongside it.
+- **No clinical decision support.** Boards display state;
+  they don't recommend care.
+- **HIPAA-by-default, not by accident.** The HIPAA add-on
+  must be enabled and the BAA executed; PHI tagging is
+  the tenant's responsibility. Defaults are *opt-in
+  opaque-by-default*, not silently compliant.
+- **The ADT connector is read-only.** Charges, orders,
+  and chart edits all stay in the EHR. By design — but if
+  you want a system that writes to the chart, FastYoke is
+  the wrong shape.
+
+If any of those is a deal-breaker, you need a different
+class of product, not a different vendor.
+
+
+#default
+
+## Next step
+
+FastYoke's general release is scheduled for later this
+year. Healthcare workloads are evaluated cohort-by-cohort
+— request early access below and we'll set up a 20-minute
+scoping call with someone who's wired healthcare tenants
+before.
 
 Request early access
 
 Read the security posture
 
-For procurement or compliance review packets, email [security@fastyoke.io](mailto:security@fastyoke.io) and reference healthcare in the subject.
+For procurement or compliance review packets, email
+[security@fastyoke.io](mailto:security@fastyoke.io) and
+reference *healthcare* in the subject line.
 
 ::
 
@@ -1085,6 +1277,223 @@ prove out the shape against a real workflow.
 Talk to sales
 
 </div>
+::
+
+---
+
+# Field service & HVAC on FastYoke — dispatch, on-site, invoice
+
+> Field-service operations for contractors running real crews — HVAC, electrical, plumbing, and multi-trade shops. Dispatch boards, on-site state tracking, invoice-on-completion, and the audit trail when a customer disputes a charge.
+
+#default
+
+## Who this is for
+
+HVAC contractors, electricians, plumbers, locksmiths,
+appliance-repair operators, and multi-trade shops with
+5-50 field technicians across one or more locations. You
+have a dispatcher, an office team, and a customer base
+that mixes residential maintenance contracts, commercial
+service calls, and the occasional install. Your current
+stack is some combination of ServiceTitan, Housecall Pro,
+a homegrown spreadsheet, a separate accounting package,
+and a lot of Slack messages.
+
+This page is for the moment you're evaluating a
+replacement for that stack or looking for the back-of-
+house operations layer underneath it.
+
+
+
+#eyebrow
+What ships today
+
+#title
+1. What's currently shipped
+
+#lede
+The field-service stack on FastYoke is a combination of marketplace apps plus the free Logistics core. Six apps cover intake-to-invoice end-to-end.
+
+#default
+<div id="shipped"></div>
+
+  ::feature-card{title="Field Service Yoke" icon="field-service" accent="sky" summary="The flagship board for this vertical. Every job moves New → Dispatched → On-site → Invoiced. Dispatcher sees the queue; tech sees their day on their phone."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="CRM Suite" icon="crm" accent="cyan" summary="Customers, equipment-on-site, contract status, service history. Linked to the job entities so a dispatcher opening a job sees the full equipment history without a context switch."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Yoke Ledger + GL Pack" icon="accounting" accent="emerald" summary="AR / AP, invoicing, payment capture, GL posting. When a job moves to Invoiced, the invoice posts to the ledger automatically. Month-end close runs against the same ledger."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Inventory" icon="inventory" accent="amber" summary="Truck stock, parts on hand, reorder points. When a tech uses a part on a job, the inventory deducts. The GL Pack posts COGS on issue if you flip the toggle."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Logistics core (free)" icon="logistics" accent="cyan" summary="Facilities, bins, zones, movements, immutable event log. Free with every tenant — the shared substrate every field-service multi-location operation builds on."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Forms — free" icon="forms" accent="rose" summary="Public maintenance-request forms, online quote requests, contact forms. Cloudflare Turnstile + PDF copy on submit. Free forever; you don't pay extra for intake."}
+  ::cta-button{to="/free-forms" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+
+Running across multiple locations is the question that
+throws most field-service software. FastYoke handles it
+three ways: **single tenant with multiple facilities**
+(most common), **one tenant per location** (separately
+managed franchises), or **hub-and-spoke** (rare; mostly
+overkill). The [Multi-location HVAC guide](/guides/multi-location-hvac-on-fastyoke)
+walks through the call.
+::
+
+#eyebrow
+Extend without code
+
+#title
+2. How to extend with low-code
+
+#default
+<div id="low-code"></div>
+
+Field-service operations are full of small per-shop
+quirks — the pricing book, the truck-stock policy, the
+maintenance-contract billing cadence. Most don't require
+an engineer:
+
+- **Pricing-book authoring in the schema (one
+  afternoon).** Use the entity-schema layer to model
+  your specific line-item catalog with optional
+  add-ons, regional pricing, and maintenance-contract
+  discounts. The catalog flows into the Field Service
+  Yoke's line-item picker and the Yoke Ledger's
+  invoicing.
+- **A custom approval step for jobs over a threshold
+  (one hour).** Add an `AwaitingApproval` state between
+  `On-site` and `Invoiced` for jobs over a dollar
+  threshold. The FSM Designer adds the guard
+  (`{">": [{"var": "total"}, 1000]}`). No code change.
+- **Maintenance-contract auto-scheduling (an
+  afternoon).** Use the FSM scheduler to spawn next-
+  visit jobs on a contract anniversary. The audit log
+  proves the maintenance was scheduled when contracted.
+- **Equipment-warranty lookups (one day).** The WASM
+  scripting tier (TypeScript on QuickJS in wasmtime)
+  lets you call out to the manufacturer's warranty API
+  on a job-creation transition. Returns get stored on
+  the equipment entity, surfaced in the tech's mobile
+  view.
+
+The low-code surface is bounded by what the schema can
+express. When the customization is broader than
+schema-shape, you're in customization territory — covered
+next.
+
+
+#eyebrow
+Customize deeply
+
+#title
+3. How to make major customizations
+
+#default
+<div id="customization"></div>
+
+### In-house engineering
+
+FastYoke ships a **typed SDK** (`@fastyoke/sdk-next`,
+`@fastyoke/sdk-vue`, plus a Rust crate for the kernel).
+For field-service contractors with engineering bench
+(usually rare in this vertical), the SDK enables:
+
+- Custom tech-facing mobile experiences (the platform
+  ships a responsive web UI; a native React Native app
+  is a project, not a config).
+- Direct integrations with non-marketplace vendors
+  (parts distributors, equipment-warranty APIs,
+  specific accounting packages beyond Yoke Ledger).
+- The **ejection clause** — take your compiled rules
+  and per-tenant databases with you whenever you want.
+  Useful if your operation grows into a private-equity
+  rollup with its own platform.
+
+### FastYoke Partner engagement
+
+For most field-service operations, the right shape is a
+Strategic Partner engagement:
+
+- **[iNetko](/partners/inetko)** — our first named
+  Strategic Partner — handles schema authoring, FSM
+  design for your specific service-call flow,
+  integration wiring (payment processor, parts-
+  distributor import, equipment-warranty API), and the
+  first 60-90 days of operator onboarding. One iNetko
+  SE for the first three weeks is enough for most
+  single-location pilots.
+- See the [Multi-location HVAC guide](/guides/multi-location-hvac-on-fastyoke)
+  for the realistic pilot path.
+
+Most field-service prospects engage iNetko before they
+engage their own engineering team. The math usually wins
+on the partner side — iNetko has done this enough times to
+make scoping mistakes that you'd otherwise make yourself.
+
+
+#eyebrow
+Honest tradeoffs
+
+#title
+What FastYoke isn't for field service
+
+#default
+
+- **No built-in pricing-book module.** Field Service
+  Yoke ships a generic line-item flow. If you're used
+  to ServiceTitan's built-in pricing-book authoring
+  UI, you'll author one in the entity schema layer
+  instead. Real but unfamiliar.
+- **No native dispatch optimization.** You see the
+  queue and you assign manually (or via a simple
+  rules-based workflow). Native vehicle-routing
+  optimization isn't yet generalized from the Bus
+  Routing / Convention Rideshare apps to field service.
+- **No native mobile app for techs (yet).** Techs use
+  the web console on their phone. It's responsive and
+  it works, but it's not a native iOS / Android app.
+  Native field-tech mobile is on the roadmap.
+
+If those tradeoffs are deal-breakers — *stay on
+ServiceTitan*. The vertical SaaS has those features
+because the vertical SaaS is built only for HVAC. FastYoke
+gives you the operational substrate, the workflow engine,
+and the multi-app integration story for the cases where
+the vertical SaaS is overkill or doesn't fit your
+specific shape.
+
+
+#default
+
+## Next step
+
+Request early access
+
+Talk to iNetko
+
+Already in retail / POS / food service paired with field
+service? See [Pay n Go Systems](/partners/pay-n-go-systems)
+— our first named Channel Partner — for the integrated
+storefront-plus-field-tech shape.
+
 ::
 
 ---
@@ -1527,6 +1936,211 @@ that looks like an active vulnerability.
 
 ---
 
+# Retail, POS & food service on FastYoke — storefront and counter operations
+
+> Multi-location retail with unified inventory and customer flows. Point-of-sale and kiosk deployments paired with payment hardware. Quick-serve, casual, and full-service restaurants — order capture, kitchen-display routing, pickup / delivery, and the back-of-house accounting.
+
+#default
+
+## Who this is for
+
+Multi-location retail operators (specialty, boutique,
+convenience), point-of-sale operators (counter, kiosk,
+self-serve), and food-service operators (quick-serve,
+casual, full-service) running 1-50 locations. Your
+current stack is some combination of Square, Toast,
+Clover, Shopify POS, Lightspeed, a separate accounting
+package, and a half-dozen spreadsheets. You've outgrown
+the all-in-one shape — your business needs more
+flexibility than the vertical SaaS gives you, but you
+don't want to build everything from scratch.
+
+
+
+#eyebrow
+What ships today
+
+#title
+1. What's currently shipped
+
+#lede
+Retail and food-service operations span counter, kitchen, back office, and customer. FastYoke pairs marketplace apps with the Pay n Go Channel Partner motion to cover the whole shape.
+
+#default
+<div id="shipped"></div>
+
+  ::feature-card{title="CRM Suite" icon="crm" accent="cyan" summary="Customers, loyalty profiles, purchase history. Linked to the order and invoice entities so a counter operator sees the customer's history at the moment they tap in."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Inventory" icon="inventory" accent="amber" summary="Per-location stock, reorder points, low-stock alerts. Cross-location transfers via the free Logistics core. The right shape for a small chain that's outgrown spreadsheets."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Yoke Ledger + GL Pack" icon="accounting" accent="emerald" summary="AR, AP, sales tax, GL posting. Daily Z-out from POS posts directly to the ledger; month-end close runs against the same books your accountant reads."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Order workflow" icon="project-tracker" accent="violet" summary="Order capture → preparation → ready → fulfilled. Kitchen-display routing for food service; pickup / delivery state for omni-channel retail. Every transition is audited."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Forms — free" icon="forms" accent="rose" summary="Public catering-inquiry forms, online reservation forms, catalog request forms. Cloudflare Turnstile + PDF copy on submit. Free forever."}
+  ::cta-button{to="/free-forms" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Pay n Go partnership" icon="logistics" accent="cyan" summary="Hardware selection, in-store deployment, payment integration, and ongoing support — delivered by our first named Channel Partner. Turnkey for retail / POS / food service."}
+  ::cta-button{to="/partners/pay-n-go-systems" variant="secondary" size="sm"}
+  Visit the partner page
+  ::
+  ::
+::
+
+#eyebrow
+Extend without code
+
+#title
+2. How to extend with low-code
+
+#default
+<div id="low-code"></div>
+
+Retail and food-service operations have endless per-shop
+quirks — the loyalty program, the discount-stacking
+policy, the kitchen-display priority rules. Most don't
+require an engineer:
+
+- **Loyalty-tier authoring (an afternoon).** Use the
+  entity schema layer to model customer tiers (Bronze /
+  Silver / Gold), the per-tier discount and free-item
+  policies, and the auto-promotion rules. The catalog
+  flows into the order workflow's pricing step.
+- **A kitchen-display priority queue (an hour).** Add a
+  rule on the order workflow's `Preparation` state that
+  prioritizes orders by ETA + customer tier. The FSM
+  Designer adds the sort guard; no code change.
+- **A daily Z-out automation (an hour).** A scheduled
+  job runs at close, sums the day's orders, posts a
+  single journal entry to the ledger, and emails the
+  manager. The Yoke Ledger's automated-posting rule
+  framework handles it.
+- **A multi-location stock-transfer workflow (an
+  afternoon).** When one location runs low, the
+  Inventory app fires a transfer request to the
+  nearest sister location with stock. Approval
+  workflow + transfer FSM. Driven by the schema.
+
+When the low-code surface isn't enough — typically when
+you need a custom kitchen-display device integration or a
+specialized payment hardware flow — you're in
+customization territory.
+
+
+#eyebrow
+Customize deeply
+
+#title
+3. How to make major customizations
+
+#default
+<div id="customization"></div>
+
+### In-house engineering
+
+Retail and food-service operations rarely have in-house
+engineering benches; this section is here for
+completeness. If you do have engineers:
+
+- The typed SDK (`@fastyoke/sdk-next`, `@fastyoke/sdk-vue`,
+  Rust kernel crate) lets you build custom counter,
+  kiosk, or kitchen-display experiences against the
+  platform API.
+- Custom marketplace apps (Cargo workspace crates) for
+  niche payment processors or specialized hardware
+  protocols beyond what the Channel Partner integrates.
+- The **ejection clause** — take your compiled rules
+  and per-tenant databases with you. Important for
+  multi-brand operators who eventually want to lift
+  the platform into their own infrastructure.
+
+### FastYoke Partner engagement
+
+For retail / POS / food service, the canonical shape is
+the Channel Partner motion:
+
+- **[Pay n Go Systems](/partners/pay-n-go-systems)** —
+  our first named Channel Partner — delivers hardware
+  selection (POS terminals, kitchen displays, kiosks),
+  in-store deployment, payment integration, and
+  ongoing support. They run the rollout; FastYoke runs
+  the platform.
+- **[Strategic Partner option](/partners/inetko)** —
+  for retail operators that want SE-led implementation
+  instead of a channel rollout, iNetko delivers the
+  schema authoring and platform onboarding. Less
+  common in this vertical but available.
+
+Most retail / POS / food-service prospects engage Pay n Go
+because the hardware + payment + deployment work is the
+80% of the project; the FastYoke platform configuration
+is the 20%. Channel Partner shape matches that ratio.
+
+
+#eyebrow
+Honest tradeoffs
+
+#title
+What FastYoke isn't for retail / POS / food service
+
+#default
+
+- **Not a turnkey POS terminal.** The hardware and the
+  payment-processor integration come from Pay n Go (or
+  your existing POS vendor if you bring one). FastYoke
+  is the platform underneath, not the box on the
+  counter.
+- **No built-in kitchen-display SDK (yet).** Kitchen-
+  display routing works via the order workflow, but
+  the device-side integration is a Pay n Go scope
+  item, not an out-of-box marketplace app.
+- **Not a delivery-platform aggregator.** If you take
+  Uber Eats, DoorDash, and GrubHub orders, those
+  integrations sit alongside FastYoke (or via Pay n Go),
+  not native to the platform.
+- **No native multi-currency for international ops
+  (yet).** Single-currency tenants for now. International
+  multi-currency support is on the roadmap as part of
+  the Yoke Ledger v2 cycle.
+
+If any of those is the deal-breaker — *stay on Toast or
+Square or whatever vertical SaaS already covers it*. The
+vertical SaaS exists because the vertical has specific
+shape; FastYoke fits when you want flexibility *plus* a
+real back-office and multi-location story underneath.
+
+
+#default
+
+## Next step
+
+Request early access
+
+Talk to Pay n Go Systems
+
+For multi-location retail or food-service operators
+evaluating FastYoke, [Pay n Go](/partners/pay-n-go-systems)
+is the right first conversation. They scope the hardware
++ deployment, and we scope the platform together.
+
+::
+
+---
+
 # Free Online Form Builder — FastYoke Solo Plan
 
 > Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
@@ -1923,6 +2537,72 @@ We disclose material security issues with the same discipline we ask of our cust
 
 
 <p class="text-center text-sm" style="color: var(--brand-text-secondary)">Last reviewed: 2026-06-26. This page is updated on every material change to the platform's PII handling.</p>
+
+---
+
+# Warehousing & 3PL on FastYoke — WMS / TMS / 3PL stack
+
+> Multi-client warehouses, four-wall WMS, transportation management, and the free Logistics core every logistics app sits on. Full vertical page lands alongside the first warehousing early-access cohort.
+
+#default
+
+## Who this is for
+
+Warehouse operators (B2B distribution, e-commerce
+fulfillment, food and beverage), multi-client 3PL
+providers, and transportation managers running 1-20
+facilities. You've outgrown a spreadsheet but the
+enterprise WMS / TMS stack is overbuilt and overpriced
+for your shape. Or you're a 3PL standing up a new client
+and want a tenant-isolated platform that scales with the
+portfolio.
+
+
+#default
+
+## Page coming alongside the first warehousing cohort
+
+This vertical page lands in full alongside the first
+warehousing / 3PL early-access cohort. The marketplace
+apps that power it ship today:
+
+- **Warehouse Management (WMS)** — four-wall ops:
+  receive, putaway, pick, pack, ship, cycle count.
+- **Transportation Management (TMS)** — parcel and
+  multi-carrier shipping with rating, labels, and
+  tracking.
+- **3PL app** — multi-client warehouses with
+  per-warehouse-client billing and audit trails.
+- **Free Logistics core** — facilities, bins, zones,
+  movements, immutable event log. Free with every
+  tenant.
+
+For the architecture and the integration path, see the
+[/docs/marketplace](/docs/marketplace) listings while the
+full vertical write-up is being prepared with our first
+named warehousing customer.
+
+
+#default
+
+## Next step
+
+The warehousing and 3PL apps are production-ready and the
+free Logistics core ships with every tenant. The
+full vertical write-up — including extensions and
+customizations — lands alongside the first cohort to
+publish. If you're evaluating FastYoke for a warehouse or
+3PL operation now, request early access:
+
+Request early access — warehousing
+
+See the marketplace apps
+
+For procurement or compliance review packets, email
+[security@fastyoke.io](mailto:security@fastyoke.io) and
+reference *warehousing* in the subject line.
+
+::
 
 ---
 
@@ -2572,6 +3252,68 @@ non-SMS notifications (e.g., email).
 
 ---
 
+# Professional services on FastYoke — projects, tasks, client work, billing
+
+> Operations software for consulting practices, agencies, and project-shaped service businesses. Projects, tasks, time-and-materials billing, and a real audit trail underneath. Full vertical page lands alongside the first professional-services early-access cohort.
+
+#default
+
+## Who this is for
+
+Consulting practices, marketing agencies, design studios,
+engineering services firms, accounting practices, and any
+project-shaped service business with 5-100 staff. Your
+current stack is some combination of a project tool
+(Asana / Linear / Jira / Trello), a CRM (HubSpot or
+nothing), a billing tool (FreshBooks / QuickBooks
+Online), and a shared drive. Each tool is fine; the seams
+between them are where the work gets lost.
+
+
+#default
+
+## Page coming alongside the first professional-services cohort
+
+This vertical page lands in full alongside the first
+professional-services early-access cohort. The
+marketplace apps that power it ship today:
+
+- **CRM Suite** — clients, opportunities, quotes,
+  orders, full sales conversion chain.
+- **Project Tracker** — projects and tasks on a simple
+  board with state machines for stage gates.
+- **Yoke Ledger + GL Pack** — time-and-materials
+  billing, project-level P&amp;L, AR aging.
+- **Forms — free** — public intake forms, RFP request
+  forms, contact forms, all wired to the workflow.
+
+For the architecture and integration path, see the
+[/docs/marketplace](/docs/marketplace) listings while the
+full vertical write-up is being prepared.
+
+
+#default
+
+## Next step
+
+The professional-services apps are production-ready. The
+full vertical write-up — including extensions and
+customizations — lands alongside the first cohort to
+publish. If you're evaluating FastYoke for a professional
+services firm now, request early access:
+
+Request early access — professional services
+
+See the marketplace apps
+
+For implementation help, see the
+[Strategic Partner](/partners/inetko) page — iNetko has
+the right shape for professional-services operations.
+
+::
+
+---
+
 # Trademarks — FastYoke
 
 > Acknowledgment of third-party trademarks referenced in the FastYoke product, and a statement that FastYoke uses them nominatively without implying endorsement or affiliation.
@@ -2915,6 +3657,74 @@ response on rejection. Login and invitation acceptance throttle per source
 IP; form submission throttles per `(source IP, form slug)` so cross-form
 abuse from one IP is caught while a single user submitting to multiple forms
 is not penalised.
+
+::
+
+---
+
+# Auto & repair on FastYoke — intake to handoff on one board
+
+> Operations software for auto-tech shops, body shops, motorcycle and small-engine repair, and equipment-service operators. Intake to handoff on one board with parts, labor, and invoicing wired in. Full vertical page lands alongside the first auto-repair early-access cohort.
+
+#default
+
+## Who this is for
+
+Independent auto-tech shops, body shops, motorcycle and
+small-engine repair, RV and equipment service, marine
+shops, and any repair operation running 2-30 technicians.
+Your current stack is some combination of Mitchell 1 /
+ALLDATA, an invoicing tool, a parts-distributor portal,
+and a paper work order on the technician's bench. You
+want one board that holds the work from drop-off to
+pickup with the audit trail of who did what.
+
+
+#default
+
+## Page coming alongside the first auto-repair cohort
+
+This vertical page lands in full alongside the first
+auto-repair early-access cohort. The marketplace apps
+that power it ship today:
+
+- **Field Service Yoke** — adapted for shop-floor
+  workflows: intake → diagnose → estimate → approval →
+  repair → QC → handoff.
+- **CRM Suite** — customers, vehicles (or equipment),
+  service history. Linked to job entities so a service
+  writer sees the full history on intake.
+- **Inventory** — parts on hand, reorder points, parts
+  consumption per job, COGS posting if you flip the
+  toggle.
+- **Yoke Ledger + GL Pack** — invoicing, payment
+  capture, GL posting. Estimate becomes invoice on
+  customer approval.
+- **Forms — free** — appointment-request forms, online
+  estimate-request forms, contact forms.
+
+For the architecture and integration path, see the
+[/docs/marketplace](/docs/marketplace) listings while the
+full vertical write-up is being prepared.
+
+
+#default
+
+## Next step
+
+The auto-repair stack is production-ready and ships
+today. The full vertical write-up — including extensions
+and customizations — lands alongside the first cohort to
+publish. If you're evaluating FastYoke for a repair shop
+now, request early access:
+
+Request early access — auto & repair
+
+See the marketplace apps
+
+For implementation help across multi-bay or multi-
+location auto operations, see the
+[Strategic Partner](/partners/inetko) page.
 
 ::
 
