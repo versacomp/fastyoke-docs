@@ -18,6 +18,7 @@ FastYoke treats PII as **opt-in opaque-by-default** — every tenant's data live
 A printable version of this summary is available for security committees and procurement reviews:
 
 - **[Download the FastYoke PII security summary (PDF)](/downloads/fastyoke-pii-security-summary.pdf)** — same content as this page, formatted for review packets.
+- **[Download the FastYoke VPAT 2.5 (PDF)](/downloads/fastyoke-vpat-2.5.pdf)** — accessibility conformance report (WCAG 2.1, Section 508, EN 301 549), auto-regenerated from the live axe coverage and engineer attestation.
 
 ::
 
@@ -113,7 +114,7 @@ New subprocessor additions are announced in advance per our contractual commitme
 
 | Attestation | Status |
 | --- | --- |
-| **VPAT 2.5 (accessibility)** | Current — generated alongside every release, available to Enterprise / ISV buyers for procurement review. |
+| **VPAT 2.5 (accessibility)** | Current — [download the PDF](/downloads/fastyoke-vpat-2.5.pdf), regenerated on every release from live axe coverage + engineer attestation. |
 | **SOC 2 Type II** | Roadmap — readiness assessment complete; controls operating; audit engagement scheduled. Bridge letter available on request. |
 | **HIPAA posture** | Available — BAA executed on Enterprise / ISV+ tier with the HIPAA add-on. PHI processed under documented administrative + technical safeguards. |
 | **GDPR readiness** | Current — DPA available, data-subject rights honored, EU region pinning available. |
