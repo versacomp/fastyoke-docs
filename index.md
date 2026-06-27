@@ -112,6 +112,11 @@ Built for operations-heavy businesses like…
   ::
   ::feature-card{title="Retail / inventory" summary="Stock, receipts, and reorder alerts without the spreadsheet."}
   ::
+  ::feature-card{title="Healthcare / triage" summary="Patient flow boards, urgent-care triage, and an HL7v2 EHR/ADT connector — built for HIPAA + BAA-gated tenants."}
+  ::cta-button{to="/solutions/healthcare" variant="secondary" size="sm"}
+  See the healthcare stack
+  ::
+  ::
 ::
 ::
 
