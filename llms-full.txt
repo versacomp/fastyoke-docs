@@ -821,6 +821,35 @@ set no cookies at all.
 We use no third-party tracking scripts, no advertising
 pixels, and no cross-site session reconciliation.
 
+## Global Privacy Control (Sec-GPC)
+
+If your browser sends the `Sec-GPC: 1` request header —
+which Brave, DuckDuckGo, Firefox via an extension, and the
+official GPC extension do — FastYoke honors it. We do not
+sell or share personal information regardless of the signal;
+honoring GPC is the formal acknowledgement that we received
+it. We do not engage in behavioral advertising under any
+circumstances.
+
+You can verify your browser is sending the signal by visiting
+[globalprivacycontrol.org](https://globalprivacycontrol.org).
+
+## Anti-abuse — Cloudflare Turnstile
+
+Public forms may use Cloudflare Turnstile — a CAPTCHA
+alternative — to prevent automated abuse. Turnstile collects
+browser characteristics (user agent, IP address, and a
+non-personalized challenge solve) to determine whether the
+visitor is a real human. Turnstile does **not** set tracking
+cookies on the marketing site and does not link visits across
+unrelated sites. It is classified as a strictly-necessary
+security mechanism under the ePrivacy carve-out for service
+the visitor explicitly requested (form submission).
+
+Cloudflare's privacy notice covers Turnstile data handling in
+detail. See our [subprocessor list](/docs/security/subprocessors)
+for the full FastYoke + Cloudflare data-processing posture.
+
 ## SMS messages
 
 FastYoke sends SMS text messages only when a tenant
