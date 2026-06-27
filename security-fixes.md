@@ -44,6 +44,8 @@ and under triage.
 
 ::marketing-section{band="gray" maxWidth="6xl"}
 
+<div id="security-fixes-list"></div>
+
 ::security-fix{title="Role-based access control enforcement hardening" status="fixed" fixedIn="3.19.0" fixedAt="2026-06-07"}
 We closed gaps where some authorization checks weren't consistently enforced: certain
 entity-write actions and the Settings area could be reached by roles that shouldn't have
@@ -52,7 +54,6 @@ administrators and managers, and the Manager system role was completed so role n
 resolve correctly. No abuse was observed; this tightens least-privilege enforcement across
 the admin application.
 ::
-
 ::security-fix{title="Admin session tokens moved out of browser storage (XSS hardening)" status="fixed" fixedIn="3.16.0" fixedAt="2026-06-04"}
 The admin application previously kept its session token (a JWT) in the
 browser's `localStorage`. A script injected through a cross-site-scripting
@@ -65,7 +66,6 @@ the reach of any future cross-site-scripting flaw to a single browser tab
 rather than a portable, stealable token. The platform-admin and
 organization-admin consoles received the same treatment.
 ::
-
 ::security-fix{title="Stricter origin matching for embedded-form framing" status="fixed" fixedIn="3.16.0" fixedAt="2026-06-04"}
 Tenants choose which sites may embed their hosted forms in an iframe, and
 FastYoke enforces that allow-list with a Content-Security-Policy
@@ -76,7 +76,6 @@ was disregarded when comparing, so an insecure (`http://`) variant of an
 allowed host could satisfy the check. No abuse was observed; this tightens the
 embedding boundary against a downgraded-origin framing attempt.
 ::
-
 ::security-fix{title="Uninitialized memory disclosure in the ws library (build-time dependency)" status="fixed" fixedIn="3.16.0" fixedAt="2026-06-04" advisoryLabel="GHSA-58qx-3vcg-4xpx" advisoryUrl="https://github.com/advisories/GHSA-58qx-3vcg-4xpx"}
 A moderate advisory (CVE-2026-45736) in the `ws` Node WebSocket library
 reported that `websocket.close()` could disclose uninitialized memory when
@@ -88,7 +87,6 @@ is the `ws` library — so no shipped release was exposed to the vulnerable
 path. We updated to `ws` ≥ 8.20.1 to clear the advisory and keep the
 dependency tree clean.
 ::
-
 ::security-fix{title="TLS hostname-verification regression in lettre's boring-tls backend" status="fixed" fixedIn="3.1.2" fixedAt="2026-05-15" advisoryLabel="RUSTSEC-2026-0141" advisoryUrl="https://rustsec.org/advisories/RUSTSEC-2026-0141"}
 A bug in lettre 0.11.21's boring-tls integration silently disabled TLS
 hostname verification for callers on that backend. FastYoke compiles lettre
@@ -96,7 +94,6 @@ with rustls, so no shipped release of FastYoke was exposed to the vulnerable
 code path. We bumped to 0.11.22 to clear the advisory and remove the flagged
 crate from our dependency tree.
 ::
-
 ::security-fix{title="Production CORS now refuses to start without an allow-list" status="fixed" fixedIn="3.1.0" fixedAt="2026-05-15"}
 The backend previously fell back to a permissive
 `Access-Control-Allow-Origin: *` when `CORS_ALLOWED_ORIGINS` was unset. We
@@ -105,14 +102,12 @@ matching the fail-closed posture used for the JWT signing secret. Sandbox and
 local-dev environments keep the permissive fallback so browser-based testing
 isn't blocked.
 ::
-
 ::security-fix{title="API-layer audit remediation" status="fixed" fixedIn="3.1.0" fixedAt="2026-05-15"}
 We ran a comprehensive audit of the API layer covering tenant-isolation gaps,
 SSRF egress vectors, authentication hardening, and reflected XSS surfaces.
 All findings were remediated and shipped before any release of v3 reached
 general availability.
 ::
-
 ::security-fix{title="Connection-listing endpoints now require explicit permission" status="fixed" fixedIn="3.1.0" fixedAt="2026-05-15"}
 The endpoints that list and read integration connections previously allowed
 any authenticated identity to enumerate which providers a tenant had
@@ -121,7 +116,6 @@ low-privilege token. They now require the same permission that gates
 connection creation and deletion. The cancel endpoint for FSM jobs was also
 tightened to resolve the tenant id from the session, not from request input.
 ::
-
 ::security-fix{title="Per-route rate limiting on unauthenticated surfaces" status="fixed" fixedIn="3.1.0" fixedAt="2026-05-15"}
 Three unauthenticated request paths — login, invitation acceptance, and
 public form submission — previously had no per-IP throttle and were bounded
