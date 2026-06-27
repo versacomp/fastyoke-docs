@@ -11,14 +11,7 @@ order: 4
 
 **Last updated:** 2026-05-26.
 
-This page is the **scaffold** version of the FastYoke terms of
-service. It governs use of the FastYoke platform at
-www.fastyoke.io and any subdomain, API, mobile interface, or
-embedded form operated by FastYoke ("the Service"). A tenant
-operator that embeds FastYoke functionality in their own
-product may layer additional terms on top of these; where they
-conflict for an interaction with that operator's surface, the
-operator's terms govern that interaction.
+This is the FastYoke terms of service.
 
 ## 1. Agreement
 

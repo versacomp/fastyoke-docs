@@ -11,12 +11,7 @@ order: 3
 
 **Last updated:** 2026-05-26.
 
-This page is the **scaffold** version of the FastYoke privacy
-notice. It covers the platform's defaults; the operator that
-embedded the form you're filling out may have layered additional
-notices on top. If something here conflicts with a notice that
-operator presented to you, the operator's notice prevails for
-that interaction.
+This is the FastYoke privacy notice.
 
 > www.fastyoke.io sets zero cookies. [Here's why →](/no-cookies)
 
