@@ -483,6 +483,15 @@ iNetko
 #default
 <div id="strategic-partners"></div>
 
+<a href="https://www.inetko.com/" target="_blank" rel="noopener noreferrer" class="block mb-10">
+<img
+  src="/partners/inetko-logo.jpg"
+  alt="iNetko Solutions"
+  width="320"
+  class="mx-auto"
+/>
+</a>
+
   ::feature-card{title="iNetko" summary="Our first named Strategic Partner. Frontline support, sales engineering, implementation, and consulting for teams that want hands-on help getting to production on FastYoke. The team to engage when you'd rather have an engineer at the keyboard alongside you than learn the platform from scratch."}
   ::cta-button{to="/partners/inetko" variant="primary" size="md"}
   Learn more →
@@ -503,6 +512,15 @@ Pay n Go Systems
 
 #default
 <div id="channel-partners"></div>
+
+<a href="https://www.payngosystems.com/" target="_blank" rel="noopener noreferrer" class="block mb-10">
+<img
+  src="/partners/pay-n-go-systems-logo.png"
+  alt="Pay n Go Systems"
+  width="320"
+  class="mx-auto"
+/>
+</a>
 
   ::feature-card{title="Pay n Go Systems" summary="Our first named Channel Partner. Focused on retail, point-of-sale, and food-service operators that want a turnkey FastYoke rollout — hardware selection, in-store deployment, payment integration, and ongoing support. The team to engage if FastYoke is the right shape and your operation is on the storefront / counter / kitchen side."}
   ::cta-button{to="/partners/pay-n-go-systems" variant="primary" size="md"}
