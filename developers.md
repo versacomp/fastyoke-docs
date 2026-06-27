@@ -90,21 +90,24 @@ How it works
 The primitives behind the sovereignty
 
 #default
+<div id="primitives"></div>
+
 ::two-col-row
 #title
 Sandboxed guards
 
+#default
 JSONLogic predicates by default, Wasm when you need compute — never raw eval. Fuel-capped, memory-bounded, audit-ready.
 
 #media
 ::feature-card{title="Tenant-isolated" summary="Every query carries a WHERE tenant_id clause by construction. Per-tenant SQLite files keep data locality strict and portable."}
 ::
 ::
-
 ::two-col-row{media="left"}
 #title
 Typed SDK
 
+#default
 The `@fastyoke/sdk` package ships React hooks, Zod schemas, and a realtime WebSocket client. Familiar ergonomics; zero boilerplate.
 
 #media
@@ -184,11 +187,11 @@ Works anywhere fetch works
 #title
 One install. Full backend.
 
+#default
 Sign up direct and you get an isolated FastYoke tenant — dedicated database, scoped API token, the full SDK. Or install from the Vercel Marketplace to skip credential wiring entirely: your env vars get auto-injected into your Next.js project in one OAuth handshake.
 
 ::signup-cta{size="lg" variant="primary" location="home-bottom"}
 ::
-
 ::marketplace-cta{size="lg" variant="secondary" location="home-bottom"}
 ::
 ::
