@@ -309,31 +309,139 @@ Sign up direct and you get an isolated FastYoke tenant — dedicated database, s
 
 # Guides — FastYoke
 
-> Opinionated guides on when FastYoke is the right move — graduation stories, migration shapes, and the platform decisions behind them.
+> Opinionated guides on when FastYoke is the right move — graduation stories, vertical playbooks, and the architectural decisions behind the platform.
 
 #default
+<div id="guides-overview"></div>
 
 ## What's a guide here
 
-A guide is an opinion piece — not a feature comparison, not
-a tutorial. It tells the story of a specific decision
-shape: when FastYoke is the right move, when it isn't,
-and what the migration looks like if it is.
+A guide is an opinion piece — not a feature comparison,
+not a tutorial. It tells the story of a specific decision
+shape: **when FastYoke is the right move, when it isn't,
+and what the migration looks like if it is.**
 
 If you want a side-by-side table against a specific
 platform, see [Compare](/compare). If you want a
 step-by-step build, see [Tutorials](/docs/tutorials).
 This surface lives in between.
 
-## Guides today
 
-- **[When you outgrow Make.com](/guides/when-you-outgrow-make)**
-  — three signals that workflow-automation tooling has
-  hit its ceiling, and what FastYoke gives you on the
-  other side.
+#eyebrow
+Featured guide
 
-More guides land as we hear from customers about the
-decision shapes that mattered most.
+#title
+When you outgrow Make.com
+
+#lede
+Make.com is genuinely great at one thing — orchestrating SaaS calls. Three concrete signals your work has stopped being that thing, and what FastYoke gives you on the other side. The piece doesn't position Make.com as inferior; the shape is the shape.
+
+#default
+<div id="featured-guide"></div>
+
+  ::feature-card{title="Read the guide" icon="forms" accent="cyan" summary="Three load-bearing signals (state in weird places, non-technical UI needs, graph turning into a state machine), plus an honest tradeoffs section."}
+  ::cta-button{to="/guides/when-you-outgrow-make" variant="primary" size="sm"}
+  When you outgrow Make.com →
+  ::
+  ::
+  ::feature-card{title="Compare side-by-side" summary="Looking for the table-shaped comparison against a specific platform? Compare carries the Make.com / Zapier / Retool / Supabase / Lovable matrix in one place."}
+  ::cta-button{to="/compare" variant="secondary" size="sm"}
+  See /compare
+  ::
+  ::
+::
+
+#eyebrow
+Graduation stories
+
+#title
+When you outgrow the tool you started with
+
+#lede
+You picked a tool because it was the right shape for the work then. The work changed. Here's how to tell when that's the case — and what the migration looks like if it is.
+
+#default
+<div id="graduation-stories"></div>
+
+  ::feature-card{title="When you outgrow Make.com" icon="logistics" accent="violet" summary="Three signals your workflow-automation tool has become a half-built application. State in weird places, non-technical UI needs, and the graph turning into a state machine."}
+  ::cta-button{to="/guides/when-you-outgrow-make" variant="secondary" size="sm"}
+  Read the guide →
+  ::
+  ::
+  ::feature-card{title="When you outgrow Airtable" icon="inventory" accent="amber" summary="Your formulas have become business logic, your status field has become a contract, and your records have become workflow journeys. Three signals — and how to migrate one workflow at a time."}
+  ::cta-button{to="/guides/when-you-outgrow-airtable" variant="secondary" size="sm"}
+  Read the guide →
+  ::
+  ::
+::
+
+#eyebrow
+Vertical playbooks
+
+#title
+What this actually looks like in your industry
+
+#lede
+The shape of a deployment is more useful than the marketing taxonomy. These guides walk through the apps, the integrations, and the procurement story for one vertical at a time.
+
+#default
+<div id="vertical-playbooks"></div>
+
+  ::feature-card{title="Hospital throughput on FastYoke" icon="crm" accent="rose" summary="Patient flow, transport, discharge planning, and EVS turnover — running on a per-tenant database with PHI encrypted at rest. The HL7v2 ADT connector keeps the boards live without a clinical-integration project."}
+  ::cta-button{to="/guides/hospital-throughput-on-fastyoke" variant="secondary" size="sm"}
+  Read the guide →
+  ::
+  ::
+  ::feature-card{title="More vertical playbooks coming" summary="Multi-location HVAC field service. Multi-client 3PL warehouses. Auto-tech shop operations. Food-service ops paired with Pay n Go POS. These land alongside the early-access cohorts. Tell us your vertical at /getting-started."}
+  ::cta-button{to="/getting-started" variant="secondary" size="sm"}
+  Request early access
+  ::
+  ::
+::
+
+#eyebrow
+Architecture
+
+#title
+How FastYoke is built — and why that matters to you
+
+#lede
+The platform-level choices that shape every other claim. These pieces are for buyers and engineers who want to know what's holding up the marketing language.
+
+#default
+<div id="architecture"></div>
+
+  ::feature-card{title="Why per-tenant database files" icon="warehouse" accent="emerald" summary="The 'Multi-Tenancy Prime Directive,' explained for buyers. Why FastYoke isolates customer data at the OS layer instead of trusting WHERE tenant_id = ?. The architectural commitment under every other security claim."}
+  ::cta-button{to="/guides/why-per-tenant-database-files" variant="secondary" size="sm"}
+  Read the guide →
+  ::
+  ::
+  ::feature-card{title="More architecture pieces coming" summary="FSM as the spine of operations software. The append-only event log explained. Forms vs entities vs jobs. The Marketplace as a contract. Each one walks through one load-bearing primitive at a time."}
+  ::cta-button{to="/security" variant="secondary" size="sm"}
+  See /security
+  ::
+  ::
+::
+
+#default
+<div id="guide-suggestions"></div>
+
+## Suggest a guide
+
+The guides we write are driven by the decision shapes
+that mattered most to actual customers. If you're
+evaluating FastYoke for a specific situation — a vertical
+we haven't covered, a graduation story from a tool we
+haven't named, an architectural question we haven't
+unpacked — **tell us.**
+
+We treat guide requests as a lead signal, not as
+something we'll get to eventually. Prospects who want
+guidance on *their exact situation* are the prospects we
+want to talk to.
+
+Request a guide via early access →
+::
 
 ---
 
@@ -831,6 +939,187 @@ Talk to sales
 
 ---
 
+# When you outgrow Airtable — FastYoke
+
+> Airtable is the right tool for half the operations workloads it ends up running. Three signals the half you're running is the other one.
+
+#default
+
+## Who this is for
+
+You run an Airtable base that started as a tracker and
+became indispensable. There are interfaces, automations, a
+custom view per team member, and a Slack alert that fires
+when status changes. Your team has trained themselves on
+this base. It works — *mostly*. But every quarter you
+notice it's drifting further from what Airtable is built
+for and closer to what an internal application would be.
+
+This guide is for that moment.
+
+## What Airtable is genuinely great at
+
+Airtable's superpower is **collaborative data with a
+familiar spreadsheet metaphor**. Non-technical operators
+can shape a base, build interfaces, and ship automations
+without a developer in the room. For small ops teams
+running a tracker, a registry, a CRM-lite, an editorial
+calendar — Airtable is *the right tool*. Its catalog of
+templates and its frictionless onboarding are the actual
+moat.
+
+If your base is shaped that way, **stay on Airtable.**
+This guide isn't trying to talk you off the platform. The
+shape is the shape.
+
+## Three signals you've outgrown it
+
+### 1. Your business logic lives in formula fields and automations
+
+You have a formula field that nests four `IF()`s and
+references three rollup fields. There's an automation that
+fires another automation. The "duplicate detection" runs
+every night and emails the operator if something looks
+off. None of this is documented anywhere except inside the
+base itself.
+
+This is the **business logic of your operation**,
+implemented in a place that wasn't designed to hold
+business logic at scale. You can't unit-test a formula
+field. You can't roll back an automation that fired the
+wrong webhook to a partner. When the operator who built
+the base goes on vacation, nobody else can confidently
+edit it.
+
+When workflow logic becomes load-bearing, it needs to live
+in code paths that can be tested, versioned, and reviewed.
+That's a real application's job — not a record's.
+
+### 2. You're enforcing data integrity with social conventions
+
+Your "status" field is a single-select with eight options.
+Three of them are spelled inconsistently because someone
+edited the option list. Your "owner" lookup pulls from a
+linked table, but the team also uses the legacy free-text
+"assignee" field for some clients. A junior team member
+typed a date into the notes column and nobody noticed for
+two months.
+
+Airtable lets a base evolve. That's its strength. But once
+the data shape becomes a contract — with downstream
+reports, billing, or partner integrations depending on it
+— *evolution* turns into *drift*. You start enforcing
+correctness with a Slack message that says "hey, can
+everyone use the linked field, not the text one?"
+
+When you've outgrown what social conventions can enforce,
+you need a schema with constraints and a workflow engine
+that refuses bad transitions. That's not bureaucracy. It's
+the same lock that ratcheted you forward in the first
+place, applied to a richer model.
+
+### 3. You're tracking *processes*, not records
+
+The base started as a list of customers. Now there's a
+"stage" column with twelve values, an "intake form" tied
+to a separate base, an automation that pings ops when a
+stage changes for more than seven days, and a separate
+sheet your finance team uses to mark which records have
+been invoiced.
+
+Underneath: every row is **a job moving through states**,
+with rules about who can move it and what has to be true
+before each transition. Airtable models *the record*. It
+does not model *the journey*. So the journey lives in
+automations and conventions, layered around a record that
+doesn't know about it.
+
+Once the journey is the work — not the record — you're
+running a workflow application. FastYoke models that
+directly with FSMs, append-only event logs, and per-state
+permissions. The record sits *inside* the workflow rather
+than alongside it.
+
+## What FastYoke gives you on the other side
+
+The graduation isn't about features. It's about which
+primitive your operation revolves around:
+
+- **FSMs over status fields.** Every job has an explicit
+  state machine. Transitions have guards, side effects,
+  and an audit row. Bad transitions are mechanically
+  impossible, not socially discouraged.
+- **A schema with constraints, but not rigid.** Entities
+  still have JSON payloads you can shape per tenant. The
+  validation layer enforces types, required fields, and
+  PII tagging — without blocking you from extending the
+  shape next sprint.
+- **A real form builder for intake.** Public forms with
+  Cloudflare Turnstile, conditional routing, PDF copies,
+  file uploads, and a malware scanner — all wired to your
+  workflow engine rather than dropped into a CSV.
+- **The audit trail.** Every state change is an
+  append-only event-log row. Reversals are new entries;
+  the original survives. GAAP-aligned for the financial
+  parts; legally defensible for the regulated ones.
+- **A multi-tenant story if you need it.** Per-tenant
+  database files isolate customer data at the OS layer,
+  not at the `WHERE tenant_id = ?` layer. Useful when
+  Airtable's workspace permission model has stopped being
+  enough.
+
+## Honest tradeoffs
+
+FastYoke is a platform, not a smart spreadsheet:
+
+- **You'll think about workflow shape upfront.** Airtable
+  lets you add a column and figure it out later. FastYoke
+  asks you what state the entity is in, what transitions
+  are legal, and who's allowed to fire them. That's
+  upstream design work Airtable doesn't make you do.
+- **The visual builder is structurally different.**
+  FastYoke's FSM Designer is graph-shaped, not
+  spreadsheet-shaped. The mental model transfers, but the
+  surface doesn't.
+- **The collaborative-data superpower goes away.** A
+  non-technical operator can extend a FastYoke tenant
+  without code, but the on-ramp is steeper than dragging
+  in a column. Plan for one round of training, not
+  zero.
+
+If those costs are deal-breakers — *stay on Airtable*. The
+graduation is real, and the platform that fits the shape
+fits the shape.
+
+## How to start
+
+1. Pick the **single workflow** that's the most
+   load-bearing in your base — the one where bad data
+   costs you money or trust. Don't try to migrate the
+   whole base.
+2. Build that workflow as a FastYoke job schema with an
+   explicit FSM. Use the [training
+   syllabus](/docs/training/syllabus) — module M3 (FSM
+   design) is the right entry point.
+3. Wire the intake to a [public form](/free-forms) so
+   submissions land directly in the workflow rather than
+   bouncing through a Zapier-to-Airtable step.
+4. Run **parallel** for a month. Both Airtable and
+   FastYoke get the data. Compare outputs. Switch over
+   when you trust the new system more than the old one.
+
+The graduation is one workflow at a time, not one weekend
+all at once.
+
+
+#default
+
+Want to walk this through with someone who's done it
+before? Request [early access](/getting-started) and we'll
+get a Strategic Partner SE on the line.
+
+---
+
 # Privacy Notice — FastYoke
 
 > How FastYoke handles personal data submitted through public forms, account info, and product telemetry. Plain-language summary plus the data subject's rights.
@@ -1167,6 +1456,204 @@ Compare plans
 ::
 
 ::
+
+---
+
+# Hospital throughput on FastYoke — FastYoke
+
+> How a clinic or hospital unit runs patient flow, transport, discharge, and EVS turnover on FastYoke — without sending PHI to a third-party SaaS.
+
+#default
+
+## Who this is for
+
+You operate a clinic, a hospital unit, or an
+ambulatory-surgery center. You have an EHR for the chart
+of record. What you don't have is good software for the
+**operational layer around the chart**: which bed a
+patient is waiting on, who's transporting them, whether
+EVS has turned the room, who's on the discharge worklist
+this hour. That layer currently lives in a whiteboard, a
+shared spreadsheet, a Teams thread, or — most commonly —
+all three at once.
+
+This guide is for the operations director, charge nurse,
+or unit administrator who's done a half-built internal
+tool and is wondering whether there's a sensible platform
+for the operational layer that *isn't* a certified EHR.
+
+## What FastYoke is — and isn't — for healthcare
+
+**FastYoke is operational scaffolding around the chart.**
+The [Patient Flow
+Yoke](/docs/marketplace) ships four FSM boards out of the
+box — bed placement, patient transport, discharge
+planning, and bed turnover — running on a per-tenant
+SQLite database with an append-only event log. The
+[EHR/ADT connector](/docs/marketplace) ingests HL7v2
+admit / transfer / discharge messages from your interface
+engine so the boards stay current without a clinical
+integration project.
+
+**FastYoke is not a certified EHR.** It doesn't bill,
+doesn't write to the chart, and doesn't claim CEHRT or
+Meaningful Use status. The connector is read-only by
+construction. If you need a chart of record, FastYoke runs
+*around* yours, not in place of it.
+
+This distinction matters because it shapes the procurement
+conversation. Your CMIO doesn't need to evaluate FastYoke
+against Epic. Your COO does — against the spreadsheet and
+the whiteboard.
+
+## The four boards
+
+Each is its own FSM, running against the same shared
+spine of `Unit`, `Bed`, and `Encounter` entities. ADT
+messages keep the spine current; the boards model the
+work happening on top.
+
+### 1. Bed placement
+
+The flagship board. Every requested admit becomes a
+`BedRequest` entity moving through:
+
+- **Requested** → request submitted by ED or unit
+- **Assigned** → bed selected, hold placed
+- **Occupied** → patient in bed
+- **PendingDischarge** → MD signed discharge order
+- **Vacated** → patient discharged, bed pending EVS
+
+Bed-availability constraints are guard conditions on the
+*Assigned* transition. Two operators trying to assign the
+same bed get a guard rejection, not a race condition.
+
+### 2. Patient transport
+
+`TransportRequest` entities move from **Pending** →
+**Dispatched** → **InProgress** → **Completed**. Mirrors
+the rideshare-style shape — a dispatcher sees the queue,
+transporters claim jobs, and the audit trail records who
+moved whom, when, between which rooms.
+
+### 3. Discharge planning
+
+`DischargePlan` entities tracked from **Initiated**
+through **Coordinated** (case management aligned),
+**Pending** (waiting on transport / family pickup), and
+**Discharged**. The board surfaces patients who've been
+medically ready for >24 hours so case management can
+escalate. Length-of-stay impact gets measurable.
+
+### 4. Bed turnover (EVS)
+
+`CleaningTask` entities for environmental services.
+**Dirty** → **InProgress** → **Clean** → ready for the
+next assignment. EVS sees the queue prioritized by bed
+demand; the audit trail tells you average turnover time
+per unit so you can staff appropriately.
+
+## How the data actually lives
+
+This is the part that matters for procurement reviews:
+
+- **Per-tenant database file.** Your tenant has its own
+  SQLite file on the Fly.io volume. There is no
+  `WHERE tenant_id = ?` clause that the database falls
+  back on for isolation — cross-tenant access would
+  require opening the wrong file, which the application
+  never does.
+- **Per-tenant AES-256-GCM encryption (PII add-on).**
+  Tagged PHI / SPI fields encrypted under per-tenant data
+  keys wrapped by a platform key. Tagged values are
+  opaque to filter / sort / search — they're decrypted
+  only on authorized read.
+- **Append-only event ledger.** Every state change (bed
+  assigned, encounter discharged, ADT message received)
+  is an immutable row. No `UPDATE` or `DELETE` is ever
+  issued against the ledger.
+- **PHI-bearing connector ledger.** The EHR / ADT
+  connector keeps raw HL7v2 messages in an append-only,
+  encrypted-at-rest ledger so an audit can replay exactly
+  what arrived from the interface engine, when, with what
+  ACK.
+- **On-VM biometrics, optionally.** Face recognition runs
+  inside your tenant, not a third-party face-API.
+  Useful for staff sign-in and patient match-back when
+  you don't want images leaving the box.
+- **HIPAA add-on + executed BAA.** Available on
+  Enterprise / ISV tier as part of the HIPAA add-on
+  enablement.
+
+## What integration looks like
+
+The realistic path for an operations director:
+
+1. **EHR vendor conversation.** Your IT team asks the EHR
+   vendor for an HL7v2 ADT feed pointed at a FastYoke
+   inbound endpoint. Most interface engines (Mirth,
+   Rhapsody, Cloverleaf) ship this out of the box. You're
+   not asking the EHR vendor to write code — you're asking
+   them to add an outbound route.
+2. **Tenant provisioning.** FastYoke spins up your tenant
+   with the HIPAA add-on enabled. BAA is executed before
+   any PHI flows. PII tagging is configured on the entity
+   schemas that hold patient data.
+3. **Pilot one unit.** Run one unit (probably the busiest
+   one) in parallel with the whiteboard for 30 days. Both
+   systems get the data. Charge nurse compares throughput
+   metrics with the new board against the whiteboard's
+   tribal knowledge.
+4. **Expand.** When the unit trusts the board more than
+   the whiteboard, expand to the rest of the hospital.
+   The transport, discharge, and EVS boards come online
+   in sequence, not all at once.
+
+This is **weeks, not quarters.** No clinical-systems
+integration project. The HL7v2 ADT feed is the only
+integration point; everything else is operator-driven
+inside the FastYoke tenant.
+
+## Honest tradeoffs
+
+FastYoke is not a hospital information system:
+
+- **Not a certified EHR.** You still need one. FastYoke
+  runs alongside it.
+- **No clinical decision support.** Boards display state;
+  they don't recommend care.
+- **HIPAA-by-default, not by accident.** The HIPAA add-on
+  must be enabled and the BAA executed; PHI tagging is
+  the tenant's responsibility. Defaults are *opt-in
+  opaque-by-default*, not silently compliant.
+- **The ADT connector is read-only.** Charges, orders,
+  and chart edits all stay in the EHR. By design — but if
+  you want a system that writes to the chart, FastYoke is
+  the wrong shape.
+
+If any of those is a deal-breaker, you need a different
+class of product, not a different vendor.
+
+## How to start
+
+1. Email `security@fastyoke.io` with "healthcare" in the
+   subject. Reference this guide. You'll get the
+   procurement packet (security posture, BAA template,
+   SOC 2 roadmap, encryption attestation).
+2. Request [early access](/getting-started) — healthcare
+   workloads are evaluated cohort-by-cohort, and we'll
+   schedule a 20-minute scoping call with someone who's
+   wired healthcare tenants before.
+3. Read the [/solutions/healthcare](/solutions/healthcare)
+   page if you haven't — it covers the apps and the
+   security posture in one place.
+
+
+#default
+
+For procurement or compliance review packets, email
+[security@fastyoke.io](mailto:security@fastyoke.io) and
+reference *healthcare* in the subject line.
 
 ---
 
@@ -1586,6 +2073,210 @@ Request early access
 *— The FastYoke team*
 
 ::
+
+---
+
+# Why per-tenant database files — FastYoke
+
+> The "Multi-Tenancy Prime Directive," explained for buyers. Why FastYoke isolates customer data at the operating-system layer instead of trusting WHERE tenant_id = ?.
+
+#default
+
+## The default that most multi-tenant SaaS ships
+
+Pick any multi-tenant SaaS product built since 2010 and
+the data model is almost always the same: **one shared
+database, one or more tables per resource, every row
+tagged with a `tenant_id` column.** Every query has a
+`WHERE tenant_id = ?` clause. Every endpoint resolves the
+caller's tenant from the session and threads that value
+through.
+
+The application code is solely responsible for never
+forgetting that clause. If a developer ships a query
+without it — or with the wrong tenant id — *every
+tenant's data is exposed by that one query*. The
+database can't help you, because the rows look the same
+to it.
+
+This is the world most SaaS lives in. It works
+*mostly*. It produces a steady tail of CVEs, postmortems,
+and incident reports that begin "a query was missing its
+tenant scope." The pattern is so common it has a name:
+**broken object-level authorization** — number one on the
+OWASP API top-10 for several years running.
+
+## What FastYoke does instead
+
+**Every tenant gets its own SQLite database file.**
+
+The application doesn't have one database connection that
+multiplexes between tenants. It opens *the file that
+belongs to that tenant*, runs the query, and closes the
+handle. There is no `tenant_id` column on the tenant-side
+tables — there's no need, because no other tenant's rows
+live in the file in the first place.
+
+Cross-tenant access isn't *guarded against*. It's
+**mechanically impossible.** A bug that forgets to scope
+a query can't leak anyone else's data, because the
+application never has two tenants' files open at the same
+time. The wrong query against the wrong file just
+returns the wrong tenant's own rows. Hostile inputs that
+would coax a `tenant_id` parameter astray have nothing to
+coax — the parameter isn't in the query.
+
+This is what the project's [CLAUDE.md](https://github.com/versacomp/fastyoke2)
+calls the "Multi-Tenancy Prime Directive," and it shapes
+the rest of the architecture.
+
+## What that buys you
+
+### Architectural authorization
+
+Code review for tenant isolation becomes a different kind
+of question. Instead of "did the developer remember the
+`WHERE` clause," reviewers ask "which file did this code
+path open?" That question has a single answer per request
+— `connection_for(tenant_id)` — and it's invariant across
+every handler. The proof reduces to one helper, not
+dozens of queries.
+
+### A real exit story
+
+Per-tenant files mean **your data is one file**. If you
+want to leave FastYoke, you don't run a query that fans
+out across a shared schema. You download your file. The
+SQLite format is open, documented, and supported by every
+language. The marketing claim "you can take your data
+with you" becomes a single `curl` invocation, not a
+six-month migration project.
+
+For ISVs building on top of FastYoke this matters even
+more: your customer's data lives in *their* file, and
+they can demand a copy any time without us being involved.
+
+### Backup and forensics simplicity
+
+A backup is the file. A point-in-time copy is the file at
+a moment. A forensic investigation is the file plus the
+event log inside it. The story is the same shape no
+matter which tenant is asking.
+
+### Compliance reviews
+
+Buyers in regulated workloads (healthcare, financial
+services, government) almost always ask "where exactly
+does my data live, and what stops the developer who
+shipped a bug yesterday from leaking it tomorrow?" The
+answer that satisfies them is rarely "we have a code
+review process." The answer that does satisfy them is
+"the application never has another tenant's file open at
+the same time as yours."
+
+Per-tenant files turn this from a process answer into an
+architectural answer.
+
+### Region pinning, free
+
+Need a tenant to live in `us-east-1` for a residency
+requirement? Move the file to `us-east-1`. The boundary
+of *what is the tenant's data* is the file. No shared
+table to split.
+
+## What that costs
+
+This is real engineering, not a free win.
+
+### You can't run a cross-tenant aggregate query
+
+Want "total submissions across all tenants today"? In a
+shared-schema model that's one query. In FastYoke, it's a
+fan-out across every tenant file plus a roll-up. We
+maintain a separate **platform** database for the
+aggregate queries that have to span tenants — billing
+counters, marketplace metadata, super-admin views. The
+rule we hold is that *no tenant data* lives in the
+platform database. Aggregate counts do.
+
+### File-handle and per-tenant resource pressure
+
+Thousands of tenants means thousands of files. SQLite is
+lightweight enough that this works, but the application
+has to be careful about connection pooling, file
+descriptor limits, and per-tenant write contention. We
+size for this; you don't have to think about it.
+
+### Cross-tenant joins simply aren't available
+
+Some product shapes — "show me all customers across all
+my white-labeled brands" — don't fit. The platform's
+honest answer is "FastYoke is the wrong substrate for
+that." If your product *is* multi-account-as-one-view,
+shared-schema is the right pattern. We pick the workloads
+where the isolation guarantee is worth more than the
+flexibility lost.
+
+### Litestream / LiteFS operational shape
+
+Replicating one file per tenant has a different
+operational story than replicating one shared database.
+We've built around it (Litestream + LiteFS, with a
+[wedged-primary watchdog](https://github.com/versacomp/fastyoke2/pull/781)
+for the failure mode where the primary stops accepting
+writes). It works, but it's a more bespoke story than
+"managed Postgres with a read replica."
+
+## Where this fits in the bigger picture
+
+Per-tenant files are *one* piece of FastYoke's isolation
+posture, not the whole thing:
+
+- **OS-layer isolation** — per-tenant files (this guide).
+- **Application-layer enforcement** — RBAC catalog, PAT
+  scoping with hard refusals, Strategic Partner consent.
+- **Encryption boundary** — per-tenant AES-256-GCM keys
+  for tagged PII / SPI fields.
+- **Audit boundary** — append-only event ledger per
+  tenant.
+- **Network boundary** — TLS in transit, region pinning
+  for residency.
+
+Per-tenant files are the load-bearing one. Everything
+else is a layer of belt-and-suspenders on top of an
+architecture that already makes the bad outcome
+mechanically impossible.
+
+## The honest summary
+
+FastYoke chose per-tenant files because we believe most
+multi-tenant SaaS leaks are not *failures of process* —
+they're *consequences of the substrate*. A substrate
+where the right query and the wrong query look identical
+to the database will produce wrong queries no matter how
+good your code review is. We removed the substrate.
+
+This costs us cross-tenant flexibility, which is real.
+For the workloads we're built for — operations-heavy
+SMB, ISVs shipping to enterprise, regulated workflows
+where the buyer cares more about boundary than about
+query convenience — that's the right trade.
+
+If you're evaluating FastYoke for one of those shapes,
+this is the architectural commitment underneath every
+other claim on `/security`. The rest of the security
+posture is real, but it's defense-in-depth around a
+boundary that's *already* enforced by the operating
+system.
+
+
+#default
+
+For the procurement-grade detail — encryption,
+attestations, subprocessor list — see
+[/security](/security). For an architectural conversation
+with someone who'd be the engineer behind your tenant,
+request [early access](/getting-started).
 
 ---
 
