@@ -18,26 +18,36 @@ Apps you can install today
 <div id="apps"></div>
 
   ::feature-card{title="CRM Suite" icon="crm" accent="cyan" summary="Track every lead from first hello to closed deal. See your whole pipeline on one board and never let a follow-up slip."}
+  ::demo-button{app="crm-suite"}
+  ::
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
   ::feature-card{title="Inventory" icon="inventory" accent="amber" summary="Know what's in stock, what's running low, and what to reorder — before you run out. Receipts, counts, and low-stock alerts built in."}
+  ::demo-button{app="inventory-yoke"}
+  ::
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
   ::feature-card{title="Project Tracker" icon="project-tracker" accent="violet" summary="Run projects on a simple board. Tasks move from to-do to done, and everyone can see exactly where things stand."}
+  ::demo-button{app="simple-project-tracker"}
+  ::
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
   ::feature-card{title="Accounting" icon="accounting" accent="emerald" summary="Send invoices, track the bills you owe, and keep your books balanced. Chart of accounts, AR/AP, and a clean ledger out of the box."}
+  ::demo-button{app="yoke-ledger"}
+  ::
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
   ::
   ::feature-card{title="Field Service" icon="field-service" accent="sky" summary="Schedule jobs, dispatch your crew, and invoice the moment work is finished. Every job moves New → Dispatched → On-site → Invoiced."}
+  ::demo-button{app="yoke-hvac"}
+  ::
   ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
   Learn more
   ::
