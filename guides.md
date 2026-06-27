@@ -1,6 +1,6 @@
 ---
 title: Guides — FastYoke
-summary: Opinionated guides on when FastYoke is the right move — graduation stories, vertical playbooks, and the architectural decisions behind the platform.
+summary: Opinionated guides on when FastYoke is the right move — graduation stories, vertical playbooks, decision frameworks, and the architectural decisions behind the platform.
 order: 1
 ---
 
@@ -65,7 +65,7 @@ You picked a tool because it was the right shape for the work then. The work cha
 #default
 <div id="graduation-stories"></div>
 
-::feature-grid{columns="2"}
+::feature-grid{columns="3"}
   ::feature-card{title="When you outgrow Make.com" icon="logistics" accent="violet" summary="Three signals your workflow-automation tool has become a half-built application. State in weird places, non-technical UI needs, and the graph turning into a state machine."}
   ::cta-button{to="/guides/when-you-outgrow-make" variant="secondary" size="sm"}
   Read the guide →
@@ -73,6 +73,11 @@ You picked a tool because it was the right shape for the work then. The work cha
   ::
   ::feature-card{title="When you outgrow Airtable" icon="inventory" accent="amber" summary="Your formulas have become business logic, your status field has become a contract, and your records have become workflow journeys. Three signals — and how to migrate one workflow at a time."}
   ::cta-button{to="/guides/when-you-outgrow-airtable" variant="secondary" size="sm"}
+  Read the guide →
+  ::
+  ::
+  ::feature-card{title="When you outgrow Zapier" icon="forms" accent="cyan" summary="Zaps chained into a stateful workflow, code-by-Zapier steps that became real scripts, and per-task billing for inherent N-step transactions. Three signals SaaS glue stopped being SaaS glue."}
+  ::cta-button{to="/guides/when-you-outgrow-zapier" variant="secondary" size="sm"}
   Read the guide →
   ::
   ::
@@ -92,13 +97,18 @@ The shape of a deployment is more useful than the marketing taxonomy. These guid
 #default
 <div id="vertical-playbooks"></div>
 
-::feature-grid{columns="2"}
+::feature-grid{columns="3"}
   ::feature-card{title="Hospital throughput on FastYoke" icon="crm" accent="rose" summary="Patient flow, transport, discharge planning, and EVS turnover — running on a per-tenant database with PHI encrypted at rest. The HL7v2 ADT connector keeps the boards live without a clinical-integration project."}
   ::cta-button{to="/guides/hospital-throughput-on-fastyoke" variant="secondary" size="sm"}
   Read the guide →
   ::
   ::
-  ::feature-card{title="More vertical playbooks coming" summary="Multi-location HVAC field service. Multi-client 3PL warehouses. Auto-tech shop operations. Food-service ops paired with Pay n Go POS. These land alongside the early-access cohorts. Tell us your vertical at /getting-started."}
+  ::feature-card{title="Multi-location HVAC on FastYoke" icon="field-service" accent="sky" summary="Dispatch boards, on-site state tracking, invoicing the moment the work is done, and the audit trail when a customer disputes a charge. Single-tenant-multi-facility vs one-tenant-per-location, and the realistic pilot path."}
+  ::cta-button{to="/guides/multi-location-hvac-on-fastyoke" variant="secondary" size="sm"}
+  Read the guide →
+  ::
+  ::
+  ::feature-card{title="More vertical playbooks coming" summary="Multi-client 3PL warehouses. Auto-tech shop operations. Food-service ops paired with Pay n Go POS. These land alongside the early-access cohorts. Tell us your vertical at /getting-started."}
   ::cta-button{to="/getting-started" variant="secondary" size="sm"}
   Request early access
   ::
@@ -107,6 +117,33 @@ The shape of a deployment is more useful than the marketing taxonomy. These guid
 ::
 
 ::marketing-section{band="white" maxWidth="6xl"}
+#eyebrow
+Decision frameworks
+
+#title
+How to decide before you commit
+
+#lede
+The pieces that come up *before* you've picked a tier, an app, or a partner. Opinionated guides on the choices buyers make once and live with for years.
+
+#default
+<div id="decision-frameworks"></div>
+
+::feature-grid{columns="2"}
+  ::feature-card{title="Choosing a tier for your team size" icon="accounting" accent="emerald" summary="An opinionated walkthrough of the Solo / Starter / Team / Pro / Enterprise / Fleet ladder. Which tier fits your team today, which one fits in six months, and the two upgrade triggers nobody talks about."}
+  ::cta-button{to="/guides/choosing-a-tier-for-your-team-size" variant="secondary" size="sm"}
+  Read the guide →
+  ::
+  ::
+  ::feature-card{title="More frameworks coming" summary="Build vs install vs extend on the marketplace. When the free tier is enough. When to bring in a Strategic Partner. Hosted vs ejected. Tell us which decision shape you're stuck on at /getting-started."}
+  ::cta-button{to="/getting-started" variant="secondary" size="sm"}
+  Request a framework
+  ::
+  ::
+::
+::
+
+::marketing-section{band="gray" maxWidth="6xl"}
 #eyebrow
 Architecture
 
@@ -119,13 +156,18 @@ The platform-level choices that shape every other claim. These pieces are for bu
 #default
 <div id="architecture"></div>
 
-::feature-grid{columns="2"}
+::feature-grid{columns="3"}
   ::feature-card{title="Why per-tenant database files" icon="warehouse" accent="emerald" summary="The 'Multi-Tenancy Prime Directive,' explained for buyers. Why FastYoke isolates customer data at the OS layer instead of trusting WHERE tenant_id = ?. The architectural commitment under every other security claim."}
   ::cta-button{to="/guides/why-per-tenant-database-files" variant="secondary" size="sm"}
   Read the guide →
   ::
   ::
-  ::feature-card{title="More architecture pieces coming" summary="FSM as the spine of operations software. The append-only event log explained. Forms vs entities vs jobs. The Marketplace as a contract. Each one walks through one load-bearing primitive at a time."}
+  ::feature-card{title="FSM as the spine of operations software" icon="project-tracker" accent="violet" summary="Why every serious operations app eventually grows a state machine — and what changes when you start with one instead of bolting it on later. Transitions are checked, guards are first-class, the audit log writes itself."}
+  ::cta-button{to="/guides/fsm-as-the-spine" variant="secondary" size="sm"}
+  Read the guide →
+  ::
+  ::
+  ::feature-card{title="More architecture pieces coming" summary="The append-only event log explained. Forms vs entities vs jobs. The Marketplace as a contract. Each walks through one load-bearing primitive at a time."}
   ::cta-button{to="/security" variant="secondary" size="sm"}
   See /security
   ::
@@ -133,7 +175,7 @@ The platform-level choices that shape every other claim. These pieces are for bu
 ::
 ::
 
-::marketing-section{band="gray" maxWidth="4xl"}
+::marketing-section{band="white" maxWidth="4xl"}
 #default
 <div id="guide-suggestions"></div>
 
@@ -144,7 +186,8 @@ that mattered most to actual customers. If you're
 evaluating FastYoke for a specific situation — a vertical
 we haven't covered, a graduation story from a tool we
 haven't named, an architectural question we haven't
-unpacked — **tell us.**
+unpacked, a framework you wish you had before you
+committed — **tell us.**
 
 We treat guide requests as a lead signal, not as
 something we'll get to eventually. Prospects who want

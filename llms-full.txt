@@ -309,7 +309,7 @@ Sign up direct and you get an isolated FastYoke tenant — dedicated database, s
 
 # Guides — FastYoke
 
-> Opinionated guides on when FastYoke is the right move — graduation stories, vertical playbooks, and the architectural decisions behind the platform.
+> Opinionated guides on when FastYoke is the right move — graduation stories, vertical playbooks, decision frameworks, and the architectural decisions behind the platform.
 
 #default
 <div id="guides-overview"></div>
@@ -373,6 +373,11 @@ You picked a tool because it was the right shape for the work then. The work cha
   Read the guide →
   ::
   ::
+  ::feature-card{title="When you outgrow Zapier" icon="forms" accent="cyan" summary="Zaps chained into a stateful workflow, code-by-Zapier steps that became real scripts, and per-task billing for inherent N-step transactions. Three signals SaaS glue stopped being SaaS glue."}
+  ::cta-button{to="/guides/when-you-outgrow-zapier" variant="secondary" size="sm"}
+  Read the guide →
+  ::
+  ::
 ::
 
 #eyebrow
@@ -392,9 +397,38 @@ The shape of a deployment is more useful than the marketing taxonomy. These guid
   Read the guide →
   ::
   ::
-  ::feature-card{title="More vertical playbooks coming" summary="Multi-location HVAC field service. Multi-client 3PL warehouses. Auto-tech shop operations. Food-service ops paired with Pay n Go POS. These land alongside the early-access cohorts. Tell us your vertical at /getting-started."}
+  ::feature-card{title="Multi-location HVAC on FastYoke" icon="field-service" accent="sky" summary="Dispatch boards, on-site state tracking, invoicing the moment the work is done, and the audit trail when a customer disputes a charge. Single-tenant-multi-facility vs one-tenant-per-location, and the realistic pilot path."}
+  ::cta-button{to="/guides/multi-location-hvac-on-fastyoke" variant="secondary" size="sm"}
+  Read the guide →
+  ::
+  ::
+  ::feature-card{title="More vertical playbooks coming" summary="Multi-client 3PL warehouses. Auto-tech shop operations. Food-service ops paired with Pay n Go POS. These land alongside the early-access cohorts. Tell us your vertical at /getting-started."}
   ::cta-button{to="/getting-started" variant="secondary" size="sm"}
   Request early access
+  ::
+  ::
+::
+
+#eyebrow
+Decision frameworks
+
+#title
+How to decide before you commit
+
+#lede
+The pieces that come up *before* you've picked a tier, an app, or a partner. Opinionated guides on the choices buyers make once and live with for years.
+
+#default
+<div id="decision-frameworks"></div>
+
+  ::feature-card{title="Choosing a tier for your team size" icon="accounting" accent="emerald" summary="An opinionated walkthrough of the Solo / Starter / Team / Pro / Enterprise / Fleet ladder. Which tier fits your team today, which one fits in six months, and the two upgrade triggers nobody talks about."}
+  ::cta-button{to="/guides/choosing-a-tier-for-your-team-size" variant="secondary" size="sm"}
+  Read the guide →
+  ::
+  ::
+  ::feature-card{title="More frameworks coming" summary="Build vs install vs extend on the marketplace. When the free tier is enough. When to bring in a Strategic Partner. Hosted vs ejected. Tell us which decision shape you're stuck on at /getting-started."}
+  ::cta-button{to="/getting-started" variant="secondary" size="sm"}
+  Request a framework
   ::
   ::
 ::
@@ -416,7 +450,12 @@ The platform-level choices that shape every other claim. These pieces are for bu
   Read the guide →
   ::
   ::
-  ::feature-card{title="More architecture pieces coming" summary="FSM as the spine of operations software. The append-only event log explained. Forms vs entities vs jobs. The Marketplace as a contract. Each one walks through one load-bearing primitive at a time."}
+  ::feature-card{title="FSM as the spine of operations software" icon="project-tracker" accent="violet" summary="Why every serious operations app eventually grows a state machine — and what changes when you start with one instead of bolting it on later. Transitions are checked, guards are first-class, the audit log writes itself."}
+  ::cta-button{to="/guides/fsm-as-the-spine" variant="secondary" size="sm"}
+  Read the guide →
+  ::
+  ::
+  ::feature-card{title="More architecture pieces coming" summary="The append-only event log explained. Forms vs entities vs jobs. The Marketplace as a contract. Each walks through one load-bearing primitive at a time."}
   ::cta-button{to="/security" variant="secondary" size="sm"}
   See /security
   ::
@@ -433,7 +472,8 @@ that mattered most to actual customers. If you're
 evaluating FastYoke for a specific situation — a vertical
 we haven't covered, a graduation story from a tool we
 haven't named, an architectural question we haven't
-unpacked — **tell us.**
+unpacked, a framework you wish you had before you
+committed — **tell us.**
 
 We treat guide requests as a lead signal, not as
 something we'll get to eventually. Prospects who want
@@ -2597,6 +2637,183 @@ rights of the mark holder.
 
 ---
 
+# When you outgrow Zapier — FastYoke
+
+> Zapier is the right tool for half the SaaS-glue you wire up. Three signals the other half has stopped being SaaS glue and started being an application.
+
+#default
+
+## Who this is for
+
+You run a handful of Zaps in production. Most of them are
+short — a webhook fires, a row gets written, an email
+goes out. A few have grown longer, with filters and
+formatters and a custom code step. One of them now has a
+"if you change this Zap, also update Zap #4382" note
+attached because the dependency between them is real and
+neither person who wrote them is at the company anymore.
+
+This guide is for the moment a single Zap turned into a
+small *system*.
+
+## What Zapier is genuinely great at
+
+Zapier's superpower is **two-step glue at internet scale**.
+A new Stripe charge writes an Airtable row. A new HubSpot
+contact triggers a Slack DM. The catalog of 6,000+
+integrations is the actual moat: the long-tail "I need to
+ping the obscure-vertical-SaaS API on a webhook" use case
+gets handled in three minutes with no code.
+
+If your Zaps are shaped like that — short, mostly
+trigger-action, no state — **stay on Zapier.** The shape
+is the shape.
+
+## Three signals you've outgrown it
+
+### 1. Your Zaps are stitching a workflow together
+
+A new submission triggers Zap #1, which writes to
+Airtable, which (via a separate Zap #2) emails a
+reviewer, who clicks an "approve" link that triggers Zap
+#3, which updates the original Airtable row and fires a
+webhook to the partner. Three Zaps, one workflow.
+
+Underneath, this is **one stateful process** modeled as
+several stateless trigger-action pairs. Every connection
+between the Zaps is implicit — a column update, a webhook
+URL, a status string. None of it is checked. When Zap #2
+fails silently, the workflow stalls and nobody notices for
+two weeks.
+
+Zapier models *events*. It does not model *journeys*. The
+moment the journey has more than one step that matters,
+you've crossed into application territory.
+
+### 2. You've built a code step that's now a script you care about
+
+One of your Zaps has a `Code by Zapier` step. It does
+something genuinely useful — formats an address, computes
+a quote, looks up a customer record in your DB. It's a
+hundred lines of JavaScript. It has no tests. It runs in
+production hundreds of times a day. You can't grep your
+codebase for it.
+
+This is **business logic running in a place that wasn't
+designed for it**. There's no version control. There's no
+review. The Zap's edit history is the only audit. When
+the code step breaks, the only way you find out is when a
+customer asks why their receipt has "undefined" on it.
+
+When a code step has become load-bearing, it needs to
+live somewhere code lives — with tests, version control,
+and a deployment pipeline. That's not a code step. That's
+a service.
+
+### 3. You're paying per-task for what should be one transaction
+
+Your Zaps fire a few thousand times a day at peak. You're
+on the Professional plan and the next tier is a noticeable
+step up. You've optimized them — added filters, batched
+where you could — but the underlying truth is that you're
+billing per-step for an inherent N-step process. A
+single new customer triggers eight Zap runs across four
+Zaps.
+
+The economics tell you something the architecture is also
+telling you: **the work isn't event-shaped, it's
+transaction-shaped.** One submission, eight downstream
+side effects, all of which need to happen or none of which
+should. Per-task billing on a per-task tool starts to
+sting because the tool isn't matched to the shape of the
+work.
+
+## What FastYoke gives you on the other side
+
+The graduation isn't about features. It's about where the
+**workflow lives**:
+
+- **FSM jobs instead of chained Zaps.** A single job
+  carries the state through the whole process. The
+  states are explicit, the transitions are checked, and
+  the audit trail is one append-only log instead of
+  scattered Zap-run histories.
+- **Code in a real codebase.** When you need custom
+  logic, it lives in the FastYoke tenant's WASM
+  scripting tier — with version control, review, and a
+  test harness. Not in an opaque text box.
+- **No per-task billing on internal transitions.** The
+  cost model is per *transition* on the FSM, not per
+  trigger-action pair. One submission with eight
+  internal state changes is one job, not eight runs.
+- **Webhooks where they actually fit.** Webhook-as-source
+  for intake; webhook-as-destination for partner
+  notification. The pattern Zapier is *good* at, you
+  keep. The orchestration in the middle moves to the
+  workflow engine.
+- **A real audit.** Every state change is an append-only
+  event-log row. When a partner says "you never told us
+  about the order," you can replay exactly what was sent,
+  when, with what payload. Zap run histories don't
+  span across Zaps; FastYoke's event log does.
+
+## Honest tradeoffs
+
+FastYoke is a workflow engine, not an integration
+catalog:
+
+- **The 6,000-integration story goes away.** FastYoke
+  has connectors for the integrations that matter for
+  operations work (Stripe, QuickBooks, EHR/ADT, mail
+  providers, cloud storage). For the long-tail
+  niche-SaaS connector, you'll either build it yourself
+  in the WASM scripting tier or keep one Zap in your
+  stack as a translation layer. Hybrid is fine.
+- **The "fire and forget" mental model is heavier.**
+  Zapier lets you write a one-line description and click
+  publish. FastYoke asks you to define the FSM states up
+  front. That's deliberate — and it's the bit that
+  pays back when the workflow grows.
+- **The cost shape inverts.** You stop paying per-task
+  and start paying per-tenant. For low-volume Zaps,
+  Zapier is cheaper. For workflows that fire frequently,
+  FastYoke's per-tenant pricing wins by a wide margin.
+
+If you genuinely run short, stateless Zaps and the
+catalog is the value — **stay on Zapier.** The
+graduation is real when the shape of your work changes,
+not before.
+
+## How to start
+
+1. Pick the **one workflow** that's caused you the most
+   pain in the last quarter — the multi-Zap chain that
+   broke twice, or the code step that scares everyone
+   on the team.
+2. Model it as a FastYoke job schema with an explicit
+   FSM. The [training
+   syllabus](/docs/training/syllabus) module M3 is the
+   right entry point.
+3. Keep the Zaps running in parallel for two weeks while
+   you validate the FastYoke version. Compare outputs.
+4. When you trust the new system more than the old
+   one, retire the chained Zaps. Keep the short,
+   single-action Zaps that genuinely are SaaS glue —
+   they're still the right shape for that.
+
+The graduation is **one workflow at a time**, not all
+at once.
+
+
+#default
+
+Want to walk this through with someone who's migrated
+production Zap chains before? Request
+[early access](/getting-started) and we'll set up a
+20-minute scoping conversation.
+
+---
+
 # Security Fixes — FastYoke
 
 > Known security findings and their fix status across FastYoke releases.
@@ -2788,6 +3005,413 @@ Request early access
 
 ---
 
+# FSM as the spine of operations software — FastYoke
+
+> Why every serious operations app eventually grows a state machine — and what changes when you start with one instead of bolting it on later.
+
+#default
+
+## The pattern every ops app converges on
+
+Pick any operations-heavy application that's been in
+production for two years and you'll find some version of
+this:
+
+- A table that holds the records.
+- A `status` column on that table — a string, an enum, a
+  foreign key into a "stages" lookup.
+- A pile of code that reads and writes that column.
+
+That code starts small: when status moves from "Pending"
+to "Assigned," send a notification. Then it grows: only
+allow "Assigned → InProgress" if the assignee is
+qualified. Then: don't allow "Cancelled → Anything." Then:
+when "Pending" has been the status for more than two
+days, escalate. Then: log every status change with who,
+when, and why.
+
+By the time the app is mature, that pile of code is **a
+state machine pretending it isn't one**. The transitions
+are scattered across handlers. The guards are
+re-implemented in three different places. The audit log
+is partial because two of the writes forgot to record
+themselves.
+
+FastYoke makes the state machine the **primary primitive**
+of every workflow. Not a derived view of the data — the
+contract the data has to obey.
+
+## What changes when you start with an FSM
+
+### 1. Transitions are checked, not hoped
+
+Every transition has explicit `from` and `to` states. The
+engine refuses any write that doesn't match a declared
+transition. The "Cancelled → Anything" bug doesn't get
+caught in code review — it gets caught at the schema
+layer, because there's no transition declared and the
+write fails.
+
+This isn't bureaucracy. It's the same lock that the type
+system gives you for function signatures, applied to the
+domain model.
+
+### 2. Guards are first-class
+
+A guard is a JSONLogic expression evaluated against the
+entity's payload before the transition fires. "Assigned →
+InProgress" is gated by `{"==": [{"var": "qualified"},
+true]}`. The guard is part of the schema, not part of the
+handler. Every code path that fires the transition gets
+the guard for free.
+
+When you need richer guard logic, the scripting tier runs
+QuickJS inside a wasmtime sandbox. You can write a real
+function, version it, test it. It still lives in the
+schema, not in a handler.
+
+### 3. The audit log writes itself
+
+Every successful transition appends a row to the
+event log. No `UPDATE`, no `DELETE` — append-only by
+construction. The auditor's question "what happened to
+this job between Tuesday and Friday?" has a literal answer
+in the database, ordered, with payloads and actors.
+
+You don't have to remember to log it. The engine does.
+
+### 4. Side effects fire on transitions, not on writes
+
+A webhook to a partner, a notification, a payment capture
+— these are *consequences* of a transition, not
+consequences of a row write. Declaring them at the
+transition level means the webhook fires once when the
+transition fires once, even if two operators race to flip
+the status. The engine serializes the transition; the
+side effect inherits that guarantee.
+
+This kills the "we fired the partner webhook twice"
+class of bug at the schema layer.
+
+### 5. The visual builder is the schema
+
+FSM Designer ships in the platform. Operators can see
+their workflow as a graph, drag a transition, ship a new
+state. The graph **is** the schema — there's no
+"the visual designer drifted from the code" failure mode
+because they share the same source of truth.
+
+For workflows simple enough to author this way, the
+operator never touches code. For workflows that need
+code, the schema is still the authoritative document; the
+code is the implementation of one guard or one side
+effect.
+
+## What this lets you skip
+
+The list of problems an FSM-first architecture **doesn't
+have** is long:
+
+- No "developer forgot the status check" bugs.
+- No "the audit log is missing entries for X" gaps.
+- No "the webhook fired three times" race conditions.
+- No "the bulk-update tool moved 4,000 records into an
+  invalid state" outages.
+- No "rebuild the audit log from server logs because the
+  app didn't record it" forensics.
+
+These aren't theoretical wins. Every operations team
+that's been in production for three years has the scars
+from at least three of them.
+
+## What this costs
+
+The honest tradeoffs:
+
+- **You think about the workflow upfront.** Schema-first
+  design asks you to enumerate the states and transitions
+  before you start writing handlers. That's
+  upstream work the "add a status column and figure it
+  out later" approach doesn't make you do.
+- **One-off operations get heavier.** Bulk-updating
+  10,000 records to a new state requires the bulk
+  operation to declare itself as a transition. That's
+  good for safety; it's slower than a `UPDATE ... SET
+  status = ?` would be.
+- **The mental model is graph-shaped, not list-shaped.**
+  Engineers used to thinking "records and statuses"
+  have to rewire to "entities and transitions." The
+  payoff is real, but there's a ramp.
+
+If those costs are deal-breakers for your team's
+preferred shape, FastYoke is the wrong substrate. If they
+read as "yes, finally," you're the audience.
+
+## Where this shows up across FastYoke
+
+- **Every marketplace app** is built around one or more
+  FSMs. Patient flow, warehouse management, AR
+  invoicing, field service — same primitive, different
+  workflow shape.
+- **The admin "cancel override"** sits outside the FSM
+  on purpose, because cancellation is a privileged
+  bypass — not a workflow transition. The schema says
+  what the workflow is; the override says what an
+  admin can do *despite* the workflow.
+- **Self-loop transitions** (where `from == to`) are a
+  legitimate primitive for audit-only events,
+  idempotent retries, and counter increments. The
+  schema accommodates the cases the textbook doesn't.
+
+## The honest summary
+
+FSMs aren't the right shape for every application. They
+**are** the right shape for operations software, because
+operations work is *journeys through states with rules*.
+Bolting a state machine onto an app that started without
+one is the most common refactor on the planet. Starting
+with one — and getting the audit log, the guards, the
+side effects, and the visual designer for free — is the
+unlock FastYoke is built around.
+
+
+#default
+
+For the procurement-grade detail on how state changes
+become the contractual audit trail, see
+[/security](/security). For an architectural conversation
+with someone who'd be the engineer behind your tenant,
+request [early access](/getting-started).
+
+---
+
+# Choosing a tier for your team size — FastYoke
+
+> An opinionated walkthrough of the FastYoke tier ladder. Which tier fits your team today, which one fits in six months, and the upgrade triggers worth watching.
+
+#default
+
+## How to read this
+
+FastYoke ships six commercial tiers: **Solo, Starter,
+Team, Pro, Enterprise, Fleet.** The
+[pricing page](/pricing) gives you the feature matrix and
+the resource caps. This guide gives you the *fit* — which
+tier is right for the team you have, and the signals that
+say it's time to upgrade.
+
+If you'd rather skip ahead and talk to someone about
+your specific situation, request
+[early access](/getting-started) and we'll route you to a
+Strategic Partner SE.
+
+## The two questions that pick the tier
+
+Almost all of tier selection collapses to two questions:
+
+1. **Who's running the workflow?** One person? A small
+   team? A regulated organization? A reseller portfolio?
+2. **What does failure look like?** A missed lead? A
+   broken handoff? A compliance breach? A multi-tenant
+   billing dispute?
+
+The answer to those two questions tells you which tier
+fits — usually within one row of the matrix.
+
+## Solo — one person, side projects, hobbyist scale
+
+**Fit:** you're a side-hustler, hobbyist, freelancer, or
+just kicking the tires. Forms are free forever, with no
+asterisk. You don't need a team, you don't need an audit
+trail anyone besides you will read, and you don't need
+custom branding.
+
+**Failure mode:** the public form goes down for ten
+minutes. You shrug.
+
+**Signals to upgrade:**
+
+- You added a second person to the tenant.
+- You started getting submissions you'd be unhappy to
+  lose.
+- You started invoicing customers based on form
+  submissions.
+
+## Starter — the smallest businesses that pay attention to numbers
+
+**Fit:** one-person business, a few hundred submissions a
+month, basic recordkeeping, a simple form-to-workflow
+flow. You care that the platform doesn't lose your data,
+but you don't yet need fine-grained access control.
+
+**Failure mode:** you missed an order because the email
+notification didn't fire. You're annoyed; the customer
+got a refund.
+
+**Signals to upgrade:**
+
+- You hired someone and now have a second operator.
+- You're up against the transaction or storage cap.
+- You started integrating with a payment processor or
+  accounting system.
+
+## Team — small operations team, real workflows, real consequences
+
+**Fit:** 3–10 operators sharing the work. You have FSM
+workflows that matter — jobs that move through states,
+forms feeding intake, an audit trail that someone might
+actually need to read someday. You want RBAC, you want
+real branding, and you want to know who did what.
+
+**Failure mode:** a transition fired twice and a partner
+got double-charged. The customer-success person spent
+the morning on the phone.
+
+**Signals to upgrade:**
+
+- You added a second department (sales + ops, ops +
+  fulfillment).
+- You started needing per-user permissions, not just
+  per-tenant.
+- You need to plug into the marketplace apps that gate
+  on Pro+ tier.
+
+## Pro — multiple departments, marketplace apps, real volume
+
+**Fit:** 10–50 operators across departments. You've
+installed marketplace apps (CRM Suite, Yoke Ledger, WMS,
+Field Service, Patient Flow). You have real customer
+data with PII tagging on. You're starting to think about
+the audit story for SOC 2 or another framework.
+
+**Failure mode:** a PII column accidentally rendered in
+a server log. Your CTO needs to write an apology.
+
+**Signals to upgrade:**
+
+- You signed an enterprise customer that wants a BAA or
+  region pinning.
+- Your compliance team starts asking about Type II.
+- A regulated workload (healthcare, financial services,
+  government) entered scope.
+
+## Enterprise — regulated, audited, BAA-eligible
+
+**Fit:** mid-market or enterprise organization. PHI, SPI,
+or otherwise-sensitive data in scope. Region pinning,
+BAA execution, the PII encryption add-on, optional HIPAA
+add-on. Your procurement process is real.
+
+**Failure mode:** a compliance review surfaces a gap in
+your data-residency posture. You're back at the
+negotiation table with the prospect, and time has slipped.
+
+**Signals to upgrade:**
+
+- You're standing up a portfolio of tenants for a
+  customer base (white-label, reseller, multi-brand).
+- You need the metered-only commercial shape (zero
+  base, all usage).
+- You're shipping a vertical SaaS product *on top of*
+  FastYoke and your customers are the end-tenants.
+
+## Fleet — portfolio operators, ISVs, channel partners
+
+**Fit:** you run dozens or hundreds of tenants on
+FastYoke. You're a Channel Partner, an ISV, or a
+multi-brand operator. You need the fleet-of-files
+operational story: tenant provisioning automation,
+billing rev-share, branded operator surfaces, a
+tenant-fleet management console.
+
+**Failure mode:** rolling out a platform change to 200
+tenants needs to be safe. You can't manually QA each
+one.
+
+**Signals to "upgrade":** this is the top of the ladder.
+The signals here are sideways — into Strategic Partner
+status, deeper consulting engagement, or a custom
+commercial structure beyond the published tiers.
+
+## The two upgrade triggers nobody talks about
+
+Most of the tier decision is driven by the matrix on the
+[pricing page](/pricing). Two triggers aren't on that
+matrix and bite teams that miss them:
+
+### Trigger 1: your first regulated customer
+
+If a customer signs that needs BAA, SOC 2 evidence, or
+region pinning, you've graduated from Team / Pro to
+**Enterprise** *before* you've felt the volume reason
+for it. Don't try to retrofit. The compliance posture is
+either part of the contract from day one or it's a
+re-papering exercise later.
+
+### Trigger 2: your second tenant is for a different customer
+
+If you started on Team or Pro and you're now spinning up
+a tenant for *someone else's brand*, you've graduated
+into **Fleet** semantics. Same architectural primitives,
+different commercial shape. Doing it on Pro tier means
+you'll be re-platforming the operator surface within a
+year.
+
+## Honest tradeoffs
+
+The tier ladder is real. So is the friction of moving
+between rungs:
+
+- **Upgrading mid-deal is expensive.** Negotiating a
+  Pro→Enterprise jump while the customer's MSA is being
+  redlined is the worst time to figure out which tier
+  you need. Better to start at the higher rung if the
+  customer profile points there.
+- **Downgrading is hard.** Resource caps tighten when
+  you drop a tier. If you've grown into the higher tier
+  and can't fit back into the lower, you'll be
+  re-architecting, not just changing a number.
+- **The marketplace gating is real.** Some apps (WMS,
+  HIPAA add-on, EHR connector) are gated to Pro+ or
+  Enterprise. Picking a tier below the gate means you
+  can't install the app, full stop.
+
+If you're between two rungs, **err one tier high**
+during early access. The pricing
+[during pre-GA](/getting-started) is operator-direct, so
+the math is friendly. Locking in the right shape now is
+worth more than the spread.
+
+## How to start
+
+1. Answer the two questions at the top of this guide.
+2. Map the answer to the tier section.
+3. If you landed on Enterprise or Fleet, request
+   [early access](/getting-started) and reference your
+   tier in the form. We'll route to the right Strategic
+   Partner SE.
+4. If you landed on Team or Pro, the [pricing
+   page](/pricing) has the matrix. The
+   [Strategic Partner](/partners/inetko) can walk you
+   through the onboarding.
+5. If you landed on Solo or Starter, go install
+   [free forms](/free-forms) and see how far you can
+   get on your own. The upgrade ramp is one click.
+
+The framework is the framework. The tier you actually
+need is the tier the work demands. Pick it, then commit
+to the shape.
+
+
+#default
+
+Want a second opinion on which tier fits? Request
+[early access](/getting-started) — we'll route you to a
+Strategic Partner SE who's onboarded teams at every
+rung.
+
+---
+
 # Channel Partners & ISVs — FastYoke
 
 > Early access program for systems integrators, channel partners, and independent software vendors building on the FastYoke aPaaS.
@@ -2818,6 +3442,201 @@ Looking for hands-on implementation, not a reseller relationship? See [iNetko](/
 
 This page is a placeholder while we shape the program. Specific terms, pricing, and signup mechanics will land here when the early-access window opens. Drop a note to [partners@fastyoke.io](mailto:partners@fastyoke.io) if you want to be on the first-cohort list.
 ::
+
+---
+
+# Multi-location HVAC on FastYoke — FastYoke
+
+> Field-service operations for an HVAC contractor running across multiple locations. Dispatch, on-site state, invoicing, and the marketplace apps that wire it together.
+
+#default
+
+## Who this is for
+
+You run an HVAC contracting business with 5–50 field
+technicians across one or more locations. You have a
+dispatcher, an office team, and a customer base that's a
+mix of residential maintenance contracts, commercial
+service calls, and the occasional install. Your current
+stack is some combination of ServiceTitan, Housecall Pro,
+a homegrown spreadsheet, a separate accounting package,
+and a lot of Slack messages.
+
+This guide is for the moment you're either evaluating a
+replacement for that stack or looking for the back-of-
+house operations layer underneath it.
+
+## The shape of the work
+
+HVAC operations have a fairly stable rhythm:
+
+- **Intake.** A customer calls or submits a form.
+- **Triage.** The dispatcher decides which tech, which
+  truck, which day.
+- **Dispatch.** The tech gets a job on their phone with
+  the customer's address, the equipment history, and the
+  parts list.
+- **On-site.** Diagnose, quote, get approval, do the
+  work.
+- **Invoice.** Capture payment on-site or email the
+  customer an invoice they can pay.
+- **Followup.** Schedule the next maintenance visit.
+  Close the loop on the work order.
+
+Every step has state. Every state change matters. Most
+"why didn't we get paid?" / "why did the tech show up at
+the wrong address?" / "why is this maintenance contract
+30 days overdue?" fail-modes trace back to a state
+transition that didn't happen or got mis-recorded.
+
+FastYoke models that rhythm directly.
+
+## The apps you install
+
+The HVAC stack on FastYoke is a combination of marketplace
+apps plus the free Logistics core:
+
+### Field Service Yoke
+
+The flagship for this vertical. Schedule jobs, dispatch
+your crew, track each job through **New → Dispatched →
+On-site → Invoiced**. The dispatcher sees the queue; the
+tech sees their day on their phone. Every transition
+fires guards (was the tech qualified for this work? did
+the customer approve the estimate?) and writes an
+append-only audit row.
+
+### CRM Suite
+
+Customers, equipment-on-site, contract status, service
+history. Linked to the job entities so a dispatcher
+opening a job sees the full equipment history without a
+context switch.
+
+### Yoke Ledger + GL Pack
+
+AR / AP, invoicing, payment capture, GL posting. When a
+job moves to **Invoiced**, the invoice posts to the
+ledger automatically. When the customer pays (in-app or
+via the payment connector), the payment posts to AR.
+Month-end close runs against the same ledger.
+
+### Inventory
+
+Truck stock, parts on hand, reorder points. When a tech
+uses a part on a job, the inventory deducts; when a
+truck restocks, inventory increments. The GL Pack posts
+COGS on issue if you flip the toggle.
+
+### Forms — free
+
+Public maintenance-request forms, contact forms, online
+quote requests. Cloudflare Turnstile + PDF copy on
+submit. Free forever; you don't pay extra for the intake
+funnel.
+
+## Multi-location specifics
+
+Running across multiple physical locations is the
+question that throws most field-service software. FastYoke
+handles it three ways depending on shape:
+
+- **Single tenant, multiple "facilities."** Each location
+  is a `Facility` entity in the free Logistics core. Techs
+  are scoped by facility. Dispatching is per-facility but
+  the customer database is shared.
+- **One tenant per location.** Each location runs as its
+  own FastYoke tenant. Useful if locations are
+  separately-managed franchises with their own books.
+  The fleet-of-files architecture means each location's
+  data lives in its own database file.
+- **Hub-and-spoke.** Headquarters runs a master tenant;
+  each location is a sub-tenant under it. Channel Partner
+  shape, technically possible, usually overkill for
+  HVAC.
+
+For most multi-location HVAC operators, **single tenant
+with multiple facilities** is the right shape. The audit
+trail spans the whole operation, the customer DB is
+shared (you don't lose history when a customer moves to a
+job-site at a different location), and the dispatcher's
+view can be scoped per-facility.
+
+## What an honest deployment looks like
+
+The realistic path for an operator evaluating FastYoke
+for HVAC:
+
+1. **Pilot one location.** Install Field Service +
+   CRM + Yoke Ledger. Migrate one location's customer
+   database and run the office for 30 days alongside
+   your current stack. Both systems get the data.
+2. **Bring in a Strategic Partner.** [iNetko](/partners/inetko)
+   handles the schema authoring, the FSM design for
+   your specific service-call flow, and the integration
+   wiring (payment processor, the parts-distributor
+   import, the equipment-warranty API). One iNetko SE
+   for the first three weeks is enough for most
+   single-location pilots.
+3. **Expand to all locations.** Once one location runs
+   green for a month, the playbook repeats per
+   location. You don't roll out everything at once;
+   you roll out the locations in priority order.
+4. **Retire the old stack.** When all locations are on
+   FastYoke and the office team trusts the new system
+   more than the old one, the old stack goes. Typically
+   60–90 days from pilot start.
+
+## Honest tradeoffs
+
+FastYoke is a workflow platform, not a vertical SaaS
+purpose-built for HVAC:
+
+- **No built-in pricing-book module.** Field Service
+  Yoke ships a generic line-item flow that handles
+  most pricing-book cases via the entity-schema layer,
+  but if you're used to ServiceTitan's built-in pricing-
+  book authoring you'll need to either author one in
+  the schema or live with a slightly heavier
+  workflow.
+- **No native dispatch optimization.** You see the queue
+  and you assign manually (or via a simple rules-based
+  workflow). Native vehicle-routing optimization isn't in
+  scope for v1. (We have it for the Bus Routing and
+  Convention Rideshare apps; it's not yet generalized
+  to field service.)
+- **No mobile app for techs (yet).** Techs use the web
+  console on their phone. It works, it's responsive, but
+  it's not a native iOS / Android app. Native
+  field-tech mobile is on the roadmap.
+
+If those tradeoffs are deal-breakers — *stay on
+ServiceTitan*. The vertical SaaS has those features
+because the vertical SaaS is built only for HVAC. FastYoke
+gives you the operational substrate, the workflow engine,
+and the multi-app integration story for the cases where
+the vertical SaaS is overkill or doesn't fit your
+specific shape.
+
+## How to start
+
+1. Request [early access](/getting-started) and mention
+   HVAC in the form. We'll route you to iNetko for the
+   scoping conversation.
+2. Read the [Channel Partner](/partners/pay-n-go-systems)
+   page if your operation also sells equipment (POS
+   side-by-side with field service is a common shape).
+3. Compare against the [Field Service](/docs/marketplace)
+   app's capability list to make sure the v1 feature
+   surface covers your bottom-three workflows.
+
+
+#default
+
+For a 20-minute scoping conversation with a Strategic
+Partner SE who's onboarded HVAC operators before, request
+[early access](/getting-started) and reference HVAC in
+the form.
 
 ---
 
