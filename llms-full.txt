@@ -2552,7 +2552,7 @@ We disclose material security issues with the same discipline we ask of our cust
 
 # Warehousing & 3PL on FastYoke — WMS / TMS / 3PL stack
 
-> Multi-client warehouses, four-wall WMS, transportation management, and the free Logistics core every logistics app sits on. Full vertical page lands alongside the first warehousing early-access cohort.
+> Multi-client warehouses, four-wall WMS, transportation management, and the free Logistics core every logistics app sits on. Built for warehouses and 3PL operators that want a unified stack across the four walls and the road.
 
 #default
 
@@ -2568,45 +2568,202 @@ and want a tenant-isolated platform that scales with the
 portfolio.
 
 
+#eyebrow
+What ships today
+
+#title
+1. What's currently shipped
+
+#lede
+The warehousing stack on FastYoke is a combination of three marketplace apps on top of the free Logistics core. Receive-to-ship, parcel and multi-carrier shipping, and multi-client 3PL billing — all running on a per-tenant database with an append-only event log.
+
+#default
+<div id="shipped"></div>
+
+  ::feature-card{title="Warehouse Management" icon="warehouse" accent="amber" summary="Four-wall ops: receive, putaway, pick, pack, ship, cycle count. Guided scan console for each step. Soft-reservation availability so two pickers never grab the same unit."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Transportation Management" icon="logistics" accent="cyan" summary="Parcel and multi-carrier shipping with rating, labels, and tracking. Carrier-agnostic via the ShippingProvider trait. EasyPost / Shippo-class integrations plug in cleanly."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="3PL app" icon="warehouse" accent="violet" summary="Multi-client warehouses on one operator tenant. Storage-snapshot + per-movement-handling billing posts directly to a draft AR invoice. Per-client audit trail and reporting."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Logistics core (free)" icon="logistics" accent="cyan" summary="Facilities, bins, zones, movements, immutable event log. Free with every tenant. The shared substrate every logistics app on FastYoke sits on top of."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Yoke Ledger + GL Pack" icon="accounting" accent="emerald" summary="AR / AP invoicing posted directly from movement-based billing runs. Month-end close runs against the same ledger your accountant reads."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="CRM Suite + Forms" icon="crm" accent="rose" summary="Customer / client records linked to warehouse-client entities. Public RFP and intake forms for new client onboarding. Free Forms forever."}
+  ::cta-button{to="/free-forms" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+::
+
+#eyebrow
+Extend without code
+
+#title
+2. How to extend with low-code
+
+#default
+<div id="low-code"></div>
+
+Warehouse operations always have one more wrinkle — the
+specific receive-tolerance policy, the client-facing
+reporting cadence, the SLA-driven exception handler. Most
+extensions don't require an engineer:
+
+- **Custom putaway rules (an hour).** Use the FSM
+  Designer to add a guard on the putaway transition —
+  oversize SKUs go to specific zones, hazmat SKUs go to
+  isolated bins, fast-mover SKUs go to forward pick.
+  The schema captures the policy; no code change.
+- **A client-facing dashboard (an afternoon).** Drop in
+  list / detail / dashboard blocks from the marketplace.
+  Expose movement counts, in-stock summaries, and
+  shipment status for one warehouse-client — the
+  warehouse_client_id dimension scopes the view
+  automatically.
+- **Automated low-stock alerts (an hour).** A scheduled
+  job runs nightly, computes available stock per SKU
+  per warehouse-client (`qty_on_hand − Σ reserved`),
+  emails the client a CSV of items below their
+  reorder threshold. Yoke Ledger's reporting framework
+  handles the formatting.
+- **Carrier-specific rate shopping (one day).** The
+  WASM scripting tier (TypeScript on QuickJS in
+  wasmtime) lets you call out to a custom rating
+  endpoint on the shipment-creation transition. Useful
+  if you negotiated a contract carrier outside the
+  default EasyPost / Shippo catalog.
+- **Per-client billing-cycle automation (one day).**
+  The 3PL app's `tpl_billing_runs` table schedules
+  per-client billing on a configurable cadence. The
+  result posts directly to AR invoices in the Yoke
+  Ledger.
+
+When the low-code surface isn't enough — typically when
+you need a custom WCS / WES integration or a specialized
+carrier protocol — you're in customization territory.
+
+
+#eyebrow
+Customize deeply
+
+#title
+3. How to make major customizations
+
+#default
+<div id="customization"></div>
+
+### In-house engineering
+
+For warehouses with engineering bench (less common
+mid-market, common at the enterprise scale), the
+**typed SDK** (`@fastyoke/sdk-next`, `@fastyoke/sdk-vue`,
+plus a Rust crate for the kernel) enables:
+
+- Custom RF-gun or scanner-device integrations beyond
+  the default web-on-mobile console.
+- WCS / WES (Warehouse Control / Execution System)
+  hooks for automated material-handling equipment —
+  conveyors, sorters, AS/RS.
+- Direct integrations with carriers that aren't in the
+  default ShippingProvider catalog (private freight
+  contracts, specialized parcel carriers, regional
+  LTL).
+- Custom marketplace apps (Cargo workspace crates) for
+  vertical-specific WMS shapes (cold-chain, hazmat,
+  high-touch returns).
+- The **ejection clause** — take your compiled rules
+  and per-tenant databases with you whenever you want.
+  Useful if your operation grows into a private-equity
+  warehousing rollup with its own platform.
+
+### FastYoke Partner engagement
+
+For warehouses that prefer a delivered-shape engagement:
+
+- **[Strategic Partner](/partners/inetko)** — iNetko
+  handles schema authoring, FSM design for your
+  specific receive / pick / ship flow, integration
+  wiring (carrier accounts, the WMS-to-ERP feed,
+  customer EDI), and the first 60-90 days of operator
+  onboarding. Per-tenant consent + audit-trail
+  enforcement make their access auditable by you, in
+  your tenant.
+- **Channel Partners** specific to warehousing aren't
+  yet named. If your operation includes a strong
+  vertical fit (cold-chain, e-commerce-fulfillment-
+  focused, hazmat-specialized), the
+  [/channel-partners](/channel-partners) program is
+  the right intake.
+
+Most warehouses engage iNetko for the first
+implementation phase. Once the platform is steady, the
+ongoing operator team takes over while iNetko stays on
+retainer for the harder integration work.
+
+
+#eyebrow
+Honest tradeoffs
+
+#title
+What FastYoke isn't for warehousing
+
 #default
 
-## Page coming alongside the first warehousing cohort
+- **Not a Yard Management System (YMS).** Yard moves,
+  dock-door scheduling, and trailer pools are outside
+  the WMS scope today. Most mid-market operations
+  handle this in a spreadsheet alongside the WMS;
+  enterprise operations should plan for a separate YMS
+  alongside FastYoke.
+- **No native voice-pick (yet).** Pickers use the
+  web-on-mobile guided scan console. Voice-pick
+  hardware integrations are SDK-extensible but not
+  shipped out of the box.
+- **No native robotics integrations.** AGVs, AMRs, and
+  goods-to-person systems integrate via the SDK; no
+  out-of-box marketplace apps for specific vendors.
+- **Single-currency billing for 3PL.** Yoke Ledger
+  ships single-currency. International 3PL operations
+  with multi-currency client billing should wait for
+  the Yoke Ledger v2 cycle or run a separate ledger
+  alongside the FastYoke billing pipeline.
+- **No native WMS-to-ERP feed.** The integration is
+  SDK-built; we don't ship a SAP / Oracle / NetSuite
+  marketplace connector. iNetko handles this in
+  practice.
 
-This vertical page lands in full alongside the first
-warehousing / 3PL early-access cohort. The marketplace
-apps that power it ship today:
-
-- **Warehouse Management (WMS)** — four-wall ops:
-  receive, putaway, pick, pack, ship, cycle count.
-- **Transportation Management (TMS)** — parcel and
-  multi-carrier shipping with rating, labels, and
-  tracking.
-- **3PL app** — multi-client warehouses with
-  per-warehouse-client billing and audit trails.
-- **Free Logistics core** — facilities, bins, zones,
-  movements, immutable event log. Free with every
-  tenant.
-
-For the architecture and the integration path, see the
-[/docs/marketplace](/docs/marketplace) listings while the
-full vertical write-up is being prepared with our first
-named warehousing customer.
+If any of those is the deal-breaker — *stay on Manhattan
+Associates or Blue Yonder*. The enterprise WMS exists
+because the enterprise has those specific shapes.
+FastYoke is the right substrate when you want a unified
+WMS + TMS + 3PL stack at mid-market complexity without
+six-figure annual licensing.
 
 
 #default
 
 ## Next step
 
-The warehousing and 3PL apps are production-ready and the
-free Logistics core ships with every tenant. The
-full vertical write-up — including extensions and
-customizations — lands alongside the first cohort to
-publish. If you're evaluating FastYoke for a warehouse or
-3PL operation now, request early access:
-
 Request early access — warehousing
 
-See the marketplace apps
+Talk to iNetko
 
 For procurement or compliance review packets, email
 [security@fastyoke.io](mailto:security@fastyoke.io) and
@@ -3264,7 +3421,7 @@ non-SMS notifications (e.g., email).
 
 # Professional services on FastYoke — projects, tasks, client work, billing
 
-> Operations software for consulting practices, agencies, and project-shaped service businesses. Projects, tasks, time-and-materials billing, and a real audit trail underneath. Full vertical page lands alongside the first professional-services early-access cohort.
+> Operations software for consulting practices, agencies, and project-shaped service businesses. Projects, tasks, time-and-materials billing, and a real audit trail underneath.
 
 #default
 
@@ -3276,49 +3433,207 @@ project-shaped service business with 5-100 staff. Your
 current stack is some combination of a project tool
 (Asana / Linear / Jira / Trello), a CRM (HubSpot or
 nothing), a billing tool (FreshBooks / QuickBooks
-Online), and a shared drive. Each tool is fine; the seams
-between them are where the work gets lost.
+Online), and a shared drive. Each tool is fine; the
+seams between them are where the work gets lost.
 
+
+#eyebrow
+What ships today
+
+#title
+1. What's currently shipped
+
+#lede
+The professional-services stack on FastYoke pairs marketplace apps that already share a primary key: client / project / task / invoice live in the same database, the same audit log, the same RBAC. The seams that lose work in a multi-tool stack don't exist here.
+
+#default
+<div id="shipped"></div>
+
+  ::feature-card{title="CRM Suite" icon="crm" accent="cyan" summary="The full sales conversion chain — Lead → Opportunity → Quote → Order → Customer. Quotes carry line items that flow into orders; orders activate the customer as a billable client. No re-keying."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Project Tracker" icon="project-tracker" accent="violet" summary="Projects and tasks on a simple board with FSM-driven stage gates. Move a project through New → Active → On Hold → Complete with guards and audit. Tasks move from to-do to done."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Yoke Ledger + GL Pack" icon="accounting" accent="emerald" summary="AR / AP, time-and-materials billing, project-level P&L, AR aging. Time entries on tasks post to AR invoices on the configured cadence. Month-end close runs against the same ledger."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Forms — free" icon="forms" accent="rose" summary="Public RFP-request forms, contact forms, project intake forms. Cloudflare Turnstile + PDF copy on submit. Free forever — the inbound funnel isn't a paid add-on."}
+  ::cta-button{to="/free-forms" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Notes & Attachments" icon="accounting" accent="amber" summary="Every entity carries a notes + attachments rail in the inspector. Meeting notes on a customer, scope docs on an opportunity, deliverables on a project — all in one auditable timeline."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Per-tenant RBAC" icon="warehouse" accent="emerald" summary="72-permission catalog with system roles. Admins, project managers, billable team members, and external collaborators each see a different surface. Role changes are audited."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+::
+
+#eyebrow
+Extend without code
+
+#title
+2. How to extend with low-code
+
+#default
+<div id="low-code"></div>
+
+Every professional-services firm has the same shape with
+a different surface — the utilization report your CFO
+needs, the project-profitability dashboard your partners
+care about, the retainer renewal cadence your client
+success team runs. Most don't require an engineer:
+
+- **A utilization dashboard (an afternoon).** Sum time
+  entries per team member per week against their target
+  billable hours. Drop in a dashboard block; expose as
+  a tile on the admin console. The metric refreshes
+  against the live ledger.
+- **A project-profitability view (an afternoon).** Per
+  project, sum invoiced revenue against logged time
+  cost. The Yoke Ledger's per-project GL posting makes
+  this a single query. Expose it on the Project Tracker
+  detail page.
+- **Retainer auto-renewals (an hour).** A scheduled
+  scheduler-side job re-creates the monthly retainer
+  invoice on the contract anniversary. The Yoke
+  Ledger's automated-posting rule framework handles
+  the line-item logic.
+- **A scope-change approval workflow (an hour).** Add
+  a `PendingClientApproval` state between a draft
+  scope change and an active scope change. The FSM
+  guard refuses transitions without a signed
+  attachment. Audit trail captures the approval.
+- **Expense submission with attachment (an
+  afternoon).** Build a public form for team members
+  to submit expenses with receipt photos. Submissions
+  land in an entity tied to the project; approval flow
+  is a simple FSM. Reimbursements post to AP via the
+  Yoke Ledger.
+
+When the low-code surface isn't enough — typically when
+you need a custom client portal or a specialized
+time-tracking device integration — you're in
+customization territory.
+
+
+#eyebrow
+Customize deeply
+
+#title
+3. How to make major customizations
+
+#default
+<div id="customization"></div>
+
+### In-house engineering
+
+Professional services firms often have engineering bench
+(especially agencies and consultancies with a technical
+practice). The typed SDK
+(`@fastyoke/sdk-next`, `@fastyoke/sdk-vue`, plus a Rust
+crate for the kernel) enables:
+
+- **Custom client portals.** Most agencies build one —
+  a branded surface where clients see their project
+  status, deliverables, and invoices. The SDK exposes
+  the read APIs; you ship a Next.js or Vue app on top
+  with your branding.
+- **Direct integrations with non-marketplace tools.**
+  Your specific time-tracking app (Harvest, Toggl,
+  Everhour), your project management overlay (if you
+  keep one), your CRM if you don't migrate off HubSpot.
+- **Custom marketplace apps (Cargo workspace crates)**
+  for vertical-specific shapes — a creative-services
+  resource scheduling app, a technical-services
+  retainer management app.
+- The **ejection clause** — take your compiled rules
+  and per-tenant databases with you whenever you want.
+  Useful if your firm is acquired and the acquirer
+  has their own platform.
+
+### FastYoke Partner engagement
+
+For firms that don't want to build:
+
+- **[Strategic Partner — iNetko](/partners/inetko)** —
+  handles implementation, custom client-portal builds
+  if you want one, and ongoing advisory. Per-tenant
+  consent + audit-trail enforcement make their access
+  auditable by you, in your tenant.
+- **Channel Partners** specific to professional
+  services aren't named yet. If your firm operates in
+  a regulated vertical (accounting, legal, healthcare-
+  adjacent consulting), the
+  [/channel-partners](/channel-partners) program is
+  the right intake.
+
+Most professional-services firms with engineering bench
+build the client portal themselves and engage iNetko for
+the operator-side implementation. Firms without
+engineering bench engage iNetko end-to-end.
+
+
+#eyebrow
+Honest tradeoffs
+
+#title
+What FastYoke isn't for professional services
 
 #default
 
-## Page coming alongside the first professional-services cohort
+- **Not a time-tracking app.** Time entries land in
+  FastYoke (manual entry, or via an integration), but
+  the timer / idle-detection / desktop-tracker shape
+  isn't shipped. If your billing model depends on
+  Harvest- or Toggl-style passive tracking, you'll
+  integrate one of those tools.
+- **Not a resource-scheduling tool.** Project Tracker
+  models task lifecycle, not Gantt-style resource
+  allocation. If you live in Microsoft Project or
+  Smartsheet's Gantt views, you'll find that surface
+  missing.
+- **No native expense-receipt OCR.** Receipt attachments
+  land on entities, but extracting line items from a
+  photo requires the WASM scripting tier and a
+  third-party OCR service.
+- **No native PSA shape.** FastYoke composes a PSA from
+  CRM + Project Tracker + Yoke Ledger; if you want a
+  purpose-built PSA (Mavenlink, Kantata, BigTime), the
+  vertical SaaS will fit your shape more directly out
+  of the box.
 
-This vertical page lands in full alongside the first
-professional-services early-access cohort. The
-marketplace apps that power it ship today:
-
-- **CRM Suite** — clients, opportunities, quotes,
-  orders, full sales conversion chain.
-- **Project Tracker** — projects and tasks on a simple
-  board with state machines for stage gates.
-- **Yoke Ledger + GL Pack** — time-and-materials
-  billing, project-level P&amp;L, AR aging.
-- **Forms — free** — public intake forms, RFP request
-  forms, contact forms, all wired to the workflow.
-
-For the architecture and integration path, see the
-[/docs/marketplace](/docs/marketplace) listings while the
-full vertical write-up is being prepared.
+If any of those is the deal-breaker — *stay on the
+purpose-built PSA*. The vertical SaaS exists because the
+vertical has specific shape. FastYoke is the right
+substrate when you want unified ops + CRM + ledger and
+the flexibility to extend each surface independently.
 
 
 #default
 
 ## Next step
 
-The professional-services apps are production-ready. The
-full vertical write-up — including extensions and
-customizations — lands alongside the first cohort to
-publish. If you're evaluating FastYoke for a professional
-services firm now, request early access:
-
 Request early access — professional services
 
-See the marketplace apps
+Talk to iNetko
 
 For implementation help, see the
-[Strategic Partner](/partners/inetko) page — iNetko has
-the right shape for professional-services operations.
+[Strategic Partner](/partners/inetko) page. For RFP-style
+inbound from your clients, the [free Forms](/free-forms)
+on Solo tier handle the intake — no credit card.
 
 ::
 
@@ -3674,7 +3989,7 @@ is not penalised.
 
 # Auto & repair on FastYoke — intake to handoff on one board
 
-> Operations software for auto-tech shops, body shops, motorcycle and small-engine repair, and equipment-service operators. Intake to handoff on one board with parts, labor, and invoicing wired in. Full vertical page lands alongside the first auto-repair early-access cohort.
+> Operations software for auto-tech shops, body shops, motorcycle and small-engine repair, and equipment-service operators. Intake to handoff on one board with parts, labor, and invoicing wired in.
 
 #default
 
@@ -3684,57 +3999,211 @@ Independent auto-tech shops, body shops, motorcycle and
 small-engine repair, RV and equipment service, marine
 shops, and any repair operation running 2-30 technicians.
 Your current stack is some combination of Mitchell 1 /
-ALLDATA, an invoicing tool, a parts-distributor portal,
-and a paper work order on the technician's bench. You
-want one board that holds the work from drop-off to
-pickup with the audit trail of who did what.
+ALLDATA for repair info, an invoicing tool, a parts-
+distributor portal, and a paper work order on the
+technician's bench. You want one board that holds the
+work from drop-off to pickup with the audit trail of who
+did what and when.
 
+
+#eyebrow
+What ships today
+
+#title
+1. What's currently shipped
+
+#lede
+The auto-repair stack on FastYoke adapts the Field Service Yoke for shop-floor workflows. Customer + vehicle in CRM, parts in Inventory, labor in the workflow, invoicing on customer approval — all on the same per-tenant database with one audit trail.
+
+#default
+<div id="shipped"></div>
+
+  ::feature-card{title="Field Service Yoke (shop-adapted)" icon="field-service" accent="sky" summary="Repair workflow: intake → diagnose → estimate → approval → repair → QC → handoff. Service writer sees the bay queue; tech sees their bay assignment. Every transition is audited."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="CRM Suite (customer + vehicle)" icon="crm" accent="cyan" summary="Customers, vehicles (or equipment) with VIN / serial / make / model, service history per vehicle. The service writer opening a job sees every past visit, every part, every issue — in one place."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Inventory" icon="inventory" accent="amber" summary="Parts on hand per shop bin, reorder points, parts consumption per job, COGS posting if you flip the toggle. Stockouts surface on the job-create transition so the tech doesn't start work without parts."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Yoke Ledger + GL Pack" icon="accounting" accent="emerald" summary="Estimate becomes invoice on customer approval. Payment capture posts to AR. Month-end close runs against the same ledger your accountant reads. Sales tax computed per jurisdiction."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Forms — free" icon="forms" accent="rose" summary="Public appointment-request forms, online estimate-request forms, contact forms. Cloudflare Turnstile + PDF copy on submit. Free forever — your intake funnel isn't a paid add-on."}
+  ::cta-button{to="/free-forms" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Customer status web links" icon="forms" accent="rose" summary="A customer-facing link per job shows live status (in diagnosis / awaiting approval / in repair / ready). No customer portal to manage — the link is the portal. Status updates in real time."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+::
+
+#eyebrow
+Extend without code
+
+#title
+2. How to extend with low-code
+
+#default
+<div id="low-code"></div>
+
+Every shop has its specific workflow wrinkles — the
+multi-bay scheduling policy, the warranty-claim
+handoff, the safety-inspection holdover for state
+compliance. Most don't require an engineer:
+
+- **Multi-bay scheduling (an afternoon).** Use the
+  entity schema layer to model bays as facilities and
+  tech assignments as guards on the dispatch
+  transition. Service writer drags jobs to bays; the
+  guard enforces tech qualifications.
+- **A safety-inspection holdover state (an hour).**
+  Add a `PendingInspection` state between Diagnose and
+  Estimate for vehicles in jurisdictions requiring a
+  state safety inspection. The FSM Designer adds the
+  state and the guard; no code change.
+- **Equipment-warranty lookups (one day).** The WASM
+  scripting tier (TypeScript on QuickJS in wasmtime)
+  lets you call out to the manufacturer's warranty
+  API on the diagnose transition. Returns get stored
+  on the vehicle entity; warranty-eligible labor and
+  parts surface automatically.
+- **Parts-distributor catalog sync (one day).** The
+  scripting tier can pull SKU + price + availability
+  from your distributor's API on a schedule. The
+  Inventory app's catalog stays current without
+  manual entry.
+- **Maintenance-reminder cadence (an hour).** A
+  scheduled job runs monthly, computes vehicles due
+  for routine service based on last-visit date plus
+  mileage estimate, emails the customer a
+  pre-populated appointment-request link. The Yoke
+  Ledger's reporting framework formats the email.
+
+When the low-code surface isn't enough — typically a
+custom shop-floor device integration or a deep DMS
+(Dealer Management System) integration — you're in
+customization territory.
+
+
+#eyebrow
+Customize deeply
+
+#title
+3. How to make major customizations
+
+#default
+<div id="customization"></div>
+
+### In-house engineering
+
+Independent repair shops rarely have engineering bench;
+this section is for the multi-location chains and
+franchise operations that do. The typed SDK
+(`@fastyoke/sdk-next`, `@fastyoke/sdk-vue`, plus a Rust
+crate for the kernel) enables:
+
+- Custom tech-facing tablet experiences for the bay
+  floor (the platform ships a responsive web UI; a
+  native iPad app is a project, not a config).
+- Direct integrations with non-marketplace vendors —
+  Mitchell 1 / ALLDATA for repair info lookups, DMS
+  systems if you're attached to a dealership group,
+  state DMV / inspection APIs for compliance.
+- Custom marketplace apps (Cargo workspace crates) for
+  vertical-specific shapes — body-shop estimating
+  with paint-time calculators, motorcycle-shop
+  seasonal-storage workflows, RV-shop multi-system
+  repair orders.
+- The **ejection clause** — take your compiled rules
+  and per-tenant databases with you whenever you want.
+  Useful if your operation is rolled into a
+  private-equity-backed group with its own platform.
+
+### FastYoke Partner engagement
+
+For shops that prefer a delivered shape:
+
+- **[Strategic Partner — iNetko](/partners/inetko)** —
+  handles schema authoring, FSM design for your
+  specific shop-floor flow, integration wiring (parts
+  distributor, payment processor, repair-info lookups),
+  and the first 60-90 days of operator onboarding.
+  One iNetko SE for the first three weeks is enough
+  for most single-shop pilots.
+- **Channel Partners** specific to auto / repair
+  aren't yet named. The
+  [/channel-partners](/channel-partners) program
+  is the right intake if your shop also sells parts
+  or accessories alongside repair services.
+
+Most repair-shop prospects engage iNetko before they
+engage their own engineering team. The math usually
+wins on the partner side — iNetko has the platform
+internals deeper than a first-time engineering team
+can ramp on.
+
+
+#eyebrow
+Honest tradeoffs
+
+#title
+What FastYoke isn't for auto & repair
 
 #default
 
-## Page coming alongside the first auto-repair cohort
+- **No native VIN decoder.** The CRM stores the VIN
+  as a string; decoding it into make / model / year /
+  trim requires a third-party VIN-decoder API call
+  via the scripting tier.
+- **No built-in parts-distributor catalog.** You bring
+  one — either via the scripting-tier sync above or
+  manual catalog import. The platform doesn't ship a
+  preloaded WorldPac / NAPA / OEM catalog.
+- **No native DMV / state-inspection integrations.**
+  These vary jurisdiction-by-jurisdiction and are SDK-
+  built rather than out-of-box.
+- **No native paint-time calculator** (body shops).
+  Estimating tools like Mitchell or CCC are SDK-
+  integrable, not out-of-box marketplace apps.
+- **Not a DMS replacement.** If you're attached to a
+  dealership group running a full DMS (CDK / Reynolds
+  & Reynolds / Dealertrack), FastYoke runs alongside
+  it for the service-bay workflow, not in place of it.
 
-This vertical page lands in full alongside the first
-auto-repair early-access cohort. The marketplace apps
-that power it ship today:
-
-- **Field Service Yoke** — adapted for shop-floor
-  workflows: intake → diagnose → estimate → approval →
-  repair → QC → handoff.
-- **CRM Suite** — customers, vehicles (or equipment),
-  service history. Linked to job entities so a service
-  writer sees the full history on intake.
-- **Inventory** — parts on hand, reorder points, parts
-  consumption per job, COGS posting if you flip the
-  toggle.
-- **Yoke Ledger + GL Pack** — invoicing, payment
-  capture, GL posting. Estimate becomes invoice on
-  customer approval.
-- **Forms — free** — appointment-request forms, online
-  estimate-request forms, contact forms.
-
-For the architecture and integration path, see the
-[/docs/marketplace](/docs/marketplace) listings while the
-full vertical write-up is being prepared.
+If any of those is the deal-breaker — *stay on Mitchell
+1 / ALLDATA paired with a DMS*. The vertical SaaS exists
+because the vertical has specific shape. FastYoke fits
+the cases where the vertical SaaS is overkill or doesn't
+fit your specific shop's workflow.
 
 
 #default
 
 ## Next step
 
-The auto-repair stack is production-ready and ships
-today. The full vertical write-up — including extensions
-and customizations — lands alongside the first cohort to
-publish. If you're evaluating FastYoke for a repair shop
-now, request early access:
-
 Request early access — auto & repair
 
-See the marketplace apps
+Talk to iNetko
 
-For implementation help across multi-bay or multi-
-location auto operations, see the
-[Strategic Partner](/partners/inetko) page.
+For multi-location or multi-bay operations, see the
+[Strategic Partner](/partners/inetko) page. For repair
+shops that also sell parts or accessories, the
+[Pay n Go Systems](/partners/pay-n-go-systems) Channel
+Partner handles the POS side alongside the FastYoke
+service-bay workflow.
 
 ::
 
