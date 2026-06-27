@@ -10311,52 +10311,33 @@ file probably isn't a true AcroForm — it's a scanned image or a
 flattened PDF. Re-export it from the original tool with form fields
 enabled and try again.
 
-### What the validator checks
+### What happens on upload
 
-The upload runs through a server-side validator before it's
-accepted. It checks the whole file and reports **every** problem at
-once — so a single bad source can return one message per field plus
-a document-level message. A failed upload shows `PDF validation
-failed` followed by one or more of the codes below.
+The upload runs through a server-side step that **cleans the file,
+then validates it**. Two kinds of content are removed automatically —
+you no longer have to fix them by hand:
 
-Two requirements trip people up most often, and both come from the
-authoring tool rather than anything you did in FastYoke:
+- **Embedded JavaScript is stripped.** Acrobat silently adds format,
+  calculate, and validate scripts to fields (a date or currency field
+  is the usual source). FastYoke removes them on upload, so the stored
+  template and every rendered copy are script-free.
+- **Active actions are stripped** — links, launch, submit-form, and
+  remote-go-to actions are removed for the same reason.
 
-- **No embedded JavaScript** — code `embedded_javascript`. Acrobat
-  silently adds format, calculate, and validate scripts to fields
-  (a date or currency field is the usual source). The fill engine
-  runs in a no-script sandbox, so any script action is rejected. To
-  clear it in Acrobat: **Tools → JavaScript → Document JavaScripts**
-  and delete every entry, then on each field set **Properties →
-  Format → Category = None**. Re-save and re-upload.
-- **Fonts must be standard or embedded** — code `font_not_embedded`,
-  reported once per field (`Text1`, `Text2`, …). A field's font is
-  accepted only if it's one of the 14 standard PDF fonts —
-  **Helvetica, Times-Roman, Courier, Symbol, ZapfDingbats** and
-  their bold/italic variants — **or** the font program is embedded
-  in the file. **Arial is not a standard PDF font** (Helvetica is
-  its standard equivalent), so an Arial form with no embedded font
-  fails on every field at once. The quickest fix is to switch the
-  field font: in Acrobat, **Prepare Form**, select all fields,
-  **Properties → Appearance → Font = Helvetica**. Helvetica needs no
-  embedding and renders identically. If you must keep a custom font,
-  embed it instead (**Preflight → Embed fonts**).
+FastYoke renders your field values with a standard built-in font, so
+the source PDF's fonts don't matter. An Arial form, a non-embedded
+font, anything — it uploads and renders fine. (There's nothing to fix
+and no font requirement to meet.)
 
-Re-authoring the form with **Helvetica** fields and **no scripts**
-clears the two most common rejections together. To see what's
-inside a file before you re-upload, `mutool show file.pdf js` lists
-any JavaScript and Acrobat's Preflight **Fonts** profile flags
-non-embedded fonts.
-
-Other codes you may see, and what they mean:
+After cleaning, a file is rejected only for a genuine **structural**
+problem the cleaner can't safely fix. A failed upload shows `PDF
+validation failed` followed by one or more of these codes:
 
 - `encrypted_pdf_unsupported` / `malformed_pdf` — the file is
   password-protected or can't be parsed. Re-export an unencrypted,
   well-formed PDF.
 - `xfa_form_unsupported` — an XFA (LiveCycle) form. Re-save as a
   standard AcroForm.
-- `external_resource_reference` — a link, launch, or submit action
-  that reaches outside the document. Remove it.
 - `crypto_signature_widget` — a digital-signature field. Use
   FastYoke's own signature token instead of a baked-in signature
   widget.
