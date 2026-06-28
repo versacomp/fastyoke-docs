@@ -15,7 +15,7 @@ Customers may flag concerns about a subprocessor at
 `security@fastyoke.io` before a new addition takes effect.
 
 ::callout{type="note"}
-**Last updated:** 2026-06-27.
+**Last updated:** 2026-06-28.
 ::
 
 ## How to read this list
@@ -82,8 +82,9 @@ PII redaction contract.
 
 | Subprocessor | Service | Data | Region | DPA | Posture |
 |---|---|---|---|---|---|
+| **Anthropic** | LLM provider (Claude API) for AI Designer / assist features | Prompt + context; PII scrubbed by default | US (AWS us-east-1) | Yes | SOC 2 Type II |
 | **Google (Gemini)** | LLM provider for AI Designer / assist features | Prompt + context; PII scrubbed by default | Multi-region (Google Cloud) | Yes | SOC 2, ISO 27001 |
-| **DeepSeek** | LLM provider (default for cost) | Prompt + context; PII scrubbed by default | Multi-region | Subject to review | Tenants with regulated data should switch to Gemini or disable AI-assist features |
+| **DeepSeek** | LLM provider (default for cost) | Prompt + context; PII scrubbed by default | Multi-region | Subject to review | Tenants with regulated data should switch to Anthropic or Gemini, or disable AI-assist features |
 
 ## What is NOT a FastYoke subprocessor
 
