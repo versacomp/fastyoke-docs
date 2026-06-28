@@ -155,19 +155,19 @@ FastYoke runs where your data lives — cloud-managed, air-gapped, or native mob
 #default
 <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
   <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
-    <div class="text-3xl">☁️</div>
+    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.14); color: #38bdf8" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10"/><path d="M12 15v3"/><path d="M18 10.5a3.5 3.5 0 0 0-6.4-2.1 4.5 4.5 0 0 0-8.6 2.1A3.5 3.5 0 0 0 7 14.5h11"/></svg></div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">Runtime</h3>
     <p class="text-sm text-[var(--brand-text-secondary)]">Fully managed cloud. Works on every plan. Zero infra.</p>
     <a href="/runtime" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
   </div>
   <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
-    <div class="text-3xl">🏠</div>
+    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(148, 163, 184, 0.14); color: #94a3b8" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="6" rx="1"/><circle cx="8" cy="8" r="1"/><rect x="5" y="13" width="14" height="6" rx="1"/><circle cx="8" cy="16" r="1"/></svg></div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">On-Prem</h3>
     <p class="text-sm text-[var(--brand-text-secondary)]">Your servers. Air-gap friendly. Full data sovereignty.</p>
     <a href="/on-prem" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
   </div>
   <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
-    <div class="text-3xl">📱</div>
+    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(129, 140, 248, 0.14); color: #818cf8" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M11 18h2"/><path d="M16 7a2 2 0 0 1 0 3"/></svg></div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">Substrate <span style="color: var(--brand-primary)">✦</span></h3>
     <p class="text-sm text-[var(--brand-text-secondary)]">Native mobile for your fleet. OTA delivery. Team+ add-on.</p>
     <a href="/substrate" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
