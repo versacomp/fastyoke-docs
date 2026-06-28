@@ -15,7 +15,7 @@ Customers may flag concerns about a subprocessor at
 `security@fastyoke.io` before a new addition takes effect.
 
 ::callout{type="note"}
-**Last updated:** 2026-06-26.
+**Last updated:** 2026-06-27.
 ::
 
 ## How to read this list
@@ -41,6 +41,8 @@ Customers may flag concerns about a subprocessor at
 | **Cloudflare** | Edge protection, Turnstile anti-abuse, Pages (marketing site hosting) | Request metadata, Turnstile tokens, static web assets | Global edge | Yes | SOC 2, ISO 27001 |
 | **GitHub** | Source control, CI/CD, security advisories | Source code, CI logs, secrets-scanning metadata (no tenant data) | US | Yes (Microsoft) | SOC 2, ISO 27001 |
 | **S3-compatible object storage** | Continuous DB backup target (Litestream) | Encrypted database backups | US (primary) | Yes | Inherits provider posture |
+| **YugabyteDB** *(FastYoke DB — when enabled)* | Distributed SQL cloud database hosting (YugabyteDB Aeon) for the platform-tier and tenant-tier data planes when the FastYoke DB distributed-SQL substrate is active | Platform-tier control data and, when tenant-tier is promoted, per-tenant application data | US (default), configurable | Yes (Yugabyte DPA) | SOC 2 Type II, ISO 27001 |
+| **CockroachDB** *(FastYoke DB — when enabled)* | Distributed SQL cloud database hosting (CockroachDB Cloud) as an alternative engine for the FastYoke DB substrate | Platform-tier control data and, when tenant-tier is promoted, per-tenant application data | US (default), configurable | Yes (Cockroach Labs DPA) | SOC 2 Type II |
 
 ### Communications + identity
 
