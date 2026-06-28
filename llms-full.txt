@@ -127,6 +127,20 @@ Every job follows a clear path — New → Dispatched → On-site → Invoiced �
 ::
 
 #eyebrow
+Intelligence
+
+#title
+Build it. Run it. Ask it.
+
+#lede
+Two AI lanes on one platform — **build with AI** turns descriptions into apps and specs you can read and export; **run smarter with AI** turns your event log into briefs you approve before anything changes.
+
+#default
+
+See all AI capabilities
+::
+
+#eyebrow
 Deployment
 
 #title
@@ -252,6 +266,33 @@ Three guarantees you won't get from a typical LCAP
   ::feature-card{title="02. Logic Sovereignty (Rust / Wasm)" summary="Ditch slow, proprietary scripting languages. FastYoke's execution layer is powered by a sub-microsecond Rust engine. Your core business logic is compiled to WebAssembly and rigidly enforced by a state machine. It runs anywhere, at edge speeds."}
   ::
   ::feature-card{title="03. Data Sovereignty (The SQLite Fleet)" summary="Multi-tenant databases are a compliance nightmare. FastYoke uses a Fleet of Files architecture: every single tenant operates on their own physically isolated SQLite database, continuously synced via Litestream. Complete data isolation, portability, and auditability."}
+  ::
+::
+
+#eyebrow
+Intelligence
+
+#title
+Build with AI on FastYoke
+
+#lede
+Lane 1 AI generates **descriptions you can read** — YokeDocs, workflow specs, extension handoffs — not hidden canvas state. Every LLM output passes the same validators as human-authored work.
+
+#default
+  ::feature-card{title="AI Designer" icon="field-service" accent="sky" summary="Natural language → FSM transitions and multi-page extension specs inside the Advanced App Builder. Download a handoff zip for external SDK developers when you're ready."}
+  ::cta-button{to="/ai/build" variant="secondary" size="sm"}
+  Build with AI
+  ::
+  ::
+  ::feature-card{title="Yoke Architect" icon="project-tracker" accent="emerald" summary="Compose multi-board apps as a single document. Draft from a one-sentence brief, edit in Studio, Save & Activate — or export to marketplace code."}
+  ::cta-button{to="/yoke-architect" variant="secondary" size="sm"}
+  Read the thesis
+  ::
+  ::
+  ::feature-card{title="Yoker + Yoke" icon="crm" accent="violet" summary="Builders ship apps; operators run smarter. Yoker answers questions over your records; Yoke proposes workflow improvements you approve."}
+  ::cta-button{to="/ai" variant="secondary" size="sm"}
+  All AI capabilities
+  ::
   ::
 ::
 
@@ -1332,6 +1373,18 @@ prove out the shape against a real workflow.
     </p>
   </div>
   <div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">What is the Yoker add-on?</h3>
+    <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
+      <strong>Yoker</strong> is the docked RAG assistant — ask questions
+      about your entity records and attachments with on-VM retrieval.
+      <strong>Enterprise / Fleet</strong> includes Yoker; <strong>Pro</strong>
+      and <strong>Team</strong> add it for <strong>$299/mo</strong>.
+      See the <a href="/yoker" class="underline">Yoker overview</a> and
+      the add-on row in the matrix above, or the full
+      <a href="/ai" class="underline">AI capabilities</a> hub.
+    </p>
+  </div>
+  <div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">What about accessibility / VPAT?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
       WCAG 2.1 AA is a platform invariant on every tier — axe-core
@@ -1585,6 +1638,8 @@ specific shape.
 
 #default
 
+**[Yoke](/yoke)** reads your dispatch history and surfaces **briefs** — workflow improvements you approve before anything changes. Weekly digests, No-Show ML, and ServiceTitan / Jobber backfill for cold start. See the [AI hub](/ai) for Yoker RAG and builder tools.
+
 **Deploying to mobile devices?** [FastYoke Substrate](/substrate) ships
 native Android and iOS apps to your field fleet without App Store review
 — OTA-updatable, MDM-compatible, and available at the Team+ tier.
@@ -1600,6 +1655,87 @@ Already in retail / POS / food service paired with field
 service? See [Pay n Go Systems](/partners/pay-n-go-systems)
 — our first named Channel Partner — for the integrated
 storefront-plus-field-tech shape.
+
+::
+
+---
+
+# AI on FastYoke — build apps and run smarter operations
+
+> Two AI lanes on one platform — build with Yoke Architect and AI Designer, operate with Yoke briefs, digests, No-Show ML, and Yoker RAG. Every write is gated; you approve before anything changes.
+
+#eyebrow
+Two lanes
+
+#title
+Build with AI · Operate with AI
+
+#lede
+Pick the story that matches your role. Both lanes share the same platform guarantees: tenant-scoped data, sandboxed guards, and human approval on every material change.
+
+#default
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+  <div class="rounded-xl border p-6" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <p class="text-xs font-semibold uppercase tracking-wide mb-2" style="color: var(--brand-primary)">Build with AI</p>
+    <h3 class="font-semibold text-lg mb-2 text-[var(--brand-text-primary)]">Describe it; the platform materializes it</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] mb-4">For builders, ISVs, and power users who want readable artifacts — not hidden canvas state.</p>
+    <ul class="text-sm space-y-2 text-[var(--brand-text-secondary)]">
+      <li><a href="/yoke-architect" class="text-[var(--brand-primary)] font-medium">Yoke Architect</a> — one-sentence brief → editable YokeDoc</li>
+      <li><a href="/ai/build" class="text-[var(--brand-primary)] font-medium">AI Designer</a> — natural language → FSM specs and extension handoffs</li>
+      <li><a href="/studio" class="text-[var(--brand-primary)] font-medium">Studio</a> — wizard + Advanced App Builder surfaces</li>
+    </ul>
+  </div>
+  <div class="rounded-xl border p-6" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <p class="text-xs font-semibold uppercase tracking-wide mb-2" style="color: var(--brand-primary)">Run smarter with AI</p>
+    <h3 class="font-semibold text-lg mb-2 text-[var(--brand-text-primary)]">Your data proposes; you approve</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] mb-4">For owners and ops leads who want measured recommendations — not chatbot theater.</p>
+    <ul class="text-sm space-y-2 text-[var(--brand-text-secondary)]">
+      <li><a href="/yoke" class="text-[var(--brand-primary)] font-medium">Yoke</a> — briefs, weekly digest, apply preview</li>
+      <li><a href="/yoker" class="text-[var(--brand-primary)] font-medium">Yoker</a> — RAG Q&amp;A over entity records (on-VM retrieval)</li>
+      <li><a href="/docs/reports/digests" class="text-[var(--brand-primary)] font-medium">Report digests</a> — scheduled dashboard KPI emails</li>
+    </ul>
+  </div>
+</div>
+
+#eyebrow
+Capabilities
+
+#title
+Explore each capability
+
+#default
+
+See Yoke on field service
+::
+
+#eyebrow
+Trust
+
+#title
+What we won't do
+
+#default
+
+- **No autonomous writes.** Yoke briefs land in an inbox; you approve before schemas, forms, or rules change.
+- **On-VM embeddings for Yoker retrieval.** Tenant record chunks are embedded on your VM — not sent to an external provider for search.
+- **External LLMs are optional and scrubbed.** AI Designer and synthesis paths route through configured providers with PII scrubbing by default; retrieval stays local.
+- **Conservative predictions.** Yoke briefs under-promise impact; the platform measures actuals after the prediction window closes.
+
+
+#default
+
+## Ready to start?
+
+  ::feature-card{title="Operators" icon="field-service" accent="rose" summary="Connect your dispatch board, read the first Yoke digest, approve a brief that saves an hour a week."}
+  ::cta-button{to="/yoke" variant="primary" size="sm"}
+  Explore Yoke
+  ::
+  ::
+  ::feature-card{title="Builders" icon="project-tracker" accent="cyan" summary="Open Studio, sketch a Yoke from a vertical recipe, or extend a workflow with AI Designer."}
+  ::cta-button{to="/studio" variant="primary" size="sm"}
+  Open Studio
+  ::
+  ::
 
 ::
 
@@ -3120,6 +3256,128 @@ contact addresses in the [Privacy Notice](/privacy).
 
 ---
 
+# Yoke — AI operations assistant for field service
+
+> Yoke proposes concrete improvements to your workflows from patterns in your event log. Every change is a brief you approve. Weekly digests, No-Show ML, and Time Travel connect recommendations to measured outcomes.
+
+#default
+
+## The product promise
+
+*FastYoke makes your business better while you sleep — but only after you approve the plan.*
+
+Yoke is personified in copy (*"Yoke noticed…"*, *"Yoke recommends…"*) and never edits your schemas autonomously. Every brief is a durable row in your tenant database — not transient chat output.
+
+
+#eyebrow
+The inbox
+
+#title
+1. Briefs are first-class data
+
+#lede
+Each brief carries a plain-English claim, chart-ready evidence, a proposed action, a confidence tier, and a conservatively discounted impact estimate.
+
+#default
+  ::feature-card{title="Claim + evidence" icon="crm" accent="rose" summary="Every brief shows what Yoke noticed and the numbers behind it — top cohorts, SLA breaches, bottleneck states — not a vague AI summary."}
+  ::
+  ::feature-card{title="Apply preview" icon="field-service" accent="sky" summary="Before you approve, see what changes: workflow edges, form fields, notification rules. Replay against recent jobs where available."}
+  ::
+  ::feature-card{title="Time Travel linkage" icon="project-tracker" accent="violet" summary="Applied briefs write schema commits with back-pointers. History reads cause-and-effect: approve on Tuesday, measure on Wednesday."}
+  ::
+::
+
+#eyebrow
+The digest
+
+#title
+2. Yoke digest — weekly ops in your inbox
+
+#lede
+Distinct from **report digests** (scheduled dashboard KPI emails). The Yoke digest bundles pending briefs worth a look — with magic links back to your inbox.
+
+#default
+  ::feature-card{title="Digest mode" icon="forms" accent="cyan" summary="Most briefs arrive in the weekly digest: bottleneck detection, SLA risk, invoice latency patterns. Scan on mobile, approve at your desk."}
+  ::
+  ::feature-card{title="Alert mode" icon="logistics" accent="amber" summary="Urgent briefs can break out as immediate alerts when a template marks high urgency — still gated by your approval."}
+  ::
+
+**Naming:** *Yoke digest* = ops recommendations. *Report digest* = dashboard aggregates. See [scheduled report digests](/docs/reports/digests) for KPI email scheduling.
+
+::
+
+#eyebrow
+Machine learning
+
+#title
+3. No-Show ML
+
+#lede
+<div id="no-show"></div>
+The only ML-backed Yoke template in the first wave: logistic regression trained on **your** completed and no-show jobs — scored on your VM, surfaced as a single brief listing at-risk customers on upcoming bookings.
+
+#default
+  ::feature-card{title="Your history, your model" icon="field-service" accent="amber" summary="Features include prior no-show count, booking lead time, and first-visit flag. Training requires ~200 historical jobs; the model retrains on a weekly cadence."}
+  ::
+  ::feature-card{title="Honest cold start" icon="warehouse" accent="rose" summary="New tenants connect ServiceTitan or Jobber to backfill event history — tomorrow's digest can reference six months of imported jobs without a big-bang migration."}
+  ::
+
+Field service vertical
+::
+
+#eyebrow
+Connectors
+
+#title
+4. Cold start without a migration
+
+#default
+
+Yoke's marquee briefs need weeks of `event_log` to fire. V1 ships ingestion connectors that backfill from systems you already run:
+
+- **ServiceTitan** — historical jobs and customers synthesized into entity records and event log rows.
+- **Jobber** — same shape for smaller shops already on Jobber dispatch.
+
+The pitch: *Connect yesterday. Read the digest tomorrow.*
+
+
+#eyebrow
+Pricing
+
+#title
+5. Yoke Pro
+
+#default
+
+Yoke Pro is a paid tier on top of FastYoke base — launched against field service at the 5–50 employee band. A 90-day auto-trial aligns with the impact-tracker window so renewal conversations show **measured** savings, not predicted ones.
+
+Talk to sales about Yoke Pro
+
+All AI capabilities
+::
+
+#eyebrow
+Related
+
+#title
+Build lane · Ask lane
+
+#default
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div class="rounded-xl border p-5" style="border-color: var(--brand-border-subtle)">
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Yoke Architect</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] mt-1">Build multi-board apps from a one-sentence brief — same validator, human edit before save.</p>
+    <a href="/yoke-architect" class="text-sm font-medium text-[var(--brand-primary)] mt-2 inline-block">Read the thesis →</a>
+  </div>
+  <div class="rounded-xl border p-5" style="border-color: var(--brand-border-subtle)">
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Yoker</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] mt-1">Ask questions about entity records — retrieval embeddings run on your VM.</p>
+    <a href="/yoker" class="text-sm font-medium text-[var(--brand-primary)] mt-2 inline-block">Yoker overview →</a>
+  </div>
+</div>
+
+---
+
 # Why we built FastYoke
 
 > A note from the team on the problem we set out to solve — and the principles we refuse to compromise on.
@@ -4007,6 +4265,170 @@ is used for marks claimed by their owner where we have not verified
 registration. We default to `&trade;` when uncertain. The presence or
 absence of either symbol on this page does not affect the underlying
 rights of the mark holder.
+
+---
+
+# Yoker — RAG assistant grounded in your tenant data
+
+> Yoker is FastYoke's docked AI assistant. Ask natural-language questions about entity records and text attachments; retrieval runs on-VM with ONNX embeddings. Enterprise included; Pro and Team via add-on.
+
+#default
+
+## Yoker answers. Yoke proposes.
+
+| | **Yoker** | **Yoke** |
+|---|---|---|
+| **Job** | Answer questions about what you already stored | Propose workflow and schema improvements |
+| **Output** | Chat reply + source chips | Brief in an inbox you approve |
+| **Retrieval** | On-VM semantic search (RAG) | Template matchers over event log aggregates |
+| **Landing** | [Yoker docs](/docs/yoker) | [Yoke overview](/yoke) |
+
+
+#eyebrow
+Privacy
+
+#title
+1. What makes Yoker different
+
+#default
+  ::feature-card{title="On-VM embeddings" icon="warehouse" accent="violet" summary="Record chunks are embedded with ONNX on your FastYoke VM. Vector search runs in Rust against tenant-scoped rag_chunks — no external embedding API."}
+  ::
+  ::feature-card{title="Ephemeral sessions" icon="forms" accent="cyan" summary="The server does not persist chat history. The client keeps the thread during your session; each turn is forgotten server-side after the answer."}
+  ::
+  ::feature-card{title="Cited sources" icon="crm" accent="emerald" summary="Answers include used_sources chips so operators can verify which records grounded the reply — critical for regulated workflows."}
+  ::
+::
+
+#eyebrow
+Corpus
+
+#title
+2. What Yoker knows today
+
+#lede
+Retrieval expands in waves; these ingestion sources ship now.
+
+#default
+  ::feature-card{title="Entity records" icon="inventory" accent="amber" summary="Every entity record's data_payload is rendered to text, chunked (1500 chars / 200 overlap), embedded, and indexed per tenant."}
+  ::
+  ::feature-card{title="Text attachments" icon="project-tracker" accent="sky" summary="PDF, Word, and plain-text attachments on entity records are parsed, chunked, and indexed alongside records — ideal for SOPs and contract PDFs."}
+  ::
+
+Platform how-to docs and workflow config ingestion are on the roadmap as additional corpus sources. See the [Yoker docs index](/docs/yoker) for the current API surface.
+
+::
+
+#eyebrow
+Enable
+
+#title
+3. How to enable Yoker
+
+#default
+
+- **Enterprise / Fleet** — Yoker is **included**.
+- **Pro / Team** — requires the **`yoker` add-on** at **$299/mo** (check [pricing](/pricing) for current rates).
+- **Hobby / Solo** — no add-on path.
+
+Without entitlement, Yoker endpoints return `403 yoker_not_entitled` with a CTA to activate the add-on.
+
+Read the Yoker docs
+
+API reference
+::
+
+#default
+
+## Compliance workflows
+
+Pair Yoker with [Compliance Yoke](/docs/compliance-yoke) for framework-readiness sweeps, then ask tenant-scoped questions about collected evidence — see [Lab M13](/docs/training/labs/M13-compliance-yoker) in the training curriculum.
+
+← All AI capabilities
+::
+
+---
+
+# Build with AI — Yoke Architect and AI Designer
+
+> FastYoke Lane 1 AI — describe apps and workflows; get readable artifacts you can diff, export, and hand to engineers. Yoke Architect composes Yoke Apps; AI Designer extends FSMs and marketplace apps.
+
+#eyebrow
+Surfaces
+
+#title
+Three builder surfaces
+
+#default
+  ::feature-card{title="Studio wizard" icon="forms" accent="cyan" summary="On-rails and deterministic — pick layout, brand, entities, ship a themed extension. Same picks → same bundle every time. Not LLM-first."}
+  ::cta-button{to="/docs/apps/studio-wizard" variant="secondary" size="sm"}
+  Wizard docs
+  ::
+  ::
+  ::feature-card{title="AI Designer" icon="field-service" accent="sky" summary="Natural language → FSM transitions, guards, and multi-page extension specs inside the Advanced App Builder. PII-scrubbed prompts; sandboxed guards at runtime."}
+  ::cta-button{to="/docs/apps/advanced" variant="secondary" size="sm"}
+  Advanced App Builder
+  ::
+  ::
+  ::feature-card{title="Yoke Architect" icon="project-tracker" accent="emerald" summary="Compose multi-board Yoke Apps as a single document — states, guards, pages, bridges. LLM drafts from a one-sentence brief; you edit in the wizard."}
+  ::cta-button{to="/yoke-architect" variant="secondary" size="sm"}
+  Read the thesis
+  ::
+  ::
+::
+
+#eyebrow
+AI Designer
+
+#title
+Extend workflows without losing the exit clause
+
+#default
+
+The **Advanced App Builder** is the enterprise / ISV delivery surface:
+
+- Author engineering specs by hand **or** with AI assistance.
+- Track nav and page health across a multi-page extension.
+- Download a **handoff zip** for an external SDK developer when you want Rust/React ownership outside the visual tools.
+
+AI Designer sits inside that surface — it accelerates spec authorship; it does not replace your ability to export compiled rules and frontend repos. External LLM calls scrub PII by default; see the [subprocessor list](/docs/security/subprocessors).
+
+Developers & ISVs
+::
+
+#eyebrow
+Yoke Architect
+
+#title
+From a brief to a YokeDoc
+
+#default
+
+**From a brief** is the LLM entry point: type one sentence, receive a full Yoke draft, run it through the same validator as curated vertical recipes, edit boards and branding, then Save & Activate.
+
+The vertical recipe library **teaches** the model what valid YokeDocs look like — homoiconic examples in the prompt, deterministic validation on the output.
+
+Yoke Architect thesis
+
+Open Studio
+::
+
+#eyebrow
+Contrast
+
+#title
+Lane 1 vs Lane 2
+
+#default
+
+| | **Build (this page)** | **Operate ([Yoke](/yoke))** |
+|---|---|---|
+| **Audience** | Builders, ISVs | Owners, dispatchers |
+| **Input** | Briefs, specs, natural language | Event log + schema aggregates |
+| **Output** | YokeDoc, extension zip, FSM JSON | Inbox briefs + digest email |
+| **Approval** | Human edits before save | Human approves before apply |
+
+← All AI capabilities
+::
 
 ---
 
@@ -6243,6 +6665,20 @@ Read the thesis
 ---
 
 # Yoke Architect — A Thesis
+
+#eyebrow
+Build with AI
+
+#title
+Ship a Yoke from a one-sentence brief
+
+#default
+**From a brief** is the LLM entry point in Studio Yoke mode: describe what you want, receive a full YokeDoc draft, edit boards and branding, Save & Activate. The same validator runs on AI output and human edits.
+
+Build with AI overview
+
+Open Studio
+::
 
 # Yoke Architect
 

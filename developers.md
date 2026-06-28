@@ -76,6 +76,36 @@ Three guarantees you won't get from a typical LCAP
 ::
 ::
 
+::marketing-section{band="white" maxWidth="6xl"}
+#eyebrow
+Intelligence
+
+#title
+Build with AI on FastYoke
+
+#lede
+Lane 1 AI generates **descriptions you can read** — YokeDocs, workflow specs, extension handoffs — not hidden canvas state. Every LLM output passes the same validators as human-authored work.
+
+#default
+::feature-grid{columns="3"}
+  ::feature-card{title="AI Designer" icon="field-service" accent="sky" summary="Natural language → FSM transitions and multi-page extension specs inside the Advanced App Builder. Download a handoff zip for external SDK developers when you're ready."}
+  ::cta-button{to="/ai/build" variant="secondary" size="sm"}
+  Build with AI
+  ::
+  ::
+  ::feature-card{title="Yoke Architect" icon="project-tracker" accent="emerald" summary="Compose multi-board apps as a single document. Draft from a one-sentence brief, edit in Studio, Save & Activate — or export to marketplace code."}
+  ::cta-button{to="/yoke-architect" variant="secondary" size="sm"}
+  Read the thesis
+  ::
+  ::
+  ::feature-card{title="Yoker + Yoke" icon="crm" accent="violet" summary="Builders ship apps; operators run smarter. Yoker answers questions over your records; Yoke proposes workflow improvements you approve."}
+  ::cta-button{to="/ai" variant="secondary" size="sm"}
+  All AI capabilities
+  ::
+  ::
+::
+::
+
 ::marketing-section{band="gray" maxWidth="3xl"}
 ::callout{type="info" title="The Ultimate Enterprise Parachute"}
 De-risk your platform strategy today. Prototype and scale on FastYoke with absolute exit certainty. If you ever outgrow us, you take your Next.js frontend, your compiled Wasm rules, and your raw SQLite databases with you. Architect your next platform without the handcuffs.

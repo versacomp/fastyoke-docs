@@ -211,6 +211,18 @@ order: 2
     </p>
   </div>
   <div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">What is the Yoker add-on?</h3>
+    <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
+      <strong>Yoker</strong> is the docked RAG assistant — ask questions
+      about your entity records and attachments with on-VM retrieval.
+      <strong>Enterprise / Fleet</strong> includes Yoker; <strong>Pro</strong>
+      and <strong>Team</strong> add it for <strong>$299/mo</strong>.
+      See the <a href="/yoker" class="underline">Yoker overview</a> and
+      the add-on row in the matrix above, or the full
+      <a href="/ai" class="underline">AI capabilities</a> hub.
+    </p>
+  </div>
+  <div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">What about accessibility / VPAT?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
       WCAG 2.1 AA is a platform invariant on every tier — axe-core

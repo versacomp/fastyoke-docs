@@ -219,6 +219,10 @@ specific shape.
 ::marketing-section{band="gray" maxWidth="3xl"}
 #default
 
+::callout{type="info" title="Run smarter with Yoke"}
+**[Yoke](/yoke)** reads your dispatch history and surfaces **briefs** — workflow improvements you approve before anything changes. Weekly digests, No-Show ML, and ServiceTitan / Jobber backfill for cold start. See the [AI hub](/ai) for Yoker RAG and builder tools.
+::
+
 ::callout{type="info"}
 **Deploying to mobile devices?** [FastYoke Substrate](/substrate) ships
 native Android and iOS apps to your field fleet without App Store review

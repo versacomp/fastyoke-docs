@@ -5,6 +5,25 @@ ogTitle: 'Yoke Architect — A Thesis'
 ogDescription: 'Apps as data. An opinionated framework for building real software on FastYoke, with an ode to Haskell.'
 ---
 
+::marketing-section{band="gray" maxWidth="3xl"}
+#eyebrow
+Build with AI
+
+#title
+Ship a Yoke from a one-sentence brief
+
+#default
+**From a brief** is the LLM entry point in Studio Yoke mode: describe what you want, receive a full YokeDoc draft, edit boards and branding, Save & Activate. The same validator runs on AI output and human edits.
+
+::cta-button{to="/ai/build" variant="primary" size="md"}
+Build with AI overview
+::
+
+::cta-button{to="/studio" variant="secondary" size="md"}
+Open Studio
+::
+::
+
 ::marketing-section{band="white" maxWidth="3xl"}
 # Yoke Architect
 

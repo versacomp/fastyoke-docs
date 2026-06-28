@@ -142,6 +142,25 @@ Every job follows a clear path — New → Dispatched → On-site → Invoiced �
 ::
 ::
 
+::marketing-section{band="white" maxWidth="6xl"}
+#eyebrow
+Intelligence
+
+#title
+Build it. Run it. Ask it.
+
+#lede
+Two AI lanes on one platform — **build with AI** turns descriptions into apps and specs you can read and export; **run smarter with AI** turns your event log into briefs you approve before anything changes.
+
+#default
+::ai-home-band
+::
+
+::cta-button{to="/ai" variant="secondary" size="md"}
+See all AI capabilities
+::
+::
+
 ::marketing-section{band="gray" maxWidth="4xl"}
 #eyebrow
 Deployment
