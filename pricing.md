@@ -224,6 +224,34 @@ order: 2
 </div>
 ::
 
+::marketing-section{band="white" maxWidth="4xl"}
+#default
+<h2 class="text-2xl font-semibold tracking-tight text-center text-[var(--brand-text-primary)]">Deploy on your terms</h2>
+<p class="mt-2 text-center text-[var(--brand-text-secondary)]">FastYoke runs where your data lives — cloud-managed, self-hosted, or native mobile.</p>
+
+<div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+  <div class="rounded-xl border p-6 flex flex-col gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <div class="text-2xl">☁️</div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Runtime</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] flex-1">Cloud-hosted and fully managed. No infrastructure to run. Included on every plan.</p>
+    <a href="/runtime" class="mt-2 text-sm font-medium text-[var(--brand-primary)]">Learn about Runtime →</a>
+  </div>
+  <div class="rounded-xl border p-6 flex flex-col gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <div class="text-2xl">🏠</div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">On-Prem</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] flex-1">Deploy on your own servers. Air-gap friendly. Full data sovereignty. Enterprise+.</p>
+    <a href="/on-prem" class="mt-2 text-sm font-medium text-[var(--brand-primary)]">Learn about On-Prem →</a>
+  </div>
+  <div class="rounded-xl border p-6 flex flex-col gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <div class="text-2xl">📱</div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Substrate <span style="color: var(--brand-primary)">✦</span></h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] flex-1">Native Android + iOS for your employee fleet. OTA bundle delivery. Team+ add-on.</p>
+    <span class="inline-block text-xs rounded-full px-2 py-0.5 font-medium" style="background: color-mix(in srgb, var(--brand-primary) 12%, transparent); color: var(--brand-primary)">Early access · Q1 2027</span>
+    <a href="/substrate" class="mt-1 text-sm font-medium text-[var(--brand-primary)]">Learn about Substrate →</a>
+  </div>
+</div>
+::
+
 ::marketing-section{band="gray" maxWidth="3xl"}
 #default
 <h2 class="text-2xl font-semibold tracking-tight text-[var(--brand-text-primary)]">Start on Solo. Step up to Starter when you outgrow it.</h2>

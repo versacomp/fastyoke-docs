@@ -126,6 +126,37 @@ Every job follows a clear path — New → Dispatched → On-site → Invoiced �
 #default
 ::
 
+#eyebrow
+Deployment
+
+#title
+Run FastYoke your way
+
+#lede
+FastYoke runs where your data lives — cloud-managed, air-gapped, or native mobile.
+
+#default
+<div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <div class="text-3xl">☁️</div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Runtime</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)]">Fully managed cloud. Works on every plan. Zero infra.</p>
+    <a href="/runtime" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
+  </div>
+  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <div class="text-3xl">🏠</div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">On-Prem</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)]">Your servers. Air-gap friendly. Full data sovereignty.</p>
+    <a href="/on-prem" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
+  </div>
+  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <div class="text-3xl">📱</div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Substrate <span style="color: var(--brand-primary)">✦</span></h3>
+    <p class="text-sm text-[var(--brand-text-secondary)]">Native mobile for your fleet. OTA delivery. Team+ add-on.</p>
+    <a href="/substrate" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
+  </div>
+</div>
+
 #title
 Make it your own — no code required
 
@@ -1310,6 +1341,32 @@ prove out the shape against a real workflow.
       buyers get the generated VPAT 2.5 alongside the codebase
       for procurement review. See the <a href="/docs/accessibility" class="underline">accessibility docs</a> for the architectural contract.
     </p>
+  </div>
+</div>
+
+#default
+<h2 class="text-2xl font-semibold tracking-tight text-center text-[var(--brand-text-primary)]">Deploy on your terms</h2>
+<p class="mt-2 text-center text-[var(--brand-text-secondary)]">FastYoke runs where your data lives — cloud-managed, self-hosted, or native mobile.</p>
+
+<div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+  <div class="rounded-xl border p-6 flex flex-col gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <div class="text-2xl">☁️</div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Runtime</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] flex-1">Cloud-hosted and fully managed. No infrastructure to run. Included on every plan.</p>
+    <a href="/runtime" class="mt-2 text-sm font-medium text-[var(--brand-primary)]">Learn about Runtime →</a>
+  </div>
+  <div class="rounded-xl border p-6 flex flex-col gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <div class="text-2xl">🏠</div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">On-Prem</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] flex-1">Deploy on your own servers. Air-gap friendly. Full data sovereignty. Enterprise+.</p>
+    <a href="/on-prem" class="mt-2 text-sm font-medium text-[var(--brand-primary)]">Learn about On-Prem →</a>
+  </div>
+  <div class="rounded-xl border p-6 flex flex-col gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <div class="text-2xl">📱</div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Substrate <span style="color: var(--brand-primary)">✦</span></h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] flex-1">Native Android + iOS for your employee fleet. OTA bundle delivery. Team+ add-on.</p>
+    <span class="inline-block text-xs rounded-full px-2 py-0.5 font-medium" style="background: color-mix(in srgb, var(--brand-primary) 12%, transparent); color: var(--brand-primary)">Early access · Q1 2027</span>
+    <a href="/substrate" class="mt-1 text-sm font-medium text-[var(--brand-primary)]">Learn about Substrate →</a>
   </div>
 </div>
 
@@ -4287,6 +4344,24 @@ runs in both modes.
 
 ::
 
+#default
+## Looking for more control?
+
+Runtime is the fastest way to start — but FastYoke is designed to run anywhere your data lives.
+
+<div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div class="rounded-xl border p-5 flex flex-col gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">🏠 On-Prem</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] flex-1">Deploy the same single binary on your own servers. Air-gap friendly, no outbound calls, full data sovereignty. Preferred by healthcare and financial services customers.</p>
+    <a href="/on-prem" class="mt-2 text-sm font-medium text-[var(--brand-primary)]">On-Prem deployment →</a>
+  </div>
+  <div class="rounded-xl border p-5 flex flex-col gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">📱 Substrate <span style="color: var(--brand-primary)">✦</span></h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] flex-1">Extend FastYoke to native Android + iOS for your employee fleet. OTA bundle delivery, offline-capable, composable with Runtime or On-Prem. Team+ add-on, early access Q1 2027.</p>
+    <a href="/substrate" class="mt-2 text-sm font-medium text-[var(--brand-primary)]">Substrate for mobile fleets →</a>
+  </div>
+</div>
+
 ---
 
 # Security Fixes — FastYoke
@@ -5030,6 +5105,8 @@ Honest tradeoffs
   conversations can start now — the install path is ready for
   qualified pilots.
 
+
+**Also shipping to mobile devices?** Pair On-Prem with [FastYoke Substrate](/substrate) to serve OTA bundles and native Android + iOS builds from your own hardware. PHI and operational data stay on your network end-to-end.
 
 #default
 

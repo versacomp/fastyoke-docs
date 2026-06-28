@@ -163,6 +163,10 @@ Honest tradeoffs
 
 ::
 
+::callout{type="info"}
+**Also shipping to mobile devices?** Pair On-Prem with [FastYoke Substrate](/substrate) to serve OTA bundles and native Android + iOS builds from your own hardware. PHI and operational data stay on your network end-to-end.
+::
+
 ::marketing-section{band="gray" maxWidth="3xl"}
 #default
 

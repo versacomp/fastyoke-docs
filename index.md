@@ -142,6 +142,39 @@ Every job follows a clear path — New → Dispatched → On-site → Invoiced �
 ::
 ::
 
+::marketing-section{band="gray" maxWidth="4xl"}
+#eyebrow
+Deployment
+
+#title
+Run FastYoke your way
+
+#lede
+FastYoke runs where your data lives — cloud-managed, air-gapped, or native mobile.
+
+#default
+<div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <div class="text-3xl">☁️</div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Runtime</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)]">Fully managed cloud. Works on every plan. Zero infra.</p>
+    <a href="/runtime" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
+  </div>
+  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <div class="text-3xl">🏠</div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">On-Prem</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)]">Your servers. Air-gap friendly. Full data sovereignty.</p>
+    <a href="/on-prem" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
+  </div>
+  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <div class="text-3xl">📱</div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Substrate <span style="color: var(--brand-primary)">✦</span></h3>
+    <p class="text-sm text-[var(--brand-text-secondary)]">Native mobile for your fleet. OTA delivery. Team+ add-on.</p>
+    <a href="/substrate" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
+  </div>
+</div>
+::
+
 ::marketing-section{band="gray" maxWidth="3xl"}
 #title
 Make it your own — no code required

@@ -175,3 +175,23 @@ For ISVs embedding Runtime inside a client's firewall, see the
 runs in both modes.
 
 ::
+
+::marketing-section{band="white" maxWidth="4xl"}
+#default
+## Looking for more control?
+
+Runtime is the fastest way to start — but FastYoke is designed to run anywhere your data lives.
+
+<div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div class="rounded-xl border p-5 flex flex-col gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">🏠 On-Prem</h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] flex-1">Deploy the same single binary on your own servers. Air-gap friendly, no outbound calls, full data sovereignty. Preferred by healthcare and financial services customers.</p>
+    <a href="/on-prem" class="mt-2 text-sm font-medium text-[var(--brand-primary)]">On-Prem deployment →</a>
+  </div>
+  <div class="rounded-xl border p-5 flex flex-col gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">📱 Substrate <span style="color: var(--brand-primary)">✦</span></h3>
+    <p class="text-sm text-[var(--brand-text-secondary)] flex-1">Extend FastYoke to native Android + iOS for your employee fleet. OTA bundle delivery, offline-capable, composable with Runtime or On-Prem. Team+ add-on, early access Q1 2027.</p>
+    <a href="/substrate" class="mt-2 text-sm font-medium text-[var(--brand-primary)]">Substrate for mobile fleets →</a>
+  </div>
+</div>
+::
