@@ -159,10 +159,16 @@ Honest tradeoffs
   architectural posture is unchanged. FastYoke DB exists for the
   workloads that need a different shape, not as a "next version"
   of the platform. Most tenants will never need it.
-- **Enterprise+ contract required.** FastYoke DB is not available
-  on Solo, Starter, Pro, or Team tiers. It requires an Enterprise+
-  contract which includes dedicated onboarding, SLA commitments,
-  and the cluster provisioning agreement with the hosting provider.
+- **Enterprise+ contract required for managed hosting.** Fully-
+  managed FastYoke DB — where FastYoke provisions and operates the
+  cluster on your behalf — is not available on Solo, Starter, Pro,
+  or Team tiers. It requires an Enterprise+ contract which includes
+  dedicated onboarding, SLA commitments, and the cluster
+  provisioning agreement with the hosting provider. **Team-tier
+  customers** who want HA without the Enterprise+ commitment can
+  use the [bring-your-own-cluster add-on](/pricing) ($199/mo) —
+  you operate the cluster (e.g. CockroachDB Cloud Basic, Aeon
+  Sandbox), we ship the integration.
 - **Managed hosting, not self-operated.** FastYoke manages the
   Aeon or CockroachDB Cloud cluster on your behalf. You don't get
   direct cluster admin access by default. Customers who need full

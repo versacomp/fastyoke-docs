@@ -141,6 +141,23 @@ order: 2
       but don't need region pinning or HIPAA posture yet.
     </p>
   </div>
+  <div>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Can I get HA without an Enterprise+ contract?</h3>
+    <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
+      Yes, on Team. The
+      <strong>FastYoke DB — bring-your-own-cluster</strong>
+      add-on ($199/mo) lets you point FastYoke at a distributed SQL
+      cluster you operate directly. CockroachDB Cloud Basic has a
+      free tier with 50M Request Units / 10 GiB; YugabyteDB Aeon
+      Sandbox is free at similar limits. You sign up with the cluster
+      vendor; FastYoke handles the integration — capability probe,
+      migration runner, audit-trail shipping — but does not operate
+      the cluster on your behalf. The fully-managed
+      <a href="/db" class="underline">FastYoke DB</a> service
+      (FastYoke provisions and operates the cluster) remains an
+      Enterprise+ contract.
+    </p>
+  </div>
   <div id="hosting">
     <h3 class="font-semibold text-[var(--brand-text-primary)]">Where do I host my Next.js or Nuxt app?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
