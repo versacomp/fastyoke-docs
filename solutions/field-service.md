@@ -219,6 +219,13 @@ specific shape.
 ::marketing-section{band="gray" maxWidth="3xl"}
 #default
 
+::callout{type="info"}
+**Deploying to mobile devices?** [FastYoke Substrate](/substrate) ships
+native Android and iOS apps to your field fleet without App Store review
+— OTA-updatable, MDM-compatible, and available at the Team+ tier.
+Early access Q1 2027.
+::
+
 ## Next step
 
 ::cta-button{to="/getting-started" variant="primary" size="lg"}

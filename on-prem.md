@@ -88,6 +88,11 @@ Cloud SaaS platform ships, runs on your hardware:
   your own MinIO instance, an on-site NAS, or a private cloud
   bucket.
 
+- **Native mobile delivery via Substrate.** OTA bundles and build
+  artifacts are served from your own hardware when Substrate is
+  combined with On-Prem. PHI and operational data never leave your
+  network. Requires a [Substrate](/substrate) fleet add-on.
+
 ::
 
 ::marketing-section{band="gray" maxWidth="3xl"}
