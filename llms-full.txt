@@ -8010,21 +8010,56 @@ to maintain your menu or retail assortment before you open the register.
 
 Every sale moves through a simple lifecycle: **Open**, **Held**, **Awaiting
 Payment**, **Paid**, and **Refunded**. Hold a sale to start another and resume it
-later. Add line items from the catalog; the sale total updates automatically.
+later. Add line items from the catalog; the subtotal, tax, and total update
+automatically.
 
-The **Dashboard** shows open sales at a glance. The **Sales** workspace is a
-board of every sale by state so nothing stalls in the queue.
+The **Sales** workspace is a board of every sale by state so nothing stalls in
+the queue.
+
+## Dashboard
+
+The **Dashboard** is your owner's-eye view of the register. Pick a window —
+**Today**, **7 days**, or **30 days** — and see:
+
+- **Key numbers** — total sales, transaction count, average ticket, and refunds.
+- **Sales trend** — a day-by-day bar chart so you can spot busy and slow days.
+- **Top products** — your best sellers by revenue over the window.
+
+## Sales tax
+
+POS calculates tax per item using configurable **tax classes**. Open the
+**Settings** page to manage them:
+
+- Each class has a **name** (for example, `standard`, `food`, `exempt`) and a
+  **rate**. One class is the default, used for any item without an explicit
+  class.
+- Assign a class to each catalog item. When you ring up a sale, every line is
+  taxed at its class's rate, and the sale total adds the tax to the subtotal.
+
+Installing with demo data seeds sensible defaults (a standard rate, a reduced
+food rate, and a tax-exempt class) that you can edit to match your jurisdiction.
 
 ## Checkout
 
-Take payment three ways, and combine them on one sale (split tender):
+The checkout panel tracks how much has been paid against the total, with a
+progress bar and a chip for each tender taken. Take payment three ways, and
+combine them on one sale (split tender):
 
-- **Cash** — record a cash amount; the balance updates instantly.
+- **Cash** — record a cash amount; the panel shows the **change due** and the
+  balance updates instantly.
 - **Card (terminal)** — charge a connected Dejavoo terminal in person.
 - **Pay by link** — send the customer a secure Vendara payment link.
 
-When the balance is covered, the sale moves to **Paid**. Refunds move a paid sale
-to **Refunded**.
+Use **Exact** to fill the outstanding balance in one tap. A live **receipt**
+lists every line item with the subtotal, tax, and total. When the balance is
+covered, the sale moves to **Paid** — no refresh needed.
+
+### Refunds
+
+On a paid sale, enter an amount and choose **Refund**. A partial refund leaves
+the sale **Paid** with the balance adjusted; refunding the full amount moves it
+to **Refunded**. Cash sales reverse without a terminal; card sales refund back
+through the Dejavoo terminal.
 
 ## Accounting & sync
 
