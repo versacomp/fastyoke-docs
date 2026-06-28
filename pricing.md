@@ -159,13 +159,28 @@ order: 2
     </p>
   </div>
   <div>
-    <h3 class="font-semibold text-[var(--brand-text-primary)]">Can I self-host?</h3>
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Can I self-host or run offline?</h3>
     <p class="mt-2 text-sm text-[var(--brand-text-primary)]">
-      FastYoke is a single-binary Rust monolith with a persistent
-      volume — it runs anywhere Fly.io does, and anywhere Fly runs
-      will run your own hardware. Self-hosting is a Fleet-tier
-      option; talk to us for a dedicated contract.
+      Two paths, for two different situations:
     </p>
+    <ul class="mt-2 text-sm text-[var(--brand-text-primary)] list-disc pl-4 space-y-1">
+      <li>
+        <strong><a href="/runtime" class="underline">FastYoke Runtime</a> — free for local
+        development and single-node deployments.</strong> <code>npx fastyoke init</code> bootstraps
+        a local SQLite sidecar in three minutes. No cloud account, no internet required. What you
+        build here deploys to Cloud SaaS or On-Prem unchanged — the FSM engine, typed SDK, WASM
+        scripting tier, and event log are identical.
+      </li>
+      <li>
+        <strong><a href="/on-prem" class="underline">FastYoke On-Prem</a> — the full platform
+        running inside your own network.</strong> Air-gap compatible: no outbound internet required.
+        Tenant databases stay on your hardware. The right choice for regulated environments —
+        government / defense, HIPAA private cloud, financial services data-residency, critical
+        infrastructure. Available for early access alongside the platform's general release;
+        email <a href="mailto:security@fastyoke.io" class="underline">security@fastyoke.io</a>
+        to start the conversation.
+      </li>
+    </ul>
   </div>
   <div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">Is there a trial on paid tiers?</h3>
