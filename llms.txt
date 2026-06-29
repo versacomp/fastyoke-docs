@@ -1,412 +1,423 @@
 # FastYoke
 
-## About FastYoke
+> Official documentation and marketing content for the FastYoke logistics FSM platform.
+> Automated agents should prefer `.md` twins linked below over rendered HTML.
 
-- [FastYoke — Run your business on ready-made apps](https://www.fastyoke.io/): Install a CRM, inventory, accounting, or field-service app in minutes. Customize it without code. Own your data, always.
-- [FastYoke for Developers & ISVs — The Open-Architecture aPaaS](https://www.fastyoke.io/developers): Build at the speed of low-code, perform at the speed of the edge, leave whenever you want. Multi-tenant FSM platform for ISVs who refuse vendor lock-in.
-- [Guides — FastYoke](https://www.fastyoke.io/guides): Opinionated guides on when FastYoke is the right move — graduation stories, vertical playbooks, decision frameworks, and the architectural decisions behind the platform.
-- [Partners — FastYoke](https://www.fastyoke.io/partners): FastYoke's named partner ecosystem. Strategic Partners deliver hands-on implementation; Channel Partners run the portfolio motion in a specific vertical.
-- [Solutions — FastYoke](https://www.fastyoke.io/solutions): FastYoke solutions by vertical. Healthcare, warehousing, field service, retail / POS, professional services, and auto & repair — with a curated page for each.
-- [Healthcare on FastYoke — patient flow, triage, EHR/ADT, HIPAA](https://www.fastyoke.io/solutions/healthcare): Patient throughput boards, urgent-care triage, an HL7v2 EHR/ADT connector, on-VM biometrics, and a BAA-backed HIPAA posture. Built for clinics and hospital units that want operational software without sending PHI to a third-party SaaS.
-- [Get started with FastYoke — Early access](https://www.fastyoke.io/getting-started): FastYoke's general release is scheduled for later this year. Request early access by submitting the form on this page.
-- [When you outgrow Make.com — FastYoke](https://www.fastyoke.io/guides/when-you-outgrow-make): Make.com is great at orchestrating SaaS calls. Three signals you've outgrown it, and what FastYoke gives you on the other side.
-- [Marketplace — FastYoke](https://www.fastyoke.io/marketplace): Install ready-made apps on the FastYoke platform — CRM, inventory, accounting, field service, warehousing, and more.
-- [Pricing — FastYoke](https://www.fastyoke.io/pricing): Simple pricing that scales from a side project to a regulated fleet. Free with every Vercel Marketplace install; paid tiers on request.
-- [Field service & HVAC on FastYoke — dispatch, on-site, invoice](https://www.fastyoke.io/solutions/field-service): Field-service operations for contractors running real crews — HVAC, electrical, plumbing, and multi-trade shops. Dispatch boards, on-site state tracking, invoice-on-completion, and the audit trail when a customer disputes a charge.
-- [AI on FastYoke — build apps and run smarter operations](https://www.fastyoke.io/ai): Two AI lanes on one platform — build with Yoke Architect and AI Designer, operate with Yoke briefs, digests, No-Show ML, and Yoker RAG. Every write is gated; you approve before anything changes.
-- [Enterprise — FastYoke](https://www.fastyoke.io/enterprise): The enterprise application platform for regulated, operations-heavy organizations. Mechanical tenant isolation, append-only audit, deployment choice from cloud to air-gap.
-- [When you outgrow Airtable — FastYoke](https://www.fastyoke.io/guides/when-you-outgrow-airtable): Airtable is the right tool for half the operations workloads it ends up running. Three signals the half you're running is the other one.
-- [Privacy Notice — FastYoke](https://www.fastyoke.io/privacy): How FastYoke handles personal data submitted through public forms, account info, and product telemetry. Plain-language summary plus the data subject's rights.
-- [Retail, POS & food service on FastYoke — storefront and counter operations](https://www.fastyoke.io/solutions/retail-pos): Multi-location retail with unified inventory and customer flows. Point-of-sale and kiosk deployments paired with payment hardware. Quick-serve, casual, and full-service restaurants — order capture, kitchen-display routing, pickup / delivery, and the back-of-house accounting.
-- [Free Online Form Builder — FastYoke Solo Plan](https://www.fastyoke.io/free-forms): Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
-- [Hospital throughput on FastYoke — FastYoke](https://www.fastyoke.io/guides/hospital-throughput-on-fastyoke): How a clinic or hospital unit runs patient flow, transport, discharge, and EVS turnover on FastYoke — without sending PHI to a third-party SaaS.
-- [Security — FastYoke](https://www.fastyoke.io/security): Executive summary of how FastYoke protects PII — tenant isolation, encryption, access control, auditability, and operational security.
-- [Warehousing & 3PL on FastYoke — WMS / TMS / 3PL stack](https://www.fastyoke.io/solutions/warehousing): Multi-client warehouses, four-wall WMS, transportation management, and the free Logistics core every logistics app sits on. Built for warehouses and 3PL operators that want a unified stack across the four walls and the road.
-- [Terms of Service — FastYoke](https://www.fastyoke.io/terms): The terms governing your use of FastYoke — eligibility, accounts, acceptable use, SMS messaging consent, billing, and the standard disclaimers and liability limits.
-- [Trust & compliance — FastYoke](https://www.fastyoke.io/trust): Security, compliance, and procurement resources for enterprise evaluators — executive summary, advisory log, subprocessors, and technical trust center.
-- [Yoke — AI operations assistant for field service](https://www.fastyoke.io/yoke): Yoke proposes concrete improvements to your workflows from patterns in your event log. Every change is a brief you approve. Weekly digests, No-Show ML, and Time Travel connect recommendations to measured outcomes.
-- [Why we built FastYoke](https://www.fastyoke.io/about): A note from the team on the problem we set out to solve — and the principles we refuse to compromise on.
-- [FastYoke DB — enterprise-grade distributed SQL with portability](https://www.fastyoke.io/db): FastYoke DB (fyDB) is enterprise-grade distributed SQL hosted on YugabyteDB Aeon or CockroachDB Cloud, managed by FastYoke. Requires an Enterprise+ contract. Customers who need distributed SQL in a private cloud can bring their own cluster instead.
-- [Why per-tenant database files — FastYoke](https://www.fastyoke.io/guides/why-per-tenant-database-files): The "Multi-Tenancy Prime Directive," explained for buyers. Why FastYoke isolates customer data at the operating-system layer instead of trusting WHERE tenant_id = ?.
-- [SMS Opt-In — FastYoke](https://www.fastyoke.io/sms-opt-in): How FastYoke users opt in to receive transactional SMS messages, with screenshots of the in-product consent screen and the seven required disclosures.
-- [Professional services on FastYoke — projects, tasks, client work, billing](https://www.fastyoke.io/solutions/professional-services): Operations software for consulting practices, agencies, and project-shaped service businesses. Projects, tasks, time-and-materials billing, and a real audit trail underneath.
-- [Trademarks — FastYoke](https://www.fastyoke.io/trademarks): Acknowledgment of third-party trademarks referenced in the FastYoke product, and a statement that FastYoke uses them nominatively without implying endorsement or affiliation.
-- [Yoker — RAG assistant grounded in your tenant data](https://www.fastyoke.io/yoker): Yoker is FastYoke's docked AI assistant. Ask natural-language questions about entity records and text attachments; retrieval runs on-VM with ONNX embeddings. Enterprise included; Pro and Team via add-on.
-- [Build with AI — Yoke Architect and AI Designer](https://www.fastyoke.io/ai/build): FastYoke Lane 1 AI — describe apps and workflows; get readable artifacts you can diff, export, and hand to engineers. Yoke Architect composes Yoke Apps; AI Designer extends FSMs and marketplace apps.
-- [When you outgrow Zapier — FastYoke](https://www.fastyoke.io/guides/when-you-outgrow-zapier): Zapier is the right tool for half the SaaS-glue you wire up. Three signals the other half has stopped being SaaS glue and started being an application.
-- [FastYoke Runtime — free for single-node and development](https://www.fastyoke.io/runtime): The full FastYoke FSM engine, free forever for local development and single-node deployments. No cloud account. No internet. Same engine as production — what you build here deploys unchanged.
-- [Security Fixes — FastYoke](https://www.fastyoke.io/security-fixes): Known security findings and their fix status across FastYoke releases.
-- [Auto & repair on FastYoke — intake to handoff on one board](https://www.fastyoke.io/solutions/auto-repair): Operations software for auto-tech shops, body shops, motorcycle and small-engine repair, and equipment-service operators. Intake to handoff on one board with parts, labor, and invoicing wired in.
-- [Status & Reliability — FastYoke](https://www.fastyoke.io/status): How FastYoke stays up — current operating status, the controls that keep the platform running, and what happens when something breaks.
-- [Recently shipped — FastYoke](https://www.fastyoke.io/changelog): What we've been building. A running log of the features, fixes, and polish landing in FastYoke during early access.
-- [FSM as the spine of operations software — FastYoke](https://www.fastyoke.io/guides/fsm-as-the-spine): Why every serious operations app eventually grows a state machine — and what changes when you start with one instead of bolting it on later.
-- [FastYoke On-Prem — air-gapped enterprise deployment](https://www.fastyoke.io/on-prem): FastYoke as a single binary inside your own network. No outbound internet required. Tenant databases stay on your hardware. Air-gap compatible from the ground up.
-- [Choosing a tier for your team size — FastYoke](https://www.fastyoke.io/guides/choosing-a-tier-for-your-team-size): An opinionated walkthrough of the FastYoke tier ladder. Which tier fits your team today, which one fits in six months, and the upgrade triggers worth watching.
-- [FastYoke Substrate — native mobile apps for your employee fleet](https://www.fastyoke.io/substrate): FastYoke Substrate is the native mobile delivery layer for deploying internal apps to employee devices without App Store review. Build in the App Builder, compile to Android and iOS, and distribute privately via MDM or install link. Team+ tier. Early access Q1 2027.
-- [Channel Partners & ISVs — FastYoke](https://www.fastyoke.io/channel-partners): Early access program for systems integrators, channel partners, and independent software vendors building on the FastYoke aPaaS.
-- [Multi-location HVAC on FastYoke — FastYoke](https://www.fastyoke.io/guides/multi-location-hvac-on-fastyoke): Field-service operations for an HVAC contractor running across multiple locations. Dispatch, on-site state, invoicing, and the marketplace apps that wire it together.
-- [iNetko — Strategic Partner | FastYoke](https://www.fastyoke.io/partners/inetko): iNetko is FastYoke's first named Strategic Partner — frontline support, sales engineering, implementation, and consulting for teams that want hands-on help getting to production.
-- [Pay n Go Systems — Channel Partner | FastYoke](https://www.fastyoke.io/partners/pay-n-go-systems): Pay n Go Systems is FastYoke's first named Channel Partner — focused on retail, point-of-sale, and food-service deployments for operators that want a turnkey portfolio motion.
-- [Compare — FastYoke](https://www.fastyoke.io/compare): Honest side-by-side comparisons against the platforms FastYoke is most often evaluated alongside.
-- [No cookies — FastYoke](https://www.fastyoke.io/no-cookies): Zero cookies on the marketing site, one strictly-necessary session cookie on the app, no third-party trackers anywhere.
-- [FastYoke vs Lovable — Compare](https://www.fastyoke.io/compare/lovable): Lovable generates custom apps from prompts. FastYoke runs multi-tenant operational platforms with built-in workflow, RBAC, and audit. Honest, side-by-side.
-- [FastYoke vs Retool — Compare](https://www.fastyoke.io/compare/retool): Retool ships internal-tools dashboards on top of your existing databases. FastYoke ships multi-tenant operational platforms with built-in workflow, RBAC, and audit. Honest, side-by-side.
-- [FastYoke vs Supabase — Compare](https://www.fastyoke.io/compare/supabase): Supabase ships a Postgres-native backend toolkit. FastYoke ships a multi-tenant operational platform with workflow, RBAC, audit, and the app surface on top. Honest, side-by-side.
-- [Studio — Build an app on FastYoke](https://www.fastyoke.io/studio)
-- [Yoke Architect — A Thesis](https://www.fastyoke.io/yoke-architect)
+Preferred consumption for automated agents:
+
+- Start with this index (`/llms.txt`).
+- Fetch page markdown at the same path with a `.md` suffix (example: `/docs/getting-started.md` for `/docs/getting-started`).
+- Full docs-only dump: `/llms-full.txt` (large — prefer sectional fetches).
+- Do not bulk-scrape rendered HTML under `/docs/`.
+- Questions: hello@fastyoke.io (subject: docs corpus).
 
 ## Documentation
 
-- [Deprecation Policy](https://www.fastyoke.io/docs/deprecation-policy): What a deprecated surface means, when it goes away, and how to migrate.
-- [FastYoke Docs](https://www.fastyoke.io/docs): The aPaaS for logistics. Multi-tenant FSMs, schema-driven entities, extensible admin surfaces.
+- [Deprecation Policy](https://www.fastyoke.io/docs/deprecation-policy.md): What a deprecated surface means, when it goes away, and how to migrate.
+- [FastYoke Docs](https://www.fastyoke.io/docs.md): The aPaaS for logistics. Multi-tenant FSMs, schema-driven entities, extensible admin surfaces.
 
 ## Accessibility
 
-- [Accessibility](https://www.fastyoke.io/docs/accessibility): WCAG 2.1 AA enforced in CI, theme contrast validated on save, focus-trap modal primitive — the architectural pieces that clear institutional procurement.
+- [Accessibility](https://www.fastyoke.io/docs/accessibility.md): WCAG 2.1 AA enforced in CI, theme contrast validated on save, focus-trap modal primitive — the architectural pieces that clear institutional procurement.
 
 ## Accounting
 
-- [Accounting](https://www.fastyoke.io/docs/accounting): Two audiences, opposite vocabulary, same product. Per-question pages for business owners and accountants — outcomes first, mechanism second.
-- [Map an existing Chart of Accounts](https://www.fastyoke.io/docs/accounting/for-accountants/map-an-existing-coa): Three migration shapes for replacing the starter CoA with your client's books — replace, merge, or augment — and the deactivate-not-delete rule.
-- [For business owners](https://www.fastyoke.io/docs/accounting/for-business-owners): Outcome-driven accounting pages for non-accountants — did you make money, where transactions go, month-end, sending to your CPA, and a plain-English vocabulary.
-- [For accountants](https://www.fastyoke.io/docs/accounting/for-accountants): Practitioner-pitched pages for bookkeepers and CPAs — mapping a client's CoA, posting rules in accounting terms, close cycle, audit trail, exporting to QuickBooks.
-- [Posting Rules explained](https://www.fastyoke.io/docs/accounting/for-accountants/posting-rules-explained): What Posting Rules are in accounting terms — recurring journal entry templates with an audit trail — and how they survive scrutiny.
-- [Did I make money?](https://www.fastyoke.io/docs/accounting/for-business-owners/did-i-make-money): How to read your Profit & Loss in 30 seconds, what each line means, and the two traps that make the number lie.
-- [Close cycle](https://www.fastyoke.io/docs/accounting/for-accountants/close-cycle): Month, quarter, and year close on Yoke Ledger — the steps, the lock mechanism, and what the platform handles automatically.
-- [Which account does this go to?](https://www.fastyoke.io/docs/accounting/for-business-owners/categorize-a-transaction): The five buckets, a decision flow for picking the right account, and the 10 transactions a small business sees most.
-- [Audit trail](https://www.fastyoke.io/docs/accounting/for-accountants/audit-trail): The four immutability guarantees, what's signable, and the auditor handoff.
-- [Month-end checklist](https://www.fastyoke.io/docs/accounting/for-business-owners/month-end-checklist): A 5-step, 30-minute routine at the end of every month that keeps your books current and your CPA happy.
-- [Export to QuickBooks](https://www.fastyoke.io/docs/accounting/for-accountants/export-to-quickbooks): Two-pass migration shape (CoA then journal entries) for moving a client's books to QuickBooks Online — generalizes to Xero, Sage, and Wave.
-- [Send to my CPA](https://www.fastyoke.io/docs/accounting/for-business-owners/send-to-my-cpa): The three exports your CPA actually wants, how to generate each, and a copy-pasteable email template.
-- [Vocabulary](https://www.fastyoke.io/docs/accounting/for-business-owners/vocabulary): The 12 accounting words a business owner trips over when they open Yoke Ledger, defined in plain English.
+- [Accounting](https://www.fastyoke.io/docs/accounting.md): Two audiences, opposite vocabulary, same product. Per-question pages for business owners and accountants — outcomes first, mechanism second.
+- [Map an existing Chart of Accounts](https://www.fastyoke.io/docs/accounting/for-accountants/map-an-existing-coa.md): Three migration shapes for replacing the starter CoA with your client's books — replace, merge, or augment — and the deactivate-not-delete rule.
+- [For business owners](https://www.fastyoke.io/docs/accounting/for-business-owners.md): Outcome-driven accounting pages for non-accountants — did you make money, where transactions go, month-end, sending to your CPA, and a plain-English vocabulary.
+- [For accountants](https://www.fastyoke.io/docs/accounting/for-accountants.md): Practitioner-pitched pages for bookkeepers and CPAs — mapping a client's CoA, posting rules in accounting terms, close cycle, audit trail, exporting to QuickBooks.
+- [Posting Rules explained](https://www.fastyoke.io/docs/accounting/for-accountants/posting-rules-explained.md): What Posting Rules are in accounting terms — recurring journal entry templates with an audit trail — and how they survive scrutiny.
+- [Did I make money?](https://www.fastyoke.io/docs/accounting/for-business-owners/did-i-make-money.md): How to read your Profit & Loss in 30 seconds, what each line means, and the two traps that make the number lie.
+- [Close cycle](https://www.fastyoke.io/docs/accounting/for-accountants/close-cycle.md): Month, quarter, and year close on Yoke Ledger — the steps, the lock mechanism, and what the platform handles automatically.
+- [Which account does this go to?](https://www.fastyoke.io/docs/accounting/for-business-owners/categorize-a-transaction.md): The five buckets, a decision flow for picking the right account, and the 10 transactions a small business sees most.
+- [Audit trail](https://www.fastyoke.io/docs/accounting/for-accountants/audit-trail.md): The four immutability guarantees, what's signable, and the auditor handoff.
+- [Month-end checklist](https://www.fastyoke.io/docs/accounting/for-business-owners/month-end-checklist.md): A 5-step, 30-minute routine at the end of every month that keeps your books current and your CPA happy.
+- [Export to QuickBooks](https://www.fastyoke.io/docs/accounting/for-accountants/export-to-quickbooks.md): Two-pass migration shape (CoA then journal entries) for moving a client's books to QuickBooks Online — generalizes to Xero, Sage, and Wave.
+- [Send to my CPA](https://www.fastyoke.io/docs/accounting/for-business-owners/send-to-my-cpa.md): The three exports your CPA actually wants, how to generate each, and a copy-pasteable email template.
+- [Vocabulary](https://www.fastyoke.io/docs/accounting/for-business-owners/vocabulary.md): The 12 accounting words a business owner trips over when they open Yoke Ledger, defined in plain English.
 
 ## Apps
 
-- [Advanced App Builder](https://www.fastyoke.io/docs/apps/advanced): Enterprise / ISV SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
-- [Simple Project Tracker](https://www.fastyoke.io/docs/apps/simple-project-tracker): Free marketplace app — organize projects, tasks, and comments with a Kanban board.
-- [Studio wizard](https://www.fastyoke.io/docs/apps/studio-wizard): Wix-style 4-step builder — pick a layout, brand it, choose entities, ship a themed multi-page extension.
-- [Inventory Yoke](https://www.fastyoke.io/docs/apps/inventory-yoke)
-- [Project Tracker Pro — Timeline](https://www.fastyoke.io/docs/apps/spt-pro): Pro add-on for Simple Project Tracker — Waterfall/Gantt timeline with task bars, dependencies, critical path, milestones, and % complete.
-- [GL Pack](https://www.fastyoke.io/docs/apps/gl-pack)
-- [Vendara Payments](https://www.fastyoke.io/docs/apps/vendara-payments): Connect your Vendara account to invoice customers from your CRM orders and quotes.
-- [Apps](https://www.fastyoke.io/docs/apps): Group pages under a shared slug + theme; the user-facing face of your tenant.
-- [Dejavoo SPIn Payments](https://www.fastyoke.io/docs/apps/dejavoo-spin): Take card-present payments on your Dejavoo terminals from the parts counter and service cashier.
-- [Auto Dealer Yoke](https://www.fastyoke.io/docs/apps/auto-dealer-yoke): Run your service drive and parts counter with integrated card-present payments.
-- [POS](https://www.fastyoke.io/docs/apps/pos)
-- [Compliance Yoke](https://www.fastyoke.io/docs/apps/compliance): Continuous control monitoring and audit readiness — SOC 2 first, framework-agnostic.
-- [Invoicing in the Yoke Ledger](https://www.fastyoke.io/docs/apps/yoke-ledger-invoicing)
-- [Closing periods in the Yoke Ledger](https://www.fastyoke.io/docs/apps/yoke-ledger-period-close)
-- [Posting cost of goods sold from inventory](https://www.fastyoke.io/docs/apps/inventory-cogs)
-- [Closing the year in the Yoke Ledger](https://www.fastyoke.io/docs/apps/yoke-ledger-year-end-close)
-- [Bill payments in the Yoke Ledger](https://www.fastyoke.io/docs/apps/ap-bills)
-- [Cross-App Connections](https://www.fastyoke.io/docs/apps/cross-app-bridge)
-- [EHR / ADT Connector](https://www.fastyoke.io/docs/apps/ehr-connector)
-- [Patient Flow Yoke](https://www.fastyoke.io/docs/apps/patient-flow)
-- [Studio](https://www.fastyoke.io/docs/apps/studio)
-- [Urgent Care Triage](https://www.fastyoke.io/docs/apps/urgent-care)
+- [Advanced App Builder](https://www.fastyoke.io/docs/apps/advanced.md): Enterprise / ISV SPA-delivery surface — artifacts, health, handoff zip, and the Studio wizard / LLM-authored extension generators.
+- [Simple Project Tracker](https://www.fastyoke.io/docs/apps/simple-project-tracker.md): Free marketplace app — organize projects, tasks, and comments with a Kanban board.
+- [Studio wizard](https://www.fastyoke.io/docs/apps/studio-wizard.md): Wix-style 4-step builder — pick a layout, brand it, choose entities, ship a themed multi-page extension.
+- [Inventory Yoke](https://www.fastyoke.io/docs/apps/inventory-yoke.md)
+- [Project Tracker Pro — Timeline](https://www.fastyoke.io/docs/apps/spt-pro.md): Pro add-on for Simple Project Tracker — Waterfall/Gantt timeline with task bars, dependencies, critical path, milestones, and % complete.
+- [GL Pack](https://www.fastyoke.io/docs/apps/gl-pack.md)
+- [Vendara Payments](https://www.fastyoke.io/docs/apps/vendara-payments.md): Connect your Vendara account to invoice customers from your CRM orders and quotes.
+- [Apps](https://www.fastyoke.io/docs/apps.md): Group pages under a shared slug + theme; the user-facing face of your tenant.
+- [Dejavoo SPIn Payments](https://www.fastyoke.io/docs/apps/dejavoo-spin.md): Take card-present payments on your Dejavoo terminals from the parts counter and service cashier.
+- [Auto Dealer Yoke](https://www.fastyoke.io/docs/apps/auto-dealer-yoke.md): Run your service drive and parts counter with integrated card-present payments.
+- [POS](https://www.fastyoke.io/docs/apps/pos.md)
+- [Compliance Yoke](https://www.fastyoke.io/docs/apps/compliance.md): Continuous control monitoring and audit readiness — SOC 2 first, framework-agnostic.
+- [Invoicing in the Yoke Ledger](https://www.fastyoke.io/docs/apps/yoke-ledger-invoicing.md)
+- [Closing periods in the Yoke Ledger](https://www.fastyoke.io/docs/apps/yoke-ledger-period-close.md)
+- [Posting cost of goods sold from inventory](https://www.fastyoke.io/docs/apps/inventory-cogs.md)
+- [Closing the year in the Yoke Ledger](https://www.fastyoke.io/docs/apps/yoke-ledger-year-end-close.md)
+- [Bill payments in the Yoke Ledger](https://www.fastyoke.io/docs/apps/ap-bills.md)
+- [Cross-App Connections](https://www.fastyoke.io/docs/apps/cross-app-bridge.md)
+- [EHR / ADT Connector](https://www.fastyoke.io/docs/apps/ehr-connector.md)
+- [Patient Flow Yoke](https://www.fastyoke.io/docs/apps/patient-flow.md)
+- [Studio](https://www.fastyoke.io/docs/apps/studio.md)
+- [Urgent Care Triage](https://www.fastyoke.io/docs/apps/urgent-care.md)
 
 ## Authentication
 
-- [Sign-in flows](https://www.fastyoke.io/docs/auth/signin-flows): The three sign-in paths today — local email-and-password, OTP step-up (SMS or email), and the WorkOS AuthKit hosted flow. How the platform picks between them, how to enroll a phone, and what to check when a sign-in doesn't work.
-- [API tokens](https://www.fastyoke.io/docs/auth/api-tokens): Long-lived fy_pat_ bearer tokens for CI pipelines and external integrations — minting, format, scopes, hard refusals, revocation, and the rotation pattern.
-- [SSO with WorkOS](https://www.fastyoke.io/docs/auth/sso-with-workos): When AuthKit is enabled on your account, sign-in goes through WorkOS. The tenant ↔ WorkOS Organization mirror, the sign-in path, invite acceptance, and the failure modes a tenant admin can hit.
-- [Authentication & Scopes](https://www.fastyoke.io/docs/auth): JWT shapes, platform vs tenant context, extension tokens, SSO.
+- [Sign-in flows](https://www.fastyoke.io/docs/auth/signin-flows.md): The three sign-in paths today — local email-and-password, OTP step-up (SMS or email), and the WorkOS AuthKit hosted flow. How the platform picks between them, how to enroll a phone, and what to check when a sign-in doesn't work.
+- [API tokens](https://www.fastyoke.io/docs/auth/api-tokens.md): Long-lived fy_pat_ bearer tokens for CI pipelines and external integrations — minting, format, scopes, hard refusals, revocation, and the rotation pattern.
+- [SSO with WorkOS](https://www.fastyoke.io/docs/auth/sso-with-workos.md): When AuthKit is enabled on your account, sign-in goes through WorkOS. The tenant ↔ WorkOS Organization mirror, the sign-in path, invite acceptance, and the failure modes a tenant admin can hit.
+- [Authentication & Scopes](https://www.fastyoke.io/docs/auth.md): JWT shapes, platform vs tenant context, extension tokens, SSO.
 
 ## Billing
 
-- [Billing](https://www.fastyoke.io/docs/billing): How the platform charges you — tier subscription, metered usage, prepaid wallet, top-ups, low-balance alerts, and the Stripe portal. Numbers live on /pricing.
-- [Tiers & metering](https://www.fastyoke.io/docs/billing/tiers-and-metering): The tier base + metered events the platform charges for, the metered-only org billing mode, and how the period rolls up into an invoice draft. Numbers live on /pricing.
-- [Wallet & top-ups](https://www.fastyoke.io/docs/billing/wallet-and-topups): The org-level prepaid wallet, how top-up checkout works, the $10 low-balance alert, the $0 auto-suspend, and the documented exceptions for resellers and metered-only orgs.
-- [Invoices & portal](https://www.fastyoke.io/docs/billing/invoices-and-portal): The Stripe Customer Portal as the "manage billing" surface, invoice drafts vs finalized invoices, the subscription statuses you can see, and how to change tier today.
-- [API reference](https://www.fastyoke.io/docs/billing/api-reference): REST surface for the billing tab — subscription, usage, portal, addons, checkout, metering toggle, wallet, and the wallet top-up checkout.
+- [Billing](https://www.fastyoke.io/docs/billing.md): How the platform charges you — tier subscription, metered usage, prepaid wallet, top-ups, low-balance alerts, and the Stripe portal. Numbers live on /pricing.
+- [Tiers & metering](https://www.fastyoke.io/docs/billing/tiers-and-metering.md): The tier base + metered events the platform charges for, the metered-only org billing mode, and how the period rolls up into an invoice draft. Numbers live on /pricing.
+- [Wallet & top-ups](https://www.fastyoke.io/docs/billing/wallet-and-topups.md): The org-level prepaid wallet, how top-up checkout works, the $10 low-balance alert, the $0 auto-suspend, and the documented exceptions for resellers and metered-only orgs.
+- [Invoices & portal](https://www.fastyoke.io/docs/billing/invoices-and-portal.md): The Stripe Customer Portal as the "manage billing" surface, invoice drafts vs finalized invoices, the subscription statuses you can see, and how to change tier today.
+- [API reference](https://www.fastyoke.io/docs/billing/api-reference.md): REST surface for the billing tab — subscription, usage, portal, addons, checkout, metering toggle, wallet, and the wallet top-up checkout.
 
 ## Bulk operations
 
-- [Bulk operations](https://www.fastyoke.io/docs/bulk-operations): Run the same edit, delete, or FSM transition against many entity records at once. Admin-only. Always two-step — preview the change, review what would happen, then commit (or cancel).
-- [Bulk operations API reference](https://www.fastyoke.io/docs/bulk-operations/api-reference): REST endpoints for creating a preview, listing sessions, committing or cancelling — plus the five session statuses, the eight per-row outcome codes, and the sync-versus-async dispatch threshold.
+- [Bulk operations](https://www.fastyoke.io/docs/bulk-operations.md): Run the same edit, delete, or FSM transition against many entity records at once. Admin-only. Always two-step — preview the change, review what would happen, then commit (or cancel).
+- [Bulk operations API reference](https://www.fastyoke.io/docs/bulk-operations/api-reference.md): REST endpoints for creating a preview, listing sessions, committing or cancelling — plus the five session statuses, the eight per-row outcome codes, and the sync-versus-async dispatch threshold.
 
 ## CLI
 
-- [Command Reference](https://www.fastyoke.io/docs/cli/commands): Every subcommand for fy (extension authoring).
-- [fy-app.json Spec](https://www.fastyoke.io/docs/cli/app-spec): The versioned source-of-truth contract that fy app create and fy app add-entity read and write.
-- [CLI](https://www.fastyoke.io/docs/cli): fy — the extension-authoring CLI.
+- [Command Reference](https://www.fastyoke.io/docs/cli/commands.md): Every subcommand for fy (extension authoring).
+- [fy-app.json Spec](https://www.fastyoke.io/docs/cli/app-spec.md): The versioned source-of-truth contract that fy app create and fy app add-entity read and write.
+- [CLI](https://www.fastyoke.io/docs/cli.md): fy — the extension-authoring CLI.
 
 ## Compliance Yoke
 
-- [Compliance Yoke](https://www.fastyoke.io/docs/compliance-yoke): Framework readiness, evidence collectors, an Auditor Room with deterministic sampling and OSCAL export, and a public Trust Center — wired into the platform you already run.
-- [Frameworks & readiness](https://www.fastyoke.io/docs/compliance-yoke/frameworks): Frameworks, readiness scoring, drift detection, and the controls simulator — how the Compliance Yoke turns connector results plus attestations into a per-framework score.
-- [Evidence connectors](https://www.fastyoke.io/docs/compliance-yoke/connectors): GitHub, Fly, WorkOS, and AWS evidence collectors — what each pulls, how to authorize them, the run-now button vs. the scheduler, and where results land.
-- [Auditor Room](https://www.fastyoke.io/docs/compliance-yoke/auditor-room): The audit-engagement workflow — invite an external auditor, give them a deterministic sample of evidence, export an OSCAL JSON document, ship them a ZIP package with everything they need.
-- [Trust Center](https://www.fastyoke.io/docs/compliance-yoke/trust-center): A tenant-controlled public posture page with an optional AI Q&A endpoint — published from an allowlist of controls, not by redacting a full export.
-- [API reference](https://www.fastyoke.io/docs/compliance-yoke/api-reference): The REST surface for the Compliance Yoke — frameworks, readiness, connectors, simulator, evidence, engagements, OSCAL export, ZIP package, Trust Center, AI Q&A.
+- [Compliance Yoke](https://www.fastyoke.io/docs/compliance-yoke.md): Framework readiness, evidence collectors, an Auditor Room with deterministic sampling and OSCAL export, and a public Trust Center — wired into the platform you already run.
+- [Frameworks & readiness](https://www.fastyoke.io/docs/compliance-yoke/frameworks.md): Frameworks, readiness scoring, drift detection, and the controls simulator — how the Compliance Yoke turns connector results plus attestations into a per-framework score.
+- [Evidence connectors](https://www.fastyoke.io/docs/compliance-yoke/connectors.md): GitHub, Fly, WorkOS, and AWS evidence collectors — what each pulls, how to authorize them, the run-now button vs. the scheduler, and where results land.
+- [Auditor Room](https://www.fastyoke.io/docs/compliance-yoke/auditor-room.md): The audit-engagement workflow — invite an external auditor, give them a deterministic sample of evidence, export an OSCAL JSON document, ship them a ZIP package with everything they need.
+- [Trust Center](https://www.fastyoke.io/docs/compliance-yoke/trust-center.md): A tenant-controlled public posture page with an optional AI Q&A endpoint — published from an allowlist of controls, not by redacting a full export.
+- [API reference](https://www.fastyoke.io/docs/compliance-yoke/api-reference.md): The REST surface for the Compliance Yoke — frameworks, readiness, connectors, simulator, evidence, engagements, OSCAL export, ZIP package, Trust Center, AI Q&A.
 
 ## Developers
 
-- [Developers](https://www.fastyoke.io/docs/developers): Day-1 platform invariants every API consumer needs to know, plus links to every developer surface FastYoke ships.
-- [Error envelope](https://www.fastyoke.io/docs/developers/errors): The standard AppError JSON envelope, what each commonly-returned status code means in FastYoke, and three worked examples.
-- [Tenant scoping](https://www.fastyoke.io/docs/developers/tenant-scoping): How the platform enforces multi-tenancy on every request, what your code does (and doesn't) send, and why 404 and 403 mean what they mean.
-- [Idempotency](https://www.fastyoke.io/docs/developers/idempotency): Which FastYoke endpoints accept Idempotency-Key, how the platform dedupes on it, and what the safe-retry window is.
-- [Rate limits](https://www.fastyoke.io/docs/developers/rate-limits): What the platform throttles, the 429 response shape, the Retry-After header, and recommended client backoff behaviour.
+- [Developers](https://www.fastyoke.io/docs/developers.md): Day-1 platform invariants every API consumer needs to know, plus links to every developer surface FastYoke ships.
+- [Error envelope](https://www.fastyoke.io/docs/developers/errors.md): The standard AppError JSON envelope, what each commonly-returned status code means in FastYoke, and three worked examples.
+- [Tenant scoping](https://www.fastyoke.io/docs/developers/tenant-scoping.md): How the platform enforces multi-tenancy on every request, what your code does (and doesn't) send, and why 404 and 403 mean what they mean.
+- [Idempotency](https://www.fastyoke.io/docs/developers/idempotency.md): Which FastYoke endpoints accept Idempotency-Key, how the platform dedupes on it, and what the safe-retry window is.
+- [Rate limits](https://www.fastyoke.io/docs/developers/rate-limits.md): What the platform throttles, the 429 response shape, the Retry-After header, and recommended client backoff behaviour.
 
 ## Entities
 
-- [Entities](https://www.fastyoke.io/docs/entities): Schemaless JSON records that serve as FSM guard-evaluation context.
+- [Entities](https://www.fastyoke.io/docs/entities.md): Schemaless JSON records that serve as FSM guard-evaluation context.
 
 ## E-signatures
 
-- [E-signatures](https://www.fastyoke.io/docs/esign): Legally-meaningful e-signatures on forms or uploaded PDFs — three modes share one sealing engine, audit chain, and public verify endpoint.
-- [Forms with signing](https://www.fastyoke.io/docs/esign/forms-with-signing): Configure a form for inline single-signer ceremony or multi-signer send-for-signature; the signing plan, the submit hook, and the admin dashboard.
-- [Uploaded-PDF envelopes](https://www.fastyoke.io/docs/esign/uploaded-pdf-envelopes): Upload a prepared PDF, drag signature and date fields onto it, assign each to a signer, optionally self-sign, and send.
-- [The signer experience](https://www.fastyoke.io/docs/esign/signer-experience): What the signer sees and what they're agreeing to — the inline ceremony page, the emailed portal page, signature capture, and the decline path.
-- [Trust and verify](https://www.fastyoke.io/docs/esign/trust-and-verify): What FastYoke records, how the audit chain is sealed, what the platform claims (and explicitly doesn't), and how a third party verifies a sealed envelope offline.
+- [E-signatures](https://www.fastyoke.io/docs/esign.md): Legally-meaningful e-signatures on forms or uploaded PDFs — three modes share one sealing engine, audit chain, and public verify endpoint.
+- [Forms with signing](https://www.fastyoke.io/docs/esign/forms-with-signing.md): Configure a form for inline single-signer ceremony or multi-signer send-for-signature; the signing plan, the submit hook, and the admin dashboard.
+- [Uploaded-PDF envelopes](https://www.fastyoke.io/docs/esign/uploaded-pdf-envelopes.md): Upload a prepared PDF, drag signature and date fields onto it, assign each to a signer, optionally self-sign, and send.
+- [The signer experience](https://www.fastyoke.io/docs/esign/signer-experience.md): What the signer sees and what they're agreeing to — the inline ceremony page, the emailed portal page, signature capture, and the decline path.
+- [Trust and verify](https://www.fastyoke.io/docs/esign/trust-and-verify.md): What FastYoke records, how the audit chain is sealed, what the platform claims (and explicitly doesn't), and how a third party verifies a sealed envelope offline.
 
 ## Extensions
 
-- [Extensions (Install & Manage)](https://www.fastyoke.io/docs/extensions): Upload third-party extension bundles, review scopes, activate, roll back.
-- [Branding & the Powered-by badge](https://www.fastyoke.io/docs/extensions/branding): Where the FastYoke "Powered by" badge appears, and how Pro and above can opt out per surface.
+- [Extensions (Install & Manage)](https://www.fastyoke.io/docs/extensions.md): Upload third-party extension bundles, review scopes, activate, roll back.
+- [Branding & the Powered-by badge](https://www.fastyoke.io/docs/extensions/branding.md): Where the FastYoke "Powered by" badge appears, and how Pro and above can opt out per surface.
 
 ## Forms
 
-- [Forms Builder](https://www.fastyoke.io/docs/forms/builder): Pages, sections, field types, routing, themes, attachments.
-- [Recipes](https://www.fastyoke.io/docs/forms/recipes): Short, isolated single-task pages for experienced builders.
-- [Tutorials](https://www.fastyoke.io/docs/forms/tutorials): Guided 101 → 201 → 301 path that builds one clinic Patient Intake form across every Forms Builder feature.
-- [Forms](https://www.fastyoke.io/docs/forms): Build public or authenticated forms that route submissions into entities, jobs, or both.
-- [Required email with confirmation copy](https://www.fastyoke.io/docs/forms/recipes/required-email-with-confirmation): Force an email field, surface a clear "we'll email you" line so the submitter knows what's coming.
-- [Build your first form](https://www.fastyoke.io/docs/forms/tutorials/101-build-first-form): Create the Patient Intake form — two pages, six fields, publish.
-- [Skip a page when a checkbox is unchecked](https://www.fastyoke.io/docs/forms/recipes/skip-page-on-checkbox): Use a routing rule to bypass a page based on a boolean.
-- [Style and brand your form](https://www.fastyoke.io/docs/forms/tutorials/101-style-and-brand): Apply a theme, upload a logo and hero, customize the header and submit-button copy.
-- [Make a field effectively required only on a later page](https://www.fastyoke.io/docs/forms/recipes/conditional-required-by-page): Keep a field optional early, then use a routing rule to block navigation past a later page until it's filled.
-- [Share with an invite or embed](https://www.fastyoke.io/docs/forms/tutorials/101-share-invite-and-embed): Mint a kiosk invite link and embed the form on your marketing site.
-- [Rename the downloaded PDF per submission](https://www.fastyoke.io/docs/forms/recipes/rename-pdf-per-submission): Set a vanity filename pattern once; every submission's download link uses it.
-- [Forms tier entitlements](https://www.fastyoke.io/docs/forms/tiers): What each tier unlocks for the Forms surface — active form count, daily submission ceiling, anti-abuse posture, PDF rendering, badge visibility.
-- [Attach an AcroForm template](https://www.fastyoke.io/docs/forms/tutorials/201-acroform-template): Upload a fillable PDF, map form fields to AcroForm fields, render on submit.
-- [Embed a form on a Next.js page](https://www.fastyoke.io/docs/forms/recipes/embed-on-nextjs): Drop the embed snippet onto any page; works in App Router and Pages Router.
-- [Place an Overlay template](https://www.fastyoke.io/docs/forms/tutorials/201-overlay-template): Drop value regions onto any PDF — works on scans, no AcroForm needed.
-- [Mint a one-shot invite link](https://www.fastyoke.io/docs/forms/recipes/mint-one-shot-invite): Single-use, expires when consumed — perfect for a personal email.
-- [Collect signatures](https://www.fastyoke.io/docs/forms/tutorials/201-signatures): Add a signature field and wire it into both your AcroForm and your Overlay template.
-- [Switch a form's theme without rebuilding](https://www.fastyoke.io/docs/forms/recipes/switch-theme-without-rebuild): Theme change is a single save — no need to re-author the form.
-- [Promote submissions into entity records](https://www.fastyoke.io/docs/forms/tutorials/201-promote-to-entity): Spawn a job per submission, then fire a transition that copies the submission into a Patient record.
-- [Add a signature line to an AcroForm template](https://www.fastyoke.io/docs/forms/recipes/add-signature-to-acroform): Bind a signature field to a PDF widget — same captured image flows in.
-- [Prefill fields from your entity schema](https://www.fastyoke.io/docs/forms/tutorials/201-entity-prefill): Annotate the patient entity once; the form's labels, requireds, and select options come along automatically.
-- [Test a form locally with the HTTP ingestion API](https://www.fastyoke.io/docs/forms/recipes/local-test-via-http-ingestion): Skip the UI — POST a payload directly to verify your wiring.
-- [Conditional routing](https://www.fastyoke.io/docs/forms/tutorials/301-conditional-routing): Skip the insurance page for minors — simple mode first, then the same rule in JSONLogic.
-- [Reset Turnstile when you're locked out in dev](https://www.fastyoke.io/docs/forms/recipes/reset-turnstile-in-dev): One admin action clears the per-tenant counters.
-- [File uploads and scanning](https://www.fastyoke.io/docs/forms/tutorials/301-file-uploads-and-scanning): Collect insurance card images; watch them flow through the three-layer scanner.
-- [Anti-abuse tuning](https://www.fastyoke.io/docs/forms/tutorials/301-anti-abuse): Turnstile, honeypot, daily cap — what each catches and how to reset when you're locked out in dev.
-- [Custom CSS](https://www.fastyoke.io/docs/forms/tutorials/301-custom-css): Wire your brand's exact hex tokens with per-form CSS — Enterprise / ISV only.
-- [Server-to-server submission](https://www.fastyoke.io/docs/forms/tutorials/301-http-ingestion): Pipe an upstream scheduler's POSTs into the form via the HTTP ingestion API.
-- [Vanity PDF filenames](https://www.fastyoke.io/docs/forms/tutorials/301-vanity-filenames): Replace the default `submission-<id>.pdf` with a readable per-submission filename.
-- [Embed forms on your own site](https://www.fastyoke.io/docs/forms/embed): Drop a single script tag into any page to render a FastYoke form inline, with theme overrides and origin allowlists.
-- [HTTP ingestion API](https://www.fastyoke.io/docs/forms/http-ingestion): Server-to-server submission of form data via REST. Authenticate with a tenant API token, post a JSON payload, get a submission ID back.
-- [Anti-abuse for public forms](https://www.fastyoke.io/docs/forms/anti-abuse): Turnstile challenges, honeypots, daily caps, and per-IP rate limits keep public form submissions clean without a CAPTCHA wall.
-- [Form invites (Mint)](https://www.fastyoke.io/docs/forms/invites): Issue named, revocable invite links to public forms. The Mint endpoint produces a URL anyone can submit; revoked invites return 410.
-- [Vanity PDF filenames](https://www.fastyoke.io/docs/forms/pdf-vanity-filenames): Generate human-readable filenames for submission PDFs using a pattern of slugs, submission IDs, field values, and dates.
+- [Forms Builder](https://www.fastyoke.io/docs/forms/builder.md): Pages, sections, field types, routing, themes, attachments.
+- [Recipes](https://www.fastyoke.io/docs/forms/recipes.md): Short, isolated single-task pages for experienced builders.
+- [Tutorials](https://www.fastyoke.io/docs/forms/tutorials.md): Guided 101 → 201 → 301 path that builds one clinic Patient Intake form across every Forms Builder feature.
+- [Forms](https://www.fastyoke.io/docs/forms.md): Build public or authenticated forms that route submissions into entities, jobs, or both.
+- [Required email with confirmation copy](https://www.fastyoke.io/docs/forms/recipes/required-email-with-confirmation.md): Force an email field, surface a clear "we'll email you" line so the submitter knows what's coming.
+- [Build your first form](https://www.fastyoke.io/docs/forms/tutorials/101-build-first-form.md): Create the Patient Intake form — two pages, six fields, publish.
+- [Skip a page when a checkbox is unchecked](https://www.fastyoke.io/docs/forms/recipes/skip-page-on-checkbox.md): Use a routing rule to bypass a page based on a boolean.
+- [Style and brand your form](https://www.fastyoke.io/docs/forms/tutorials/101-style-and-brand.md): Apply a theme, upload a logo and hero, customize the header and submit-button copy.
+- [Make a field effectively required only on a later page](https://www.fastyoke.io/docs/forms/recipes/conditional-required-by-page.md): Keep a field optional early, then use a routing rule to block navigation past a later page until it's filled.
+- [Share with an invite or embed](https://www.fastyoke.io/docs/forms/tutorials/101-share-invite-and-embed.md): Mint a kiosk invite link and embed the form on your marketing site.
+- [Rename the downloaded PDF per submission](https://www.fastyoke.io/docs/forms/recipes/rename-pdf-per-submission.md): Set a vanity filename pattern once; every submission's download link uses it.
+- [Forms tier entitlements](https://www.fastyoke.io/docs/forms/tiers.md): What each tier unlocks for the Forms surface — active form count, daily submission ceiling, anti-abuse posture, PDF rendering, badge visibility.
+- [Attach an AcroForm template](https://www.fastyoke.io/docs/forms/tutorials/201-acroform-template.md): Upload a fillable PDF, map form fields to AcroForm fields, render on submit.
+- [Embed a form on a Next.js page](https://www.fastyoke.io/docs/forms/recipes/embed-on-nextjs.md): Drop the embed snippet onto any page; works in App Router and Pages Router.
+- [Place an Overlay template](https://www.fastyoke.io/docs/forms/tutorials/201-overlay-template.md): Drop value regions onto any PDF — works on scans, no AcroForm needed.
+- [Mint a one-shot invite link](https://www.fastyoke.io/docs/forms/recipes/mint-one-shot-invite.md): Single-use, expires when consumed — perfect for a personal email.
+- [Collect signatures](https://www.fastyoke.io/docs/forms/tutorials/201-signatures.md): Add a signature field and wire it into both your AcroForm and your Overlay template.
+- [Switch a form's theme without rebuilding](https://www.fastyoke.io/docs/forms/recipes/switch-theme-without-rebuild.md): Theme change is a single save — no need to re-author the form.
+- [Promote submissions into entity records](https://www.fastyoke.io/docs/forms/tutorials/201-promote-to-entity.md): Spawn a job per submission, then fire a transition that copies the submission into a Patient record.
+- [Add a signature line to an AcroForm template](https://www.fastyoke.io/docs/forms/recipes/add-signature-to-acroform.md): Bind a signature field to a PDF widget — same captured image flows in.
+- [Prefill fields from your entity schema](https://www.fastyoke.io/docs/forms/tutorials/201-entity-prefill.md): Annotate the patient entity once; the form's labels, requireds, and select options come along automatically.
+- [Test a form locally with the HTTP ingestion API](https://www.fastyoke.io/docs/forms/recipes/local-test-via-http-ingestion.md): Skip the UI — POST a payload directly to verify your wiring.
+- [Conditional routing](https://www.fastyoke.io/docs/forms/tutorials/301-conditional-routing.md): Skip the insurance page for minors — simple mode first, then the same rule in JSONLogic.
+- [Reset Turnstile when you're locked out in dev](https://www.fastyoke.io/docs/forms/recipes/reset-turnstile-in-dev.md): One admin action clears the per-tenant counters.
+- [File uploads and scanning](https://www.fastyoke.io/docs/forms/tutorials/301-file-uploads-and-scanning.md): Collect insurance card images; watch them flow through the three-layer scanner.
+- [Anti-abuse tuning](https://www.fastyoke.io/docs/forms/tutorials/301-anti-abuse.md): Turnstile, honeypot, daily cap — what each catches and how to reset when you're locked out in dev.
+- [Custom CSS](https://www.fastyoke.io/docs/forms/tutorials/301-custom-css.md): Wire your brand's exact hex tokens with per-form CSS — Enterprise / ISV only.
+- [Server-to-server submission](https://www.fastyoke.io/docs/forms/tutorials/301-http-ingestion.md): Pipe an upstream scheduler's POSTs into the form via the HTTP ingestion API.
+- [Vanity PDF filenames](https://www.fastyoke.io/docs/forms/tutorials/301-vanity-filenames.md): Replace the default `submission-<id>.pdf` with a readable per-submission filename.
+- [Embed forms on your own site](https://www.fastyoke.io/docs/forms/embed.md): Drop a single script tag into any page to render a FastYoke form inline, with theme overrides and origin allowlists.
+- [HTTP ingestion API](https://www.fastyoke.io/docs/forms/http-ingestion.md): Server-to-server submission of form data via REST. Authenticate with a tenant API token, post a JSON payload, get a submission ID back.
+- [Anti-abuse for public forms](https://www.fastyoke.io/docs/forms/anti-abuse.md): Turnstile challenges, honeypots, daily caps, and per-IP rate limits keep public form submissions clean without a CAPTCHA wall.
+- [Form invites (Mint)](https://www.fastyoke.io/docs/forms/invites.md): Issue named, revocable invite links to public forms. The Mint endpoint produces a URL anyone can submit; revoked invites return 410.
+- [Vanity PDF filenames](https://www.fastyoke.io/docs/forms/pdf-vanity-filenames.md): Generate human-readable filenames for submission PDFs using a pattern of slugs, submission IDs, field values, and dates.
 
 ## Getting Started
 
-- [Getting Started](https://www.fastyoke.io/docs/getting-started): Sign in, provision a tenant, build your first form, wire it to an FSM.
-- [Installation](https://www.fastyoke.io/docs/getting-started/installation): Sign in, confirm your tenant assignment, invite teammates.
-- [Your First Form](https://www.fastyoke.io/docs/getting-started/first-form): Build a public form, collect submissions, spawn jobs from them.
-- [Sign up](https://www.fastyoke.io/docs/getting-started/signup): Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Solo tier.
+- [Getting Started](https://www.fastyoke.io/docs/getting-started.md): Sign in, provision a tenant, build your first form, wire it to an FSM.
+- [Installation](https://www.fastyoke.io/docs/getting-started/installation.md): Sign in, confirm your tenant assignment, invite teammates.
+- [Your First Form](https://www.fastyoke.io/docs/getting-started/first-form.md): Build a public form, collect submissions, spawn jobs from them.
+- [Sign up](https://www.fastyoke.io/docs/getting-started/signup.md): Create a FastYoke tenant in under a minute — enter your email, confirm it, you're on the free Solo tier.
 
 ## Integrations
 
-- [Integrations](https://www.fastyoke.io/docs/integrations): Encrypted credential storage for outbound webhooks, Twilio, SendGrid, and custom REST endpoints.
-- [Cloud Storage Connector (OneDrive & Dropbox)](https://www.fastyoke.io/docs/integrations/cloud-storage): Automatically deposit your signed documents and form PDFs into your own OneDrive or Dropbox folder.
-- [Email Connector (Gmail & Outlook)](https://www.fastyoke.io/docs/integrations/mail-connector): Sync customer emails into your CRM, automatically — connect Gmail or Outlook/M365.
-- [Vercel](https://www.fastyoke.io/docs/integrations/vercel): Install FastYoke from the Vercel Marketplace, or sign up directly and link an existing Vercel project. Both paths end at the same tenant.
-- [Webhooks](https://www.fastyoke.io/docs/integrations/webhooks)
+- [Integrations](https://www.fastyoke.io/docs/integrations.md): Encrypted credential storage for outbound webhooks, Twilio, SendGrid, and custom REST endpoints.
+- [Cloud Storage Connector (OneDrive & Dropbox)](https://www.fastyoke.io/docs/integrations/cloud-storage.md): Automatically deposit your signed documents and form PDFs into your own OneDrive or Dropbox folder.
+- [Email Connector (Gmail & Outlook)](https://www.fastyoke.io/docs/integrations/mail-connector.md): Sync customer emails into your CRM, automatically — connect Gmail or Outlook/M365.
+- [Vercel](https://www.fastyoke.io/docs/integrations/vercel.md): Install FastYoke from the Vercel Marketplace, or sign up directly and link an existing Vercel project. Both paths end at the same tenant.
+- [Webhooks](https://www.fastyoke.io/docs/integrations/webhooks.md)
 
 ## Jobs
 
-- [Jobs](https://www.fastyoke.io/docs/jobs): The runtime side of workflows — live FSM instances you fire transitions against.
+- [Jobs](https://www.fastyoke.io/docs/jobs.md): The runtime side of workflows — live FSM instances you fire transitions against.
 
 ## LCAP
 
-- [LCAP](https://www.fastyoke.io/docs/lcap): Low-Code Application Platform — annotation-driven entity rendering. One annotation row drives Forms v2, Page Designer, CRUD scaffolds, and `@fastyoke/next` SSR pages.
-- [Annotations](https://www.fastyoke.io/docs/lcap/annotations): Edit field annotations from `/admin/entities/:name`. Type picker cascades — changing field_type prunes invalid component slugs and config keys automatically.
-- [Field types](https://www.fastyoke.io/docs/lcap/field-types): The closed 9-type vocabulary every LCAP consumer resolves against. Type drives the default component; @ui/component overrides it within the type's allowed slug list.
-- [Formatting](https://www.fastyoke.io/docs/lcap/formatting): Currency, percent, date, and time formatting reference. Native Intl + a tiny dayjs-token parser. Storage stays canonical; locale + timezone applied at display only.
-- [Page Designer integration](https://www.fastyoke.io/docs/lcap/page-designer): The `entity_field` block binds a Page Designer block to one (entity, field, record) tuple and mounts `<SmartField mode="display" />`. Annotation drives display formatting — change once, every block follows.
-- [UI config reference](https://www.fastyoke.io/docs/lcap/ui-config): Every `@ui/*` key the resolver respects, organized by field_type. The annotation row's `ui_config_json` is the single source of truth.
+- [LCAP](https://www.fastyoke.io/docs/lcap.md): Low-Code Application Platform — annotation-driven entity rendering. One annotation row drives Forms v2, Page Designer, CRUD scaffolds, and `@fastyoke/next` SSR pages.
+- [Annotations](https://www.fastyoke.io/docs/lcap/annotations.md): Edit field annotations from `/admin/entities/:name`. Type picker cascades — changing field_type prunes invalid component slugs and config keys automatically.
+- [Field types](https://www.fastyoke.io/docs/lcap/field-types.md): The closed 9-type vocabulary every LCAP consumer resolves against. Type drives the default component; @ui/component overrides it within the type's allowed slug list.
+- [Formatting](https://www.fastyoke.io/docs/lcap/formatting.md): Currency, percent, date, and time formatting reference. Native Intl + a tiny dayjs-token parser. Storage stays canonical; locale + timezone applied at display only.
+- [Page Designer integration](https://www.fastyoke.io/docs/lcap/page-designer.md): The `entity_field` block binds a Page Designer block to one (entity, field, record) tuple and mounts `<SmartField mode="display" />`. Annotation drives display formatting — change once, every block follows.
+- [UI config reference](https://www.fastyoke.io/docs/lcap/ui-config.md): Every `@ui/*` key the resolver respects, organized by field_type. The annotation row's `ui_config_json` is the single source of truth.
 
 ## Marketplace
 
-- [Marketplace](https://www.fastyoke.io/docs/marketplace): The catalogue of installable Yokes — what a Yoke is, free vs paid, what install seeds into your tenant, and the retention contract that says uninstall does not delete your data.
-- [Install & uninstall](https://www.fastyoke.io/docs/marketplace/install-and-uninstall): Install grants entitlement and seeds schemas; uninstall revokes entitlement and keeps every row. Reinstall is a no-op-then-grant.
-- [Listings & pricing](https://www.fastyoke.io/docs/marketplace/listings-and-pricing): Three pricing models — Free, fixed monthly, metered. Tier gating via tier_required. Free caps via free_cap. Downgrading doesn't auto-uninstall — the entitlement stays but listing routes start refusing.
-- [Tenant Yokes (custom)](https://www.fastyoke.io/docs/marketplace/tenant-yokes): Author your own listings on a single tenant. Verticals bundle related listings together. Clone-from-source uses an existing listing as a starting point. Yoke Studio is the authoring UI.
-- [API reference](https://www.fastyoke.io/docs/marketplace/api-reference): REST surface for the Marketplace — listings, install, uninstall, checkout, Tenant Yokes, verticals, clone, draft, primitives.
+- [Marketplace](https://www.fastyoke.io/docs/marketplace.md): The catalogue of installable Yokes — what a Yoke is, free vs paid, what install seeds into your tenant, and the retention contract that says uninstall does not delete your data.
+- [Install & uninstall](https://www.fastyoke.io/docs/marketplace/install-and-uninstall.md): Install grants entitlement and seeds schemas; uninstall revokes entitlement and keeps every row. Reinstall is a no-op-then-grant.
+- [Listings & pricing](https://www.fastyoke.io/docs/marketplace/listings-and-pricing.md): Three pricing models — Free, fixed monthly, metered. Tier gating via tier_required. Free caps via free_cap. Downgrading doesn't auto-uninstall — the entitlement stays but listing routes start refusing.
+- [Tenant Yokes (custom)](https://www.fastyoke.io/docs/marketplace/tenant-yokes.md): Author your own listings on a single tenant. Verticals bundle related listings together. Clone-from-source uses an existing listing as a starting point. Yoke Studio is the authoring UI.
+- [API reference](https://www.fastyoke.io/docs/marketplace/api-reference.md): REST surface for the Marketplace — listings, install, uninstall, checkout, Tenant Yokes, verticals, clone, draft, primitives.
 
 ## Messaging
 
-- [Messaging](https://www.fastyoke.io/docs/messaging): In-platform 1:1 and group DMs scoped to a tenant, with @mentions that fire notifications, edit/delete on your own messages, and real-time updates.
-- [Messaging API reference](https://www.fastyoke.io/docs/messaging/api-reference): REST endpoints for conversations + messages, the mark-read semantics, and the WebSocket kind:"message" envelope.
+- [Messaging](https://www.fastyoke.io/docs/messaging.md): In-platform 1:1 and group DMs scoped to a tenant, with @mentions that fire notifications, edit/delete on your own messages, and real-time updates.
+- [Messaging API reference](https://www.fastyoke.io/docs/messaging/api-reference.md): REST endpoints for conversations + messages, the mark-read semantics, and the WebSocket kind:"message" envelope.
 
 ## Notifications
 
-- [Notifications](https://www.fastyoke.io/docs/notifications): A per-user inbox of events that need your attention. Today the platform fires notifications on @mentions only; the bell is real-time and per-user.
-- [Notifications API reference](https://www.fastyoke.io/docs/notifications/api-reference): REST endpoints for listing notifications, fetching the unread count, and marking as read — plus the WebSocket kind:"notification" envelope.
+- [Notifications](https://www.fastyoke.io/docs/notifications.md): A per-user inbox of events that need your attention. Today the platform fires notifications on @mentions only; the bell is real-time and per-user.
+- [Notifications API reference](https://www.fastyoke.io/docs/notifications/api-reference.md): REST endpoints for listing notifications, fetching the unread count, and marking as read — plus the WebSocket kind:"notification" envelope.
 
 ## Pages
 
-- [Pages](https://www.fastyoke.io/docs/pages): Block-based workspace pages that embed FastYoke data into your operator UI.
+- [Pages](https://www.fastyoke.io/docs/pages.md): Block-based workspace pages that embed FastYoke data into your operator UI.
 
 ## Permissions
 
-- [Permissions](https://www.fastyoke.io/docs/permissions): Roles, the permission catalog, the audit log, and the frontend builder-gating primitive.
-- [Permission catalog](https://www.fastyoke.io/docs/permissions/permission-catalog): Every permission id FastYoke ships, grouped by domain. The single source of truth lives in backend/src/permissions/catalog.rs.
-- [Role-change audit log](https://www.fastyoke.io/docs/permissions/audit-log): What gets recorded when an admin changes a role, who can read it, and how to read it programmatically.
-- [Builder permission gating](https://www.fastyoke.io/docs/permissions/builder-gating): How the frontend hides authoring surfaces from users who lack the underlying permission.
+- [Permissions](https://www.fastyoke.io/docs/permissions.md): Roles, the permission catalog, the audit log, and the frontend builder-gating primitive.
+- [Permission catalog](https://www.fastyoke.io/docs/permissions/permission-catalog.md): Every permission id FastYoke ships, grouped by domain. The single source of truth lives in backend/src/permissions/catalog.rs.
+- [Role-change audit log](https://www.fastyoke.io/docs/permissions/audit-log.md): What gets recorded when an admin changes a role, who can read it, and how to read it programmatically.
+- [Builder permission gating](https://www.fastyoke.io/docs/permissions/builder-gating.md): How the frontend hides authoring surfaces from users who lack the underlying permission.
 
 ## Primitives
 
-- [Engine Primitives](https://www.fastyoke.io/docs/primitives)
-- [Aggregator](https://www.fastyoke.io/docs/primitives/aggregator)
-- [Approval Gate](https://www.fastyoke.io/docs/primitives/approval-gate)
-- [Cross-Entity Transition](https://www.fastyoke.io/docs/primitives/cross-entity-transition)
-- [Field Compute](https://www.fastyoke.io/docs/primitives/field-compute)
-- [Field Mutator](https://www.fastyoke.io/docs/primitives/field-mutator)
-- [Notifier](https://www.fastyoke.io/docs/primitives/notifier)
-- [PDF Generator](https://www.fastyoke.io/docs/primitives/pdf-generator)
-- [Record Spawner](https://www.fastyoke.io/docs/primitives/record-spawner)
-- [Scheduler](https://www.fastyoke.io/docs/primitives/scheduler)
-- [SLA Timer](https://www.fastyoke.io/docs/primitives/sla-timer)
-- [Trigger Predicates](https://www.fastyoke.io/docs/primitives/trigger-predicates)
+- [Engine Primitives](https://www.fastyoke.io/docs/primitives.md)
+- [Aggregator](https://www.fastyoke.io/docs/primitives/aggregator.md)
+- [Approval Gate](https://www.fastyoke.io/docs/primitives/approval-gate.md)
+- [Cross-Entity Transition](https://www.fastyoke.io/docs/primitives/cross-entity-transition.md)
+- [Field Compute](https://www.fastyoke.io/docs/primitives/field-compute.md)
+- [Field Mutator](https://www.fastyoke.io/docs/primitives/field-mutator.md)
+- [Notifier](https://www.fastyoke.io/docs/primitives/notifier.md)
+- [PDF Generator](https://www.fastyoke.io/docs/primitives/pdf-generator.md)
+- [Record Spawner](https://www.fastyoke.io/docs/primitives/record-spawner.md)
+- [Scheduler](https://www.fastyoke.io/docs/primitives/scheduler.md)
+- [SLA Timer](https://www.fastyoke.io/docs/primitives/sla-timer.md)
+- [Trigger Predicates](https://www.fastyoke.io/docs/primitives/trigger-predicates.md)
 
 ## Recipes
 
-- [Webhook Intake](https://www.fastyoke.io/docs/recipes/webhook-intake): Receive external events as FSM-backed jobs via a public form + invite token.
-- [Extension Authoring](https://www.fastyoke.io/docs/recipes/extension-authoring): End-to-end — scaffold, iterate locally, publish to a tenant.
-- [CI Scripting](https://www.fastyoke.io/docs/recipes/ci-scripting): Automate tenant-scoped operations from CI using a long-lived FastYoke API token + curl.
-- [CRUD UI with the SDK Hooks](https://www.fastyoke.io/docs/recipes/sdk-crud-ui): Full list + create + update + delete page for a user-defined entity kind using @fastyoke/sdk 0.2.0.
-- [SPA on Cloudflare Pages with the React SDK](https://www.fastyoke.io/docs/recipes/spa-on-cloudflare-pages): Build a standalone Vite + React SPA that signs in to FastYoke, CRUDs entities with realtime, uploads files, and deploys to Cloudflare Pages.
-- [Recipes](https://www.fastyoke.io/docs/recipes): Focused walkthroughs for the common FastYoke integration patterns.
-- [Handle email bounces and complaints](https://www.fastyoke.io/docs/recipes/email-bounces): How FastYoke processes AWS SES bounce and complaint notifications, where the suppression list lives, and how to recover a recipient.
+- [Webhook Intake](https://www.fastyoke.io/docs/recipes/webhook-intake.md): Receive external events as FSM-backed jobs via a public form + invite token.
+- [Extension Authoring](https://www.fastyoke.io/docs/recipes/extension-authoring.md): End-to-end — scaffold, iterate locally, publish to a tenant.
+- [CI Scripting](https://www.fastyoke.io/docs/recipes/ci-scripting.md): Automate tenant-scoped operations from CI using a long-lived FastYoke API token + curl.
+- [CRUD UI with the SDK Hooks](https://www.fastyoke.io/docs/recipes/sdk-crud-ui.md): Full list + create + update + delete page for a user-defined entity kind using @fastyoke/sdk 0.2.0.
+- [SPA on Cloudflare Pages with the React SDK](https://www.fastyoke.io/docs/recipes/spa-on-cloudflare-pages.md): Build a standalone Vite + React SPA that signs in to FastYoke, CRUDs entities with realtime, uploads files, and deploys to Cloudflare Pages.
+- [Recipes](https://www.fastyoke.io/docs/recipes.md): Focused walkthroughs for the common FastYoke integration patterns.
+- [Handle email bounces and complaints](https://www.fastyoke.io/docs/recipes/email-bounces.md): How FastYoke processes AWS SES bounce and complaint notifications, where the suppression list lives, and how to recover a recipient.
 
 ## Reports
 
-- [Reports & Dashboards](https://www.fastyoke.io/docs/reports): Aggregate entity records into single numbers or grouped rollups, lay them out on tenant-shared dashboards, and email digests on a schedule.
-- [Dashboards](https://www.fastyoke.io/docs/reports/dashboards): Lay report tiles on a single page, choose a render shape per tile (number, bar, or line), and serve the dashboard as server-rendered HTML.
-- [Scheduled digests](https://www.fastyoke.io/docs/reports/digests): Attach a schedule to a dashboard and the platform emails the rendered dashboard to a list of recipients on cadence. Daily or weekly; UTC clock; Pro tier or higher.
+- [Reports & Dashboards](https://www.fastyoke.io/docs/reports.md): Aggregate entity records into single numbers or grouped rollups, lay them out on tenant-shared dashboards, and email digests on a schedule.
+- [Dashboards](https://www.fastyoke.io/docs/reports/dashboards.md): Lay report tiles on a single page, choose a render shape per tile (number, bar, or line), and serve the dashboard as server-rendered HTML.
+- [Scheduled digests](https://www.fastyoke.io/docs/reports/digests.md): Attach a schedule to a dashboard and the platform emails the rendered dashboard to a list of recipients on cadence. Daily or weekly; UTC clock; Pro tier or higher.
 
 ## Reseller billing
 
-- [Reseller billing](https://www.fastyoke.io/docs/reseller-billing): Channel-partner billing — rate cards, white-label invoices, statements with margin reporting, and Vendara-Connect-driven settlement. For Channel Partners reselling FastYoke to their own end customers.
-- [Rate cards](https://www.fastyoke.io/docs/reseller-billing/rate-cards): Per-end-customer markup schedules. The __default__ sentinel applies to every end customer without an override; absent the default, wholesale + 0% is in effect. Replace is atomic.
-- [Statements & reconciliation](https://www.fastyoke.io/docs/reseller-billing/statements-and-reconciliation): Statements are live per-end-customer roll-ups; reconciliation buckets break wholesale / retail / margin / margin % per period. Voided invoices are excluded.
-- [Invoices](https://www.fastyoke.io/docs/reseller-billing/invoices): Lifecycle is live → generated/frozen → issued → settled. Void applies only before issue. Vendara Connect collects from the end customer.
-- [White-label branding](https://www.fastyoke.io/docs/reseller-billing/white-label): Configure invoice line items with your own brand. The platform never inserts the string "FastYoke" into a reseller invoice. {period} is the only built-in substitution.
-- [API reference](https://www.fastyoke.io/docs/reseller-billing/api-reference): REST surface for partner-portal billing — rate card, profile, statements, reconciliation, invoice lifecycle.
+- [Reseller billing](https://www.fastyoke.io/docs/reseller-billing.md): Channel-partner billing — rate cards, white-label invoices, statements with margin reporting, and Vendara-Connect-driven settlement. For Channel Partners reselling FastYoke to their own end customers.
+- [Rate cards](https://www.fastyoke.io/docs/reseller-billing/rate-cards.md): Per-end-customer markup schedules. The __default__ sentinel applies to every end customer without an override; absent the default, wholesale + 0% is in effect. Replace is atomic.
+- [Statements & reconciliation](https://www.fastyoke.io/docs/reseller-billing/statements-and-reconciliation.md): Statements are live per-end-customer roll-ups; reconciliation buckets break wholesale / retail / margin / margin % per period. Voided invoices are excluded.
+- [Invoices](https://www.fastyoke.io/docs/reseller-billing/invoices.md): Lifecycle is live → generated/frozen → issued → settled. Void applies only before issue. Vendara Connect collects from the end customer.
+- [White-label branding](https://www.fastyoke.io/docs/reseller-billing/white-label.md): Configure invoice line items with your own brand. The platform never inserts the string "FastYoke" into a reseller invoice. {period} is the only built-in substitution.
+- [API reference](https://www.fastyoke.io/docs/reseller-billing/api-reference.md): REST surface for partner-portal billing — rate card, profile, statements, reconciliation, invoice lifecycle.
 
 ## SDK
 
-- [SDK Quickstart](https://www.fastyoke.io/docs/sdk/quickstart): Install @fastyoke/sdk and mount your first extension.
-- [SDK Reference](https://www.fastyoke.io/docs/sdk/reference): Public exports of @fastyoke/sdk — provider, data hooks, realtime client, FsmTimeline / FsmViewer, WorkflowHistory, SmartField, and the typed resource clients.
-- [SDK](https://www.fastyoke.io/docs/sdk): @fastyoke/sdk — build extensions, page designer blocks, and host integrations.
+- [SDK Quickstart](https://www.fastyoke.io/docs/sdk/quickstart.md): Install @fastyoke/sdk and mount your first extension.
+- [SDK Reference](https://www.fastyoke.io/docs/sdk/reference.md): Public exports of @fastyoke/sdk — provider, data hooks, realtime client, FsmTimeline / FsmViewer, WorkflowHistory, SmartField, and the typed resource clients.
+- [SDK](https://www.fastyoke.io/docs/sdk.md): @fastyoke/sdk — build extensions, page designer blocks, and host integrations.
 
 ## Security
 
-- [Trust Center](https://www.fastyoke.io/docs/security/trust-center): How FastYoke protects your data — isolation, encryption, access control, auditability, availability, and our path to SOC 2.
-- [Subprocessor List](https://www.fastyoke.io/docs/security/subprocessors): The third parties FastYoke uses to operate the platform — what each processes, where, and our DPA / compliance posture for each.
-- [PII / SPI Field Encryption](https://www.fastyoke.io/docs/security/encryption): Tag entity-field annotations or form-field schemas with `is_pii` to encrypt their values at rest under a per-tenant key. Available as a $19/mo add-on at every tier.
+- [Trust Center](https://www.fastyoke.io/docs/security/trust-center.md): How FastYoke protects your data — isolation, encryption, access control, auditability, availability, and our path to SOC 2.
+- [Subprocessor List](https://www.fastyoke.io/docs/security/subprocessors.md): The third parties FastYoke uses to operate the platform — what each processes, where, and our DPA / compliance posture for each.
+- [PII / SPI Field Encryption](https://www.fastyoke.io/docs/security/encryption.md): Tag entity-field annotations or form-field schemas with `is_pii` to encrypt their values at rest under a per-tenant key. Available as a $19/mo add-on at every tier.
 
 ## Training
 
-- [Training](https://www.fastyoke.io/docs/training): A self-paced 8-week intensive curriculum that condenses a full college-semester sweep of the FastYoke platform into ~160 hours. Sixteen modules, one capstone, every platform pillar.
-- [About the labs](https://www.fastyoke.io/docs/training/labs): Hands-on lab exercises pinned to syllabus modules. Two labs per week through M16. This page documents the uniform six-section lab scaffold and the three-section solution scaffold every lab follows.
-- [About the lectures](https://www.fastyoke.io/docs/training/lectures): Short, opinionated narratives that explain the why behind each module. Read before the lab; consult after.
-- [About the quizzes](https://www.fastyoke.io/docs/training/quizzes): Self-check question banks, one per syllabus module. Multiple choice with revealed answers. Not graded — the test is whether you can answer cold.
-- [Lab M1 — Trace a tenant-scoped query](https://www.fastyoke.io/docs/training/labs/M1-architecture-trace): Open the FastYoke backend source. Pick one tenant-scoped GET handler and trace tenant_id from JWT extraction through SqlitePool selection to the SQL statement. End with a one-page write-up of the full path.
-- [Lecture M1 — Platform architecture & multi-tenancy](https://www.fastyoke.io/docs/training/lectures/M1-architecture): Why FastYoke is a single Rust binary with one SQLite database per tenant, and why every query must scope by tenant_id.
-- [Quiz M1 — Platform architecture & multi-tenancy](https://www.fastyoke.io/docs/training/quizzes/M1-quiz): 10 multiple-choice questions on the single-binary monolith, the fleet-of-files model, and the tenant_id prime directive.
-- [Syllabus](https://www.fastyoke.io/docs/training/syllabus): Sixteen modules across eight weeks. Each module has learning objectives, an assigned reading list cross-linked into the reference docs, a lab title, a project deliverable title, and three quiz topics. The capstone in Week 8 ships an end-to-end Tenant Yoke.
-- [Capstone](https://www.fastyoke.io/docs/training/capstone): The final integration project. Ship a working artifact that exercises ≥4 platform pillars and meets a five-category rubric. Default shape is an end-to-end Tenant Yoke; alternatives accepted by approval.
-- [Lab M1 — Solution](https://www.fastyoke.io/docs/training/labs/M1-architecture-trace-solution): Reference solution for Lab M1 — answers per step keyed to the lab's checkpoints.
-- [Lecture M2 — Auth & token layers](https://www.fastyoke.io/docs/training/lectures/M2-auth): Why the platform ships seven distinct auth-token shapes, and how the one-hour admin test JWT differs from a fy_pat_ PAT.
-- [Quiz M2 — Auth & token layers](https://www.fastyoke.io/docs/training/quizzes/M2-quiz): 10 multiple-choice questions on session JWTs, fy_pat_ PATs, the one-hour test token, scopes vs roles, and the anti-delegation refusal.
-- [Lab M2 — Token walkthrough](https://www.fastyoke.io/docs/training/labs/M2-token-walkthrough): Mint a one-hour test token and a long-lived fy_pat_ token. Call the tenant API with each. Observe two hard-refusal cases. Capture the three working request shapes in a shell script.
-- [Lecture M3 — Entities](https://www.fastyoke.io/docs/training/lectures/M3-entities): Why entity payloads are stored schemaless, what the JSON-payload schema actually gates, and how deletes interact with FSM history.
-- [Quiz M3 — Entities](https://www.fastyoke.io/docs/training/quizzes/M3-quiz): 10 multiple-choice questions on JSON-payload schemas, annotations, the retention contract on delete, and idempotency.
-- [Lab M2 — Solution](https://www.fastyoke.io/docs/training/labs/M2-token-walkthrough-solution): Reference solution for Lab M2 — exact curl commands, expected response shapes, and the full auth-walkthrough.sh script.
-- [Lecture M4 — Forms](https://www.fastyoke.io/docs/training/lectures/M4-forms): Why forms are zod-mirrored end-to-end, how anti-abuse works on public links, and the form-to-job submission pattern.
-- [Quiz M4 — Forms](https://www.fastyoke.io/docs/training/quizzes/M4-quiz): 10 multiple-choice questions on zod-mirrored schemas, anti-abuse defenses, public-link submissions, and form-to-job wiring.
-- [Lab M3 — Author a vehicle entity](https://www.fastyoke.io/docs/training/labs/M3-entities): Mint a fy_pat_ token, POST a vehicle schema with three annotated fields, exercise the full REST surface (POST, GET, PATCH, LIST, DELETE), and observe what happens to referencing FSM job rows on delete. End with a vehicle-crud.sh script that re-runs cleanly.
-- [Lecture M5 — FSM authoring](https://www.fastyoke.io/docs/training/lectures/M5-fsm): Why guards are JSONLogic and never raw strings, what an orphan state is, and how deterministic replay works.
-- [Quiz M5 — FSM authoring](https://www.fastyoke.io/docs/training/quizzes/M5-quiz): 10 multiple-choice questions on JSONLogic guards, the sandbox, orphan states, and deterministic replay.
-- [Lab M3 — Solution](https://www.fastyoke.io/docs/training/labs/M3-entities-solution): Reference solution for Lab M3 — exact schema body, curl commands, expected JSON shapes per step, and a sample vehicle-crud.sh script.
-- [Lecture M6 — Jobs](https://www.fastyoke.io/docs/training/lectures/M6-jobs): Why the event log is append-only, what the admin cancel override actually bypasses, and when a self-loop transition is the right shape.
-- [Quiz M6 — Jobs](https://www.fastyoke.io/docs/training/quizzes/M6-quiz): 10 multiple-choice questions on the append-only event log, the admin cancel override, self-loops, and optimistic UI.
-- [Starter code](https://www.fastyoke.io/docs/training/starter-code): Skeleton scripts and JSON templates the labs reference — clone, set two env vars, run.
-- [Certification](https://www.fastyoke.io/docs/training/certification): How completion certificates are issued — rides on the M14 e-sign trust model. No new platform endpoint. Self-referential by design.
-- [Lab M4 — Public-link form](https://www.fastyoke.io/docs/training/labs/M4-forms): Compose a 4-field public form, publish a tokenized public link, submit anonymously, observe the FSM job the platform creates at submit time, then trigger anti-abuse and observe the 429 + Retry-After response.
-- [Lecture M7 — Pages & App Builder](https://www.fastyoke.io/docs/training/lectures/M7-pages-apps): What separates a Page from an App, the block-based composition model, and where the Advanced Builder adds LLM assistance.
-- [Quiz M7 — Pages & App Builder](https://www.fastyoke.io/docs/training/quizzes/M7-quiz): 10 multiple-choice questions on Pages vs Apps, the block catalog, theme inheritance, and the Advanced App Builder.
-- [Lab M4 — Solution](https://www.fastyoke.io/docs/training/labs/M4-forms-solution): Reference solution for Lab M4 — sample form schema, exact public-submit curl with multipart body, FSM job inspection, and the 10-iteration anti-abuse loop with expected 429 + Retry-After.
-- [Lecture M8 — Yoke Studio](https://www.fastyoke.io/docs/training/lectures/M8-studio): Why Studio uses persistent drafts with snapshots, the draft-archive lifecycle, and what "edit a published Yoke in place" does behind the scenes.
-- [Quiz M8 — Yoke Studio](https://www.fastyoke.io/docs/training/quizzes/M8-quiz): 10 multiple-choice questions on persistent drafts, snapshots, the archive lifecycle, and edit-in-place re-versioning.
-- [Lab M5 — FSM authoring](https://www.fastyoke.io/docs/training/labs/M5-fsm-authoring): Author a 5-state service-ticket FSM with three JSONLogic guards. POST it. Attempt a transition the guard should refuse and observe the 422. Hand-trace one full run from submitted through resolved.
-- [Lecture M9 — Extensions](https://www.fastyoke.io/docs/training/lectures/M9-extensions): Why extensions are signed WASM modules with no host syscalls, what the manifest scope vocabulary controls, and the dev-loop tradeoffs.
-- [Quiz M9 — Extensions](https://www.fastyoke.io/docs/training/quizzes/M9-quiz): 10 multiple-choice questions on signed WASM bundles, the manifest scope vocabulary, WIT host imports, and fuel/memory caps.
-- [Lab M5 — Solution](https://www.fastyoke.io/docs/training/labs/M5-fsm-authoring-solution): Reference solution for Lab M5 — exact schema body with three JSONLogic guards, sample 422 + 200 transition responses, and a sample hand-trace.
-- [Lecture M10 — Marketplace](https://www.fastyoke.io/docs/training/lectures/M10-marketplace): The install / inspect / uninstall / clone loop, the retention contract on uninstall, and the difference between a Marketplace app and a Tenant Yoke.
-- [Quiz M10 — Marketplace](https://www.fastyoke.io/docs/training/quizzes/M10-quiz): 10 multiple-choice questions on the install/uninstall loop, the retention contract, Tenant Yokes vs Marketplace listings, and clone semantics.
-- [Lab M6 — Jobs](https://www.fastyoke.io/docs/training/labs/M6-jobs): Drive a job through the M5 schema, add a self-loop transition for an audit event, fire the admin cancel override, inspect both event_log rows (self-loop + override).
-- [Lecture M11 — Webhooks, notifications & messaging](https://www.fastyoke.io/docs/training/lectures/M11-webhooks): Why outbound webhooks ship with HMAC + delivery-id dedup, what the DLQ replay actually replays, and how notifications and messaging share the event spine.
-- [Quiz M11 — Webhooks, notifications & messaging](https://www.fastyoke.io/docs/training/quizzes/M11-quiz): 10 multiple-choice questions on HMAC verification, delivery-id dedup, the DLQ, rotate-secret dual window, and the SSRF guard.
-- [Lab M6 — Solution](https://www.fastyoke.io/docs/training/labs/M6-jobs-solution): Reference solution for Lab M6 — exact PATCH that adds the self-loop, exact admin-cancel curl, sample event_log row JSON, and a sample job-lifecycle.sh script.
-- [Lecture M12 — Bulk operations + Reports & dashboards](https://www.fastyoke.io/docs/training/lectures/M12-bulk-reports): The preview-and-commit contract, why cascade is opt-in per call, and how aggregates compute on demand.
-- [Quiz M12 — Bulk operations + Reports & dashboards](https://www.fastyoke.io/docs/training/quizzes/M12-quiz): 10 multiple-choice questions on preview-and-commit, cascade, dashboard aggregates, and digest scheduling.
-- [Lab M7 — Pages & App Builder](https://www.fastyoke.io/docs/training/labs/M7-pages-and-apps): Author a 3-page App in the admin shell — Vehicles list (from M3), Intake form (from M4), Dashboard widget. Set a theme override and a navigation order. Open the App and confirm all three pages render.
-- [Lecture M13 — Compliance Yoke + Yoker](https://www.fastyoke.io/docs/training/lectures/M13-compliance-yoker): Why the Auditor Room uses deterministic sampling, the connector-vs-attestation distinction, and what Yoker actually indexes.
-- [Quiz M13 — Compliance Yoke + Yoker](https://www.fastyoke.io/docs/training/quizzes/M13-quiz): 10 multiple-choice questions on deterministic sampling, the connector-vs-attestation distinction, OSCAL exports, and Yoker gating.
-- [Lab M7 — Solution](https://www.fastyoke.io/docs/training/labs/M7-pages-and-apps-solution): Reference solution for Lab M7 — menu paths per step plus three common gotchas around theme cascade, dashboard widget refresh, and draft-form embeds.
-- [Lecture M14 — Yoke Ledger + E-signatures](https://www.fastyoke.io/docs/training/lectures/M14-ledger-esign): Why journal entries are immutable once posted, what the seal proves without a PKI, and how the public verify endpoint is the trust model.
-- [Quiz M14 — Yoke Ledger + E-signatures](https://www.fastyoke.io/docs/training/quizzes/M14-quiz): 10 multiple-choice questions on journal-entry immutability, the reversal contract, the seal's trust model, and posting-rule self-loops.
-- [Lab M8 — Yoke Studio](https://www.fastyoke.io/docs/training/labs/M8-yoke-studio): Build a 2-board Yoke in Yoke Studio at /admin/studio, capture a named snapshot, edit, restore. Confirm the restore reverts your edit.
-- [Lecture M15 — Billing, reseller billing & Strategic Partner](https://www.fastyoke.io/docs/training/lectures/M15-billing-reseller): The prepaid wallet's dual-threshold contract, the __default__ sentinel in rate cards, and why Strategic Partner consent is per-request.
-- [Quiz M15 — Billing, reseller billing & Strategic Partner](https://www.fastyoke.io/docs/training/quizzes/M15-quiz): 10 multiple-choice questions on the prepaid wallet's dual threshold, the __default__ sentinel, Strategic Partner consent, and metered-only mode.
-- [Lab M8 — Solution](https://www.fastyoke.io/docs/training/labs/M8-yoke-studio-solution): Reference solution for Lab M8 — Studio menu paths plus three common gotchas around explicit-snapshot semantics, destructive restore, and per-tenant draft ownership.
-- [Lecture M16 — Capstone framing](https://www.fastyoke.io/docs/training/lectures/M16-capstone): How the capstone exercises every primitive across Weeks 1–7, the rubric's load-bearing categories, and what "done" looks like.
-- [Quiz M16 — Capstone framing](https://www.fastyoke.io/docs/training/quizzes/M16-quiz): 10 multiple-choice questions on the capstone's integration-over-isolation principle, the rubric categories, and what "done" looks like.
-- [Lab M9 — Extensions](https://www.fastyoke.io/docs/training/labs/M9-extensions): Scaffold a starter extension with fy ext init, wire one SDK route fetching the vehicle entity count, sign with fy ext sign, verify with fy ext verify, install via the admin shell, observe the card render in the tenant.
-- [Lab M9 — Solution](https://www.fastyoke.io/docs/training/labs/M9-extensions-solution): Reference solution for Lab M9 — exact CLI output, manifest walkthrough, SDK call shape, and four common gotchas around signing, JWT TTL, and hard refusals.
-- [Lab M10 — Marketplace](https://www.fastyoke.io/docs/training/labs/M10-marketplace): Install Yoke Ledger via REST, inspect what it seeds (owned_schemas + default Chart of Accounts), uninstall, verify the retention contract (rows survive), then author a Tenant Yoke via clone-from-source.
-- [Lab M10 — Solution](https://www.fastyoke.io/docs/training/labs/M10-marketplace-solution): Reference solution for Lab M10 — exact REST commands per step, the retention-contract explanation, and gotchas around clone-from-source semantics and owned_schemas uniqueness.
-- [Lab M11 — Webhooks](https://www.fastyoke.io/docs/training/labs/M11-webhooks): Subscribe to job.transition, verify HMAC end-to-end on a receiver, force failures into the DLQ, then replay deliveries and observe dedup by delivery id.
-- [Lab M11 — Solution](https://www.fastyoke.io/docs/training/labs/M11-webhooks-solution): Answer key for the M11 webhooks lab — exact curls, a Node HMAC verifier, the delivery-id dedup pattern, and notes on rotate-secret and the SSRF guard.
-- [Lab M12 — Bulk ops & Reports](https://www.fastyoke.io/docs/training/labs/M12-bulk-ops-reports): Bulk-edit then bulk-delete with cascade via REST preview/commit, then compose a dashboard with bar and line widgets and schedule a weekly digest.
-- [Lab M12 — Solution](https://www.fastyoke.io/docs/training/labs/M12-bulk-ops-reports-solution): Answer key for the M12 bulk ops & reports lab — exact preview/commit/cascade curls, dashboard composer menu paths, digest scheduling fields, and the common gotchas.
-- [Lab M13 — Compliance & Yoker](https://www.fastyoke.io/docs/training/labs/M13-compliance-yoker): Run a framework-readiness sweep, list collected evidence, generate an OSCAL export, open the Auditor Room, and optionally ask Yoker a tenant-scoped question.
-- [Lab M13 — Solution](https://www.fastyoke.io/docs/training/labs/M13-compliance-yoker-solution): Answer key for the M13 compliance & Yoker lab — exact sweep/evidence/OSCAL curls, Auditor Room menu paths, deterministic-sampling and gating notes.
-- [Lab M14 — Ledger & E-sign](https://www.fastyoke.io/docs/training/labs/M14-ledger-esign): Author a Revenue CoA account and a Posting Rule via REST, post a journal entry, reverse it, then upload a PDF envelope and verify the Certificate of Completion out-of-band.
-- [Lab M14 — Solution](https://www.fastyoke.io/docs/training/labs/M14-ledger-esign-solution): Answer key for the M14 ledger & e-sign lab — exact GL curls, the reversal contract, the public verify endpoint shape, and three sealed-PDF gotchas.
-- [Lab M15 — Billing, reseller & Strategic Partner](https://www.fastyoke.io/docs/training/labs/M15-billing-reseller): Top up a sandbox tenant's prepaid wallet, inspect the metered usage rollup, then simulate usage and trip the low-balance alert.
-- [Lab M15 — Solution](https://www.fastyoke.io/docs/training/labs/M15-billing-reseller-solution): Answer key for the M15 billing lab — exact wallet/usage curls, the dual-threshold contract, reseller rate-card note, Strategic Partner consent semantics.
-- [Lab M16 — Capstone](https://www.fastyoke.io/docs/training/labs/M16-capstone): The capstone is the final integration project. This page is the bridge from Week 8 to the canonical capstone doc.
+- [Training](https://www.fastyoke.io/docs/training.md): A self-paced 8-week intensive curriculum that condenses a full college-semester sweep of the FastYoke platform into ~160 hours. Sixteen modules, one capstone, every platform pillar.
+- [About the labs](https://www.fastyoke.io/docs/training/labs.md): Hands-on lab exercises pinned to syllabus modules. Two labs per week through M16. This page documents the uniform six-section lab scaffold and the three-section solution scaffold every lab follows.
+- [About the lectures](https://www.fastyoke.io/docs/training/lectures.md): Short, opinionated narratives that explain the why behind each module. Read before the lab; consult after.
+- [About the quizzes](https://www.fastyoke.io/docs/training/quizzes.md): Self-check question banks, one per syllabus module. Multiple choice with revealed answers. Not graded — the test is whether you can answer cold.
+- [Lab M1 — Trace a tenant-scoped query](https://www.fastyoke.io/docs/training/labs/M1-architecture-trace.md): Open the FastYoke backend source. Pick one tenant-scoped GET handler and trace tenant_id from JWT extraction through SqlitePool selection to the SQL statement. End with a one-page write-up of the full path.
+- [Lecture M1 — Platform architecture & multi-tenancy](https://www.fastyoke.io/docs/training/lectures/M1-architecture.md): Why FastYoke is a single Rust binary with one SQLite database per tenant, and why every query must scope by tenant_id.
+- [Quiz M1 — Platform architecture & multi-tenancy](https://www.fastyoke.io/docs/training/quizzes/M1-quiz.md): 10 multiple-choice questions on the single-binary monolith, the fleet-of-files model, and the tenant_id prime directive.
+- [Syllabus](https://www.fastyoke.io/docs/training/syllabus.md): Sixteen modules across eight weeks. Each module has learning objectives, an assigned reading list cross-linked into the reference docs, a lab title, a project deliverable title, and three quiz topics. The capstone in Week 8 ships an end-to-end Tenant Yoke.
+- [Capstone](https://www.fastyoke.io/docs/training/capstone.md): The final integration project. Ship a working artifact that exercises ≥4 platform pillars and meets a five-category rubric. Default shape is an end-to-end Tenant Yoke; alternatives accepted by approval.
+- [Lab M1 — Solution](https://www.fastyoke.io/docs/training/labs/M1-architecture-trace-solution.md): Reference solution for Lab M1 — answers per step keyed to the lab's checkpoints.
+- [Lecture M2 — Auth & token layers](https://www.fastyoke.io/docs/training/lectures/M2-auth.md): Why the platform ships seven distinct auth-token shapes, and how the one-hour admin test JWT differs from a fy_pat_ PAT.
+- [Quiz M2 — Auth & token layers](https://www.fastyoke.io/docs/training/quizzes/M2-quiz.md): 10 multiple-choice questions on session JWTs, fy_pat_ PATs, the one-hour test token, scopes vs roles, and the anti-delegation refusal.
+- [Lab M2 — Token walkthrough](https://www.fastyoke.io/docs/training/labs/M2-token-walkthrough.md): Mint a one-hour test token and a long-lived fy_pat_ token. Call the tenant API with each. Observe two hard-refusal cases. Capture the three working request shapes in a shell script.
+- [Lecture M3 — Entities](https://www.fastyoke.io/docs/training/lectures/M3-entities.md): Why entity payloads are stored schemaless, what the JSON-payload schema actually gates, and how deletes interact with FSM history.
+- [Quiz M3 — Entities](https://www.fastyoke.io/docs/training/quizzes/M3-quiz.md): 10 multiple-choice questions on JSON-payload schemas, annotations, the retention contract on delete, and idempotency.
+- [Lab M2 — Solution](https://www.fastyoke.io/docs/training/labs/M2-token-walkthrough-solution.md): Reference solution for Lab M2 — exact curl commands, expected response shapes, and the full auth-walkthrough.sh script.
+- [Lecture M4 — Forms](https://www.fastyoke.io/docs/training/lectures/M4-forms.md): Why forms are zod-mirrored end-to-end, how anti-abuse works on public links, and the form-to-job submission pattern.
+- [Quiz M4 — Forms](https://www.fastyoke.io/docs/training/quizzes/M4-quiz.md): 10 multiple-choice questions on zod-mirrored schemas, anti-abuse defenses, public-link submissions, and form-to-job wiring.
+- [Lab M3 — Author a vehicle entity](https://www.fastyoke.io/docs/training/labs/M3-entities.md): Mint a fy_pat_ token, POST a vehicle schema with three annotated fields, exercise the full REST surface (POST, GET, PATCH, LIST, DELETE), and observe what happens to referencing FSM job rows on delete. End with a vehicle-crud.sh script that re-runs cleanly.
+- [Lecture M5 — FSM authoring](https://www.fastyoke.io/docs/training/lectures/M5-fsm.md): Why guards are JSONLogic and never raw strings, what an orphan state is, and how deterministic replay works.
+- [Quiz M5 — FSM authoring](https://www.fastyoke.io/docs/training/quizzes/M5-quiz.md): 10 multiple-choice questions on JSONLogic guards, the sandbox, orphan states, and deterministic replay.
+- [Lab M3 — Solution](https://www.fastyoke.io/docs/training/labs/M3-entities-solution.md): Reference solution for Lab M3 — exact schema body, curl commands, expected JSON shapes per step, and a sample vehicle-crud.sh script.
+- [Lecture M6 — Jobs](https://www.fastyoke.io/docs/training/lectures/M6-jobs.md): Why the event log is append-only, what the admin cancel override actually bypasses, and when a self-loop transition is the right shape.
+- [Quiz M6 — Jobs](https://www.fastyoke.io/docs/training/quizzes/M6-quiz.md): 10 multiple-choice questions on the append-only event log, the admin cancel override, self-loops, and optimistic UI.
+- [Starter code](https://www.fastyoke.io/docs/training/starter-code.md): Skeleton scripts and JSON templates the labs reference — clone, set two env vars, run.
+- [Certification](https://www.fastyoke.io/docs/training/certification.md): How completion certificates are issued — rides on the M14 e-sign trust model. No new platform endpoint. Self-referential by design.
+- [Lab M4 — Public-link form](https://www.fastyoke.io/docs/training/labs/M4-forms.md): Compose a 4-field public form, publish a tokenized public link, submit anonymously, observe the FSM job the platform creates at submit time, then trigger anti-abuse and observe the 429 + Retry-After response.
+- [Lecture M7 — Pages & App Builder](https://www.fastyoke.io/docs/training/lectures/M7-pages-apps.md): What separates a Page from an App, the block-based composition model, and where the Advanced Builder adds LLM assistance.
+- [Quiz M7 — Pages & App Builder](https://www.fastyoke.io/docs/training/quizzes/M7-quiz.md): 10 multiple-choice questions on Pages vs Apps, the block catalog, theme inheritance, and the Advanced App Builder.
+- [Lab M4 — Solution](https://www.fastyoke.io/docs/training/labs/M4-forms-solution.md): Reference solution for Lab M4 — sample form schema, exact public-submit curl with multipart body, FSM job inspection, and the 10-iteration anti-abuse loop with expected 429 + Retry-After.
+- [Lecture M8 — Yoke Studio](https://www.fastyoke.io/docs/training/lectures/M8-studio.md): Why Studio uses persistent drafts with snapshots, the draft-archive lifecycle, and what "edit a published Yoke in place" does behind the scenes.
+- [Quiz M8 — Yoke Studio](https://www.fastyoke.io/docs/training/quizzes/M8-quiz.md): 10 multiple-choice questions on persistent drafts, snapshots, the archive lifecycle, and edit-in-place re-versioning.
+- [Lab M5 — FSM authoring](https://www.fastyoke.io/docs/training/labs/M5-fsm-authoring.md): Author a 5-state service-ticket FSM with three JSONLogic guards. POST it. Attempt a transition the guard should refuse and observe the 422. Hand-trace one full run from submitted through resolved.
+- [Lecture M9 — Extensions](https://www.fastyoke.io/docs/training/lectures/M9-extensions.md): Why extensions are signed WASM modules with no host syscalls, what the manifest scope vocabulary controls, and the dev-loop tradeoffs.
+- [Quiz M9 — Extensions](https://www.fastyoke.io/docs/training/quizzes/M9-quiz.md): 10 multiple-choice questions on signed WASM bundles, the manifest scope vocabulary, WIT host imports, and fuel/memory caps.
+- [Lab M5 — Solution](https://www.fastyoke.io/docs/training/labs/M5-fsm-authoring-solution.md): Reference solution for Lab M5 — exact schema body with three JSONLogic guards, sample 422 + 200 transition responses, and a sample hand-trace.
+- [Lecture M10 — Marketplace](https://www.fastyoke.io/docs/training/lectures/M10-marketplace.md): The install / inspect / uninstall / clone loop, the retention contract on uninstall, and the difference between a Marketplace app and a Tenant Yoke.
+- [Quiz M10 — Marketplace](https://www.fastyoke.io/docs/training/quizzes/M10-quiz.md): 10 multiple-choice questions on the install/uninstall loop, the retention contract, Tenant Yokes vs Marketplace listings, and clone semantics.
+- [Lab M6 — Jobs](https://www.fastyoke.io/docs/training/labs/M6-jobs.md): Drive a job through the M5 schema, add a self-loop transition for an audit event, fire the admin cancel override, inspect both event_log rows (self-loop + override).
+- [Lecture M11 — Webhooks, notifications & messaging](https://www.fastyoke.io/docs/training/lectures/M11-webhooks.md): Why outbound webhooks ship with HMAC + delivery-id dedup, what the DLQ replay actually replays, and how notifications and messaging share the event spine.
+- [Quiz M11 — Webhooks, notifications & messaging](https://www.fastyoke.io/docs/training/quizzes/M11-quiz.md): 10 multiple-choice questions on HMAC verification, delivery-id dedup, the DLQ, rotate-secret dual window, and the SSRF guard.
+- [Lab M6 — Solution](https://www.fastyoke.io/docs/training/labs/M6-jobs-solution.md): Reference solution for Lab M6 — exact PATCH that adds the self-loop, exact admin-cancel curl, sample event_log row JSON, and a sample job-lifecycle.sh script.
+- [Lecture M12 — Bulk operations + Reports & dashboards](https://www.fastyoke.io/docs/training/lectures/M12-bulk-reports.md): The preview-and-commit contract, why cascade is opt-in per call, and how aggregates compute on demand.
+- [Quiz M12 — Bulk operations + Reports & dashboards](https://www.fastyoke.io/docs/training/quizzes/M12-quiz.md): 10 multiple-choice questions on preview-and-commit, cascade, dashboard aggregates, and digest scheduling.
+- [Lab M7 — Pages & App Builder](https://www.fastyoke.io/docs/training/labs/M7-pages-and-apps.md): Author a 3-page App in the admin shell — Vehicles list (from M3), Intake form (from M4), Dashboard widget. Set a theme override and a navigation order. Open the App and confirm all three pages render.
+- [Lecture M13 — Compliance Yoke + Yoker](https://www.fastyoke.io/docs/training/lectures/M13-compliance-yoker.md): Why the Auditor Room uses deterministic sampling, the connector-vs-attestation distinction, and what Yoker actually indexes.
+- [Quiz M13 — Compliance Yoke + Yoker](https://www.fastyoke.io/docs/training/quizzes/M13-quiz.md): 10 multiple-choice questions on deterministic sampling, the connector-vs-attestation distinction, OSCAL exports, and Yoker gating.
+- [Lab M7 — Solution](https://www.fastyoke.io/docs/training/labs/M7-pages-and-apps-solution.md): Reference solution for Lab M7 — menu paths per step plus three common gotchas around theme cascade, dashboard widget refresh, and draft-form embeds.
+- [Lecture M14 — Yoke Ledger + E-signatures](https://www.fastyoke.io/docs/training/lectures/M14-ledger-esign.md): Why journal entries are immutable once posted, what the seal proves without a PKI, and how the public verify endpoint is the trust model.
+- [Quiz M14 — Yoke Ledger + E-signatures](https://www.fastyoke.io/docs/training/quizzes/M14-quiz.md): 10 multiple-choice questions on journal-entry immutability, the reversal contract, the seal's trust model, and posting-rule self-loops.
+- [Lab M8 — Yoke Studio](https://www.fastyoke.io/docs/training/labs/M8-yoke-studio.md): Build a 2-board Yoke in Yoke Studio at /admin/studio, capture a named snapshot, edit, restore. Confirm the restore reverts your edit.
+- [Lecture M15 — Billing, reseller billing & Strategic Partner](https://www.fastyoke.io/docs/training/lectures/M15-billing-reseller.md): The prepaid wallet's dual-threshold contract, the __default__ sentinel in rate cards, and why Strategic Partner consent is per-request.
+- [Quiz M15 — Billing, reseller billing & Strategic Partner](https://www.fastyoke.io/docs/training/quizzes/M15-quiz.md): 10 multiple-choice questions on the prepaid wallet's dual threshold, the __default__ sentinel, Strategic Partner consent, and metered-only mode.
+- [Lab M8 — Solution](https://www.fastyoke.io/docs/training/labs/M8-yoke-studio-solution.md): Reference solution for Lab M8 — Studio menu paths plus three common gotchas around explicit-snapshot semantics, destructive restore, and per-tenant draft ownership.
+- [Lecture M16 — Capstone framing](https://www.fastyoke.io/docs/training/lectures/M16-capstone.md): How the capstone exercises every primitive across Weeks 1–7, the rubric's load-bearing categories, and what "done" looks like.
+- [Quiz M16 — Capstone framing](https://www.fastyoke.io/docs/training/quizzes/M16-quiz.md): 10 multiple-choice questions on the capstone's integration-over-isolation principle, the rubric categories, and what "done" looks like.
+- [Lab M9 — Extensions](https://www.fastyoke.io/docs/training/labs/M9-extensions.md): Scaffold a starter extension with fy ext init, wire one SDK route fetching the vehicle entity count, sign with fy ext sign, verify with fy ext verify, install via the admin shell, observe the card render in the tenant.
+- [Lab M9 — Solution](https://www.fastyoke.io/docs/training/labs/M9-extensions-solution.md): Reference solution for Lab M9 — exact CLI output, manifest walkthrough, SDK call shape, and four common gotchas around signing, JWT TTL, and hard refusals.
+- [Lab M10 — Marketplace](https://www.fastyoke.io/docs/training/labs/M10-marketplace.md): Install Yoke Ledger via REST, inspect what it seeds (owned_schemas + default Chart of Accounts), uninstall, verify the retention contract (rows survive), then author a Tenant Yoke via clone-from-source.
+- [Lab M10 — Solution](https://www.fastyoke.io/docs/training/labs/M10-marketplace-solution.md): Reference solution for Lab M10 — exact REST commands per step, the retention-contract explanation, and gotchas around clone-from-source semantics and owned_schemas uniqueness.
+- [Lab M11 — Webhooks](https://www.fastyoke.io/docs/training/labs/M11-webhooks.md): Subscribe to job.transition, verify HMAC end-to-end on a receiver, force failures into the DLQ, then replay deliveries and observe dedup by delivery id.
+- [Lab M11 — Solution](https://www.fastyoke.io/docs/training/labs/M11-webhooks-solution.md): Answer key for the M11 webhooks lab — exact curls, a Node HMAC verifier, the delivery-id dedup pattern, and notes on rotate-secret and the SSRF guard.
+- [Lab M12 — Bulk ops & Reports](https://www.fastyoke.io/docs/training/labs/M12-bulk-ops-reports.md): Bulk-edit then bulk-delete with cascade via REST preview/commit, then compose a dashboard with bar and line widgets and schedule a weekly digest.
+- [Lab M12 — Solution](https://www.fastyoke.io/docs/training/labs/M12-bulk-ops-reports-solution.md): Answer key for the M12 bulk ops & reports lab — exact preview/commit/cascade curls, dashboard composer menu paths, digest scheduling fields, and the common gotchas.
+- [Lab M13 — Compliance & Yoker](https://www.fastyoke.io/docs/training/labs/M13-compliance-yoker.md): Run a framework-readiness sweep, list collected evidence, generate an OSCAL export, open the Auditor Room, and optionally ask Yoker a tenant-scoped question.
+- [Lab M13 — Solution](https://www.fastyoke.io/docs/training/labs/M13-compliance-yoker-solution.md): Answer key for the M13 compliance & Yoker lab — exact sweep/evidence/OSCAL curls, Auditor Room menu paths, deterministic-sampling and gating notes.
+- [Lab M14 — Ledger & E-sign](https://www.fastyoke.io/docs/training/labs/M14-ledger-esign.md): Author a Revenue CoA account and a Posting Rule via REST, post a journal entry, reverse it, then upload a PDF envelope and verify the Certificate of Completion out-of-band.
+- [Lab M14 — Solution](https://www.fastyoke.io/docs/training/labs/M14-ledger-esign-solution.md): Answer key for the M14 ledger & e-sign lab — exact GL curls, the reversal contract, the public verify endpoint shape, and three sealed-PDF gotchas.
+- [Lab M15 — Billing, reseller & Strategic Partner](https://www.fastyoke.io/docs/training/labs/M15-billing-reseller.md): Top up a sandbox tenant's prepaid wallet, inspect the metered usage rollup, then simulate usage and trip the low-balance alert.
+- [Lab M15 — Solution](https://www.fastyoke.io/docs/training/labs/M15-billing-reseller-solution.md): Answer key for the M15 billing lab — exact wallet/usage curls, the dual-threshold contract, reseller rate-card note, Strategic Partner consent semantics.
+- [Lab M16 — Capstone](https://www.fastyoke.io/docs/training/labs/M16-capstone.md): The capstone is the final integration project. This page is the bridge from Week 8 to the canonical capstone doc.
 
 ## Tutorials
 
-- [Tutorials](https://www.fastyoke.io/docs/tutorials): End-to-end developer build flows. Mint a token, ship something live, with verifiable checkpoints at every step. Three tiers — 101 first contact, 201 production patterns, 301 extending the platform.
-- [101 — Your first API integration](https://www.fastyoke.io/docs/tutorials/101-first-integration): In ten minutes, mint a one-hour test token, POST an entity, fire a workflow transition against it, and receive the matching outbound webhook. The proof at the end is a single HTTPS request you can replay.
-- [201 — Sync data into FastYoke](https://www.fastyoke.io/docs/tutorials/201-csv-importer): Build a 60-line Node script that imports a CSV of customers into your tenant's entity API. Idempotency keys keep re-runs safe, Retry-After respects rate limits, and a checkpoint file recovers from mid-batch failure.
-- [301 — Author an extension](https://www.fastyoke.io/docs/tutorials/301-author-extension): Author, sign, install, and load a tiny React extension that reads the current user's tenant_id from the SDK, fetches an entity count from the tenant API, and renders the result inside the admin shell.
+- [Tutorials](https://www.fastyoke.io/docs/tutorials.md): End-to-end developer build flows. Mint a token, ship something live, with verifiable checkpoints at every step. Three tiers — 101 first contact, 201 production patterns, 301 extending the platform.
+- [101 — Your first API integration](https://www.fastyoke.io/docs/tutorials/101-first-integration.md): In ten minutes, mint a one-hour test token, POST an entity, fire a workflow transition against it, and receive the matching outbound webhook. The proof at the end is a single HTTPS request you can replay.
+- [201 — Sync data into FastYoke](https://www.fastyoke.io/docs/tutorials/201-csv-importer.md): Build a 60-line Node script that imports a CSV of customers into your tenant's entity API. Idempotency keys keep re-runs safe, Retry-After respects rate limits, and a checkpoint file recovers from mid-batch failure.
+- [301 — Author an extension](https://www.fastyoke.io/docs/tutorials/301-author-extension.md): Author, sign, install, and load a tiny React extension that reads the current user's tenant_id from the SDK, fetches an entity count from the tenant API, and renders the result inside the admin shell.
 
 ## Workflows
 
-- [FSM Designer](https://www.fastyoke.io/docs/workflows/builder): Draw the graph, wire transitions, compose guards, declare actions.
-- [Workflows](https://www.fastyoke.io/docs/workflows): Finite-state machines with sandboxed guards, declarative actions, and multi-version publishing.
+- [FSM Designer](https://www.fastyoke.io/docs/workflows/builder.md): Draw the graph, wire transitions, compose guards, declare actions.
+- [Workflows](https://www.fastyoke.io/docs/workflows.md): Finite-state machines with sandboxed guards, declarative actions, and multi-version publishing.
 
 ## Yoke Ledger
 
-- [Yoke Ledger](https://www.fastyoke.io/docs/yoke-ledger): A free double-entry General Ledger Yoke — Chart of Accounts, journal entries, declarative posting rules, and three financial statements your other Yokes can post into.
-- [Chart of accounts](https://www.fastyoke.io/docs/yoke-ledger/chart-of-accounts): The five account types, the code convention, the editor surface, and the deactivate-not-delete rule that preserves your historical entries.
-- [Journal entries](https://www.fastyoke.io/docs/yoke-ledger/journal-entries): Journal entries are FSM jobs. draft → posted ↔ reversed, immutable once posted, with a balance invariant the platform enforces at write time.
-- [Posting rules](https://www.fastyoke.io/docs/yoke-ledger/posting-rules): Declarative mappings from a source event to a journal entry shape. The Posting Rule Designer authors them; idempotent execution dedupes per source event.
-- [Reports](https://www.fastyoke.io/docs/yoke-ledger/reports): Trial Balance, Profit & Loss, and Balance Sheet — three financial statements computed on demand from posted entries, with reconciliation identities the platform preserves at write time.
-- [API reference](https://www.fastyoke.io/docs/yoke-ledger/api-reference): REST surface for Yoke Ledger — accounts, journal entries (with post and reverse), posting rules, the sources catalogue, and the three financial statements.
+- [Yoke Ledger](https://www.fastyoke.io/docs/yoke-ledger.md): A free double-entry General Ledger Yoke — Chart of Accounts, journal entries, declarative posting rules, and three financial statements your other Yokes can post into.
+- [Chart of accounts](https://www.fastyoke.io/docs/yoke-ledger/chart-of-accounts.md): The five account types, the code convention, the editor surface, and the deactivate-not-delete rule that preserves your historical entries.
+- [Journal entries](https://www.fastyoke.io/docs/yoke-ledger/journal-entries.md): Journal entries are FSM jobs. draft → posted ↔ reversed, immutable once posted, with a balance invariant the platform enforces at write time.
+- [Posting rules](https://www.fastyoke.io/docs/yoke-ledger/posting-rules.md): Declarative mappings from a source event to a journal entry shape. The Posting Rule Designer authors them; idempotent execution dedupes per source event.
+- [Reports](https://www.fastyoke.io/docs/yoke-ledger/reports.md): Trial Balance, Profit & Loss, and Balance Sheet — three financial statements computed on demand from posted entries, with reconciliation identities the platform preserves at write time.
+- [API reference](https://www.fastyoke.io/docs/yoke-ledger/api-reference.md): REST surface for Yoke Ledger — accounts, journal entries (with post and reverse), posting rules, the sources catalogue, and the three financial statements.
 
 ## Yoker (AI assistant)
 
-- [Yoker (AI assistant)](https://www.fastyoke.io/docs/yoker): A RAG-powered chat assistant in the right-toolbar dock. Ask natural-language questions grounded in your entity records and text attachments. On-VM embeddings, no external API calls.
-- [Yoker API reference](https://www.fastyoke.io/docs/yoker/api-reference): REST endpoints for the Yoker assistant and the corpus backfill, plus the entitlement-gating 403 envelope and the deferred-API list.
+- [Yoker (AI assistant)](https://www.fastyoke.io/docs/yoker.md): A RAG-powered chat assistant in the right-toolbar dock. Ask natural-language questions grounded in your entity records and text attachments. On-VM embeddings, no external API calls.
+- [Yoker API reference](https://www.fastyoke.io/docs/yoker/api-reference.md): REST endpoints for the Yoker assistant and the corpus backfill, plus the entitlement-gating 403 envelope and the deferred-API list.
+
+## Optional
+
+- [FastYoke — Run your business on ready-made apps](https://www.fastyoke.io/index.md): Install a CRM, inventory, accounting, or field-service app in minutes. Customize it without code. Own your data, always.
+- [FastYoke for Developers & ISVs — The Open-Architecture aPaaS](https://www.fastyoke.io/developers.md): Build at the speed of low-code, perform at the speed of the edge, leave whenever you want. Multi-tenant FSM platform for ISVs who refuse vendor lock-in.
+- [Guides — FastYoke](https://www.fastyoke.io/guides.md): Opinionated guides on when FastYoke is the right move — graduation stories, vertical playbooks, decision frameworks, and the architectural decisions behind the platform.
+- [Partners — FastYoke](https://www.fastyoke.io/partners.md): FastYoke's named partner ecosystem. Strategic Partners deliver hands-on implementation; Channel Partners run the portfolio motion in a specific vertical.
+- [Solutions — FastYoke](https://www.fastyoke.io/solutions.md): FastYoke solutions by vertical. Healthcare, warehousing, field service, retail / POS, professional services, and auto & repair — with a curated page for each.
+- [Healthcare on FastYoke — patient flow, triage, EHR/ADT, HIPAA](https://www.fastyoke.io/solutions/healthcare.md): Patient throughput boards, urgent-care triage, an HL7v2 EHR/ADT connector, on-VM biometrics, and a BAA-backed HIPAA posture. Built for clinics and hospital units that want operational software without sending PHI to a third-party SaaS.
+- [Get started with FastYoke — Early access](https://www.fastyoke.io/getting-started.md): FastYoke's general release is scheduled for later this year. Request early access by submitting the form on this page.
+- [When you outgrow Make.com — FastYoke](https://www.fastyoke.io/guides/when-you-outgrow-make.md): Make.com is great at orchestrating SaaS calls. Three signals you've outgrown it, and what FastYoke gives you on the other side.
+- [Marketplace — FastYoke](https://www.fastyoke.io/marketplace.md): Install ready-made apps on the FastYoke platform — CRM, inventory, accounting, field service, warehousing, and more.
+- [Pricing — FastYoke](https://www.fastyoke.io/pricing.md): Simple pricing that scales from a side project to a regulated fleet. Free with every Vercel Marketplace install; paid tiers on request.
+- [Field service & HVAC on FastYoke — dispatch, on-site, invoice](https://www.fastyoke.io/solutions/field-service.md): Field-service operations for contractors running real crews — HVAC, electrical, plumbing, and multi-trade shops. Dispatch boards, on-site state tracking, invoice-on-completion, and the audit trail when a customer disputes a charge.
+- [AI on FastYoke — build apps and run smarter operations](https://www.fastyoke.io/ai.md): Two AI lanes on one platform — build with Yoke Architect and AI Designer, operate with Yoke briefs, digests, No-Show ML, and Yoker RAG. Every write is gated; you approve before anything changes.
+- [Enterprise — FastYoke](https://www.fastyoke.io/enterprise.md): The enterprise application platform for regulated, operations-heavy organizations. Mechanical tenant isolation, append-only audit, deployment choice from cloud to air-gap.
+- [When you outgrow Airtable — FastYoke](https://www.fastyoke.io/guides/when-you-outgrow-airtable.md): Airtable is the right tool for half the operations workloads it ends up running. Three signals the half you're running is the other one.
+- [Privacy Notice — FastYoke](https://www.fastyoke.io/privacy.md): How FastYoke handles personal data submitted through public forms, account info, and product telemetry. Plain-language summary plus the data subject's rights.
+- [Retail, POS & food service on FastYoke — storefront and counter operations](https://www.fastyoke.io/solutions/retail-pos.md): Multi-location retail with unified inventory and customer flows. Point-of-sale and kiosk deployments paired with payment hardware. Quick-serve, casual, and full-service restaurants — order capture, kitchen-display routing, pickup / delivery, and the back-of-house accounting.
+- [Free Online Form Builder — FastYoke Solo Plan](https://www.fastyoke.io/free-forms.md): Build unlimited forms for free. Drag-and-drop builder, multi-page flows, conditional logic, themes, and PDF generation. Designed for personal projects and small businesses.
+- [Hospital throughput on FastYoke — FastYoke](https://www.fastyoke.io/guides/hospital-throughput-on-fastyoke.md): How a clinic or hospital unit runs patient flow, transport, discharge, and EVS turnover on FastYoke — without sending PHI to a third-party SaaS.
+- [Security — FastYoke](https://www.fastyoke.io/security.md): Executive summary of how FastYoke protects PII — tenant isolation, encryption, access control, auditability, and operational security.
+- [Warehousing & 3PL on FastYoke — WMS / TMS / 3PL stack](https://www.fastyoke.io/solutions/warehousing.md): Multi-client warehouses, four-wall WMS, transportation management, and the free Logistics core every logistics app sits on. Built for warehouses and 3PL operators that want a unified stack across the four walls and the road.
+- [Terms of Service — FastYoke](https://www.fastyoke.io/terms.md): The terms governing your use of FastYoke — eligibility, accounts, acceptable use, SMS messaging consent, billing, and the standard disclaimers and liability limits.
+- [Trust & compliance — FastYoke](https://www.fastyoke.io/trust.md): Security, compliance, and procurement resources for enterprise evaluators — executive summary, advisory log, subprocessors, and technical trust center.
+- [Yoke — AI operations assistant for field service](https://www.fastyoke.io/yoke.md): Yoke proposes concrete improvements to your workflows from patterns in your event log. Every change is a brief you approve. Weekly digests, No-Show ML, and Time Travel connect recommendations to measured outcomes.
+- [Why we built FastYoke](https://www.fastyoke.io/about.md): A note from the team on the problem we set out to solve — and the principles we refuse to compromise on.
+- [FastYoke DB — enterprise-grade distributed SQL with portability](https://www.fastyoke.io/db.md): FastYoke DB (fyDB) is enterprise-grade distributed SQL hosted on YugabyteDB Aeon or CockroachDB Cloud, managed by FastYoke. Requires an Enterprise+ contract. Customers who need distributed SQL in a private cloud can bring their own cluster instead.
+- [Why per-tenant database files — FastYoke](https://www.fastyoke.io/guides/why-per-tenant-database-files.md): The "Multi-Tenancy Prime Directive," explained for buyers. Why FastYoke isolates customer data at the operating-system layer instead of trusting WHERE tenant_id = ?.
+- [SMS Opt-In — FastYoke](https://www.fastyoke.io/sms-opt-in.md): How FastYoke users opt in to receive transactional SMS messages, with screenshots of the in-product consent screen and the seven required disclosures.
+- [Professional services on FastYoke — projects, tasks, client work, billing](https://www.fastyoke.io/solutions/professional-services.md): Operations software for consulting practices, agencies, and project-shaped service businesses. Projects, tasks, time-and-materials billing, and a real audit trail underneath.
+- [Trademarks — FastYoke](https://www.fastyoke.io/trademarks.md): Acknowledgment of third-party trademarks referenced in the FastYoke product, and a statement that FastYoke uses them nominatively without implying endorsement or affiliation.
+- [Yoker — RAG assistant grounded in your tenant data](https://www.fastyoke.io/yoker.md): Yoker is FastYoke's docked AI assistant. Ask natural-language questions about entity records and text attachments; retrieval runs on-VM with ONNX embeddings. Enterprise included; Pro and Team via add-on.
+- [Build with AI — Yoke Architect and AI Designer](https://www.fastyoke.io/ai/build.md): FastYoke Lane 1 AI — describe apps and workflows; get readable artifacts you can diff, export, and hand to engineers. Yoke Architect composes Yoke Apps; AI Designer extends FSMs and marketplace apps.
+- [When you outgrow Zapier — FastYoke](https://www.fastyoke.io/guides/when-you-outgrow-zapier.md): Zapier is the right tool for half the SaaS-glue you wire up. Three signals the other half has stopped being SaaS glue and started being an application.
+- [FastYoke Runtime — free for single-node and development](https://www.fastyoke.io/runtime.md): The full FastYoke FSM engine, free forever for local development and single-node deployments. No cloud account. No internet. Same engine as production — what you build here deploys unchanged.
+- [Security Fixes — FastYoke](https://www.fastyoke.io/security-fixes.md): Known security findings and their fix status across FastYoke releases.
+- [Auto & repair on FastYoke — intake to handoff on one board](https://www.fastyoke.io/solutions/auto-repair.md): Operations software for auto-tech shops, body shops, motorcycle and small-engine repair, and equipment-service operators. Intake to handoff on one board with parts, labor, and invoicing wired in.
+- [Status & Reliability — FastYoke](https://www.fastyoke.io/status.md): How FastYoke stays up — current operating status, the controls that keep the platform running, and what happens when something breaks.
+- [Recently shipped — FastYoke](https://www.fastyoke.io/changelog.md): What we've been building. A running log of the features, fixes, and polish landing in FastYoke during early access.
+- [FSM as the spine of operations software — FastYoke](https://www.fastyoke.io/guides/fsm-as-the-spine.md): Why every serious operations app eventually grows a state machine — and what changes when you start with one instead of bolting it on later.
+- [FastYoke On-Prem — air-gapped enterprise deployment](https://www.fastyoke.io/on-prem.md): FastYoke as a single binary inside your own network. No outbound internet required. Tenant databases stay on your hardware. Air-gap compatible from the ground up.
+- [Choosing a tier for your team size — FastYoke](https://www.fastyoke.io/guides/choosing-a-tier-for-your-team-size.md): An opinionated walkthrough of the FastYoke tier ladder. Which tier fits your team today, which one fits in six months, and the upgrade triggers worth watching.
+- [FastYoke Substrate — native mobile apps for your employee fleet](https://www.fastyoke.io/substrate.md): FastYoke Substrate is the native mobile delivery layer for deploying internal apps to employee devices without App Store review. Build in the App Builder, compile to Android and iOS, and distribute privately via MDM or install link. Team+ tier. Early access Q1 2027.
+- [Channel Partners & ISVs — FastYoke](https://www.fastyoke.io/channel-partners.md): Early access program for systems integrators, channel partners, and independent software vendors building on the FastYoke aPaaS.
+- [Multi-location HVAC on FastYoke — FastYoke](https://www.fastyoke.io/guides/multi-location-hvac-on-fastyoke.md): Field-service operations for an HVAC contractor running across multiple locations. Dispatch, on-site state, invoicing, and the marketplace apps that wire it together.
+- [iNetko — Strategic Partner | FastYoke](https://www.fastyoke.io/partners/inetko.md): iNetko is FastYoke's first named Strategic Partner — frontline support, sales engineering, implementation, and consulting for teams that want hands-on help getting to production.
+- [Pay n Go Systems — Channel Partner | FastYoke](https://www.fastyoke.io/partners/pay-n-go-systems.md): Pay n Go Systems is FastYoke's first named Channel Partner — focused on retail, point-of-sale, and food-service deployments for operators that want a turnkey portfolio motion.
+- [Compare — FastYoke](https://www.fastyoke.io/compare.md): Honest side-by-side comparisons against the platforms FastYoke is most often evaluated alongside.
+- [No cookies — FastYoke](https://www.fastyoke.io/no-cookies.md): Zero cookies on the marketing site, one strictly-necessary session cookie on the app, no third-party trackers anywhere.
+- [FastYoke vs Lovable — Compare](https://www.fastyoke.io/compare/lovable.md): Lovable generates custom apps from prompts. FastYoke runs multi-tenant operational platforms with built-in workflow, RBAC, and audit. Honest, side-by-side.
+- [FastYoke vs Retool — Compare](https://www.fastyoke.io/compare/retool.md): Retool ships internal-tools dashboards on top of your existing databases. FastYoke ships multi-tenant operational platforms with built-in workflow, RBAC, and audit. Honest, side-by-side.
+- [FastYoke vs Supabase — Compare](https://www.fastyoke.io/compare/supabase.md): Supabase ships a Postgres-native backend toolkit. FastYoke ships a multi-tenant operational platform with workflow, RBAC, audit, and the app surface on top. Honest, side-by-side.
+- [Studio — Build an app on FastYoke](https://www.fastyoke.io/studio.md)
+- [Yoke Architect — A Thesis](https://www.fastyoke.io/yoke-architect.md)
