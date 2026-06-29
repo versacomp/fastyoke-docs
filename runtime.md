@@ -4,11 +4,13 @@ summary: The full FastYoke FSM engine, free forever for local development and si
 order: 6
 ---
 
-::hero{eyebrow="Free forever · No cloud account" title="The FastYoke engine, running on your machine" tagline="FastYoke Runtime is the full FSM engine, free for local development and single-node deployments. No internet connection required. What you build here deploys to Cloud SaaS or On-Prem unchanged — the engine is identical."}
+::hero{eyebrow="Post-GA · Free forever · No cloud account" title="The FastYoke engine, running on your machine" tagline="FastYoke Runtime is the full FSM engine for local development and single-node deployments. The deployment platform ships at general availability — join the waitlist on /download until then. No internet connection required for local work. What you build here deploys to Cloud SaaS or On-Prem unchanged — the engine is identical."}
 ::
 
 ::marketing-section{band="white" maxWidth="3xl"}
 #default
+
+::maturity-badge{status="post-ga"}
 
 ## Three minutes to a running app
 

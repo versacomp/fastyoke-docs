@@ -63,7 +63,7 @@ Same application code across substrates — choose managed cloud, air-gapped on-
 #default
 ::feature-grid{columns="4"}
   ::feature-card{title="Runtime" summary="Local FSM engine for dev and single-node. Free — same app package deploys to Cloud SaaS unchanged." accent="cyan"}
-  ::maturity-badge{status="available"}
+  ::maturity-badge{status="post-ga"}
   ::
   ::cta-button{to="/runtime" variant="secondary" size="sm"}
   Learn more
