@@ -8,6 +8,8 @@ order: 3
 ::
 
 ::marketing-section{band="white" maxWidth="3xl"}
+#default
+
 ## Platform thesis
 
 FastYoke is an **application platform as a service (aPaaS)** purpose-built for operations-intensive organizations where process integrity, auditability, and data residency are procurement requirements—not afterthoughts.
@@ -28,7 +30,6 @@ Download board brief (PDF)
 See the open architecture
 ::
 ::
-
 ::
 
 ::marketing-section{band="gray" maxWidth="6xl"}
@@ -61,7 +62,7 @@ Same application code across substrates — choose managed cloud, air-gapped on-
 
 #default
 ::feature-grid{columns="4"}
-  ::feature-card{title="Runtime" summary="Fully managed cloud. Works on every plan. Zero infra." accent="cyan"}
+  ::feature-card{title="Runtime" summary="Local FSM engine for dev and single-node. Free — same app package deploys to Cloud SaaS unchanged." accent="cyan"}
   ::maturity-badge{status="available"}
   ::
   ::cta-button{to="/runtime" variant="secondary" size="sm"}
@@ -147,6 +148,8 @@ Full posture: [Security executive summary](/security) · [Yoker RAG overview](/y
 ::
 
 ::marketing-section{band="white" maxWidth="3xl"}
+#default
+
 ## Identity & access
 
 - **72-permission RBAC catalog** — every API and UI surface gates on explicit permissions.
@@ -155,6 +158,8 @@ Full posture: [Security executive summary](/security) · [Yoker RAG overview](/y
 ::
 
 ::marketing-section{band="gray" maxWidth="3xl"}
+#default
+
 ## Implementation partners
 
 Enterprise rollouts — especially **on-prem** and vertical FSM design — typically pair FastYoke with a certified implementation partner. See [Partners](/partners) and [On-Prem deployment](/on-prem).
@@ -165,6 +170,7 @@ Enterprise rollouts — especially **on-prem** and vertical FSM design — typic
 Start the enterprise conversation
 
 #default
+::inline-cta-group
 ::cta-button{to="/contact" variant="primary" size="lg"}
 Contact sales
 ::
@@ -175,5 +181,6 @@ Security questionnaire
 
 ::cta-button{to="/on-prem" variant="secondary" size="md"}
 On-Prem overview
+::
 ::
 ::

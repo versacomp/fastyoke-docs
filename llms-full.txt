@@ -1828,6 +1828,8 @@ What we won't do
 
 > The enterprise application platform for regulated, operations-heavy organizations. Mechanical tenant isolation, append-only audit, deployment choice from cloud to air-gap.
 
+#default
+
 ## Platform thesis
 
 FastYoke is an **application platform as a service (aPaaS)** purpose-built for operations-intensive organizations where process integrity, auditability, and data residency are procurement requirements—not afterthoughts.
@@ -1841,7 +1843,6 @@ Download board brief (PDF)
 
 See the open architecture
 ::
-
 ::
 
 #eyebrow
@@ -1869,7 +1870,7 @@ Run FastYoke where your data lives
 Same application code across substrates — choose managed cloud, air-gapped on-prem, native mobile fleet, or distributed SQL when scale demands it.
 
 #default
-  ::feature-card{title="Runtime" summary="Fully managed cloud. Works on every plan. Zero infra." accent="cyan"}
+  ::feature-card{title="Runtime" summary="Local FSM engine for dev and single-node. Free — same app package deploys to Cloud SaaS unchanged." accent="cyan"}
   ::maturity-badge{status="available"}
   ::
   ::cta-button{to="/runtime" variant="secondary" size="sm"}
@@ -1944,11 +1945,15 @@ Download security posture (PDF)
 Full posture: [Security executive summary](/security) · [Yoker RAG overview](/yoker) · [Subprocessor list](/docs/security/subprocessors) · [Trust Center (technical)](/docs/security/trust-center)
 ::
 
+#default
+
 ## Identity & access
 
 - **72-permission RBAC catalog** — every API and UI surface gates on explicit permissions.
 - **Personal Access Tokens** — scoped `fy_pat_` tokens with hard refusals outside granted scopes.
 - **Strategic Partner consent** — implementation partners reach a tenant only while a per-tenant grant is active.
+
+#default
 
 ## Implementation partners
 
@@ -1963,6 +1968,7 @@ Contact sales
 Security questionnaire
 
 On-Prem overview
+::
 ::
 
 ---
