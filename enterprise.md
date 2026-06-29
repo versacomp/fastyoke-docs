@@ -22,13 +22,12 @@ State transitions are enforced through a **finite state machine** with sandboxed
 ::
 
 ::inline-cta-group
-::cta-button{to="/downloads/fastyoke-enterprise-platform-overview.pdf" variant="primary" size="md" download}
-Download board brief (PDF)
-::
-
-::cta-button{to="/developers" variant="secondary" size="md"}
-See the open architecture
-::
+  ::cta-button{to="/downloads/fastyoke-enterprise-platform-overview.pdf" variant="primary" size="md" download}
+  Download board brief (PDF)
+  ::
+  ::cta-button{to="/developers" variant="secondary" size="md"}
+  See the open architecture
+  ::
 ::
 ::
 
@@ -135,13 +134,12 @@ Deployment substrates, on-VM RAG posture, Compliance Yoke, and attestations — 
 | SOC 2 Type II | Roadmap — bridge letter on request |
 
 ::inline-cta-group
-::cta-button{to="/downloads/fastyoke-enterprise-security-compliance-brief.pdf" variant="primary" size="md" download}
-Download compliance brief (PDF)
-::
-
-::cta-button{to="/downloads/fastyoke-pii-security-summary.pdf" variant="secondary" size="md" download}
-Download security posture (PDF)
-::
+  ::cta-button{to="/downloads/fastyoke-enterprise-security-compliance-brief.pdf" variant="primary" size="md" download}
+  Download compliance brief (PDF)
+  ::
+  ::cta-button{to="/downloads/fastyoke-pii-security-summary.pdf" variant="secondary" size="md" download}
+  Download security posture (PDF)
+  ::
 ::
 
 Full posture: [Security executive summary](/security) · [Yoker RAG overview](/yoker) · [Subprocessor list](/docs/security/subprocessors) · [Trust Center (technical)](/docs/security/trust-center)
@@ -171,16 +169,13 @@ Start the enterprise conversation
 
 #default
 ::inline-cta-group
-::cta-button{to="/contact" variant="primary" size="lg"}
-Contact sales
-::
-
-::cta-button{to="mailto:security@fastyoke.io?subject=FastYoke%20security%20questionnaire" variant="secondary" size="md"}
-Security questionnaire
-::
-
-::cta-button{to="/on-prem" variant="secondary" size="md"}
-On-Prem overview
-::
-::
+  ::cta-button{to="/contact" variant="primary" size="lg"}
+  Contact sales
+  ::
+  ::cta-button{to="mailto:security@fastyoke.io?subject=FastYoke%20security%20questionnaire" variant="secondary" size="md"}
+  Security questionnaire
+  ::
+  ::cta-button{to="/on-prem" variant="secondary" size="md"}
+  On-Prem overview
+  ::
 ::

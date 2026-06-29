@@ -32,15 +32,13 @@ code running across both.
 ::
 
 ::inline-cta-group
-::cta-button{to="/downloads/fastyoke-db-board-brief.pdf" variant="primary" size="md" download}
-Download board brief (PDF)
+  ::cta-button{to="/downloads/fastyoke-db-board-brief.pdf" variant="primary" size="md" download}
+  Download board brief (PDF)
+  ::
+  ::cta-button{to="/guides/why-per-tenant-database-files" variant="secondary" size="md"}
+  Read the architecture commitment
+  ::
 ::
-
-::cta-button{to="/guides/why-per-tenant-database-files" variant="secondary" size="md"}
-Read the architecture commitment
-::
-::
-
 ::
 
 ::marketing-section{band="gray" maxWidth="6xl"}

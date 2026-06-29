@@ -1841,10 +1841,12 @@ Line-of-business capabilities—CRM, inventory, field service, patient throughpu
 State transitions are enforced through a **finite state machine** with sandboxed guard evaluation, recorded in an **append-only event log**, and exposed through **role-gated APIs**. This architecture aligns with the controls enterprise security and compliance teams expect to validate.
 
 
-Download board brief (PDF)
-
-See the open architecture
-::
+  ::cta-button{to="/downloads/fastyoke-enterprise-platform-overview.pdf" variant="primary" size="md" download}
+  Download board brief (PDF)
+  ::
+  ::cta-button{to="/developers" variant="secondary" size="md"}
+  See the open architecture
+  ::
 ::
 
 #eyebrow
@@ -1939,10 +1941,12 @@ Deployment substrates, on-VM RAG posture, Compliance Yoke, and attestations — 
 | Accessibility | VPAT 2.5 — [download on Security](/security) |
 | SOC 2 Type II | Roadmap — bridge letter on request |
 
-Download compliance brief (PDF)
-
-Download security posture (PDF)
-::
+  ::cta-button{to="/downloads/fastyoke-enterprise-security-compliance-brief.pdf" variant="primary" size="md" download}
+  Download compliance brief (PDF)
+  ::
+  ::cta-button{to="/downloads/fastyoke-pii-security-summary.pdf" variant="secondary" size="md" download}
+  Download security posture (PDF)
+  ::
 
 Full posture: [Security executive summary](/security) · [Yoker RAG overview](/yoker) · [Subprocessor list](/docs/security/subprocessors) · [Trust Center (technical)](/docs/security/trust-center)
 ::
@@ -1965,13 +1969,15 @@ Enterprise rollouts — especially **on-prem** and vertical FSM design — typic
 Start the enterprise conversation
 
 #default
-Contact sales
-
-Security questionnaire
-
-On-Prem overview
-::
-::
+  ::cta-button{to="/contact" variant="primary" size="lg"}
+  Contact sales
+  ::
+  ::cta-button{to="mailto:security@fastyoke.io?subject=FastYoke%20security%20questionnaire" variant="secondary" size="md"}
+  Security questionnaire
+  ::
+  ::cta-button{to="/on-prem" variant="secondary" size="md"}
+  On-Prem overview
+  ::
 
 ---
 
@@ -3716,11 +3722,12 @@ between substrates on a per-tenant basis, with the same application
 code running across both.
 
 
-Download board brief (PDF)
-
-Read the architecture commitment
-::
-
+  ::cta-button{to="/downloads/fastyoke-db-board-brief.pdf" variant="primary" size="md" download}
+  Download board brief (PDF)
+  ::
+  ::cta-button{to="/guides/why-per-tenant-database-files" variant="secondary" size="md"}
+  Read the architecture commitment
+  ::
 ::
 
 #eyebrow
