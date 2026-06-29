@@ -90,11 +90,6 @@ Run a real four-wall warehouse on FastYoke: receive against a PO, putaway to a b
   Learn more
   ::
   ::
-  ::feature-card{title="Accounting" icon="accounting" accent="emerald" summary="Send invoices, track the bills you owe, and keep your books balanced. Chart of accounts, AR/AP, and a clean ledger out of the box — the GL underneath every app."}
-  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
-  Learn more
-  ::
-  ::
 ::
 ::
 
@@ -110,14 +105,29 @@ Built for operations-heavy businesses like…
 
 ::feature-grid{columns="3"}
   ::feature-card{title="Field service / HVAC" summary="Dispatch crews, track jobs to completion, invoice on site."}
+  ::cta-button{to="/solutions/field-service" variant="secondary" size="sm"}
+  See field service
+  ::
   ::
   ::feature-card{title="Warehousing & 3PL" summary="Receive, putaway, pick, pack, ship — with a guided scan console and an immutable event log."}
+  ::cta-button{to="/solutions/warehousing" variant="secondary" size="sm"}
+  See warehousing
+  ::
   ::
   ::feature-card{title="Auto & repair" summary="From intake to handoff, every job tracked on one board."}
+  ::cta-button{to="/solutions/auto-repair" variant="secondary" size="sm"}
+  See auto & repair
+  ::
   ::
   ::feature-card{title="Professional services" summary="Projects, tasks, and client work that never falls through the cracks."}
+  ::cta-button{to="/solutions/professional-services" variant="secondary" size="sm"}
+  See professional services
+  ::
   ::
   ::feature-card{title="Retail / inventory" summary="Stock, receipts, and reorder alerts without the spreadsheet."}
+  ::cta-button{to="/solutions/retail-pos" variant="secondary" size="sm"}
+  See retail / POS
+  ::
   ::
   ::feature-card{title="Healthcare / triage" summary="Patient flow boards, urgent-care triage, and an HL7v2 EHR/ADT connector — built for HIPAA + BAA-gated tenants."}
   ::cta-button{to="/solutions/healthcare" variant="secondary" size="sm"}
@@ -219,11 +229,6 @@ Forms are free forever. Paid tiers scale from a single team to a regulated fleet
 #default
 ::cta-button{to="/pricing" variant="primary" size="lg"}
 See pricing
-::
-::
-
-::marketing-section{band="gray" maxWidth="6xl"}
-::customer-logo-strip{eyebrow="Trusted by teams running real operations on FastYoke."}
 ::
 ::
 
