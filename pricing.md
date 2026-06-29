@@ -239,15 +239,16 @@ order: 2
 ::marketing-section{band="white" maxWidth="4xl"}
 #default
 <h2 class="text-2xl font-semibold tracking-tight text-center text-[var(--brand-text-primary)]">Deploy on your terms</h2>
-<p class="mt-2 text-center text-[var(--brand-text-secondary)]">FastYoke runs where your data lives — cloud-managed, self-hosted, or native mobile.</p>
+<p class="mt-2 text-center text-[var(--brand-text-secondary)]">One FSM engine — managed cloud, air-gapped servers, or native mobile.</p>
 
 <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
   <div class="rounded-xl border p-6 flex flex-col gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
-    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.14); color: #38bdf8" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10"/><path d="M12 15v3"/><path d="M18 10.5a3.5 3.5 0 0 0-6.4-2.1 4.5 4.5 0 0 0-8.6 2.1A3.5 3.5 0 0 0 7 14.5h11"/></svg></div>
+    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.14); color: #38bdf8" aria-hidden="true"><span class="inline-flex items-center justify-center gap-0.5" style="line-height:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10"/><path d="M12 15v3"/><path d="M18 10.5a3.5 3.5 0 0 0-6.4-2.1 4.5 4.5 0 0 0-8.6 2.1A3.5 3.5 0 0 0 7 14.5h11"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 18h20"/><path d="M12 16v2"/></svg></span></div>
     <h3 class="font-semibold text-[var(--brand-text-primary)]">Runtime</h3>
-    <p class="text-xs font-medium text-[var(--brand-primary)]">Available post-GA release</p>
-    <p class="text-sm text-[var(--brand-text-secondary)] flex-1">Local FSM engine for dev and single-node. Free — no cloud account.</p>
-    <a href="/runtime" class="mt-2 text-sm font-medium text-[var(--brand-primary)]">Learn about Runtime →</a>
+    <p class="text-xs text-[var(--brand-text-secondary)]">Two ways to run the engine</p>
+    <p class="text-xs font-medium text-[var(--brand-primary)]">Cloud live · Local post-GA</p>
+    <p class="text-sm text-[var(--brand-text-secondary)] flex-1"><strong>Managed Cloud</strong> — production-ready today. <strong>Local single-node</strong> — free for dev and offline work.</p>
+    <a href="/runtime#modes" class="mt-2 text-sm font-medium text-[var(--brand-primary)]">Compare runtimes →</a>
   </div>
   <div class="rounded-xl border p-6 flex flex-col gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
     <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(148, 163, 184, 0.14); color: #94a3b8" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="6" rx="1"/><circle cx="8" cy="8" r="1"/><rect x="5" y="13" width="14" height="6" rx="1"/><circle cx="8" cy="16" r="1"/></svg></div>

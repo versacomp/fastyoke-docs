@@ -369,7 +369,7 @@ Preferred consumption for automated agents:
 
 ## Optional
 
-- [FastYoke — Run your business on ready-made apps](https://www.fastyoke.io/index.md): Install a CRM, inventory, accounting, or field-service app in minutes. Customize it without code. Own your data, always.
+- [FastYoke — Run your business on ready-made apps](https://www.fastyoke.io/index.md): Install CRM, inventory, accounting, or field-service apps from the marketplace. Customize them without code. Own your data, always.
 - [FastYoke for Developers & ISVs — The Open-Architecture aPaaS](https://www.fastyoke.io/developers.md): Build at the speed of low-code, perform at the speed of the edge, leave whenever you want. Multi-tenant FSM platform for ISVs who refuse vendor lock-in.
 - [Guides — FastYoke](https://www.fastyoke.io/guides.md): Opinionated guides on when FastYoke is the right move — graduation stories, vertical playbooks, decision frameworks, and the architectural decisions behind the platform.
 - [Partners — FastYoke](https://www.fastyoke.io/partners.md): FastYoke's named partner ecosystem. Strategic Partners deliver hands-on implementation; Channel Partners run the portfolio motion in a specific vertical.
@@ -401,7 +401,7 @@ Preferred consumption for automated agents:
 - [Yoker — RAG assistant grounded in your tenant data](https://www.fastyoke.io/yoker.md): Yoker is FastYoke's docked AI assistant. Ask natural-language questions about entity records and text attachments; retrieval runs on-VM with ONNX embeddings. Enterprise included; Pro and Team via add-on.
 - [Build with AI — Yoke Architect and AI Designer](https://www.fastyoke.io/ai/build.md): FastYoke Lane 1 AI — describe apps and workflows; get readable artifacts you can diff, export, and hand to engineers. Yoke Architect composes Yoke Apps; AI Designer extends FSMs and marketplace apps.
 - [When you outgrow Zapier — FastYoke](https://www.fastyoke.io/guides/when-you-outgrow-zapier.md): Zapier is the right tool for half the SaaS-glue you wire up. Three signals the other half has stopped being SaaS glue and started being an application.
-- [FastYoke Runtime — free for single-node and development](https://www.fastyoke.io/runtime.md): The full FastYoke FSM engine, free forever for local development and single-node deployments. No cloud account. No internet. Same engine as production — what you build here deploys unchanged.
+- [FastYoke Runtime — managed cloud and local single-node](https://www.fastyoke.io/runtime.md): One FSM engine, two runtimes — Managed Cloud (live today) or local single-node (post-GA, free forever). Same schemas, same SDK swap. What you build in either mode deploys unchanged.
 - [Security Fixes — FastYoke](https://www.fastyoke.io/security-fixes.md): Known security findings and their fix status across FastYoke releases.
 - [Auto & repair on FastYoke — intake to handoff on one board](https://www.fastyoke.io/solutions/auto-repair.md): Operations software for auto-tech shops, body shops, motorcycle and small-engine repair, and equipment-service operators. Intake to handoff on one board with parts, labor, and invoicing wired in.
 - [Status & Reliability — FastYoke](https://www.fastyoke.io/status.md): How FastYoke stays up — current operating status, the controls that keep the platform running, and what happens when something breaks.

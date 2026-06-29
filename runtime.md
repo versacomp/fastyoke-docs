@@ -1,10 +1,40 @@
 ---
-title: FastYoke Runtime — free for single-node and development
-summary: The full FastYoke FSM engine, free forever for local development and single-node deployments. No cloud account. No internet. Same engine as production — what you build here deploys unchanged.
+title: FastYoke Runtime — managed cloud and local single-node
+summary: One FSM engine, two runtimes — Managed Cloud (live today) or local single-node (post-GA, free forever). Same schemas, same SDK swap. What you build in either mode deploys unchanged.
 order: 6
 ---
 
-::hero{eyebrow="Post-GA · Free forever · No cloud account" title="The FastYoke engine, running on your machine" tagline="FastYoke Runtime is the full FSM engine for local development and single-node deployments. The deployment platform ships at general availability — join the waitlist on /download until then. No internet connection required for local work. What you build here deploys to Cloud SaaS or On-Prem unchanged — the engine is identical."}
+::hero{eyebrow="Cloud live · Local post-GA" title="One engine. Two runtimes." tagline="Run FastYoke as Managed Cloud — fully hosted, multi-tenant, production-ready today — or on your machine with FastYoke Runtime for local development and single-node deployments. The FSM engine, schemas, and app packages are identical across both."}
+::
+
+::marketing-section{band="gray" maxWidth="6xl"}
+#eyebrow
+Choose your runtime
+
+#title
+<div id="modes"></div>
+Two ways to run the same engine
+
+#lede
+Managed Cloud for production workloads today. Local Runtime for offline dev, demos, and single-node — free forever, shipping post-GA.
+
+#default
+::feature-grid{columns="2"}
+  ::feature-card{title="Managed Cloud" icon="logistics" accent="cyan" summary="Fully hosted multi-tenant FastYoke. Sign up, install marketplace apps, and run production workloads today — migrations, managed backups, and WebSocket fanout included."}
+  ::
+  ::feature-card{title="Local single-node" icon="warehouse" accent="sky" summary="The full engine on your machine. Free forever for development and single-node. No cloud account, no outbound traffic — join the waitlist on /download until post-GA."}
+  ::
+::
+
+<div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+  ::cta-button{to="/getting-started" variant="primary" size="md"}
+  Start on Managed Cloud
+  ::
+  ::cta-button{to="/download" variant="secondary" size="md"}
+  Local Runtime waitlist
+  ::
+</div>
+
 ::
 
 ::marketing-section{band="white" maxWidth="3xl"}
