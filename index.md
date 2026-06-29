@@ -202,6 +202,11 @@ FastYoke runs where your data lives — cloud-managed, air-gapped, or native mob
     <a href="/substrate" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
   </div>
 </div>
+
+<p class="mt-6 text-center text-sm" style="color: var(--brand-text-secondary)">
+  Regulated industry or procurement review?
+  <a href="/enterprise" class="font-medium" style="color: var(--brand-primary)">See the enterprise platform overview →</a>
+</p>
 ::
 
 ::marketing-section{band="gray" maxWidth="3xl"}

@@ -9,6 +9,8 @@ order: 4
 
 ::marketing-section{band="white" maxWidth="3xl"}
 
+Evaluating FastYoke for enterprise procurement? Start at the **[Enterprise overview](/enterprise)**.
+
 ## The one-sentence posture
 
 FastYoke treats PII as **opt-in opaque-by-default** — every tenant's data lives in its own database file, isolation is enforced at the operating-system layer, and the PII / SPI encryption add-on closes the loop with per-tenant AES-256-GCM keys that the platform itself cannot read without an authorized request.
