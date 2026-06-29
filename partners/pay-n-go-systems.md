@@ -4,6 +4,9 @@ summary: Pay n Go Systems is FastYoke's first named Channel Partner — focused 
 order: 11
 ---
 
+::hero{eyebrow="Channel Partner" title="Pay n Go Systems" tagline="The Channel Partner for retail, point-of-sale, and food-service operators that want a turnkey rollout of FastYoke."}
+::
+
 ::marketing-section{band="white" maxWidth="3xl" align="center"}
 #default
 <a href="https://www.payngosystems.com/" target="_blank" rel="noopener noreferrer" class="block">
@@ -14,9 +17,6 @@ order: 11
   class="mx-auto"
 />
 </a>
-::
-
-::hero{eyebrow="Channel Partner" title="Pay n Go Systems" tagline="The Channel Partner for retail, point-of-sale, and food-service operators that want a turnkey rollout of FastYoke."}
 ::
 
 ::marketing-section{band="white" maxWidth="3xl"}

@@ -4,6 +4,9 @@ summary: iNetko is FastYoke's first named Strategic Partner — frontline suppor
 order: 10
 ---
 
+::hero{eyebrow="Strategic Partner" title="iNetko" tagline="The implementation partner for teams that want hands-on help getting to production on FastYoke."}
+::
+
 ::marketing-section{band="white" maxWidth="3xl" align="center"}
 #default
 <a href="https://www.inetko.com/" target="_blank" rel="noopener noreferrer" class="block">
@@ -14,9 +17,6 @@ order: 10
   class="mx-auto"
 />
 </a>
-::
-
-::hero{eyebrow="Strategic Partner" title="iNetko" tagline="The implementation partner for teams that want hands-on help getting to production on FastYoke."}
 ::
 
 ::marketing-section{band="white" maxWidth="3xl"}
