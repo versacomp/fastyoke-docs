@@ -36,7 +36,7 @@ order: 2
 
 ::marketing-section{band="gray" maxWidth="6xl"}
 #default
-<h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">Compare to what you're paying now</h2>
+<h2 id="compare" class="text-2xl font-semibold text-[var(--brand-text-primary)]">Compare to what you're paying now</h2>
 <p class="mt-3 text-sm text-[var(--brand-text-secondary)]">
   The Team tier sits where most product teams land — five admin users,
   three tenants, the Advanced App Builder, and 1M transitions a month.

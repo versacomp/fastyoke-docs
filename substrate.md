@@ -10,6 +10,8 @@ order: 8
 ::marketing-section{band="white" maxWidth="3xl"}
 #default
 
+::maturity-badge{status="early-access" label="Q1 2027"}
+
 ## The one-sentence posture
 
 Internal tools don't belong in the App Store. The review cycle, the

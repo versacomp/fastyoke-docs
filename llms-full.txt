@@ -14,6 +14,9 @@ Ready-made apps
 #title
 Apps you can install today
 
+#lede
+Install CRM, inventory, accounting, and more from the marketplace. [Browse all apps →](/marketplace)
+
 #default
 <div id="apps"></div>
 
@@ -1195,6 +1198,73 @@ prove out the shape against a real workflow.
 
 ---
 
+# Marketplace — FastYoke
+
+> Install ready-made apps on the FastYoke platform — CRM, inventory, accounting, field service, warehousing, and more.
+
+#eyebrow
+Flagship apps
+
+#title
+Start with a proven app, make it yours
+
+#lede
+Each app ships with seeded layouts, field annotations, and workflow definitions. Technical install and developer APIs live in [Marketplace docs](/docs/marketplace).
+
+#default
+  ::feature-card{title="CRM Suite" icon="crm" accent="cyan" summary="Track every lead from first hello to closed deal. Pipeline board, dashboard KPIs, and opportunity detail pages out of the box."}
+  ::demo-button{app="crm-suite"}
+  ::
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Install guide
+  ::
+  ::
+  ::feature-card{title="Inventory" icon="inventory" accent="amber" summary="Stock levels, receipts, transfers, cycle counts, and low-stock alerts — without the spreadsheet."}
+  ::demo-button{app="inventory-yoke"}
+  ::
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Install guide
+  ::
+  ::
+  ::feature-card{title="Project Tracker" icon="project-tracker" accent="violet" summary="Simple project boards — tasks move from to-do to done with full audit history."}
+  ::demo-button{app="simple-project-tracker"}
+  ::
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Install guide
+  ::
+  ::
+  ::feature-card{title="Yoke Ledger" icon="accounting" accent="emerald" summary="Invoices, bills, chart of accounts, AR/AP, period close, and sealed PDF exports for auditors."}
+  ::demo-button{app="yoke-ledger"}
+  ::
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Install guide
+  ::
+  ::
+  ::feature-card{title="Field Service" icon="field-service" accent="sky" summary="Dispatch crews, track jobs through on-site completion, invoice when work is done."}
+  ::demo-button{app="yoke-hvac"}
+  ::
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Install guide
+  ::
+  ::
+  ::feature-card{title="Warehouse Management" icon="warehouse" accent="amber" summary="Receive, putaway, pick, pack, ship, and cycle count with a guided scan console on the Logistics core."}
+  ::cta-button{to="/docs/marketplace" variant="secondary" size="sm"}
+  Install guide
+  ::
+  ::
+::
+
+#title
+Build and list your own app
+
+#default
+ISVs ship vertical apps on the same platform primitives — entities, FSM, forms, and marketplace install records. See [For developers](/developers) and [Partners](/partners).
+
+Explore the platform
+::
+
+---
+
 # Pricing — FastYoke
 
 > Simple pricing that scales from a side project to a regulated fleet. Free with every Vercel Marketplace install; paid tiers on request.
@@ -1213,7 +1283,7 @@ prove out the shape against a real workflow.
 ::
 
 #default
-<h2 class="text-2xl font-semibold text-[var(--brand-text-primary)]">Compare to what you're paying now</h2>
+<h2 id="compare" class="text-2xl font-semibold text-[var(--brand-text-primary)]">Compare to what you're paying now</h2>
 <p class="mt-3 text-sm text-[var(--brand-text-secondary)]">
   The Team tier sits where most product teams land — five admin users,
   three tenants, the Advanced App Builder, and 1M transitions a month.
@@ -1760,11 +1830,18 @@ What we won't do
 
 ## Platform thesis
 
-FastYoke is an **application platform as a service (aPaaS)** for organizations that run on workflows, not spreadsheets. CRM, inventory, field service, healthcare throughput, and accounting are apps on a shared engine — not five SaaS subscriptions held together with exports and prayer.
+FastYoke is an **application platform as a service (aPaaS)** purpose-built for operations-intensive organizations where process integrity, auditability, and data residency are procurement requirements—not afterthoughts.
 
-Every state change flows through a **finite state machine** with sandboxed guards, an **append-only event log**, and **role-gated APIs**. That is the substrate enterprise auditors expect.
+Line-of-business capabilities—CRM, inventory, field service, patient throughput, and financial operations—are delivered as installable applications on a single platform core. Teams consolidate onto one governed environment rather than coordinating across multiple SaaS products with inconsistent data models, integration middleware, and audit trails.
+
+State transitions are enforced through a **finite state machine** with sandboxed guard evaluation, recorded in an **append-only event log**, and exposed through **role-gated APIs**. This architecture aligns with the controls enterprise security and compliance teams expect to validate.
+
+
+Download board brief (PDF)
 
 See the open architecture
+::
+
 ::
 
 #eyebrow
@@ -1792,46 +1869,80 @@ Run FastYoke where your data lives
 Same application code across substrates — choose managed cloud, air-gapped on-prem, native mobile fleet, or distributed SQL when scale demands it.
 
 #default
-<div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
-  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
-    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.14); color: #38bdf8" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10"/><path d="M12 15v3"/><path d="M18 10.5a3.5 3.5 0 0 0-6.4-2.1 4.5 4.5 0 0 0-8.6 2.1A3.5 3.5 0 0 0 7 14.5h11"/></svg></div>
-    <h3 class="font-semibold text-[var(--brand-text-primary)]">Runtime</h3>
-    <p class="text-sm text-[var(--brand-text-secondary)]">Fully managed cloud. Works on every plan. Zero infra.</p>
-    <a href="/runtime" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
-  </div>
-  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
-    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(148, 163, 184, 0.14); color: #94a3b8" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="6" rx="1"/><circle cx="8" cy="8" r="1"/><rect x="5" y="13" width="14" height="6" rx="1"/><circle cx="8" cy="16" r="1"/></svg></div>
-    <h3 class="font-semibold text-[var(--brand-text-primary)]">On-Prem</h3>
-    <p class="text-sm text-[var(--brand-text-secondary)]">Your servers. Air-gap friendly. Full data sovereignty.</p>
-    <a href="/on-prem" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
-  </div>
-  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
-    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(129, 140, 248, 0.14); color: #818cf8" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M11 18h2"/><path d="M16 7a2 2 0 0 1 0 3"/></svg></div>
-    <h3 class="font-semibold text-[var(--brand-text-primary)]">Substrate <span style="color: var(--brand-primary)">✦</span></h3>
-    <p class="text-sm text-[var(--brand-text-secondary)]">Native mobile for your fleet. OTA delivery. Team+ add-on.</p>
-    <a href="/substrate" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
-  </div>
-  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
-    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(52, 211, 153, 0.14); color: #34d399" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
-    <h3 class="font-semibold text-[var(--brand-text-primary)]">FastYoke DB</h3>
-    <p class="text-sm text-[var(--brand-text-secondary)]">Distributed SQL for HA, geo, and DR. Enterprise+ managed hosting.</p>
-    <a href="/db" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
-  </div>
-</div>
+  ::feature-card{title="Runtime" summary="Fully managed cloud. Works on every plan. Zero infra." accent="cyan"}
+  ::maturity-badge{status="available"}
+  ::
+  ::cta-button{to="/runtime" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="On-Prem" summary="Your servers. Air-gap friendly. Full data sovereignty." accent="sky"}
+  ::maturity-badge{status="pilot"}
+  ::
+  ::cta-button{to="/on-prem" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Substrate ✦" summary="Native mobile for your fleet. OTA delivery. Team+ add-on." accent="violet"}
+  ::maturity-badge{status="early-access" label="Q1 2027"}
+  ::
+  ::cta-button{to="/substrate" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="FastYoke DB" summary="Distributed SQL for HA, geo, and DR. Enterprise+ managed hosting." accent="emerald"}
+  ::maturity-badge{status="pilot" label="Enterprise+"}
+  ::
+  ::cta-button{to="/db" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+::
 
-## Compliance & trust
+#eyebrow
+Roadmap
 
+#title
+Also in the pipeline
+
+#default
+  ::feature-card{title="Studio" summary="Unified visual canvas — the on-rails wizard and Advanced App Builder ship today; the single canvas view is still in development."}
+  ::maturity-badge{status="development"}
+  ::
+  ::cta-button{to="/studio" variant="secondary" size="sm"}
+  See Studio
+  ::
+  ::
+::
+
+#eyebrow
+Security & compliance
+
+#title
+Artifacts for security and compliance review
+
+#lede
+Deployment substrates, on-VM RAG posture, Compliance Yoke, and attestations — packaged for procurement packets without replacing the full Security executive summary.
+
+#default
 | Control | Posture |
 | --- | --- |
 | Tenant isolation | Dedicated SQLite file per tenant (or FastYoke DB substrate at scale) |
 | Field-level encryption | Optional PII/SPI add-on (AES-256-GCM per tenant) |
+| On-VM RAG (Yoker) | Embeddings and vector search on your VM; cited sources; Enterprise included |
 | SSO | WorkOS AuthKit |
 | HIPAA | BAA + add-on on Enterprise tier |
 | GDPR | DPA, data-subject rights, EU region pinning |
 | Accessibility | VPAT 2.5 — [download on Security](/security) |
 | SOC 2 Type II | Roadmap — bridge letter on request |
 
-Full posture: [Security executive summary](/security) · [Subprocessor list](/docs/security/subprocessors) · [Trust Center (technical)](/docs/security/trust-center)
+Download compliance brief (PDF)
+
+Download security posture (PDF)
+::
+
+Full posture: [Security executive summary](/security) · [Yoker RAG overview](/yoker) · [Subprocessor list](/docs/security/subprocessors) · [Trust Center (technical)](/docs/security/trust-center)
+::
 
 ## Identity & access
 
@@ -3373,6 +3484,40 @@ contact addresses in the [Privacy Notice](/privacy).
 
 ---
 
+# Trust & compliance — FastYoke
+
+> Security, compliance, and procurement resources for enterprise evaluators — executive summary, advisory log, subprocessors, and technical trust center.
+
+## Start here
+
+| Resource | What it covers |
+| --- | --- |
+| [Enterprise overview](/enterprise) | Platform thesis, deployment options, compliance summary |
+| [Security & compliance brief (PDF)](/downloads/fastyoke-enterprise-security-compliance-brief.pdf) | Deployment substrates, on-VM RAG, Compliance Yoke — for security officers |
+| [Security executive summary](/security) | PII posture, five-control model, shared responsibility, attestations |
+| [PII security summary (PDF)](/downloads/fastyoke-pii-security-summary.pdf) | Printable packet for security committees |
+| [VPAT 2.5 (PDF)](/downloads/fastyoke-vpat-2.5.pdf) | Accessibility conformance report |
+| [Security fixes log](/security-fixes) | Recently patched advisories |
+| [Subprocessor list](/docs/security/subprocessors) | Third parties, regions, DPA status |
+| [Trust Center (technical)](/docs/security/trust-center) | Deep technical reference for builders and auditors |
+
+## Contact
+
+- **Security questionnaires + procurement:** [security@fastyoke.io](mailto:security@fastyoke.io)
+- **Enterprise sales:** [sales@fastyoke.io](mailto:sales@fastyoke.io) or [Contact](/contact)
+- **Vulnerability reports:** [security@fastyoke.io](mailto:security@fastyoke.io) — 24-hour acknowledgement SLA
+
+#title
+Request a review
+
+#default
+Security questionnaire
+
+Enterprise overview
+::
+
+---
+
 # Yoke — AI operations assistant for field service
 
 > Yoke proposes concrete improvements to your workflows from patterns in your event log. Every change is a brief you approve. Weekly digests, No-Show ML, and Time Travel connect recommendations to measured outcomes.
@@ -3562,6 +3707,13 @@ You don't choose between "FastYoke" and "FastYoke DB." You choose
 between substrates on a per-tenant basis, with the same application
 code running across both.
 
+
+Download board brief (PDF)
+
+Read the architecture commitment
+::
+
+::
 
 #eyebrow
 Two flavors, one managed service
@@ -5909,6 +6061,7 @@ rung.
 
 #default
 
+
 ## The one-sentence posture
 
 Internal tools don't belong in the App Store. The review cycle, the
@@ -6405,7 +6558,35 @@ we'll route inbound interest to the Pay n Go team.
 
 > Honest side-by-side comparisons against the platforms FastYoke is most often evaluated alongside.
 
+#eyebrow
+Two evaluation paths
+
+#title
+Building internal tools vs. replacing a legacy platform
+
+#lede
+Evaluating FastYoke for a **dev-led internal-tools build**? Start with the builder comparisons below. Running a **procurement review against an incumbent enterprise platform**? See the [Enterprise overview](/enterprise) and the pricing TCO matrix.
+
 #default
+<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-10">
+  <div
+    class="block rounded-lg border p-6 lg:col-span-3"
+    style="border-color: var(--brand-primary); background: color-mix(in srgb, var(--brand-primary) 6%, transparent)"
+  >
+    <h3 class="font-semibold text-[var(--brand-text-primary)]">Enterprise platform TCO</h3>
+    <p class="mt-2 text-sm text-[var(--brand-text-secondary)]">
+      Mechanical tenant isolation, append-only audit, deployment choice from cloud to air-gap —
+      and how FastYoke Team tier prices against a DIY stack or internal-tools builder at scale.
+    </p>
+    <div class="mt-4 flex flex-wrap gap-4 text-sm font-medium">
+      <a href="/enterprise" class="text-[var(--brand-primary)]">Enterprise overview →</a>
+      <a href="/pricing#compare" class="text-[var(--brand-primary)]">Pricing compare matrix →</a>
+    </div>
+  </div>
+</div>
+
+<p class="mb-6 text-sm font-medium text-[var(--brand-text-secondary)]">Builder &amp; backend comparisons</p>
+
 <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
   <a
     href="/compare/lovable"

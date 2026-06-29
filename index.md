@@ -19,6 +19,9 @@ Ready-made apps
 #title
 Apps you can install today
 
+#lede
+Install CRM, inventory, accounting, and more from the marketplace. [Browse all apps →](/marketplace)
+
 #default
 <div id="apps"></div>
 

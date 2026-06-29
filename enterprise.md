@@ -10,13 +10,25 @@ order: 3
 ::marketing-section{band="white" maxWidth="3xl"}
 ## Platform thesis
 
-FastYoke is an **application platform as a service (aPaaS)** for organizations that run on workflows, not spreadsheets. CRM, inventory, field service, healthcare throughput, and accounting are apps on a shared engine — not five SaaS subscriptions held together with exports and prayer.
+FastYoke is an **application platform as a service (aPaaS)** purpose-built for operations-intensive organizations where process integrity, auditability, and data residency are procurement requirements—not afterthoughts.
 
-Every state change flows through a **finite state machine** with sandboxed guards, an **append-only event log**, and **role-gated APIs**. That is the substrate enterprise auditors expect.
+Line-of-business capabilities—CRM, inventory, field service, patient throughput, and financial operations—are delivered as installable applications on a single platform core. Teams consolidate onto one governed environment rather than coordinating across multiple SaaS products with inconsistent data models, integration middleware, and audit trails.
+
+State transitions are enforced through a **finite state machine** with sandboxed guard evaluation, recorded in an **append-only event log**, and exposed through **role-gated APIs**. This architecture aligns with the controls enterprise security and compliance teams expect to validate.
+
+::enterprise-platform-diagram
+::
+
+::inline-cta-group
+::cta-button{to="/downloads/fastyoke-enterprise-platform-overview.pdf" variant="primary" size="md" download}
+Download board brief (PDF)
+::
 
 ::cta-button{to="/developers" variant="secondary" size="md"}
 See the open architecture
 ::
+::
+
 ::
 
 ::marketing-section{band="gray" maxWidth="6xl"}
@@ -48,48 +60,90 @@ Run FastYoke where your data lives
 Same application code across substrates — choose managed cloud, air-gapped on-prem, native mobile fleet, or distributed SQL when scale demands it.
 
 #default
-<div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
-  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
-    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.14); color: #38bdf8" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10"/><path d="M12 15v3"/><path d="M18 10.5a3.5 3.5 0 0 0-6.4-2.1 4.5 4.5 0 0 0-8.6 2.1A3.5 3.5 0 0 0 7 14.5h11"/></svg></div>
-    <h3 class="font-semibold text-[var(--brand-text-primary)]">Runtime</h3>
-    <p class="text-sm text-[var(--brand-text-secondary)]">Fully managed cloud. Works on every plan. Zero infra.</p>
-    <a href="/runtime" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
-  </div>
-  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
-    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(148, 163, 184, 0.14); color: #94a3b8" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="6" rx="1"/><circle cx="8" cy="8" r="1"/><rect x="5" y="13" width="14" height="6" rx="1"/><circle cx="8" cy="16" r="1"/></svg></div>
-    <h3 class="font-semibold text-[var(--brand-text-primary)]">On-Prem</h3>
-    <p class="text-sm text-[var(--brand-text-secondary)]">Your servers. Air-gap friendly. Full data sovereignty.</p>
-    <a href="/on-prem" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
-  </div>
-  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
-    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(129, 140, 248, 0.14); color: #818cf8" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M11 18h2"/><path d="M16 7a2 2 0 0 1 0 3"/></svg></div>
-    <h3 class="font-semibold text-[var(--brand-text-primary)]">Substrate <span style="color: var(--brand-primary)">✦</span></h3>
-    <p class="text-sm text-[var(--brand-text-secondary)]">Native mobile for your fleet. OTA delivery. Team+ add-on.</p>
-    <a href="/substrate" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
-  </div>
-  <div class="rounded-xl border p-5 flex flex-col items-center gap-2" style="border-color: var(--brand-border-subtle); background: var(--brand-bg-surface)">
-    <div class="flex items-center justify-center shrink-0" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(52, 211, 153, 0.14); color: #34d399" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
-    <h3 class="font-semibold text-[var(--brand-text-primary)]">FastYoke DB</h3>
-    <p class="text-sm text-[var(--brand-text-secondary)]">Distributed SQL for HA, geo, and DR. Enterprise+ managed hosting.</p>
-    <a href="/db" class="text-sm font-medium text-[var(--brand-primary)]">Learn more →</a>
-  </div>
-</div>
+::feature-grid{columns="4"}
+  ::feature-card{title="Runtime" summary="Fully managed cloud. Works on every plan. Zero infra." accent="cyan"}
+  ::maturity-badge{status="available"}
+  ::
+  ::cta-button{to="/runtime" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="On-Prem" summary="Your servers. Air-gap friendly. Full data sovereignty." accent="sky"}
+  ::maturity-badge{status="pilot"}
+  ::
+  ::cta-button{to="/on-prem" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="Substrate ✦" summary="Native mobile for your fleet. OTA delivery. Team+ add-on." accent="violet"}
+  ::maturity-badge{status="early-access" label="Q1 2027"}
+  ::
+  ::cta-button{to="/substrate" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+  ::feature-card{title="FastYoke DB" summary="Distributed SQL for HA, geo, and DR. Enterprise+ managed hosting." accent="emerald"}
+  ::maturity-badge{status="pilot" label="Enterprise+"}
+  ::
+  ::cta-button{to="/db" variant="secondary" size="sm"}
+  Learn more
+  ::
+  ::
+::
 ::
 
 ::marketing-section{band="gray" maxWidth="3xl"}
-## Compliance & trust
+#eyebrow
+Roadmap
 
+#title
+Also in the pipeline
+
+#default
+::feature-grid{columns="1"}
+  ::feature-card{title="Studio" summary="Unified visual canvas — the on-rails wizard and Advanced App Builder ship today; the single canvas view is still in development."}
+  ::maturity-badge{status="development"}
+  ::
+  ::cta-button{to="/studio" variant="secondary" size="sm"}
+  See Studio
+  ::
+  ::
+::
+::
+
+::marketing-section{band="white" maxWidth="3xl"}
+#eyebrow
+Security & compliance
+
+#title
+Artifacts for security and compliance review
+
+#lede
+Deployment substrates, on-VM RAG posture, Compliance Yoke, and attestations — packaged for procurement packets without replacing the full Security executive summary.
+
+#default
 | Control | Posture |
 | --- | --- |
 | Tenant isolation | Dedicated SQLite file per tenant (or FastYoke DB substrate at scale) |
 | Field-level encryption | Optional PII/SPI add-on (AES-256-GCM per tenant) |
+| On-VM RAG (Yoker) | Embeddings and vector search on your VM; cited sources; Enterprise included |
 | SSO | WorkOS AuthKit |
 | HIPAA | BAA + add-on on Enterprise tier |
 | GDPR | DPA, data-subject rights, EU region pinning |
 | Accessibility | VPAT 2.5 — [download on Security](/security) |
 | SOC 2 Type II | Roadmap — bridge letter on request |
 
-Full posture: [Security executive summary](/security) · [Subprocessor list](/docs/security/subprocessors) · [Trust Center (technical)](/docs/security/trust-center)
+::inline-cta-group
+::cta-button{to="/downloads/fastyoke-enterprise-security-compliance-brief.pdf" variant="primary" size="md" download}
+Download compliance brief (PDF)
+::
+
+::cta-button{to="/downloads/fastyoke-pii-security-summary.pdf" variant="secondary" size="md" download}
+Download security posture (PDF)
+::
+::
+
+Full posture: [Security executive summary](/security) · [Yoker RAG overview](/yoker) · [Subprocessor list](/docs/security/subprocessors) · [Trust Center (technical)](/docs/security/trust-center)
 ::
 
 ::marketing-section{band="white" maxWidth="3xl"}
